@@ -16,41 +16,45 @@
     </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form" id="memberModal">
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
-            <a-input placeholder="请输入名称" v-decorator.trim="[ 'supplier', validatorRules.supplier]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系人">
-            <a-input placeholder="请输入联系人" v-decorator.trim="[ 'contacts' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="手机号码">
-            <a-input placeholder="请输入手机号码" v-decorator.trim="[ 'telephone' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系电话">
-            <a-input placeholder="请输入联系电话" v-decorator.trim="[ 'phoneNum' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="电子邮箱">
-            <a-input placeholder="请输入电子邮箱" v-decorator.trim="[ 'email' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
-            <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24/2">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-            <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'description' ]" />
-          </a-form-item>
-        </a-col>
+        <a-row class="form-row" :gutter="24">
+          <a-col :span="24/2">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
+              <a-input placeholder="请输入会员卡号" v-decorator.trim="[ 'supplier', validatorRules.supplier]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="24/2">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系人">
+              <a-input placeholder="请输入联系人" v-decorator.trim="[ 'contacts' ]" />
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :span="24/2">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="手机号码">
+              <a-input placeholder="请输入手机号码" v-decorator.trim="[ 'telephone' ]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="24/2">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系电话">
+              <a-input placeholder="请输入联系电话" v-decorator.trim="[ 'phoneNum' ]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="24/2">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="电子邮箱">
+              <a-input placeholder="请输入电子邮箱" v-decorator.trim="[ 'email' ]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="24/2">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+              <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="24/2">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
+              <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'description' ]" />
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
     </a-spin>
   </a-modal>
@@ -80,7 +84,7 @@
         validatorRules:{
           supplier:{
             rules: [
-              { required: true, message: '请输入名称!' },
+              { required: true, message: '请输入会员卡号!' },
               { min: 2, max: 60, message: '长度在 2 到 60 个字符', trigger: 'blur' },
               { validator: this.validateSupplierName}
             ]
@@ -154,7 +158,7 @@
             if(!res.data.status){
               callback();
             } else {
-              callback("名称已经存在");
+              callback("会员卡号已经存在");
             }
           } else {
             callback(res.data);

@@ -8,8 +8,8 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入名称查询" v-model="queryParam.supplier"></a-input>
+                <a-form-item label="会员卡号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入会员卡号查询" v-model="queryParam.supplier"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -135,7 +135,7 @@
             align:"center",
             scopedSlots: { customRender: 'action' },
           },
-          { title: '名称',dataIndex: 'supplier',width:150,align:"left"},
+          { title: '会员卡号',dataIndex: 'supplier',width:150,align:"left"},
           { title: '联系人', dataIndex: 'contacts',width:70,align:"left"},
           { title: '手机号码', dataIndex: 'telephone',width:100,align:"left"},
           { title: '联系电话', dataIndex: 'phoneNum',width:100,align:"left"},
