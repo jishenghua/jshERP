@@ -234,7 +234,7 @@ public class DepotHeadService {
                 ||BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType) ) {
             //采购订单里面选择销售订单的时候不要过滤
             if(StringUtil.isEmpty(purchaseStatus)) {
-                if (null != supplierList) {
+                if (null != supplierList && supplierList.size() > 0) {
                     boolean customerFlag = systemConfigService.getCustomerFlag();
                     List<String> organList = new ArrayList<>();
                     for (Supplier supplier : supplierList) {
@@ -243,7 +243,9 @@ public class DepotHeadService {
                             organList.add(supplier.getId().toString());
                         }
                     }
-                    organArray = StringUtil.listToStringArray(organList);
+                    if(organList.size() > 0) {
+                        organArray = StringUtil.listToStringArray(organList);
+                    }
                 }
             }
         }
