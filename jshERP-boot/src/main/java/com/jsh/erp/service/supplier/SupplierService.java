@@ -540,7 +540,7 @@ public class SupplierService {
             return exportExcelVendorOrCustomer(dataList, type);
         } else {
             //会员
-            String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "预付款", "备注", "排序", "状态"};
+            String[] names = {"会员卡号", "联系人", "手机号码", "联系电话", "电子邮箱", "预付款", "备注", "排序", "状态"};
             String title = "信息内容";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
