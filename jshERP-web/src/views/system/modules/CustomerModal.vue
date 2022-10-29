@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :title="title"
-    :width="800"
+    :width="1200"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @ok="handleOk"
@@ -109,11 +109,11 @@
         isReadOnly: false,
         labelCol: {
           xs: { span: 24 },
-          sm: { span: 6 },
+          sm: { span: 4 },
         },
         wrapperCol: {
           xs: { span: 24 },
-          sm: { span: 16 },
+          sm: { span: 20 },
         },
         confirmLoading: false,
         form: this.$form.createForm(this),
