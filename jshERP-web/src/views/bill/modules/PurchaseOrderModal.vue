@@ -298,7 +298,7 @@
             this.materialTable.columns[0].type = FormTypes.normal
           }
           this.model.operTime = this.model.operTimeStr
-          if(this.model.accountId == null) {
+          if(this.model.accountId == null && this.model.accountIdList) {
             this.model.accountId = 0
             this.manyAccountBtnStatus = true
             this.accountIdList = this.model.accountIdList
