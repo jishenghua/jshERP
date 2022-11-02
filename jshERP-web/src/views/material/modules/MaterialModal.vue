@@ -354,16 +354,16 @@
               title: '多属性', key: 'sku', width: '20%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '点击生成条码赋值'
             },
             {
-              title: '采购价', key: 'purchaseDecimal', width: '9%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '采购价', key: 'purchaseDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '零售价', key: 'commodityDecimal', width: '9%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '零售价', key: 'commodityDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '销售价', key: 'wholesaleDecimal', width: '9%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '销售价', key: 'wholesaleDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '最低售价', key: 'lowDecimal', width: '9%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '最低售价', key: 'lowDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
@@ -375,13 +375,13 @@
               title: '仓库', key: 'name', width: '15%', type: FormTypes.normal
             },
             {
-              title: '期初库存数量', key: 'initStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '期初库存数量', key: 'initStock', width: '15%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '最低安全库存数量', key: 'lowSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '最低安全库存数量', key: 'lowSafeStock', width: '15%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             },
             {
-              title: '最高安全库存数量', key: 'highSafeStock', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}'
+              title: '最高安全库存数量', key: 'highSafeStock', width: '15%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
             }
           ]
         },
@@ -644,6 +644,17 @@
                   }
                 }
               }
+              //对最低和最高安全库存进行校验
+              for (let i = 0; i < formData.stock.length; i++) {
+                let depotStockObj = formData.stock[i]
+                if(depotStockObj.lowSafeStock && depotStockObj.highSafeStock) {
+                  if(depotStockObj.lowSafeStock-0 > depotStockObj.highSafeStock-0) {
+                    this.$message.warning('抱歉，' + depotStockObj.name + '的最低安全库存大于最高安全库存！')
+                    return
+                  }
+                }
+              }
+              //图片校验
               if(this.fileList && this.fileList.length > 0) {
                 formData.imgName = this.fileList
                 let fileArr = this.fileList.split(',')
