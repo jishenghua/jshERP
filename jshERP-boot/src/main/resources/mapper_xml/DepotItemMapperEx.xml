@@ -601,7 +601,7 @@
         and ifnull(m.delete_flag,'0') !='1'
         and mis.depot_id=mcs.depot_id
         and ((ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number &lt; ifnull(mis.low_safe_stock,0))
-            or (ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
+            or (ifnull(mis.high_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
