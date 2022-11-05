@@ -121,9 +121,10 @@
               <a-col :md="6" :sm="24" v-if="!model.id">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
                   data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
-                  <a-tooltip title="多属性针对服装、鞋帽等行业，配合生成条码一起使用">
+                  <a-tooltip title="多属性针对服装、鞋帽等行业，需要先录入单位才能激活此处输入框">
+                    <a-tag class="tag-info" v-if="!manySkuStatus">需要先录入单位才能激活</a-tag>
                     <a-select mode="multiple" v-decorator="[ 'manySku' ]" showSearch optionFilterProp="children"
-                      placeholder="请选择多属性（可多选）" @change="onManySkuChange">
+                      placeholder="请选择多属性（可多选）" @change="onManySkuChange" v-show="manySkuStatus">
                       <a-select-option v-for="(item,index) in materialAttributeList" :key="index" :value="item.value" :disabled="item.disabled">
                         {{ item.name }}
                       </a-select-option>
@@ -301,6 +302,7 @@
         unitStatus: false,
         manyUnitStatus: true,
         unitChecked: false,
+        manySkuStatus: false,
         switchDisabled: false, //开关的启用状态
         barCodeSwitch: false, //生成条码开关
         maxBarCodeInfo: '', //最大条码
@@ -430,8 +432,9 @@
         this.activeKey = '1'
         this.manySkuSelected = 0
         this.barCodeSwitch = false
+        this.manySkuStatus = false
         this.maxBarCodeInfo = ''
-        this.visible = true;
+        this.visible = true
         if(JSON.stringify(record) === '{}') {
           this.fileList = []
         } else {
@@ -1020,6 +1023,12 @@
         }
       },
       onlyUnitOnChange(e) {
+        if(e.target.value) {
+          //单位有填写了之后则显示多属性的文本框
+          this.manySkuStatus = true
+        } else {
+          this.manySkuStatus = false
+        }
         this.$refs.editableMeTable.getValues((error, values) => {
           let mArr = values
           for (let i = 0; i < mArr.length; i++) {
@@ -1110,5 +1119,14 @@
   .input-table {
     max-width: 100%;
     min-width: 1550px;
+  }
+  .tag-info {
+    font-size:14px;
+    height:32px;
+    line-height:32px;
+    width:100%;
+    padding: 0px 11px;
+    color: #bbb;
+    background-color: #ffffff;
   }
 </style>
