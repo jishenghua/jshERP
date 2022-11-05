@@ -133,31 +133,24 @@
               </a-col>
             </a-row>
             <a-row class="form-row" :gutter="24">
-              <a-col :md="6" :sm="24" v-if="manySkuSelected>=1">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="skuOneTitle">
-                  <a-tooltip title="选择之后请点击生成条码">
-                    <a-select mode="multiple" v-decorator="[ 'skuOne' ]" showSearch optionFilterProp="children" placeholder="请选择（可多选）" >
-                      <a-select-option v-for="(item,index) in skuOneList" :key="index" :value="item.value">
-                        {{ item.name }}
-                      </a-select-option>
-                    </a-select>
-                  </a-tooltip>
+              <a-col :md="12" :sm="24" v-if="manySkuSelected>=1">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" :label="skuOneTitle">
+                  <a-select mode="multiple" v-decorator="[ 'skuOne' ]" showSearch optionFilterProp="children"
+                            placeholder="请选择（可多选）" @select="onSkuChange" @deselect="onSkuOneDeSelect">
+                    <a-select-option v-for="(item,index) in skuOneList" :key="index" :value="item.value">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24" v-if="manySkuSelected>=2">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="skuTwoTitle">
-                  <a-tooltip title="选择之后请点击生成条码">
-                    <a-select mode="multiple" v-decorator="[ 'skuTwo' ]" showSearch optionFilterProp="children" placeholder="请选择（可多选）" >
-                      <a-select-option v-for="(item,index) in skuTwoList" :key="index" :value="item.value">
-                        {{ item.name }}
-                      </a-select-option>
-                    </a-select>
-                  </a-tooltip>
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24" v-if="manySkuSelected>=1">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="生成条码">
-                  <a-switch v-model="barCodeSwitch" @change="onBarCodeChange"></a-switch>
+              <a-col :md="12" :sm="24" v-if="manySkuSelected>=2">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" :label="skuTwoTitle">
+                  <a-select mode="multiple" v-decorator="[ 'skuTwo' ]" showSearch optionFilterProp="children"
+                            placeholder="请选择（可多选）" @select="onSkuChange" @deselect="onSkuTwoDeSelect">
+                    <a-select-option v-for="(item,index) in skuTwoList" :key="index" :value="item.value">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -277,7 +270,7 @@
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList,
     getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
-  import { autoJumpNextInput, handleIntroJs } from '@/utils/util'
+  import { removeByVal, autoJumpNextInput, handleIntroJs } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -778,52 +771,66 @@
         this.barCodeSwitch = false;
         this.meTable.dataSource = []
       },
-      onBarCodeChange(checked) {
+      onSkuChange() {
+        let skuOneData = this.form.getFieldValue('skuOne')
+        let skuTwoData = this.form.getFieldValue('skuTwo')
+        this.autoSkuList(skuOneData, skuTwoData)
+      },
+      onSkuOneDeSelect(value) {
+        let skuOneData = this.form.getFieldValue('skuOne')
+        let skuTwoData = this.form.getFieldValue('skuTwo')
+        removeByVal(skuOneData, value)
+        this.autoSkuList(skuOneData, skuTwoData)
+      },
+      onSkuTwoDeSelect(value) {
+        let skuOneData = this.form.getFieldValue('skuOne')
+        let skuTwoData = this.form.getFieldValue('skuTwo')
+        removeByVal(skuTwoData, value)
+        this.autoSkuList(skuOneData, skuTwoData)
+      },
+      autoSkuList(skuOneData, skuTwoData) {
         let unit = this.form.getFieldValue('unit')
         if(unit) {
-          if(checked){
-            //计算多属性已经选择了几个
-            let count = this.getNumByField('skuOne') + this.getNumByField('skuTwo')
-            let barCodeSku = []
-            if(count === 1) {
-              let skuArr = []
-              if(this.getNumByField('skuOne')) {
-                skuArr.push(this.form.getFieldValue('skuOne'))
-              }
-              let skuArrOne = skuArr[0]
-              for (let i = 0; i < skuArrOne.length; i++) {
-                barCodeSku.push(skuArrOne[i])
-              }
-            } else if(count === 2) {
-              let skuArr = []
-              if(this.getNumByField('skuOne')) {
-                skuArr.push(this.form.getFieldValue('skuOne'))
-              }
-              if(this.getNumByField('skuTwo')) {
-                skuArr.push(this.form.getFieldValue('skuTwo'))
-              }
-              let skuArrOne = skuArr[0]
-              let skuArrTwo = skuArr[1]
-              for (let i = 0; i < skuArrOne.length; i++) {
-                for (let j = 0; j < skuArrTwo.length; j++) {
-                  barCodeSku.push(skuArrOne[i] + ',' + skuArrTwo[j])
-                }
+          //计算多属性已经选择了几个
+          let count = this.getNumByField('skuOne') + this.getNumByField('skuTwo')
+          let barCodeSku = []
+          if(count === 1) {
+            let skuArrOnly = []
+            if(this.getNumByField('skuOne')) {
+              skuArrOnly = skuOneData
+            } else if(this.getNumByField('skuTwo')) {
+              skuArrOnly = skuTwoData
+            }
+            for (let i = 0; i < skuArrOnly.length; i++) {
+              barCodeSku.push(skuArrOnly[i])
+            }
+          } else if(count === 2) {
+            let skuArr = []
+            if(this.getNumByField('skuOne')) {
+              skuArr.push(skuOneData)
+            }
+            if(this.getNumByField('skuTwo')) {
+              skuArr.push(skuTwoData)
+            }
+            let skuArrOne = skuArr[0]
+            let skuArrTwo = skuArr[1]
+            for (let i = 0; i < skuArrOne.length; i++) {
+              for (let j = 0; j < skuArrTwo.length; j++) {
+                barCodeSku.push(skuArrOne[i] + ',' + skuArrTwo[j])
               }
             }
-            let meTableData = []
-            getMaxBarCode({}).then((res)=>{
-              if(res && res.code===200) {
-                let maxBarCode = res.data.barCode-0
-                for (let i = 0; i < barCodeSku.length; i++) {
-                  let currentBarCode = maxBarCode + i + 1
-                  meTableData.push({barCode: currentBarCode, commodityUnit: unit, sku: barCodeSku[i]})
-                }
-                this.meTable.dataSource = meTableData
-              }
-            })
-          } else {
-            this.meTable.dataSource = []
           }
+          let meTableData = []
+          getMaxBarCode({}).then((res)=>{
+            if(res && res.code===200) {
+              let maxBarCode = res.data.barCode-0
+              for (let i = 0; i < barCodeSku.length; i++) {
+                let currentBarCode = maxBarCode + i + 1
+                meTableData.push({barCode: currentBarCode, commodityUnit: unit, sku: barCodeSku[i]})
+              }
+              this.meTable.dataSource = meTableData
+            }
+          })
         } else {
           this.$message.warning('请填写单位（注意不要勾选多单位）');
           this.barCodeSwitch = false;
