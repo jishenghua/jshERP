@@ -28,6 +28,8 @@
       <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
       <!--导出Excel-->
       <a-button v-if="billType === '采购订单'||billType === '销售订单'" @click="exportExcel()">导出</a-button>
+      <!--反审核-->
+      <a-button v-if="isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
     </template>
     <a-form :form="form">
@@ -976,7 +978,7 @@
 
 <script>
   import pick from 'lodash.pick'
-  import { getAction } from '@/api/manage'
+  import { getAction, postAction } from '@/api/manage'
   import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
   import { getMpListShort, openDownloadDialog, sheet2blob } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
@@ -996,6 +998,7 @@
         width: '1600px',
         visible: false,
         model: {},
+        isCanBackCheck: true,
         billType: '',
         billPrintFlag: false,
         fileList: [],
@@ -1019,7 +1022,8 @@
         loading: false,
         dataSource: [],
         url: {
-          detailList: '/depotItem/getDetailList'
+          detailList: '/depotItem/getDetailList',
+          batchSetStatusUrl: "/depotHead/batchSetStatus"
         },
         //表头
         columns:[],
@@ -1461,6 +1465,27 @@
           }
         }).finally(() => {
           this.loading = false
+        })
+      },
+      handleBackCheck() {
+        let that = this
+        this.$confirm({
+          title: "确认操作",
+          content: "是否对该单据进行反审核?",
+          onOk: function () {
+            that.loading = true
+            postAction(that.url.batchSetStatusUrl, {status: '0', ids: that.model.id}).then((res) => {
+              if(res.code === 200){
+                that.$emit('ok')
+                that.loading = false
+                that.close()
+              } else {
+                that.$message.warning(res.data.message)
+                that.loading = false
+              }
+            }).finally(() => {
+            })
+          }
         })
       },
       handleCancel() {

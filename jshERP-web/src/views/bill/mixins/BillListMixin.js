@@ -72,6 +72,9 @@ export const BillListMixin = {
       }
     },
     myHandleDetail(record, type) {
+      if(this.btnEnableList.indexOf(7)===-1) {
+        this.$refs.modalDetail.isCanBackCheck = false
+      }
       this.handleDetail(record, type);
     },
     handleApprove(record) {

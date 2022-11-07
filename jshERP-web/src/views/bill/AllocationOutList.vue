@@ -126,7 +126,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <allocation-out-modal ref="modalForm" @ok="modalFormOk"></allocation-out-modal>
-        <bill-detail ref="modalDetail"></bill-detail>
+        <bill-detail ref="modalDetail" @ok="modalFormOk"></bill-detail>
       </a-card>
     </a-col>
   </a-row>

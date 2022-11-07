@@ -17,6 +17,8 @@
       <a-button v-if="financialType === '支出'" v-print="'#itemOutPrint'" ghost type="primary">打印</a-button>
       <a-button v-if="financialType === '收款'" v-print="'#moneyInPrint'" ghost type="primary">打印</a-button>
       <a-button v-if="financialType === '付款'" v-print="'#moneyOutPrint'" ghost type="primary">打印</a-button>
+      <!--反审核-->
+      <a-button v-if="isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
     </template>
     <a-form :form="form">
@@ -396,8 +398,7 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import { getAction } from '@/api/manage'
-  import { findBillDetailByNumber} from '@/api/api'
+  import { getAction, postAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   export default {
     name: 'FinancialDetail',
@@ -410,6 +411,7 @@
         width: '1600px',
         visible: false,
         model: {},
+        isCanBackCheck: true,
         financialType: '',
         fileList: [],
         labelCol: {
@@ -424,7 +426,8 @@
         loading: false,
         dataSource: [],
         url: {
-          detailList: '/accountItem/getDetailList'
+          detailList: '/accountItem/getDetailList',
+          batchSetStatusUrl: '/accountHead/batchSetStatus'
         },
         advanceInColumns: [
           { title: '账户名称',dataIndex: 'accountName',width: '30%'},
@@ -495,6 +498,27 @@
           }
         }).finally(() => {
           this.loading = false
+        })
+      },
+      handleBackCheck() {
+        let that = this
+        this.$confirm({
+          title: "确认操作",
+          content: "是否对该单据进行反审核?",
+          onOk: function () {
+            that.loading = true
+            postAction(that.url.batchSetStatusUrl, {status: '0', ids: that.model.id}).then((res) => {
+              if(res.code === 200){
+                that.$emit('ok')
+                that.loading = false
+                that.close()
+              } else {
+                that.$message.warning(res.data.message)
+                that.loading = false
+              }
+            }).finally(() => {
+            })
+          }
         })
       },
       handleCancel() {
