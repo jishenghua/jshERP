@@ -17,9 +17,10 @@
     computed: {
       comp: function () {
         if(!this.path){
-          return null;
+          return null
         }
-        return () => import(`@/views/${this.path}.vue`)
+        return null
+        // return () => import(`@/views/${this.path}.vue`)
       }
     },
     props: ['path','formData'],
