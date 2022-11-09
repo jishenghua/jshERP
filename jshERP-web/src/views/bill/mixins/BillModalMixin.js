@@ -370,8 +370,10 @@ export const BillModalMixin = {
                     mObj.stock = mInfo.stock
                     mArr.push(mObj)
                   }
+                  let allPriceTotal = 0
                   let taxLastMoneyTotal = 0
                   for (let j = 0; j < mArr.length; j++) {
+                    allPriceTotal += mArr[j].allPrice-0
                     taxLastMoneyTotal += mArr[j].taxLastMoney-0
                     //组合和拆分单据给商品类型进行重新赋值
                     if(j===0) {
@@ -381,7 +383,11 @@ export const BillModalMixin = {
                     }
                   }
                   this.materialTable.dataSource = mArr
-                  target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
+                  if(this.prefixNo ==='LSCK' || this.prefixNo ==='LSTH') {
+                    target.statisticsColumns.allPrice = allPriceTotal
+                  } else {
+                    target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
+                  }
                   that.autoChangePrice(target)
                 })
               } else {
