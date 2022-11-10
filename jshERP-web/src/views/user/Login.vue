@@ -7,7 +7,7 @@
           size="large"
           v-decorator="['loginName',{initialValue:'', rules: validatorRules.loginName.rules}]"
           type="text"
-          @focus="initWeixin"
+          @mouseover="initWeixin"
           placeholder="请输入用户名">
           <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
@@ -18,6 +18,7 @@
           v-decorator="['password',{initialValue:'', rules: validatorRules.password.rules}]"
           size="large"
           type="password"
+          @mouseover="initWeixin"
           autocomplete="false"
           placeholder="密码">
           <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -38,6 +39,7 @@
           htmlType="submit"
           class="login-button"
           :loading="loginBtn"
+          @mouseover="initWeixin"
           @click.stop.prevent="handleSubmit"
           :disabled="loginBtn">确定
         </a-button>
@@ -48,13 +50,13 @@
           <a-col>
             © 2015-2030 {{systemTitle}} - Powered By
             <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
-            <span v-if="showWeixinSpan()" class="weixin" @mouseover="showWeixin" @click="changeWeixinStatus">微信小程序</span>
           </a-col>
         </a-row>
       </div>
 
-      <div v-if="showWeixinFlag" style="text-align: center; padding-top: 10px;">
-        <img src="/static/weixin.jpg" style="width:258px" />
+      <div v-if="showWeixinFlag" style="text-align: center; padding-top: 20px;">
+        <img src="/static/weixin.jpg" style="width:160px" />
+        <div style="font-size:16px;padding-top:10px;font-weight:bold">欢迎【扫一扫】<br/>{{systemTitle}}微信小程序</div>
       </div>
     </a-form>
   </div>
