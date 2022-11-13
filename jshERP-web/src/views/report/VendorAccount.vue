@@ -91,7 +91,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import { getAction } from '@/api/manage'
-  import {findBySelectSup, findBillDetailByNumber,findFinancialDetailByNumber} from '@/api/api'
+  import {findBySelectSup} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   export default {
@@ -178,23 +178,6 @@
         console.log(dateString[0],dateString[1]);
         this.queryParam.beginTime=dateString[0];
         this.queryParam.endTime=dateString[1];
-      },
-      myHandleDetail(record) {
-        if(record.type === '收入' || record.type === '支出' || record.type === '付款') {
-          findFinancialDetailByNumber({ billNo: record.number }).then((res) => {
-            if (res && res.code === 200) {
-              this.$refs.modalFinancialDetail.show(res.data, record.type);
-              this.$refs.modalFinancialDetail.title="详情";
-            }
-          })
-        } else {
-          findBillDetailByNumber({ number: record.number }).then((res) => {
-            if (res && res.code === 200) {
-              this.$refs.modalBillDetail.show(res.data, record.type);
-              this.$refs.modalBillDetail.title="详情";
-            }
-          })
-        }
       },
       loadData(arg) {
         //加载数据 若传入参数1则加载第一页的内容

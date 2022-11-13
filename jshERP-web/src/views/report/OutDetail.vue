@@ -234,7 +234,8 @@
       myHandleDetail(record) {
         findBillDetailByNumber({ number: record.number }).then((res) => {
           if (res && res.code === 200) {
-            this.handleDetail(res.data, record.newType);
+            this.$refs.modalDetail.isCanBackCheck = false
+            this.handleDetail(res.data, record.newType)
           }
         })
       },

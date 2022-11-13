@@ -119,6 +119,7 @@
         this.toFromType = record.fromType
         findBillDetailByNumber({ number: record.number }).then((res) => {
           if (res && res.code === 200) {
+            this.$refs.billDetail.isCanBackCheck = false
             that.$refs.billDetail.show(res.data, record.type);
             that.$refs.billDetail.title="详情";
           }

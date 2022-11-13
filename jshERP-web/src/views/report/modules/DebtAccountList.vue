@@ -158,6 +158,7 @@
           if (res && res.code === 200) {
             let type = res.data.depotHeadType
             type = type.replace('其它','')
+            this.$refs.modalDetail.isCanBackCheck = false
             this.handleDetail(res.data, type)
           }
         })

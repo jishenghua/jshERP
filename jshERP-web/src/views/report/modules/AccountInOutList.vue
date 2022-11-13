@@ -146,6 +146,7 @@
         if(record.fromType === 'bill') {
           findBillDetailByNumber({ number: record.number }).then((res) => {
             if (res && res.code === 200) {
+              this.$refs.billDetail.isCanBackCheck = false
               that.$refs.billDetail.show(res.data, record.type);
               that.$refs.billDetail.title="详情";
             }
@@ -153,6 +154,7 @@
         } else if(record.fromType === 'financial') {
           findFinancialDetailByNumber({ billNo: record.number }).then((res) => {
             if (res && res.code === 200) {
+              this.$refs.financialDetail.isCanBackCheck = false
               that.$refs.financialDetail.show(res.data, record.type);
               that.$refs.financialDetail.title="详情";
             }
