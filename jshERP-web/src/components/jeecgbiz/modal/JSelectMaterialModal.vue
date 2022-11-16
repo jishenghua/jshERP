@@ -40,9 +40,11 @@
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
-                  <a-button type="primary" icon="search" @click="loadMaterialData(1)" title="查询"></a-button>
-                  <a-button style="margin-left: 8px" icon="reload" @click="searchReset(1)" title="重置"></a-button>
-                  <a-button style="margin-left: 8px" icon="plus" @click="addMaterial" title="添加"></a-button>
+                  <a-button type="primary" @click="loadMaterialData(1)">查询</a-button>
+                  <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
+                  <a-tooltip title="没查询到，决定新增商品！">
+                    <a-button style="margin-left: 8px" @click="addMaterial">新增</a-button>
+                  </a-tooltip>
                   <a @click="handleToggleSearch" style="margin-left: 8px">
                     {{ toggleSearchStatus ? '收起' : '展开' }}
                     <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>

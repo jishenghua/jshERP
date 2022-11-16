@@ -398,14 +398,13 @@
             })
           })
           //给优惠后金额重新赋值
-          if(discountLastMoney) {
-            this.$nextTick(() => {
-              this.form.setFieldsValue({
-                'discountLastMoney': discountLastMoney.toFixed(2),
-                'changeAmount': discountLastMoney
-              })
-            });
-          }
+          discountLastMoney = discountLastMoney?discountLastMoney:0
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'discountLastMoney': discountLastMoney.toFixed(2),
+              'changeAmount': discountLastMoney
+            })
+          })
           this.materialTable.dataSource = selectBillDetailRows
         }
       },

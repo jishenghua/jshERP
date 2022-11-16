@@ -393,21 +393,20 @@
           }
           this.materialTable.dataSource = listEx
           ///给优惠后金额重新赋值
-          if(allTaxLastMoney) {
-            let discountMoney = (discount*allTaxLastMoney/100).toFixed(2)-0
-            let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
-            this.$nextTick(() => {
-              this.form.setFieldsValue({
-                'organId': organId,
-                'linkNumber': linkNumber,
-                'discount': discount,
-                'discountMoney': discountMoney,
-                'discountLastMoney': discountLastMoney,
-                'changeAmount': discountLastMoney,
-                'remark': remark
-              })
+          allTaxLastMoney = allTaxLastMoney?allTaxLastMoney:0
+          let discountMoney = (discount*allTaxLastMoney/100).toFixed(2)-0
+          let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'organId': organId,
+              'linkNumber': linkNumber,
+              'discount': discount,
+              'discountMoney': discountMoney,
+              'discountLastMoney': discountLastMoney,
+              'changeAmount': discountLastMoney,
+              'remark': remark
             })
-          }
+          })
         }
       },
     }

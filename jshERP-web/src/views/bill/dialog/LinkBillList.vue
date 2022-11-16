@@ -259,9 +259,13 @@
             this.loadDetailData(1)
           }
         } else {
-          this.getSelectBillDetailRows();
-          this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discount, this.deposit, this.remark)
-          this.close();
+          if(this.selectedDetailRowKeys.length) {
+            this.getSelectBillDetailRows()
+            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discount, this.deposit, this.remark)
+            this.close()
+          } else {
+            this.$message.warning('抱歉，请选择单据明细！')
+          }
         }
       },
       //查询明细列表
