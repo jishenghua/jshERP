@@ -14,6 +14,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.account.AccountService;
+import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
@@ -77,6 +78,8 @@ public class DepotHeadService {
     @Resource
     private AccountService accountService;
     @Resource
+    private AccountHeadService accountHeadService;
+    @Resource
     private AccountItemService accountItemService;
     @Resource
     DepotItemMapperEx depotItemMapperEx;
@@ -105,7 +108,7 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String status, String purchaseStatus, String number, String linkNumber,
+    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         List<DepotHeadVo4List> list=new ArrayList<>();
@@ -119,7 +122,7 @@ public class DepotHeadService {
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
+            list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
                  materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
             if (null != list) {
                 for (DepotHeadVo4List dh : list) {
@@ -145,6 +148,14 @@ public class DepotHeadService {
                         dh.setDeposit(BigDecimal.ZERO);
                     }
                     dh.setFinishDeposit(depotHeadMapperEx.getFinishDepositByNumber(dh.getNumber()));
+                    //欠款计算
+                    BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
+                    BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
+                    BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
+                    dh.setDebt(discountLastMoney.add(otherMoney).subtract((dh.getDeposit().add(changeAmount))));
+                    //是否有付款单或收款单
+                    int financialBillNoSize = accountHeadService.getFinancialBillNoByBillId(dh.getId()).size();
+                    dh.setHasFinancialFlag(financialBillNoSize>0);
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
                     }
@@ -170,7 +181,7 @@ public class DepotHeadService {
         return resList;
     }
 
-    public Long countDepotHead(String type, String subType, String roleType, String status, String purchaseStatus, String number, String linkNumber,
+    public Long countDepotHead(String type, String subType, String roleType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
         Long result=null;
         try{
@@ -181,7 +192,7 @@ public class DepotHeadService {
             String [] organArray = getOrganArray(subType, purchaseStatus);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
                    materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);

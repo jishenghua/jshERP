@@ -43,6 +43,11 @@ public class DepotHeadVo4List extends DepotHead{
 
     private BigDecimal materialCount;
 
+    /**
+     * 是否有付款单或收款单
+     */
+    private Boolean hasFinancialFlag;
+
     public String getProjectName() {
         return projectName;
     }
@@ -185,5 +190,13 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setMaterialCount(BigDecimal materialCount) {
         this.materialCount = materialCount;
+    }
+
+    public Boolean getHasFinancialFlag() {
+        return hasFinancialFlag;
+    }
+
+    public void setHasFinancialFlag(Boolean hasFinancialFlag) {
+        this.hasFinancialFlag = hasFinancialFlag;
     }
 }

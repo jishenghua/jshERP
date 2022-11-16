@@ -134,6 +134,12 @@
             <bind name="bindAccountId" value="'%'+accountId+'%'"/>
             and (dh.account_id=#{accountId} or dh.account_id_list like #{bindAccountId})
         </if>
+        <if test="hasDebt != null and hasDebt ==1">
+            and (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))>0)
+        </if>
+        <if test="hasDebt != null and hasDebt ==0">
+            and (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))=0)
+        </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
@@ -223,6 +229,12 @@
         <if test="accountId != null">
             <bind name="bindAccountId" value="'%'+accountId+'%'"/>
             and (dh.account_id=#{accountId} or dh.account_id_list like #{bindAccountId})
+        </if>
+        <if test="hasDebt != null and hasDebt ==1">
+            and (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))>0)
+        </if>
+        <if test="hasDebt != null and hasDebt ==0">
+            and (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))=0)
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
