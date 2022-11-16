@@ -82,6 +82,14 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="有无欠款" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择有无欠款" v-model="queryParam.hasDebt">
+                      <a-select-option value="1">有欠款</a-select-option>
+                      <a-select-option value="0">无欠款</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
@@ -142,6 +150,11 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <template slot="customRenderDebt" slot-scope="value, record">
+              <span style="color:green" v-if="value>0 && record.hasFinancialFlag">{{value}}</span>
+              <span style="color:red" v-if="value>0 && !record.hasFinancialFlag">{{value}}</span>
+              <span v-if="value===0">{{value}}</span>
+            </template>
             <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
@@ -186,6 +199,7 @@
           creator: "",
           linkNumber: "",
           accountId: "",
+          hasDebt: "",
           status: "",
           remark: ""
         },
@@ -238,10 +252,7 @@
           },
           { title: '付款', dataIndex: 'changeAmount',width:60},
           { title: '欠款', dataIndex: 'debt',width:60,
-            customRender:function (text,record,index) {
-              let debt = record.discountLastMoney + record.otherMoney - (record.deposit + record.changeAmount)
-              return debt? debt.toFixed(2):''
-            }
+            scopedSlots: { customRender: 'customRenderDebt' }
           },
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
