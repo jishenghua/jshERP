@@ -205,11 +205,8 @@
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
-              if(record.linkNumber) {
-                return text + "[转]";
-              } else {
-                return text;
-              }
+              text = record.linkNumber?text+"[转]":text
+              return text
             }
           },
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,

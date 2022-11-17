@@ -176,15 +176,7 @@
             align:"center", width: 150,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '单据编号', dataIndex: 'number',width:160,
-            customRender:function (text,record,index) {
-              if(record.linkNumber) {
-                return text + "[转]";
-              } else {
-                return text;
-              }
-            }
-          },
+          { title: '单据编号', dataIndex: 'number',width:160},
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {

@@ -95,6 +95,13 @@
                     {{model.accountName}}
                   </a-form-item>
                 </a-col>
+                <a-col v-if="model.hasBackFlag" :lg="24" :md="6" :sm="6">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退货单号">
+                    <template v-for="(item, index) in linkNumberList">
+                      <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
+                    </template>
+                  </a-form-item>
+                </a-col>
               </a-row>
             </a-col>
           </a-row>
@@ -346,6 +353,15 @@
                 {{model.debt}}
               </a-form-item>
             </a-col>
+            <a-col v-if="model.hasBackFlag" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退货单号">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
             <a-col v-if="financialBillNoList.length" :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款单号">
                 <template v-for="(item, index) in financialBillNoList">
@@ -608,7 +624,13 @@
                 {{model.debt}}
               </a-form-item>
             </a-col>
-            <a-col :span="6"></a-col>
+            <a-col v-if="model.hasBackFlag" :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="退货单号">
+                <template v-for="(item, index) in linkNumberList">
+                  <a @click="myHandleDetail(item.number)">{{item.number}}</a><br/>
+                </template>
+              </a-form-item>
+            </a-col>
           </a-row>
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
@@ -1003,6 +1025,7 @@
         billPrintFlag: false,
         fileList: [],
         purchaseBySaleFlag: false,
+        linkNumberList: [],
         financialBillNoList: [],
         tableWidth: {
           'width': '1500px'
@@ -1415,6 +1438,13 @@
           }
         })
       },
+      getBillListByLinkNumber(number) {
+        getAction('/depotHead/getBillListByLinkNumber', {number: number}).then(res => {
+          if(res && res.code === 200){
+            this.linkNumberList = res.data
+          }
+        })
+      },
       getFinancialBillNoByBillId(billId) {
         getAction('/accountHead/getFinancialBillNoByBillId', {billId: billId}).then(res => {
           if(res && res.code === 200){
@@ -1453,6 +1483,7 @@
         this.requestSubTableData(record, type, url, params);
         this.initPlatform()
         this.getSystemConfig()
+        this.getBillListByLinkNumber(this.model.number)
         this.getFinancialBillNoByBillId(this.model.id)
       },
       requestSubTableData(record, type, url, params, success) {
