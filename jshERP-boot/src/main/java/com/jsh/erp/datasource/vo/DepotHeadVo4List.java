@@ -47,6 +47,10 @@ public class DepotHeadVo4List extends DepotHead{
      * 是否有付款单或收款单
      */
     private Boolean hasFinancialFlag;
+    /**
+     * 是否有退款单
+     */
+    private Boolean hasBackFlag;
 
     public String getProjectName() {
         return projectName;
@@ -198,5 +202,13 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setHasFinancialFlag(Boolean hasFinancialFlag) {
         this.hasFinancialFlag = hasFinancialFlag;
+    }
+
+    public Boolean getHasBackFlag() {
+        return hasBackFlag;
+    }
+
+    public void setHasBackFlag(Boolean hasBackFlag) {
+        this.hasBackFlag = hasBackFlag;
     }
 }

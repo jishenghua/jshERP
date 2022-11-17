@@ -156,6 +156,9 @@ public class DepotHeadService {
                     //是否有付款单或收款单
                     int financialBillNoSize = accountHeadService.getFinancialBillNoByBillId(dh.getId()).size();
                     dh.setHasFinancialFlag(financialBillNoSize>0);
+                    //是否有退款单
+                    int billListSize = getBillListByLinkNumber(dh.getNumber()).size();
+                    dh.setHasBackFlag(billListSize>0);
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
                     }
@@ -730,6 +733,12 @@ public class DepotHeadService {
                     if(dh.getTotalPrice() != null) {
                         dh.setTotalPrice(dh.getTotalPrice().abs());
                     }
+                    //是否有付款单或收款单
+                    int financialBillNoSize = accountHeadService.getFinancialBillNoByBillId(dh.getId()).size();
+                    dh.setHasFinancialFlag(financialBillNoSize>0);
+                    //是否有退款单
+                    int billListSize = getBillListByLinkNumber(dh.getNumber()).size();
+                    dh.setHasBackFlag(billListSize>0);
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
                     }
@@ -756,6 +765,18 @@ public class DepotHeadService {
         DepotHeadExample example = new DepotHeadExample();
         example.createCriteria().andLinkNumberEqualTo(linkNumber).andNumberNotEqualTo(number).andTypeEqualTo(type)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        return depotHeadMapper.selectByExample(example);
+    }
+
+    /**
+     * 根据原单号查询关联的单据列表
+     * @param linkNumber
+     * @return
+     * @throws Exception
+     */
+    public List<DepotHead> getBillListByLinkNumber(String linkNumber)throws Exception {
+        DepotHeadExample example = new DepotHeadExample();
+        example.createCriteria().andLinkNumberEqualTo(linkNumber).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return depotHeadMapper.selectByExample(example);
     }
 

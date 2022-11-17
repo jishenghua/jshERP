@@ -374,6 +374,30 @@ public class DepotHeadController {
     }
 
     /**
+     * 根据原单号查询关联的单据列表
+     * @param number
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getBillListByLinkNumber")
+    @ApiOperation(value = "根据原单号查询关联的单据列表")
+    public BaseResponseInfo getBillListByLinkNumber(@RequestParam("number") String number,
+                                              HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        DepotHead dh = new DepotHead();
+        try {
+            List<DepotHead> list = depotHeadService.getBillListByLinkNumber(number);
+            res.code = 200;
+            res.data = list;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
      * 新增单据主表及单据子表信息
      * @param body
      * @param request
