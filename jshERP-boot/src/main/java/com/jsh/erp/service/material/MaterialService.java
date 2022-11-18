@@ -133,6 +133,7 @@ public class MaterialService {
                 for (MaterialVo4Unit m : list) {
                     m.setMaterialOther(getMaterialOtherByParam(mpArr, m));
                     m.setStock(currentStockMap.get(m.getId())!=null? currentStockMap.get(m.getId()): BigDecimal.ZERO);
+                    m.setBigUnitStock(getBigUnitStock(m.getStock(), m.getUnitId()));
                     resList.add(m);
                 }
             }
@@ -1103,8 +1104,19 @@ public class MaterialService {
     }
 
     public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String materialParam, Integer zeroStock,
-                                                  String column, String order, Integer offset, Integer rows) {
-        return materialMapperEx.getListWithStock(depotList, idList, materialParam, zeroStock, column, order, offset, rows);
+                                                  String column, String order, Integer offset, Integer rows) throws Exception {
+        Map<Long, BigDecimal> initialStockMap = new HashMap<>();
+        List<MaterialInitialStockWithMaterial> initialStockList = getInitialStockWithMaterial(depotList);
+        for (MaterialInitialStockWithMaterial mism: initialStockList) {
+            initialStockMap.put(mism.getMaterialId(), mism.getNumber());
+        }
+        List<MaterialVo4Unit> dataList = materialMapperEx.getListWithStock(depotList, idList, materialParam, zeroStock, column, order, offset, rows);
+        for(MaterialVo4Unit item: dataList) {
+            item.setUnitName(null!=item.getUnitId()?item.getUnitName() + "[多单位]":item.getUnitName());
+            item.setInitialStock(initialStockMap.get(item.getId()));
+            item.setBigUnitStock(getBigUnitStock(item.getCurrentStock(), item.getUnitId()));
+        }
+        return dataList;
     }
 
     public int getListWithStockCount(List<Long> depotList, List<Long> idList, String materialParam, Integer zeroStock) {
@@ -1113,6 +1125,24 @@ public class MaterialService {
 
     public MaterialVo4Unit getTotalStockAndPrice(List<Long> depotList, List<Long> idList, String materialParam) {
         return materialMapperEx.getTotalStockAndPrice(depotList, idList, materialParam);
+    }
+
+    /**
+     * 将小单位的库存换算为大单位的库存
+     * @param stock
+     * @param unitId
+     * @return
+     * @throws Exception
+     */
+    public String getBigUnitStock(BigDecimal stock, Long unitId) throws Exception {
+        String bigUnitStock = "";
+        if(null!= unitId) {
+            Unit unit = unitService.getUnit(unitId);
+            if(unit.getRatio()!=0 && stock!=null) {
+                bigUnitStock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP) + unit.getOtherUnit();
+            }
+        }
+        return bigUnitStock;
     }
 
     /**

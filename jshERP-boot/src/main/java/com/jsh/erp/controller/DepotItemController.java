@@ -331,7 +331,8 @@ public class DepotItemController {
                     String materialOther = getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
-                    item.put("unitName", diEx.getMaterialUnit());
+                    item.put("unitId", diEx.getUnitId());
+                    item.put("unitName", null!=diEx.getUnitId() ? diEx.getMaterialUnit()+"[多单位]" : diEx.getMaterialUnit());
                     BigDecimal prevSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,timeA);
                     Map<String,BigDecimal> intervalMap = depotItemService.getIntervalMapByParamWithDepotList(depotList,mId,timeA,timeB);
                     BigDecimal inSum = intervalMap.get("inSum");
@@ -341,6 +342,8 @@ public class DepotItemController {
                     item.put("inSum", inSum);
                     item.put("outSum", outSum);
                     item.put("thisSum", thisSum);
+                    //将小单位的库存换算为大单位的库存
+                    item.put("bigUnitStock", materialService.getBigUnitStock(thisSum, diEx.getUnitId()));
                     item.put("unitPrice", diEx.getPurchaseDecimal());
                     item.put("thisAllPrice", thisSum.multiply(diEx.getPurchaseDecimal()));
                     dataArray.add(item);

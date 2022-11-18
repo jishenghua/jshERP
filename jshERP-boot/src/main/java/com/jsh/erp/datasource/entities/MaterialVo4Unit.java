@@ -38,6 +38,11 @@ public class MaterialVo4Unit extends Material{
 
     private Long depotId;
 
+    /**
+     * 换算为大单位的库存
+     */
+    private String bigUnitStock;
+
     public String getUnitName() {
         return unitName;
     }
@@ -172,5 +177,13 @@ public class MaterialVo4Unit extends Material{
 
     public void setDepotId(Long depotId) {
         this.depotId = depotId;
+    }
+
+    public String getBigUnitStock() {
+        return bigUnitStock;
+    }
+
+    public void setBigUnitStock(String bigUnitStock) {
+        this.bigUnitStock = bigUnitStock;
     }
 }
