@@ -146,6 +146,11 @@
                 <a-icon v-if="record.imgName" style="font-size: 18px" theme="twoTone" type="file-image" />
               </a-popover>
             </template>
+            <template slot="customRenderStock" slot-scope="text, record">
+              <a-tooltip :title="record.bigUnitStock">
+                {{text}}
+              </a-tooltip>
+            </template>
             <template slot="customRenderEnabled" slot-scope="enabled">
               <a-tag v-if="enabled" color="green">启用</a-tag>
               <a-tag v-if="!enabled" color="orange">禁用</a-tag>
@@ -254,7 +259,9 @@
           },
           {title: '基础重量', dataIndex: 'weight', width: 80},
           {title: '保质期', dataIndex: 'expiryNum', width: 60},
-          {title: '库存', dataIndex: 'stock', width: 80},
+          {title: '库存', dataIndex: 'stock', width: 80,
+            scopedSlots: { customRender: 'customRenderStock' }
+          },
           {title: '采购价', dataIndex: 'purchaseDecimal', width: 80},
           {title: '零售价', dataIndex: 'commodityDecimal', width: 80},
           {title: '销售价', dataIndex: 'wholesaleDecimal', width: 80},

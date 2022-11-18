@@ -72,6 +72,11 @@
               <span slot="action" slot-scope="text, record">
                 <a @click="showMaterialInOutList(record)">{{record.id?'流水':''}}</a>
               </span>
+              <template slot="customRenderStock" slot-scope="text, record">
+                <a-tooltip :title="record.bigUnitStock">
+                  {{text}}
+                </a-tooltip>
+              </template>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
             <a-col :md="24" :sm="24">
@@ -158,7 +163,9 @@
           {title: '单位', dataIndex: 'unitName', width: 60, ellipsis:true},
           {title: '单价', dataIndex: 'purchaseDecimal', sorter: (a, b) => a.purchaseDecimal - b.purchaseDecimal, width: 60},
           {title: '初始库存', dataIndex: 'initialStock', sorter: (a, b) => a.initialStock - b.initialStock, width: 60},
-          {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60},
+          {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60,
+            scopedSlots: { customRender: 'customRenderStock' }
+          },
           {title: '库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80}
         ],
         url: {

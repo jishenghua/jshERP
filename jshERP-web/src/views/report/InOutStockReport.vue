@@ -60,6 +60,11 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
+            <template slot="customRenderStock" slot-scope="text, record">
+              <a-tooltip :title="record.bigUnitStock">
+                {{text}}
+              </a-tooltip>
+            </template>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
             <a-col :md="24" :sm="24">
@@ -140,7 +145,9 @@
           {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum, width: 80},
           {title: '入库数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 60},
           {title: '出库数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 60},
-          {title: '本月结存数量', dataIndex: 'thisSum', sorter: (a, b) => a.thisSum - b.thisSum, width: 80},
+          {title: '本月结存数量', dataIndex: 'thisSum', sorter: (a, b) => a.thisSum - b.thisSum, width: 80,
+            scopedSlots: { customRender: 'customRenderStock' }
+          },
           {title: '结存金额', dataIndex: 'thisAllPrice', sorter: (a, b) => a.thisAllPrice - b.thisAllPrice, width: 60}
         ],
         url: {
