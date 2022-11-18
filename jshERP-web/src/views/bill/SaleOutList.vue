@@ -152,8 +152,12 @@
               </a-popconfirm>
             </span>
             <template slot="customRenderDebt" slot-scope="value, record">
-              <span style="color:green" v-if="value>0 && record.hasFinancialFlag">{{value}}</span>
-              <span style="color:red" v-if="value>0 && !record.hasFinancialFlag">{{value}}</span>
+              <a-tooltip title="有收款单">
+                <span style="color:green" v-if="value>0 && record.hasFinancialFlag">{{value}}</span>
+              </a-tooltip>
+              <a-tooltip title="暂未收款">
+                <span style="color:red" v-if="value>0 && !record.hasFinancialFlag">{{value}}</span>
+              </a-tooltip>
               <span v-if="value===0">{{value}}</span>
             </template>
             <template slot="customRenderStatus" slot-scope="status">
