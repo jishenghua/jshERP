@@ -52,6 +52,11 @@ public class DepotHeadVo4List extends DepotHead{
      */
     private Boolean hasBackFlag;
 
+    /**
+     * 实际欠款
+     */
+    private BigDecimal realNeedDebt;
+
     public String getProjectName() {
         return projectName;
     }
@@ -210,5 +215,13 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setHasBackFlag(Boolean hasBackFlag) {
         this.hasBackFlag = hasBackFlag;
+    }
+
+    public BigDecimal getRealNeedDebt() {
+        return realNeedDebt;
+    }
+
+    public void setRealNeedDebt(BigDecimal realNeedDebt) {
+        this.realNeedDebt = realNeedDebt;
     }
 }

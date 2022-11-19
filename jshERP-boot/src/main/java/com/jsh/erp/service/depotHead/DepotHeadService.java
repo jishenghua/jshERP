@@ -781,6 +781,18 @@ public class DepotHeadService {
     }
 
     /**
+     * 根据原单号查询关联的单据列表(排除当前的单据编号)
+     * @param linkNumber
+     * @return
+     * @throws Exception
+     */
+    public List<DepotHead> getBillListByLinkNumberExceptNumber(String linkNumber, String number)throws Exception {
+        DepotHeadExample example = new DepotHeadExample();
+        example.createCriteria().andLinkNumberEqualTo(linkNumber).andNumberNotEqualTo(number).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        return depotHeadMapper.selectByExample(example);
+    }
+
+    /**
      * 新增单据主表及单据子表信息
      * @param beanJson
      * @param rows
@@ -802,9 +814,12 @@ public class DepotHeadService {
         }
         //欠款校验
         if("采购退货".equals(subType) || "销售退货".equals(subType)) {
-            if(depotHead.getChangeAmount().abs().compareTo(depotHead.getDiscountLastMoney().add(depotHead.getOtherMoney()))!=0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG));
+            //退货单对应的原单实际欠款（这里面要除去收付款的金额）
+            BigDecimal originalRealDebt = getOriginalRealDebt(depotHead.getLinkNumber(), depotHead.getNumber());
+            JSONObject billObj = JSONObject.parseObject(beanJson);
+            if(billObj!=null && billObj.get("debt")!=null && originalRealDebt.compareTo(billObj.getBigDecimal("debt"))<0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_MSG));
             }
         }
         //判断用户是否已经登录过，登录过不再处理
@@ -897,9 +912,12 @@ public class DepotHeadService {
         }
         //欠款校验
         if("采购退货".equals(subType) || "销售退货".equals(subType)) {
-            if(depotHead.getChangeAmount().abs().compareTo(depotHead.getDiscountLastMoney().add(depotHead.getOtherMoney()))!=0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG));
+            //退货单对应的原单实际欠款（这里面要除去收付款的金额）
+            BigDecimal originalRealDebt = getOriginalRealDebt(depotHead.getLinkNumber(), depotHead.getNumber());
+            JSONObject billObj = JSONObject.parseObject(beanJson);
+            if(billObj!=null && billObj.get("debt")!=null && originalRealDebt.compareTo(billObj.getBigDecimal("debt"))<0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_MSG));
             }
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){
@@ -951,6 +969,38 @@ public class DepotHeadService {
         logService.insertLog("单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+    }
+
+    /**
+     * 退货单对应的原单实际欠款（这里面要除去收付款的金额）
+     * @param linkNumber 原单单号
+     * @param number 当前单号
+     * @return
+     */
+    public BigDecimal getOriginalRealDebt(String linkNumber, String number) throws Exception {
+        DepotHead depotHead = getDepotHead(linkNumber);
+        BigDecimal discountLastMoney = depotHead.getDiscountLastMoney()!=null?depotHead.getDiscountLastMoney():BigDecimal.ZERO;
+        BigDecimal otherMoney = depotHead.getOtherMoney()!=null?depotHead.getOtherMoney():BigDecimal.ZERO;
+        BigDecimal deposit = depotHead.getDeposit()!=null?depotHead.getDeposit():BigDecimal.ZERO;
+        BigDecimal changeAmount = depotHead.getChangeAmount()!=null?depotHead.getChangeAmount().abs():BigDecimal.ZERO;
+        //原单欠款
+        BigDecimal debt = discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount)));
+        //完成欠款
+        BigDecimal finishDebt = accountItemService.getEachAmountByBillId(depotHead.getId());
+        finishDebt = finishDebt!=null?finishDebt:BigDecimal.ZERO;
+        //原单对应的退货单欠款(总数)
+        List<DepotHead> billList = getBillListByLinkNumberExceptNumber(linkNumber, number);
+        BigDecimal allBillDebt = BigDecimal.ZERO;
+        for(DepotHead dh: billList) {
+            BigDecimal billDiscountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
+            BigDecimal billOtherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
+            BigDecimal billDeposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
+            BigDecimal billChangeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount().abs():BigDecimal.ZERO;
+            BigDecimal billDebt = billDiscountLastMoney.add(billOtherMoney).subtract((billDeposit.add(billChangeAmount)));
+            allBillDebt = allBillDebt.add(billDebt);
+        }
+        //原单实际欠款
+        return debt.subtract(finishDebt).subtract(allBillDebt);
     }
 
     public Map<String, Object> getBuyAndSaleStatistics(String today, String monthFirstDay, String yesterdayBegin, String yesterdayEnd,
@@ -1076,15 +1126,29 @@ public class DepotHeadService {
                     BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
                     BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
-                    BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
-                    //欠款
+                    BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount().abs():BigDecimal.ZERO;
+                    //本单欠款
                     dh.setNeedDebt(discountLastMoney.add(otherMoney).subtract(deposit.add(changeAmount)));
+                    List<DepotHead> billList = getBillListByLinkNumber(dh.getNumber());
+                    //退货单欠款(总数)
+                    BigDecimal allBillDebt = BigDecimal.ZERO;
+                    for(DepotHead depotHead: billList) {
+                        BigDecimal billDiscountLastMoney = depotHead.getDiscountLastMoney()!=null?depotHead.getDiscountLastMoney():BigDecimal.ZERO;
+                        BigDecimal billOtherMoney = depotHead.getOtherMoney()!=null?depotHead.getOtherMoney():BigDecimal.ZERO;
+                        BigDecimal billDeposit = depotHead.getDeposit()!=null?depotHead.getDeposit():BigDecimal.ZERO;
+                        BigDecimal billChangeAmount = depotHead.getChangeAmount()!=null?depotHead.getChangeAmount().abs():BigDecimal.ZERO;
+                        BigDecimal billDebt = billDiscountLastMoney.add(billOtherMoney).subtract((billDeposit.add(billChangeAmount)));
+                        allBillDebt = allBillDebt.add(billDebt);
+                    }
+                    BigDecimal needDebt = dh.getNeedDebt()!=null?dh.getNeedDebt():BigDecimal.ZERO;
+                    //实际欠款   实际欠款=本单欠款-退货单欠款（主要针对存在退货的情况）
+                    dh.setRealNeedDebt(needDebt.subtract(allBillDebt));
                     BigDecimal finishDebt = accountItemService.getEachAmountByBillId(dh.getId());
                     finishDebt = finishDebt!=null?finishDebt:BigDecimal.ZERO;
                     //已收欠款
                     dh.setFinishDebt(finishDebt);
                     //待收欠款
-                    dh.setDebt(discountLastMoney.add(otherMoney).subtract(deposit.add(changeAmount).add(finishDebt)));
+                    dh.setDebt(needDebt.subtract(allBillDebt).subtract(finishDebt));
                     dh.setMaterialsList(findMaterialsListByHeaderId(dh.getId()));
                     resList.add(dh);
                 }
