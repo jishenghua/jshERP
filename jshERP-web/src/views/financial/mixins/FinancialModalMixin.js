@@ -233,8 +233,8 @@ export const FinancialModalMixin = {
       for(let i=0; i<selectBillRows.length; i++){
         let info = selectBillRows[i]
         info.billNumber = info.number
-        info.needDebt = (info.discountLastMoney + info.otherMoney - (info.deposit + info.changeAmount)).toFixed(2)
-        info.eachAmount =  (info.discountLastMoney + info.otherMoney - (info.deposit + info.changeAmount + info.finishDebt)).toFixed(2);
+        info.needDebt = info.realNeedDebt
+        info.eachAmount = info.debt
         if(info.eachAmount != 0) {
           changeAmount += info.eachAmount-0
           listEx.push(info)

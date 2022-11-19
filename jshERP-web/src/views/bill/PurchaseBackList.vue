@@ -232,6 +232,7 @@
             }
           },
           { title: '退款', dataIndex: 'changeAmount',width:50},
+          { title: '欠款', dataIndex: 'debt',width:60},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

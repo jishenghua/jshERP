@@ -1,7 +1,7 @@
 <template>
   <a-modal
     :title="title"
-    :width="1250"
+    :width="1300"
     :visible="visible"
     @ok="handleOk"
     @cancel="handleCancel"
@@ -13,20 +13,20 @@
       <!-- 搜索区域 -->
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
+          <a-col :md="6" :sm="24">
             <a-form-item label="单据编号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
               <a-input placeholder="请输入单据编号查询" v-model="queryParam.number"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="8">
+          <a-col :md="6" :sm="24">
             <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
               <a-input placeholder="请输入名称、规格、型号" v-model="queryParam.materialParam"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :md="7" :sm="10">
+          <a-col :md="6" :sm="24">
             <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-range-picker
-                style="width: 210px"
+                style="width: 100%"
                 v-model="queryParam.createTimeRange"
                 format="YYYY-MM-DD"
                 :placeholder="['开始时间', '结束时间']"
@@ -59,6 +59,12 @@
       @change="handleTableChange">
       <span slot="numberCustomRender" slot-scope="text, record">
         <a @click="myHandleDetail(record)">{{record.number}}</a>
+      </span>
+      <span slot="customTitle">
+        实际欠款
+        <a-tooltip title="实际欠款=本单欠款-退货单欠款（主要针对存在退货的情况）">
+          <a-icon type="question-circle" />
+        </a-tooltip>
       </span>
     </a-table>
     <!-- table区域-end -->
@@ -106,16 +112,6 @@
         },
         // 表头
         columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:40,
-            align:"center",
-            customRender:function (t,r,index) {
-              return parseInt(index)+1;
-            }
-          },
           { title: '', dataIndex: 'organName',width:120, ellipsis:true},
           {
             title: '单据编号', dataIndex: 'number', width: 120,
@@ -129,18 +125,13 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
-          { title: '操作员', dataIndex: 'userName',width:60},
-          { title: '欠款', dataIndex: 'needDebt',width:70,
-            customRender:function (text,record,index) {
-              return (record.discountLastMoney + record.otherMoney - (record.deposit + record.changeAmount)).toFixed(2);
-            }
+          { title: '操作员', dataIndex: 'userName',width:70, ellipsis:true},
+          { title: '本单欠款', dataIndex: 'needDebt',width:70 },
+          { dataIndex: 'realNeedDebt',width:80,
+            slots: { title: 'customTitle' }
           },
           { title: '已收欠款', dataIndex: 'finishDebt',width:70 },
-          { title: '待收欠款', dataIndex: 'debt',width:70,
-            customRender:function (text,record,index) {
-              return (record.discountLastMoney + record.otherMoney - (record.deposit + record.changeAmount + record.finishDebt)).toFixed(2);
-            }
-          }
+          { title: '待收欠款', dataIndex: 'debt',width:70 }
         ],
         url: {
           list: "/depotHead/debtList"
@@ -197,6 +188,8 @@
       handleOk () {
         this.getSelectBillRows();
         this.$emit('ok', this.selectBillRows);
+        this.selectedRowKeys = []
+        this.selectBillRows = []
         this.close();
       },
       onDateChange: function (value, dateString) {
@@ -216,7 +209,7 @@
       getSelectBillRows() {
         let dataSource = this.dataSource;
         let billIds = "";
-        this.selectBillRows = [];
+        this.selectBillRows = []
         for (let i = 0, len = dataSource.length; i < len; i++) {
           if (this.selectedRowKeys.includes(dataSource[i].id)) {
             this.selectBillRows.push(dataSource[i]);
