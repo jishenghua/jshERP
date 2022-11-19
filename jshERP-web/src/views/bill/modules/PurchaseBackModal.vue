@@ -392,6 +392,13 @@
           let allTaxLastMoney = 0
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
+            if(info.finishNumber>0) {
+              info.operNumber = info.preNumber - info.finishNumber
+              info.allPrice = info.operNumber * info.unitPrice-0
+              let taxRate = info.taxRate-0
+              info.taxMoney = (info.allPrice*taxRate/100).toFixed(2)-0
+              info.taxLastMoney = (info.allPrice + info.taxMoney).toFixed(2)-0
+            }
             info.linkId = info.id
             allTaxLastMoney += info.taxLastMoney
             listEx.push(info)
