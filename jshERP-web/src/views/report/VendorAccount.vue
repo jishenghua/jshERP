@@ -60,6 +60,12 @@
             <span slot="action" slot-scope="text, record">
               <a @click="showDebtAccountList(record)">{{record.id?'详情':''}}</a>
             </span>
+            <span slot="customTitle">
+              期末应付
+              <a-tooltip title="期末应付=期初应付+本期欠款-本期付款">
+                <a-icon type="question-circle" />
+              </a-tooltip>
+            </span>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
             <a-col :md="24" :sm="24">
@@ -147,7 +153,9 @@
           {title: '期初应付', dataIndex: 'preNeed', width: 80},
           {title: '本期欠款', dataIndex: 'debtMoney', width: 80},
           {title: '本期付款', dataIndex: 'backMoney', width: 80},
-          {title: '期末应付', dataIndex: 'allNeed', width: 80}
+          {dataIndex: 'allNeed', width: 80,
+            slots: { title: 'customTitle' }
+          }
         ],
         url: {
           list: "/depotHead/getStatementAccount",

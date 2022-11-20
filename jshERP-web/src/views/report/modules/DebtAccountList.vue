@@ -51,11 +51,11 @@
           <a @click="myHandleDetail(record)">{{record.number}}</a>
         </span>
         <span slot="customTitle">
-        实际欠款
-        <a-tooltip title="实际欠款=本单欠款-退货单欠款（主要针对存在退货的情况）">
-          <a-icon type="question-circle" />
-        </a-tooltip>
-      </span>
+          实际欠款
+          <a-tooltip title="实际欠款=本单欠款-退货单欠款（主要针对存在退货的情况）">
+            <a-icon type="question-circle" />
+          </a-tooltip>
+        </span>
       </a-table>
     </section>
     <!-- table区域-end -->
