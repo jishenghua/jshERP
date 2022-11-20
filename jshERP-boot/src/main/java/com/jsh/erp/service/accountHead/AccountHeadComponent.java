@@ -42,8 +42,9 @@ public class AccountHeadComponent implements ICommonQuery {
         Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
         String status = StringUtil.getInfo(search, "status");
         String remark = StringUtil.getInfo(search, "remark");
+        String number = StringUtil.getInfo(search, "number");
         return accountHeadService.select(type, roleType, billNo, beginTime, endTime, organId, creator, handsPersonId,
-                accountId, status, remark, QueryUtils.offset(map), QueryUtils.rows(map));
+                accountId, status, remark, number, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -60,8 +61,9 @@ public class AccountHeadComponent implements ICommonQuery {
         Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
         String status = StringUtil.getInfo(search, "status");
         String remark = StringUtil.getInfo(search, "remark");
+        String number = StringUtil.getInfo(search, "number");
         return accountHeadService.countAccountHead(type, roleType, billNo, beginTime, endTime, organId, creator, handsPersonId,
-                accountId, status, remark);
+                accountId, status, remark, number);
     }
 
     @Override

@@ -56,6 +56,12 @@
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and ah.remark like #{bindRemark}
         </if>
+        <if test="ahIdList!=null and ahIdList.size()>0">
+            and ah.id in
+            <foreach collection="ahIdList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         and ifnull(ah.delete_flag,'0') !='1'
         order by ah.id desc
         <if test="offset != null and rows != null">
@@ -107,6 +113,12 @@
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and remark like #{bindRemark}
+        </if>
+        <if test="ahIdList!=null and ahIdList.size()>0">
+            and id in
+            <foreach collection="ahIdList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>

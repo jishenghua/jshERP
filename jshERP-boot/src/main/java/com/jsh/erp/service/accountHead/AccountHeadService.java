@@ -10,6 +10,7 @@ import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.accountItem.AccountItemService;
+import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.supplier.SupplierService;
@@ -43,6 +44,8 @@ public class AccountHeadService {
     private OrgaUserRelService orgaUserRelService;
     @Resource
     private AccountItemService accountItemService;
+    @Resource
+    private DepotHeadService depotHeadService;
     @Resource
     private UserService userService;
     @Resource
@@ -88,14 +91,15 @@ public class AccountHeadService {
 
     public List<AccountHeadVo4ListEx> select(String type, String roleType, String billNo, String beginTime, String endTime,
                                              Long organId, Long creator, Long handsPersonId, Long accountId, String status,
-                                             String remark, int offset, int rows) throws Exception{
+                                             String remark, String number, int offset, int rows) throws Exception{
         List<AccountHeadVo4ListEx> resList = new ArrayList<>();
         try{
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            List<Long> ahIdList = accountItemService.getAhIdListByBillNumber(number);
             List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, offset, rows);
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, ahIdList, offset, rows);
             if (null != list) {
                 for (AccountHeadVo4ListEx ah : list) {
                     if(ah.getChangeAmount() != null) {
@@ -118,14 +122,15 @@ public class AccountHeadService {
 
     public Long countAccountHead(String type, String roleType, String billNo, String beginTime, String endTime,
                                  Long organId, Long creator, Long handsPersonId, Long accountId, String status,
-                                 String remark) throws Exception{
+                                 String remark, String number) throws Exception{
         Long result=null;
         try{
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            List<Long> ahIdList = accountItemService.getAhIdListByBillNumber(number);
             result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark);
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, ahIdList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
