@@ -302,36 +302,44 @@ public class DepotHeadController {
         try {
             String type = "";
             String subType = "";
+            String typeBack = "";
+            String subTypeBack = "";
             if (("供应商").equals(supplierType)) {
                 type = "入库";
                 subType = "采购";
+                typeBack = "出库";
+                subTypeBack = "采购退货";
             } else if (("客户").equals(supplierType)) {
                 type = "出库";
                 subType = "销售";
+                typeBack = "入库";
+                subTypeBack = "销售退货";
             }
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4StatementAccount> list = depotHeadService.getStatementAccount(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType, (currentPage-1)*pageSize, pageSize);
+                    supplierType, type, subType,typeBack, subTypeBack, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.getStatementAccountCount(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType);
+                    supplierType, type, subType,typeBack, subTypeBack);
             for(DepotHeadVo4StatementAccount item: list) {
-                BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreBackMoney());
+                BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreReturnDebtMoney()).subtract(item.getPreBackMoney());
                 item.setPreNeed(preNeed);
-                BigDecimal allNeedGet = preNeed.add(item.getDebtMoney()).subtract(item.getBackMoney());
+                BigDecimal realDebtMoney = item.getDebtMoney().subtract(item.getReturnDebtMoney());
+                item.setDebtMoney(realDebtMoney);
+                BigDecimal allNeedGet = preNeed.add(realDebtMoney).subtract(item.getBackMoney());
                 item.setAllNeed(allNeedGet);
             }
             map.put("rows", list);
             map.put("total", total);
-            List<DepotHeadVo4StatementAccount> totalPayList = depotHeadService.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, supplierType, type, subType);
+            List<DepotHeadVo4StatementAccount> totalPayList = depotHeadService.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, supplierType, type, subType, typeBack, subTypeBack);
             if(totalPayList.size()>0) {
                 DepotHeadVo4StatementAccount totalPayItem = totalPayList.get(0);
                 BigDecimal firstMoney = BigDecimal.ZERO;
                 BigDecimal lastMoney = BigDecimal.ZERO;
                 if(totalPayItem!=null) {
-                    firstMoney = totalPayItem.getBeginNeed().add(totalPayItem.getPreDebtMoney()).subtract(totalPayItem.getPreBackMoney());
-                    lastMoney = firstMoney.add(totalPayItem.getDebtMoney()).subtract(totalPayItem.getBackMoney());
+                    firstMoney = totalPayItem.getBeginNeed().add(totalPayItem.getPreDebtMoney()).subtract(totalPayItem.getPreReturnDebtMoney()).subtract(totalPayItem.getPreBackMoney());
+                    lastMoney = firstMoney.add(totalPayItem.getDebtMoney()).subtract(totalPayItem.getReturnDebtMoney()).subtract(totalPayItem.getBackMoney());
                 }
                 map.put("firstMoney", firstMoney); //期初
                 map.put("lastMoney", lastMoney);  //期末

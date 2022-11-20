@@ -17,18 +17,50 @@ public class DepotHeadVo4StatementAccount {
 
     private String email;
 
+    /**
+     * 起始期初金额
+     */
     private BigDecimal beginNeed;
 
+    /**
+     * 上期欠款金额
+     */
     private BigDecimal preDebtMoney;
 
+    /**
+     * 上期退货的欠款金额
+     */
+    private BigDecimal preReturnDebtMoney;
+
+
+    /**
+     * 上期收付款
+     */
     private BigDecimal preBackMoney;
 
+    /**
+     * 期初应收
+     */
     private BigDecimal preNeed;
 
+    /**
+     * 本期欠款
+     */
     private BigDecimal debtMoney;
 
+    /**
+     * 本期退货的欠款金额
+     */
+    private BigDecimal returnDebtMoney;
+
+    /**
+     * 本期收款
+     */
     private BigDecimal backMoney;
 
+    /**
+     * 期末应收
+     */
     private BigDecimal allNeed;
 
     public Long getId() {
@@ -95,6 +127,14 @@ public class DepotHeadVo4StatementAccount {
         this.preDebtMoney = preDebtMoney;
     }
 
+    public BigDecimal getPreReturnDebtMoney() {
+        return preReturnDebtMoney;
+    }
+
+    public void setPreReturnDebtMoney(BigDecimal preReturnDebtMoney) {
+        this.preReturnDebtMoney = preReturnDebtMoney;
+    }
+
     public BigDecimal getPreBackMoney() {
         return preBackMoney;
     }
@@ -117,6 +157,14 @@ public class DepotHeadVo4StatementAccount {
 
     public void setDebtMoney(BigDecimal debtMoney) {
         this.debtMoney = debtMoney;
+    }
+
+    public BigDecimal getReturnDebtMoney() {
+        return returnDebtMoney;
+    }
+
+    public void setReturnDebtMoney(BigDecimal returnDebtMoney) {
+        this.returnDebtMoney = returnDebtMoney;
     }
 
     public BigDecimal getBackMoney() {
