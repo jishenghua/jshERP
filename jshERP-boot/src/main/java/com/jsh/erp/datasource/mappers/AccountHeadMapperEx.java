@@ -23,7 +23,7 @@ public interface AccountHeadMapperEx {
             @Param("accountId") Long accountId,
             @Param("status") String status,
             @Param("remark") String remark,
-            @Param("ahIdList") List<Long> ahIdList,
+            @Param("number") String number,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -39,7 +39,7 @@ public interface AccountHeadMapperEx {
             @Param("accountId") Long accountId,
             @Param("status") String status,
             @Param("remark") String remark,
-            @Param("ahIdList") List<Long> ahIdList);
+            @Param("number") String number);
 
     BigDecimal findAllMoney(
             @Param("supplierId") Integer supplierId,

@@ -261,29 +261,4 @@ public class AccountItemService {
     public BigDecimal getEachAmountByBillId(Long billId) {
         return accountItemMapperEx.getEachAmountByBillId(billId).abs();
     }
-
-    public List<Long> getAhIdListByBillNumber(String number) throws Exception {
-        if(StringUtil.isNotEmpty(number)) {
-            DepotHead depotHead = depotHeadService.getDepotHead(number);
-            if(depotHead.getId()!=null) {
-                List<Long> ahIdList = new ArrayList<>();
-                AccountItemExample example = new AccountItemExample();
-                example.createCriteria().andBillIdEqualTo(depotHead.getId()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                List<AccountItem> list = accountItemMapper.selectByExample(example);
-                if (list != null && list.size() > 0) {
-                    for(AccountItem accountItem: list) {
-                        ahIdList.add(accountItem.getHeaderId());
-                    }
-                    return ahIdList;
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-
-    }
 }

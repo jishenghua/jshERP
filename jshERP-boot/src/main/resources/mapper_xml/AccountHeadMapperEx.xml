@@ -12,6 +12,8 @@
     <select id="selectByConditionAccountHead" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
         select ah.*, s.supplier OrganName, p.Name HandsPersonName, u.username userName, a.Name AccountName
         from jsh_account_head ah
+        left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
+        left join jsh_depot_head dh on dh.id=ai.bill_id and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_supplier s on ah.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_user u on ah.creator=u.id and ifnull(u.Status,'0') !='1'
         left join jsh_person p on ah.hands_person_id=p.id and ifnull(p.delete_Flag,'0') !='1'
@@ -56,11 +58,9 @@
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and ah.remark like #{bindRemark}
         </if>
-        <if test="ahIdList!=null and ahIdList.size()>0">
-            and ah.id in
-            <foreach collection="ahIdList" item="item" index="index" separator="," open="(" close=")">
-                #{item}
-            </foreach>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
         order by ah.id desc
@@ -72,55 +72,55 @@
 
     <select id="countsByAccountHead" resultType="java.lang.Long">
         SELECT
-        COUNT(id)
-        FROM jsh_account_head
+        COUNT(ah.id)
+        FROM jsh_account_head ah
+        left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
+        left join jsh_depot_head dh on dh.id=ai.bill_id and ifnull(dh.delete_flag,'0') !='1'
         WHERE 1=1
         <if test="billNo != null">
             <bind name="bindBillNo" value="'%'+billNo+'%'"/>
-            and bill_no like #{bindBillNo}
+            and ah.bill_no like #{bindBillNo}
         </if>
         <if test="type != null">
-            and type=#{type}
+            and ah.type=#{type}
         </if>
         <if test="beginTime != null">
-            and bill_time &gt;= #{beginTime}
+            and ah.bill_time &gt;= #{beginTime}
         </if>
         <if test="endTime != null">
-            and bill_time &lt;= #{endTime}
+            and ah.bill_time &lt;= #{endTime}
         </if>
         <if test="organId != null">
-            and organ_id=#{organId}
+            and ah.organ_id=#{organId}
         </if>
         <if test="handsPersonId != null">
-            and hands_person_id=#{handsPersonId}
+            and ah.hands_person_id=#{handsPersonId}
         </if>
         <if test="creator != null">
-            and creator=#{creator}
+            and ah.creator=#{creator}
         </if>
         <if test="creatorArray != null">
-            and creator in (
+            and ah.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
             </foreach>
             )
         </if>
         <if test="accountId != null">
-            and account_id=#{accountId}
+            and ah.account_id=#{accountId}
         </if>
         <if test="status != null and status != ''">
-            and status=#{status}
+            and ah.status=#{status}
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and remark like #{bindRemark}
+            and ah.remark like #{bindRemark}
         </if>
-        <if test="ahIdList!=null and ahIdList.size()>0">
-            and id in
-            <foreach collection="ahIdList" item="item" index="index" separator="," open="(" close=")">
-                #{item}
-            </foreach>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
         </if>
-        and ifnull(delete_flag,'0') !='1'
+        and ifnull(ah.delete_flag,'0') !='1'
     </select>
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">

@@ -97,9 +97,8 @@ public class AccountHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<Long> ahIdList = accountItemService.getAhIdListByBillNumber(number);
             List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, ahIdList, offset, rows);
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
             if (null != list) {
                 for (AccountHeadVo4ListEx ah : list) {
                     if(ah.getChangeAmount() != null) {
@@ -128,9 +127,8 @@ public class AccountHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<Long> ahIdList = accountItemService.getAhIdListByBillNumber(number);
             result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, ahIdList);
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
