@@ -151,7 +151,7 @@
         this.queryParam.type = type
         this.queryParam.subType = subType
         this.queryParam.status = status
-        this.columns[1].title = organType
+        this.columns[0].title = organType
         if(type === '入库') {
           this.columns[7].title = '已付欠款'
           this.columns[8].title = '待付欠款'
