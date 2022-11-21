@@ -82,6 +82,7 @@
       ref="table"
       size="middle"
       rowKey="id"
+      :pagination="false"
       :columns="columnsDetail"
       :dataSource="dataSourceDetail"
       :loading="loading"
