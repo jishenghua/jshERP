@@ -87,7 +87,7 @@
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="销售单号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入销售单号（精确查询）" v-model="queryParam.number"></a-input>
+                    <a-input placeholder="请输入销售单号" v-model="queryParam.number"></a-input>
                   </a-form-item>
                 </a-col>
               </template>
