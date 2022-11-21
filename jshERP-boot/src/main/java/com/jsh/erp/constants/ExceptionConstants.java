@@ -363,7 +363,7 @@ public class ExceptionConstants {
     public static final String DEPOT_HEAD_MANY_ACCOUNT_FAILED_MSG = "请修改多账户的结算金额";
     //单据录入-关联单据实际不存在欠款
     public static final int DEPOT_HEAD_BACK_BILL_DEBT_FAILED_CODE = 8500009;
-    public static final String DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG = "抱歉，关联单据实际不存在欠款";
+    public static final String DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG = "抱歉，关联单据为空时不能欠款";
     //单据录入-调入仓库与原仓库不能重复
     public static final int DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_CODE = 8500010;
     public static final String DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_MSG = "调入仓库与原仓库不能重复";

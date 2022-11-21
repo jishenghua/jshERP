@@ -814,13 +814,7 @@ public class DepotHeadService {
         }
         //欠款校验
         if("采购退货".equals(subType) || "销售退货".equals(subType)) {
-            //退货单对应的原单实际欠款（这里面要除去收付款的金额）
-            BigDecimal originalRealDebt = getOriginalRealDebt(depotHead.getLinkNumber(), depotHead.getNumber());
-            JSONObject billObj = JSONObject.parseObject(beanJson);
-            if(billObj!=null && billObj.get("debt")!=null && originalRealDebt.compareTo(billObj.getBigDecimal("debt"))<0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_MSG));
-            }
+            checkDebtByParam(beanJson, depotHead);
         }
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
@@ -912,13 +906,7 @@ public class DepotHeadService {
         }
         //欠款校验
         if("采购退货".equals(subType) || "销售退货".equals(subType)) {
-            //退货单对应的原单实际欠款（这里面要除去收付款的金额）
-            BigDecimal originalRealDebt = getOriginalRealDebt(depotHead.getLinkNumber(), depotHead.getNumber());
-            JSONObject billObj = JSONObject.parseObject(beanJson);
-            if(billObj!=null && billObj.get("debt")!=null && originalRealDebt.compareTo(billObj.getBigDecimal("debt"))<0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_CODE,
-                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_MSG));
-            }
+            checkDebtByParam(beanJson, depotHead);
         }
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())){
             depotHead.setAccountIdList(depotHead.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", ""));
@@ -969,6 +957,29 @@ public class DepotHeadService {
         logService.insertLog("单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+    }
+
+    /**
+     * 针对退货单，校验欠款
+     * @param beanJson
+     * @param depotHead
+     * @throws Exception
+     */
+    public void checkDebtByParam(String beanJson, DepotHead depotHead) throws Exception {
+        JSONObject billObj = JSONObject.parseObject(beanJson);
+        if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
+            //退货单对应的原单实际欠款（这里面要除去收付款的金额）
+            BigDecimal originalRealDebt = getOriginalRealDebt(depotHead.getLinkNumber(), depotHead.getNumber());
+            if(billObj!=null && billObj.get("debt")!=null && originalRealDebt.compareTo(billObj.getBigDecimal("debt"))<0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_OVER_MSG));
+            }
+        } else {
+            if(billObj!=null && billObj.get("debt")!=null && BigDecimal.ZERO.compareTo(billObj.getBigDecimal("debt"))!=0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_BACK_BILL_DEBT_FAILED_MSG));
+            }
+        }
     }
 
     /**
