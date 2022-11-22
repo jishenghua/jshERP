@@ -1,10 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.DepotHead;
-import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
-import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
-import com.jsh.erp.datasource.vo.DepotHeadVo4List;
-import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
+import com.jsh.erp.datasource.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -230,8 +227,8 @@ public interface DepotHeadMapperEx {
             @Param("materialParam") String materialParam,
             @Param("depotArray") String[] depotArray);
 
-    BigDecimal getFinishDepositByNumber(
-            @Param("number") String number);
+    List<FinishDepositVo> getFinishDepositByNumberList(
+            @Param("numberList") List<String> numberList);
 
     BigDecimal getFinishDepositByNumberExceptCurrent(
             @Param("linkNumber") String linkNumber,

@@ -7,10 +7,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.DepotHeadMapper;
 import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
 import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
-import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
-import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
-import com.jsh.erp.datasource.vo.DepotHeadVo4List;
-import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
+import com.jsh.erp.datasource.vo.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.account.AccountService;
@@ -125,6 +122,15 @@ public class DepotHeadService {
             list=depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
                  materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
             if (null != list) {
+                List<Long> idList = new ArrayList<>();
+                List<String> numberList = new ArrayList<>();
+                for (DepotHeadVo4List dh : list) {
+                    idList.add(dh.getId());
+                    numberList.add(dh.getNumber());
+                }
+                //通过批量查询去构造map
+                Map<String,BigDecimal> finishDepositMap = getFinishDepositMapByNumberList(numberList);
+                Map<String,Integer> billSizeMap = getBillSizeMapByLinkNumberList(numberList);
                 for (DepotHeadVo4List dh : list) {
                     if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
                         String accountStr = accountService.getAccountStrByIdAndMoney(accountMap, dh.getAccountIdList(), dh.getAccountMoneyList());
@@ -147,7 +153,7 @@ public class DepotHeadService {
                     if(dh.getDeposit() == null) {
                         dh.setDeposit(BigDecimal.ZERO);
                     }
-                    dh.setFinishDeposit(depotHeadMapperEx.getFinishDepositByNumber(dh.getNumber()));
+                    dh.setFinishDeposit(finishDepositMap.get(dh.getNumber()));
                     //欠款计算
                     BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
@@ -157,8 +163,10 @@ public class DepotHeadService {
                     int financialBillNoSize = accountHeadService.getFinancialBillNoByBillId(dh.getId()).size();
                     dh.setHasFinancialFlag(financialBillNoSize>0);
                     //是否有退款单
-                    int billListSize = getBillListByLinkNumber(dh.getNumber()).size();
-                    dh.setHasBackFlag(billListSize>0);
+                    if(billSizeMap!=null) {
+                        Integer billListSize = billSizeMap.get(dh.getNumber());
+                        dh.setHasBackFlag(billListSize!=null && billListSize>0);
+                    }
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
                     }
@@ -281,6 +289,24 @@ public class DepotHeadService {
             creator = orgaUserRelService.getUserIdListByUserId(user.getId());
         }
         return creator;
+    }
+
+    public Map<String, BigDecimal> getFinishDepositMapByNumberList(List<String> numberList) {
+        List<FinishDepositVo> list = depotHeadMapperEx.getFinishDepositByNumberList(numberList);
+        Map<String,BigDecimal> finishDepositMap = new HashMap<>();
+        for(FinishDepositVo finishDepositVo : list){
+            finishDepositMap.put(finishDepositVo.getNumber(), finishDepositVo.getFinishDeposit());
+        }
+        return finishDepositMap;
+    }
+
+    public Map<String, Integer> getBillSizeMapByLinkNumberList(List<String> numberList) throws Exception {
+        List<DepotHead> list = getBillListByLinkNumberList(numberList);
+        Map<String, Integer> billListMap = new HashMap<>();
+        for(DepotHead depotHead : list){
+            billListMap.put(depotHead.getLinkNumber(), list.size());
+        }
+        return billListMap;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -765,6 +791,18 @@ public class DepotHeadService {
         DepotHeadExample example = new DepotHeadExample();
         example.createCriteria().andLinkNumberEqualTo(linkNumber).andNumberNotEqualTo(number).andTypeEqualTo(type)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        return depotHeadMapper.selectByExample(example);
+    }
+
+    /**
+     * 根据原单号查询关联的单据列表(批量)
+     * @param linkNumberList
+     * @return
+     * @throws Exception
+     */
+    public List<DepotHead> getBillListByLinkNumberList(List<String> linkNumberList)throws Exception {
+        DepotHeadExample example = new DepotHeadExample();
+        example.createCriteria().andLinkNumberIn(linkNumberList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return depotHeadMapper.selectByExample(example);
     }
 

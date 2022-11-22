@@ -954,10 +954,16 @@
         order by dh.oper_time desc
     </select>
 
-    <select id="getFinishDepositByNumber" resultType="java.math.BigDecimal">
-        select ifnull(sum(dh.deposit),0)
+    <select id="getFinishDepositByNumberList" resultType="com.jsh.erp.datasource.vo.FinishDepositVo">
+        select dh.link_number number, ifnull(sum(dh.deposit),0) finishDeposit
         from jsh_depot_head dh
-        where dh.link_number=#{number}
+        where 1=1
+        <if test="numberList.size()>0">
+            and dh.link_number in
+            <foreach collection="numberList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
