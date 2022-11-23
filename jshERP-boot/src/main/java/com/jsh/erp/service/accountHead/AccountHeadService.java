@@ -402,6 +402,10 @@ public class AccountHeadService {
         return resList;
     }
 
+    public List<AccountItem> getFinancialBillNoByBillIdList(List<Long> idList) {
+        return accountHeadMapperEx.getFinancialBillNoByBillIdList(idList);
+    }
+
     public List<AccountHead> getFinancialBillNoByBillId(Long billId) {
         return accountHeadMapperEx.getFinancialBillNoByBillId(billId);
     }

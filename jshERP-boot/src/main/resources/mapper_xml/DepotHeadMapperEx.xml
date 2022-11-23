@@ -243,18 +243,32 @@
         and ifnull(dh.delete_Flag,'0') !='1') tb
     </select>
 
-    <select id="findMaterialsListByHeaderId" resultType="java.lang.String">
-        select group_concat(concat(jsh_material.name,' ',ifnull(jsh_material.standard,''),' ',ifnull(jsh_material.model,''))) as mName
+    <select id="findMaterialsListMapByHeaderIdList" resultType="com.jsh.erp.datasource.vo.MaterialsListVo">
+        select jsh_depot_item.header_id, group_concat(concat(jsh_material.name,' ',ifnull(jsh_material.standard,''),' ',ifnull(jsh_material.model,''))) as materialsList
         from jsh_depot_item
         left join jsh_material on jsh_depot_item.material_id = jsh_material.Id and ifnull(jsh_material.delete_Flag,'0') !='1'
-        where jsh_depot_item.header_id = #{id}
+        where 1=1
+        <if test="idList.size()>0">
+            and jsh_depot_item.header_id in
+            <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         and ifnull(jsh_depot_item.delete_flag,'0') !='1'
+        group by jsh_depot_item.header_id
     </select>
 
-    <select id="getMaterialCountByHeaderId" resultType="java.math.BigDecimal">
-        select sum(oper_number) from jsh_depot_item
-        where header_id = #{id}
+    <select id="getMaterialCountListByHeaderIdList" resultType="com.jsh.erp.datasource.vo.MaterialCountVo">
+        select header_id, sum(oper_number) materialCount from jsh_depot_item
+        where 1=1
+        <if test="idList.size()>0">
+            and header_id in
+            <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         and ifnull(delete_flag,'0') !='1'
+        group by header_id
     </select>
 
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
@@ -965,6 +979,7 @@
             </foreach>
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
+        group by dh.link_number
     </select>
 
     <select id="getFinishDepositByNumberExceptCurrent" resultType="java.math.BigDecimal">

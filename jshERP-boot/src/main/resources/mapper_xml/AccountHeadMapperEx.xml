@@ -189,10 +189,23 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
+    <select id="getFinancialBillNoByBillIdList" resultType="com.jsh.erp.datasource.entities.AccountItem">
+        select ai.bill_id from jsh_account_head ah
+        left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
+        where 1=1
+        <if test="idList.size()>0">
+            and ai.bill_id in
+            <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        and ifnull(ah.delete_flag,'0') !='1'
+    </select>
+
     <select id="getFinancialBillNoByBillId" resultType="com.jsh.erp.datasource.entities.AccountHead">
         select ah.bill_no from jsh_account_head ah
         left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
-        where bill_id=#{billId}
+        where ai.bill_id=#{billId}
         and ifnull(ah.delete_flag,'0') !='1'
     </select>
 </mapper>

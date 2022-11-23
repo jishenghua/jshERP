@@ -57,11 +57,11 @@ public interface DepotHeadMapperEx {
             @Param("accountId") Long accountId,
             @Param("remark") String remark);
 
-    String findMaterialsListByHeaderId(
-            @Param("id") Long id);
+    List<MaterialsListVo> findMaterialsListMapByHeaderIdList(
+            @Param("idList") List<Long> idList);
 
-    BigDecimal getMaterialCountByHeaderId(
-            @Param("id") Long id);
+    List<MaterialCountVo> getMaterialCountListByHeaderIdList(
+            @Param("idList") List<Long> idList);
 
     List<DepotHeadVo4InDetail> findInOutDetail(
             @Param("beginTime") String beginTime,
