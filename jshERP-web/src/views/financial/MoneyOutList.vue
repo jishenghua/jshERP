@@ -64,8 +64,8 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="收款账户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择收款账户" showSearch optionFilterProp="children" v-model="queryParam.accountId">
+                  <a-form-item label="付款账户" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择付款账户" showSearch optionFilterProp="children" v-model="queryParam.accountId">
                       <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                         {{ item.name }}
                       </a-select-option>
