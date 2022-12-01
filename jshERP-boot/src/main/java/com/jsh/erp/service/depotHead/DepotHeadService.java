@@ -835,9 +835,13 @@ public class DepotHeadService {
      * @throws Exception
      */
     public List<DepotHead> getBillListByLinkNumberList(List<String> linkNumberList)throws Exception {
-        DepotHeadExample example = new DepotHeadExample();
-        example.createCriteria().andLinkNumberIn(linkNumberList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return depotHeadMapper.selectByExample(example);
+        if(linkNumberList!=null && linkNumberList.size()>0) {
+            DepotHeadExample example = new DepotHeadExample();
+            example.createCriteria().andLinkNumberIn(linkNumberList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            return depotHeadMapper.selectByExample(example);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     /**
