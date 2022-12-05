@@ -128,6 +128,7 @@ public class SystemConfigController {
         try {
             String savePath = "";
             String bizPath = request.getParameter("biz");
+            String name = request.getParameter("name");
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             MultipartFile file = multipartRequest.getFile("file");// 获取上传文件对象
             if(StringUtil.isEmpty(bizPath)){
@@ -136,7 +137,7 @@ public class SystemConfigController {
             String token = request.getHeader("X-Access-Token");
             Long tenantId = Tools.getTenantIdByToken(token);
             bizPath = bizPath + File.separator + tenantId;
-            savePath = this.uploadLocal(file,bizPath);
+            savePath = this.uploadLocal(file, bizPath, name);
             if(StringUtil.isNotEmpty(savePath)){
                 res.code = 200;
                 res.data = savePath;
@@ -158,7 +159,7 @@ public class SystemConfigController {
      * @param bizPath  自定义路径
      * @return
      */
-    private String uploadLocal(MultipartFile mf,String bizPath){
+    private String uploadLocal(MultipartFile mf,String bizPath,String name){
         try {
             String ctxPath = filePath;
             String fileName = null;
@@ -169,7 +170,11 @@ public class SystemConfigController {
             String orgName = mf.getOriginalFilename();// 获取文件名
             orgName = FileUtils.getFileName(orgName);
             if(orgName.indexOf(".")!=-1){
-                fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+                if(StringUtil.isNotEmpty(name)) {
+                    fileName = name.substring(0, name.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+                } else {
+                    fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+                }
             }else{
                 fileName = orgName+ "_" + System.currentTimeMillis();
             }
