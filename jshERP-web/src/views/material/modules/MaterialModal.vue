@@ -26,17 +26,17 @@
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称" data-step="1" data-title="名称" data-intro="名称必填，可以重复">
-                  <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]"/>
+                  <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name ]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="2" data-title="规格" data-intro="规格不必填，比如：10克">
-                  <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard' ]"/>
+                  <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard', validatorRules.standard ]"/>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号" data-step="3" data-title="型号" data-intro="型号是比规格更小的属性，比如：RX-01">
-                  <a-input placeholder="请输入型号" v-decorator.trim="[ 'model' ]" />
+                  <a-input placeholder="请输入型号" v-decorator.trim="[ 'model', validatorRules.model ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -45,9 +45,9 @@
                   比如牛奶有瓶和箱两种单位，12瓶=1箱，这就构成了多单位，多单位中有个换算比例">
                   <a-row class="form-row" :gutter="24">
                     <a-col :lg="15" :md="15" :sm="24">
-                      <a-input placeholder="输入单位" :hidden="unitStatus" v-decorator.trim="[ 'unit' ]" @change="onlyUnitOnChange" />
-                      <a-select :value="unitList" placeholder="选择单位" v-decorator="[ 'unitId' ]" @change="manyUnitOnChange"
-                        showSearch optionFilterProp="children" :hidden="manyUnitStatus" :dropdownMatchSelectWidth="false">
+                      <a-input placeholder="输入单位" v-if="!unitChecked" v-decorator.trim="[ 'unit', validatorRules.unit ]" @change="onlyUnitOnChange" />
+                      <a-select :value="unitList" placeholder="选择多单位" v-decorator="[ 'unitId', validatorRules.unitId ]" @change="manyUnitOnChange"
+                        showSearch optionFilterProp="children" v-if="unitChecked" :dropdownMatchSelectWidth="false">
                         <div slot="dropdownRender" slot-scope="menu">
                           <v-nodes :vnodes="menu" />
                           <a-divider style="margin: 4px 0;" />
@@ -386,12 +386,27 @@
           name:{
             rules: [
               { required: true, message: '请输入名称!' },
-              { min: 2, max: 60, message: '长度在 2 到 60 个字符', trigger: 'blur' }
+              { max: 100, message: '长度请小于100个字符', trigger: 'blur' }
+            ]
+          },
+          standard:{
+            rules: [
+              { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
+            ]
+          },
+          model:{
+            rules: [
+              { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
             ]
           },
           unit:{
             rules: [
               { required: true, message: '请输入单位!' }
+            ]
+          },
+          unitId:{
+            rules: [
+              { required: true, message: '请选择多单位!' }
             ]
           }
         },
@@ -551,10 +566,6 @@
       },
       /** 发起新增或修改的请求 */
       requestAddOrEdit(formData) {
-        if(formData.unit === '' && formData.unitId === '') {
-          this.$message.warning('抱歉，单位为必填项！');
-          return;
-        }
         if(formData.meList.length === 0) {
           this.$message.warning('抱歉，请输入条码信息！');
           return;
