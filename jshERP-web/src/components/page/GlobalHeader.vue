@@ -168,7 +168,7 @@
 <style lang="less" scoped>
   /* update_begin author:scott date:20190220 for: 缩小首页布局顶部的高度*/
 
-  @height: 59px;
+  @height: 49px;
 
   .layout {
 

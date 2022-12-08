@@ -1,67 +1,72 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="650"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:20%;height: 60%;overflow-y: hidden">
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户1">
-              <a-select style="width:185px;" placeholder="请选择结算账户" v-decorator="[ 'oneAccountId' ]" :dropdownMatchSelectWidth="false" allowClear>
-                <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                  {{ item.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算金额">
-              <a-input-number placeholder="请输入金额" v-decorator.trim="[ 'oneAccountPrice' ]" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户2">
-              <a-select style="width:185px;" placeholder="请选择结算账户" v-decorator="[ 'twoAccountId' ]" :dropdownMatchSelectWidth="false" allowClear>
-                <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                  {{ item.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算金额">
-              <a-input-number placeholder="请输入金额" v-decorator.trim="[ 'twoAccountPrice' ]" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户3">
-              <a-select style="width:185px;" placeholder="请选择结算账户" v-decorator="[ 'threeAccountId' ]" :dropdownMatchSelectWidth="false" allowClear>
-                <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
-                  {{ item.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算金额">
-              <a-input-number placeholder="请输入金额" v-decorator.trim="[ 'threeAccountPrice' ]" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="650"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20%;height: 60%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form">
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="12" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户1">
+                <a-select style="width:185px;" placeholder="请选择结算账户" v-decorator="[ 'oneAccountId' ]" :dropdownMatchSelectWidth="false" allowClear>
+                  <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                    {{ item.name }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :lg="12" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算金额">
+                <a-input-number placeholder="请输入金额" v-decorator.trim="[ 'oneAccountPrice' ]" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="12" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户2">
+                <a-select style="width:185px;" placeholder="请选择结算账户" v-decorator="[ 'twoAccountId' ]" :dropdownMatchSelectWidth="false" allowClear>
+                  <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                    {{ item.name }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :lg="12" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算金额">
+                <a-input-number placeholder="请输入金额" v-decorator.trim="[ 'twoAccountPrice' ]" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="12" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户3">
+                <a-select style="width:185px;" placeholder="请选择结算账户" v-decorator="[ 'threeAccountId' ]" :dropdownMatchSelectWidth="false" allowClear>
+                  <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
+                    {{ item.name }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :lg="12" :md="12" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算金额">
+                <a-input-number placeholder="请输入金额" v-decorator.trim="[ 'threeAccountPrice' ]" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

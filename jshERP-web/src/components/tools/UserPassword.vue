@@ -1,28 +1,33 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="modalWidth"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:25%;height: 50%;overflow-y: hidden">
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
-        <a-form-item label="旧密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input type="password" placeholder="请输入旧密码" v-decorator="[ 'oldpassword', validatorRules.oldpassword]" />
-        </a-form-item>
-        <a-form-item label="新密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input type="password" placeholder="新密码至少6位，区分大小写" v-decorator="[ 'password', validatorRules.password]" />
-        </a-form-item>
-        <a-form-item label="确认新密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-input type="password"  placeholder="请确认新密码" v-decorator="[ 'confirmPassword', validatorRules.confirmPassword]"/>
-        </a-form-item>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="modalWidth"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20%;height: 50%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form">
+          <a-form-item label="旧密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-input type="password" placeholder="请输入旧密码" v-decorator="[ 'oldpassword', validatorRules.oldpassword]" />
+          </a-form-item>
+          <a-form-item label="新密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-input type="password" placeholder="新密码至少6位，区分大小写" v-decorator="[ 'password', validatorRules.password]" />
+          </a-form-item>
+          <a-form-item label="确认新密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
+            <a-input type="password"  placeholder="请确认新密码" v-decorator="[ 'confirmPassword', validatorRules.confirmPassword]"/>
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 
 <script>

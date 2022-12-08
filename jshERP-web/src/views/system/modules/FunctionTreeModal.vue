@@ -1,34 +1,39 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="width"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:10%;height: 90%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" @click="handleCancel">
-        关闭
-      </a-button>
-    </template>
-    <a-spin :spinning="confirmLoading">
-      <a-col :md="10" :sm="24">
-        <template>
-          <a-tree
-            multiple
-            @select='onSelect'
-            :selectedKeys="selectedKeys"
-            :checkedKeys="checkedKeys"
-            :treeData="roleFunctionTree"
-            :checkStrictly="checkStrictly"
-            :expandedKeys="iExpandedKeys"
-            :autoExpandParent="true" />
-        </template>
-      </a-col>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="width"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:10%;height: 90%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel">
+          关闭
+        </a-button>
+      </template>
+      <a-spin :spinning="confirmLoading">
+        <a-col :md="10" :sm="24">
+          <template>
+            <a-tree
+              multiple
+              @select='onSelect'
+              :selectedKeys="selectedKeys"
+              :checkedKeys="checkedKeys"
+              :treeData="roleFunctionTree"
+              :checkStrictly="checkStrictly"
+              :expandedKeys="iExpandedKeys"
+              :autoExpandParent="true" />
+          </template>
+        </a-col>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

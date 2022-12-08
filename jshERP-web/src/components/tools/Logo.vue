@@ -26,7 +26,7 @@
 </script>
 <style lang="less" scoped>
   /*缩小首页布 局顶部的高度*/
-  @height: 59px;
+  @height: 49px;
 
   .sider {
     box-shadow: none !important;

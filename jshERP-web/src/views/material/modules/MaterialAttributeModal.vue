@@ -1,32 +1,37 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="800"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:20%;height: 50%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
-        关闭
-      </a-button>
-    </template>
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="属性名">
-          <a-input placeholder="请输入属性名" v-decorator.trim="[ 'attributeName', validatorRules.attributeName]" />
-        </a-form-item>
-      </a-form>
-      <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="属性值">
-          <a-textarea :rows="2" placeholder="请输入属性值（用竖线隔开）" v-decorator.trim="[ 'attributeValue', validatorRules.attributeValue]" />
-        </a-form-item>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="800"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:100px;height: 50%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" v-if="isReadOnly" @click="handleCancel">
+          关闭
+        </a-button>
+      </template>
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="属性名">
+            <a-input placeholder="请输入属性名" v-decorator.trim="[ 'attributeName', validatorRules.attributeName]" />
+          </a-form-item>
+        </a-form>
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="属性值">
+            <a-textarea :rows="2" placeholder="请输入属性值（用竖线隔开）" v-decorator.trim="[ 'attributeValue', validatorRules.attributeValue]" />
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

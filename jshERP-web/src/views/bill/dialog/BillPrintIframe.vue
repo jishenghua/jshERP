@@ -1,30 +1,35 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="width"
-    :visible="visible"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" @click="handleCancel">取消</a-button>
-    </template>
-    <a-form :form="form">
-      <template>
-        <iframe :src="billPrintUrl" width="100%" :height="height" frameborder="0" scrolling="no"></iframe>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="width"
+      :visible="visible"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20px;height: 95%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
-      <template>
-        <a-row>
-          <a-col>
-            <a-form-item>
-              <a-input v-decorator="['id']" hidden/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </template>
-    </a-form>
-  </a-modal>
+      <a-form :form="form">
+        <template>
+          <iframe :src="billPrintUrl" width="100%" :height="height" frameborder="0" scrolling="no"></iframe>
+        </template>
+        <template>
+          <a-row>
+            <a-col>
+              <a-form-item>
+                <a-input v-decorator="['id']" hidden/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </template>
+      </a-form>
+    </a-modal>
+  </div>
 </template>
 
 <script>

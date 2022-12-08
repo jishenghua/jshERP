@@ -1,34 +1,39 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="1250"
-    :visible="visible"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" @click="handleCancel">取消</a-button>
-    </template>
-    <!-- table区域-begin -->
-    <a-table
-      bordered
-      ref="table"
-      size="middle"
-      rowKey="id"
-      :columns="columns"
-      :dataSource="dataSource"
-      :pagination="ipagination"
-      :loading="loading"
-      @change="handleTableChange">
-      <span slot="numberCustomRender" slot-scope="text, record">
-        <a @click="myHandleDetail(record)">{{record.number}}</a>
-      </span>
-    </a-table>
-    <!-- table区域-end -->
-    <!-- 表单区域 -->
-    <bill-detail ref="billDetail"></bill-detail>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="1250"
+      :visible="visible"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20px;height: 95%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel">取消</a-button>
+      </template>
+      <!-- table区域-begin -->
+      <a-table
+        bordered
+        ref="table"
+        size="middle"
+        rowKey="id"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="ipagination"
+        :loading="loading"
+        @change="handleTableChange">
+        <span slot="numberCustomRender" slot-scope="text, record">
+          <a @click="myHandleDetail(record)">{{record.number}}</a>
+        </span>
+      </a-table>
+      <!-- table区域-end -->
+      <!-- 表单区域 -->
+      <bill-detail ref="billDetail"></bill-detail>
+    </a-modal>
+  </div>
 </template>
 <script>
   import BillDetail from '../../bill/dialog/BillDetail'

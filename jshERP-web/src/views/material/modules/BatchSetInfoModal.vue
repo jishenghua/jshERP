@@ -1,63 +1,68 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="1000"
-    :visible="visible"
-    :confirm-loading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:25%;height: 45%;overflow-y: hidden">
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
-        <a-row class="form-row" :gutter="24">
-          <a-col :md="8" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色">
-              <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量">
-              <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期">
-              <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
-              <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-                             :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
-              </a-tree-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
-              <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
-                <a-select-option value="1">有</a-select-option>
-                <a-select-option value="0">无</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号">
-              <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
-                <a-select-option value="1">有</a-select-option>
-                <a-select-option value="0">无</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="8" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-              <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="1000"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:25%;height: 45%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form">
+          <a-row class="form-row" :gutter="24">
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="颜色">
+                <a-input placeholder="请输入颜色" v-decorator.trim="[ 'color' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量">
+                <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期">
+                <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
+                <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                               :treeData="categoryTree" v-decorator="[ 'categoryId' ]" placeholder="请选择类别">
+                </a-tree-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
+                <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
+                  <a-select-option value="1">有</a-select-option>
+                  <a-select-option value="0">无</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号">
+                <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
+                  <a-select-option value="1">有</a-select-option>
+                  <a-select-option value="0">无</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
+                <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'remark' ]" style="margin-top:8px;"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 
 <script>

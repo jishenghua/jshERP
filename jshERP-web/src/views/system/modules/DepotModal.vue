@@ -1,49 +1,54 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="800"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:15%;height: 70%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
-        关闭
-      </a-button>
-    </template>
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form" id="depotModal">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库名称">
-          <a-input placeholder="请输入仓库名称" v-decorator.trim="[ 'name', validatorRules.name]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库地址">
-          <a-input placeholder="请输入仓库地址" v-decorator.trim="[ 'address' ]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓储费">
-          <a-input placeholder="请输入仓储费" v-decorator.trim="[ 'warehousing' ]" suffix="元/天/KG"/>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="搬运费">
-          <a-input placeholder="请输入搬运费" v-decorator.trim="[ 'truckage' ]" suffix="元"/>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="负责人">
-          <a-select placeholder="选择负责人" v-decorator="[ 'principal' ]" :dropdownMatchSelectWidth="false">
-            <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
-              {{ item.userName }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
-          <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-          <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'remark' ]" />
-        </a-form-item>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="800"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:15%;height: 70%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" v-if="isReadOnly" @click="handleCancel">
+          关闭
+        </a-button>
+      </template>
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form" id="depotModal">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库名称">
+            <a-input placeholder="请输入仓库名称" v-decorator.trim="[ 'name', validatorRules.name]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库地址">
+            <a-input placeholder="请输入仓库地址" v-decorator.trim="[ 'address' ]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓储费">
+            <a-input placeholder="请输入仓储费" v-decorator.trim="[ 'warehousing' ]" suffix="元/天/KG"/>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="搬运费">
+            <a-input placeholder="请输入搬运费" v-decorator.trim="[ 'truckage' ]" suffix="元"/>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="负责人">
+            <a-select placeholder="选择负责人" v-decorator="[ 'principal' ]" :dropdownMatchSelectWidth="false">
+              <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+                {{ item.userName }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+            <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
+            <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'remark' ]" />
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

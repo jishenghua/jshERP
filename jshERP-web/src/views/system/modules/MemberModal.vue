@@ -1,63 +1,68 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="1200"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:20%;height: 60%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
-        关闭
-      </a-button>
-    </template>
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form" id="memberModal">
-        <a-row class="form-row" :gutter="24">
-          <a-col :span="24/2">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
-              <a-input placeholder="请输入会员卡号" v-decorator.trim="[ 'supplier', validatorRules.supplier]" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="24/2">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系人">
-              <a-input placeholder="请输入联系人" v-decorator.trim="[ 'contacts' ]" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :span="24/2">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="手机号码">
-              <a-input placeholder="请输入手机号码" v-decorator.trim="[ 'telephone' ]" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="24/2">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系电话">
-              <a-input placeholder="请输入联系电话" v-decorator.trim="[ 'phoneNum' ]" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="24/2">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="电子邮箱">
-              <a-input placeholder="请输入电子邮箱" v-decorator.trim="[ 'email' ]" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="24/2">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
-              <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="24/2">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-              <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'description' ]" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="1200"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20%;height: 60%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" v-if="isReadOnly" @click="handleCancel">
+          关闭
+        </a-button>
+      </template>
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form" id="memberModal">
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="24/2">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
+                <a-input placeholder="请输入会员卡号" v-decorator.trim="[ 'supplier', validatorRules.supplier]" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="24/2">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系人">
+                <a-input placeholder="请输入联系人" v-decorator.trim="[ 'contacts' ]" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="24/2">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="手机号码">
+                <a-input placeholder="请输入手机号码" v-decorator.trim="[ 'telephone' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="24/2">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系电话">
+                <a-input placeholder="请输入联系电话" v-decorator.trim="[ 'phoneNum' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="24/2">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="电子邮箱">
+                <a-input placeholder="请输入电子邮箱" v-decorator.trim="[ 'email' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="24/2">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+                <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :span="24/2">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
+                <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'description' ]" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

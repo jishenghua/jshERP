@@ -1,36 +1,40 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="500"
-    :visible="visible"
-    :confirm-loading="confirmLoading"
-    :maskClosable="false"
-    @cancel="handleCancel"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:25%;height: 45%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" @click="handleCancel">取消</a-button>
-    </template>
-    <a-spin :spinning="confirmLoading">
-      <a-row class="form-row" :gutter="24">
-        <a-col :md="24" :sm="24">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="第一步：">
-            <a target="_blank" :href="templateUrl"><b>{{templateName}}</b></a>
-            <p>提示：模板中的第一行请勿删除</p>
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <a-row class="form-row" :gutter="24">
-        <a-col :md="24" :sm="24">
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="第二步：">
-            <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-              <a-button type="primary" icon="import">导入</a-button>
-            </a-upload>
-          </a-form-item>
-        </a-col>
-      </a-row>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="500"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @cancel="handleCancel"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:25%;height: 45%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel">取消</a-button>
+      </template>
+      <a-spin :spinning="confirmLoading">
+        <a-row class="form-row" :gutter="24">
+          <a-col :md="24" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="第一步：">
+              <a target="_blank" :href="templateUrl"><b>{{templateName}}</b></a>
+              <p>提示：模板中的第一行请勿删除</p>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :md="24" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="第二步：">
+              <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+                <a-button type="primary" icon="import">导入</a-button>
+              </a-upload>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 
 <script>

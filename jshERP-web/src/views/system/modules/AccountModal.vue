@@ -1,42 +1,47 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="800"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:20%;height: 65%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
-        关闭
-      </a-button>
-    </template>
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form" id="accountModal">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
-          <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
-          <a-input placeholder="请输入编号" v-decorator.trim="[ 'serialNo', validatorRules.serialNo]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初金额">
-          <a-input placeholder="请输入期初金额" v-decorator.trim="[ 'initialAmount' ]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="当前余额">
-          <a-input placeholder="请输入当前余额" :read-only="true" v-decorator.trim="[ 'currentAmount' ]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
-          <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-          <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" />
-        </a-form-item>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="800"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20%;height: 65%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" v-if="isReadOnly" @click="handleCancel">
+          关闭
+        </a-button>
+      </template>
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form" id="accountModal">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
+            <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
+            <a-input placeholder="请输入编号" v-decorator.trim="[ 'serialNo', validatorRules.serialNo]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初金额">
+            <a-input placeholder="请输入期初金额" v-decorator.trim="[ 'initialAmount' ]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="当前余额">
+            <a-input placeholder="请输入当前余额" :read-only="true" v-decorator.trim="[ 'currentAmount' ]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+            <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
+            <a-textarea :rows="2" placeholder="请输入备注" v-decorator="[ 'remark' ]" />
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

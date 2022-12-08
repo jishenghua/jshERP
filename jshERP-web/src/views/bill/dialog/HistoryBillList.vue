@@ -1,87 +1,92 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="1250"
-    :visible="visible"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button @click="handleCancel">关闭</a-button>
-    </template>
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <!-- 搜索区域 -->
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="4" :sm="24">
-            <a-form-item :label="organLabel" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-select v-model="queryParam.organId" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
-                <a-select-option v-for="(item,index) in supplierList" :key="index" :value="item.id">
-                  {{ item.supplier }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :md="5" :sm="24">
-            <a-form-item label="单号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="5" :sm="24">
-            <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="条码|名称|规格|型号" v-model="queryParam.materialParam"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <a-range-picker
-                style="width: 100%"
-                v-model="queryParam.createTimeRange"
-                format="YYYY-MM-DD"
-                :placeholder="['开始时间', '结束时间']"
-                @change="onDateChange"
-                @ok="onDateOk"
-              />
-            </a-form-item>
-          </a-col>
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :md="4" :sm="24">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-            </a-col>
-          </span>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- table区域-begin -->
-    <a-table
-      bordered
-      ref="table"
-      size="middle"
-      rowKey="id"
-      :columns="columns"
-      :dataSource="dataSource"
-      :pagination="ipagination"
-      :loading="loading"
-      @change="handleTableChange">
-      <span slot="numberCustomRender" slot-scope="text, record">
-        <a @click="myHandleDetail(record)">{{record.number}}</a>
-      </span>
-      <template slot="customRenderStatus" slot-scope="text, record">
-        <a-tag v-if="record.status === '0'" color="red">未审核</a-tag>
-        <a-tag v-if="record.status === '1'" color="green">已审核</a-tag>
-        <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">完成采购</a-tag>
-        <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
-        <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
-        <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="1250"
+      :visible="visible"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:50px;height: 90%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button @click="handleCancel">关闭</a-button>
       </template>
-    </a-table>
-    <!-- table区域-end -->
-    <!-- 表单区域 -->
-    <bill-detail ref="billDetail"></bill-detail>
-  </a-modal>
+      <!-- 查询区域 -->
+      <div class="table-page-search-wrapper">
+        <!-- 搜索区域 -->
+        <a-form layout="inline" @keyup.enter.native="searchQuery">
+          <a-row :gutter="24">
+            <a-col :md="4" :sm="24">
+              <a-form-item :label="organLabel" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-select v-model="queryParam.organId" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                  <a-select-option v-for="(item,index) in supplierList" :key="index" :value="item.id">
+                    {{ item.supplier }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="5" :sm="24">
+              <a-form-item label="单号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :md="5" :sm="24">
+              <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-input placeholder="条码|名称|规格|型号" v-model="queryParam.materialParam"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-range-picker
+                  style="width: 100%"
+                  v-model="queryParam.createTimeRange"
+                  format="YYYY-MM-DD"
+                  :placeholder="['开始时间', '结束时间']"
+                  @change="onDateChange"
+                  @ok="onDateOk"
+                />
+              </a-form-item>
+            </a-col>
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-col :md="4" :sm="24">
+                <a-button type="primary" @click="searchQuery">查询</a-button>
+                <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+              </a-col>
+            </span>
+          </a-row>
+        </a-form>
+      </div>
+      <!-- table区域-begin -->
+      <a-table
+        bordered
+        ref="table"
+        size="middle"
+        rowKey="id"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="ipagination"
+        :loading="loading"
+        @change="handleTableChange">
+        <span slot="numberCustomRender" slot-scope="text, record">
+          <a @click="myHandleDetail(record)">{{record.number}}</a>
+        </span>
+        <template slot="customRenderStatus" slot-scope="text, record">
+          <a-tag v-if="record.status === '0'" color="red">未审核</a-tag>
+          <a-tag v-if="record.status === '1'" color="green">已审核</a-tag>
+          <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">完成采购</a-tag>
+          <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
+          <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
+          <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
+        </template>
+      </a-table>
+      <!-- table区域-end -->
+      <!-- 表单区域 -->
+      <bill-detail ref="billDetail"></bill-detail>
+    </a-modal>
+  </div>
 </template>
 
 <script>

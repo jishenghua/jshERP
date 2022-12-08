@@ -1,47 +1,52 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="800"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 95%;overflow-y: hidden">
-    <a-spin :spinning="confirmLoading">
-      <div class="drawer-bootom-button">
-        <a-dropdown :trigger="['click']" placement="topCenter">
-          <a-menu slot="overlay">
-            <a-menu-item key="1" @click="switchCheckStrictly(1)">父子关联</a-menu-item>
-            <a-menu-item key="2" @click="switchCheckStrictly(2)">取消关联</a-menu-item>
-            <a-menu-item key="3" @click="checkALL">全部勾选</a-menu-item>
-            <a-menu-item key="4" @click="cancelCheckALL">取消全选</a-menu-item>
-            <a-menu-item key="5" @click="expandAll">展开所有</a-menu-item>
-            <a-menu-item key="6" @click="closeAll">合并所有</a-menu-item>
-          </a-menu>
-          <a-button>
-            树操作 <a-icon type="up" />
-          </a-button>
-        </a-dropdown>
-      </div>
-      <a-col :md="10" :sm="24">
-        <template>
-          <a-tree
-            checkable
-            multiple
-            @check="onCheck"
-            :selectedKeys="selectedKeys"
-            :checkedKeys="checkedKeys"
-            :treeData="roleFunctionTree"
-            :checkStrictly="checkStrictly"
-            :expandedKeys="iExpandedKeys"
-            :autoExpandParent="true"
-            @expand="onExpand"/>
-        </template>
-      </a-col>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="800"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:5%;height: 95%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <div class="drawer-bootom-button">
+          <a-dropdown :trigger="['click']" placement="topCenter">
+            <a-menu slot="overlay">
+              <a-menu-item key="1" @click="switchCheckStrictly(1)">父子关联</a-menu-item>
+              <a-menu-item key="2" @click="switchCheckStrictly(2)">取消关联</a-menu-item>
+              <a-menu-item key="3" @click="checkALL">全部勾选</a-menu-item>
+              <a-menu-item key="4" @click="cancelCheckALL">取消全选</a-menu-item>
+              <a-menu-item key="5" @click="expandAll">展开所有</a-menu-item>
+              <a-menu-item key="6" @click="closeAll">合并所有</a-menu-item>
+            </a-menu>
+            <a-button>
+              树操作 <a-icon type="up" />
+            </a-button>
+          </a-dropdown>
+        </div>
+        <a-col :md="10" :sm="24">
+          <template>
+            <a-tree
+              checkable
+              multiple
+              @check="onCheck"
+              :selectedKeys="selectedKeys"
+              :checkedKeys="checkedKeys"
+              :treeData="roleFunctionTree"
+              :checkStrictly="checkStrictly"
+              :expandedKeys="iExpandedKeys"
+              :autoExpandParent="true"
+              @expand="onExpand"/>
+          </template>
+        </a-col>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

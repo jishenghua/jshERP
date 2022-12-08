@@ -1,62 +1,67 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="width"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 95%;overflow-y: hidden">
-    <a-spin :spinning="confirmLoading">
-      <div class="table-page-search-wrapper">
-        <!-- 按钮区域 -->
-        <a-form layout="inline">
-          <a-row :gutter="24">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-col :md="12" :sm="24">
-                <a-button @click="toggleChecked">
-                  {{ !checked ? '全选' : '全取消' }}
-                </a-button>
-                <a-button @click="editToggleChecked" style="margin-left: 8px">
-                  {{ !editChecked ? '全选-编辑' : '全取消-编辑' }}
-                </a-button>
-                <a-button @click="auditToggleChecked" style="margin-left: 8px">
-                  {{ !auditChecked ? '全选-审核' : '全取消-审核' }}
-                </a-button>
-                <a-button @click="unAuditToggleChecked" style="margin-left: 8px">
-                  {{ !unAuditChecked ? '全选-反审核' : '全取消-反审核' }}
-                </a-button>
-              </a-col>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="width"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:5%;height: 95%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <div class="table-page-search-wrapper">
+          <!-- 按钮区域 -->
+          <a-form layout="inline">
+            <a-row :gutter="24">
+              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                <a-col :md="12" :sm="24">
+                  <a-button @click="toggleChecked">
+                    {{ !checked ? '全选' : '全取消' }}
+                  </a-button>
+                  <a-button @click="editToggleChecked" style="margin-left: 8px">
+                    {{ !editChecked ? '全选-编辑' : '全取消-编辑' }}
+                  </a-button>
+                  <a-button @click="auditToggleChecked" style="margin-left: 8px">
+                    {{ !auditChecked ? '全选-审核' : '全取消-审核' }}
+                  </a-button>
+                  <a-button @click="unAuditToggleChecked" style="margin-left: 8px">
+                    {{ !unAuditChecked ? '全选-反审核' : '全取消-反审核' }}
+                  </a-button>
+                </a-col>
+              </span>
+            </a-row>
+          </a-form>
+        </div>
+        <!-- table区域-begin -->
+        <div>
+          <a-table
+            ref="table"
+            size="middle"
+            bordered
+            rowKey="id"
+            :pagination="false"
+            :columns="columns"
+            :dataSource="dataSource"
+            :loading="loading">
+            <span slot="action" slot-scope="text, record">
+              <a-checkbox v-if="record.pushBtn.indexOf(1)>-1" value="1" :checked="record.btnStr?record.btnStr.indexOf(1)>-1:false" @change="onChange(record,'1')">编辑</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf(2)>-1" value="2" :checked="record.btnStr?record.btnStr.indexOf(2)>-1:false" @change="onChange(record,'2')">审核</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf(7)>-1" value="7" :checked="record.btnStr?record.btnStr.indexOf(7)>-1:false" @change="onChange(record,'7')">反审核</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf(3)>-1" value="3" :checked="record.btnStr?record.btnStr.indexOf(3)>-1:false" @change="onChange(record,'3')">导入导出</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf(4)>-1" value="4" :checked="record.btnStr?record.btnStr.indexOf(4)>-1:false" @change="onChange(record,'4')">启用禁用</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf(5)>-1" value="5" :checked="record.btnStr?record.btnStr.indexOf(5)>-1:false" @change="onChange(record,'5')">打印</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf(6)>-1" value="6" :checked="record.btnStr?record.btnStr.indexOf(6)>-1:false" @change="onChange(record,'6')">作废</a-checkbox>
             </span>
-          </a-row>
-        </a-form>
-      </div>
-      <!-- table区域-begin -->
-      <div>
-        <a-table
-          ref="table"
-          size="middle"
-          bordered
-          rowKey="id"
-          :pagination="false"
-          :columns="columns"
-          :dataSource="dataSource"
-          :loading="loading">
-          <span slot="action" slot-scope="text, record">
-            <a-checkbox v-if="record.pushBtn.indexOf(1)>-1" value="1" :checked="record.btnStr?record.btnStr.indexOf(1)>-1:false" @change="onChange(record,'1')">编辑</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(2)>-1" value="2" :checked="record.btnStr?record.btnStr.indexOf(2)>-1:false" @change="onChange(record,'2')">审核</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(7)>-1" value="7" :checked="record.btnStr?record.btnStr.indexOf(7)>-1:false" @change="onChange(record,'7')">反审核</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(3)>-1" value="3" :checked="record.btnStr?record.btnStr.indexOf(3)>-1:false" @change="onChange(record,'3')">导入导出</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(4)>-1" value="4" :checked="record.btnStr?record.btnStr.indexOf(4)>-1:false" @change="onChange(record,'4')">启用禁用</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(5)>-1" value="5" :checked="record.btnStr?record.btnStr.indexOf(5)>-1:false" @change="onChange(record,'5')">打印</a-checkbox>
-            <a-checkbox v-if="record.pushBtn.indexOf(6)>-1" value="6" :checked="record.btnStr?record.btnStr.indexOf(6)>-1:false" @change="onChange(record,'6')">作废</a-checkbox>
-          </span>
-        </a-table>
-      </div>
-    </a-spin>
-  </a-modal>
+          </a-table>
+        </div>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

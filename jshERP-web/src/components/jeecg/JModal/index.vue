@@ -1,44 +1,48 @@
 <template>
-  <a-modal
-    ref="modal"
-    :class="getClass(modalClass)"
-    :style="getStyle(modalStyle)"
-    :visible="visible"
-    v-bind="_attrs"
-    v-on="$listeners"
-    @ok="handleOk"
-    @cancel="handleCancel"
-  >
+  <div ref="container">
+    <a-modal
+      ref="modal"
+      :class="getClass(modalClass)"
+      :style="getStyle(modalStyle)"
+      :visible="visible"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :getContainer="() => $refs.container"
+      v-bind="_attrs"
+      v-on="$listeners"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
 
-    <slot></slot>
+      <slot></slot>
 
-    <template v-if="!isNoTitle" slot="title">
-      <a-row class="j-modal-title-row" type="flex">
-        <a-col class="left">
-          <slot name="title">{{ title }}</slot>
-        </a-col>
-        <a-col class="right">
-          <a-tooltip title="新手引导">
-            <a-button v-if="switchHelp" @click="handleHelp" style="right:112px;" class="ant-modal-close ant-modal-close-x"
-                      ghost type="link" icon="question-circle"/>
-          </a-tooltip>
-          <a-button v-if="switchFullscreen" @click="toggleFullscreen" class="ant-modal-close ant-modal-close-x"
-                    ghost type="link" :icon="fullscreenButtonIcon"/>
-        </a-col>
-      </a-row>
-    </template>
+      <template v-if="!isNoTitle" slot="title">
+        <a-row class="j-modal-title-row" type="flex">
+          <a-col class="left">
+            <slot name="title">{{ title }}</slot>
+          </a-col>
+          <a-col class="right">
+            <a-tooltip title="新手引导">
+              <a-button v-if="switchHelp" @click="handleHelp" style="right:112px;" class="ant-modal-close ant-modal-close-x"
+                        ghost type="link" icon="question-circle"/>
+            </a-tooltip>
+            <a-button v-if="switchFullscreen" @click="toggleFullscreen" class="ant-modal-close ant-modal-close-x"
+                      ghost type="link" :icon="fullscreenButtonIcon"/>
+          </a-col>
+        </a-row>
+      </template>
 
-    <!-- 处理 scopedSlots -->
-    <template v-for="slotName of scopedSlotsKeys" :slot="slotName">
-      <slot :name="slotName"></slot>
-    </template>
+      <!-- 处理 scopedSlots -->
+      <template v-for="slotName of scopedSlotsKeys" :slot="slotName">
+        <slot :name="slotName"></slot>
+      </template>
 
-    <!-- 处理 slots -->
-    <template v-for="slotName of slotsKeys" v-slot:[slotName]>
-      <slot :name="slotName"></slot>
-    </template>
+      <!-- 处理 slots -->
+      <template v-for="slotName of slotsKeys" v-slot:[slotName]>
+        <slot :name="slotName"></slot>
+      </template>
 
-  </a-modal>
+    </a-modal>
+  </div>
 </template>
 
 <script>

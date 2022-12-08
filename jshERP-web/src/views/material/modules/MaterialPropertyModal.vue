@@ -1,31 +1,36 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="800"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:20%;height: 70%;overflow-y: hidden">
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
-          <a-input placeholder="请输入名称" v-decorator.trim="[ 'nativeName' ]" :readOnly="model.id"/>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否启用">
-          <a-switch checked-children="启用" un-checked-children="禁用" v-model="enabledSwitch" @change="onChange"></a-switch>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
-          <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort', validatorRules.sort]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="别名">
-          <a-input placeholder="请输入别名" v-decorator.trim="[ 'anotherName' ]" />
-        </a-form-item>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="800"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20%;height: 70%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
+            <a-input placeholder="请输入名称" v-decorator.trim="[ 'nativeName' ]" :readOnly="model.id"/>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否启用">
+            <a-switch checked-children="启用" un-checked-children="禁用" v-model="enabledSwitch" @change="onChange"></a-switch>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+            <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort', validatorRules.sort]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="别名">
+            <a-input placeholder="请输入别名" v-decorator.trim="[ 'anotherName' ]" />
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

@@ -1,38 +1,43 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="600"
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:20%;height: 60%;overflow-y: hidden">
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="登录名称">
-          <a-input placeholder="请输入登录名称" v-decorator.trim="[ 'loginName', validatorRules.loginName]" :readOnly="!!model.id"
-                   suffix="初始密码：123456" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用户数量限制">
-          <a-input-number style="width:100%" placeholder="请输入用户数量限制" v-decorator.trim="[ 'userNumLimit' ]" />
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="租户类型">
-          <a-select style="width:100%" placeholder="请选择租户类型" v-decorator.trim="[ 'type' ]">
-            <a-select-option value="0">试用租户</a-select-option>
-            <a-select-option value="1">付费租户</a-select-option>
-          </a-select>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="到期时间">
-          <j-date style="width:100%" placeholder="请选择到期时间" v-decorator.trim="[ 'expireTime' ]" :show-time="true"/>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="描述">
-          <a-textarea :rows="2" placeholder="请输入描述" v-decorator.trim="[ 'remark' ]" />
-        </a-form-item>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="600"
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20%;height: 60%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="登录名称">
+            <a-input placeholder="请输入登录名称" v-decorator.trim="[ 'loginName', validatorRules.loginName]" :readOnly="!!model.id"
+                     suffix="初始密码：123456" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用户数量限制">
+            <a-input-number style="width:100%" placeholder="请输入用户数量限制" v-decorator.trim="[ 'userNumLimit' ]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="租户类型">
+            <a-select style="width:100%" placeholder="请选择租户类型" v-decorator.trim="[ 'type' ]">
+              <a-select-option value="0">试用租户</a-select-option>
+              <a-select-option value="1">付费租户</a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="到期时间">
+            <j-date style="width:100%" placeholder="请选择到期时间" v-decorator.trim="[ 'expireTime' ]" :show-time="true"/>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="描述">
+            <a-textarea :rows="2" placeholder="请输入描述" v-decorator.trim="[ 'remark' ]" />
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 <script>
   import pick from 'lodash.pick'

@@ -9,7 +9,7 @@
         @close="() => this.collapsed = false"
         :closable="false"
         :visible="collapsed"
-        width="200px"
+        width="150px"
       >
         <side-menu
           mode="inline"
@@ -38,7 +38,7 @@
         @close="() => this.collapsed = false"
         :closable="false"
         :visible="collapsed"
-        width="200px"
+        width="150px"
       >
         <side-menu
           mode="inline"
@@ -52,7 +52,7 @@
 
     <a-layout
       :class="[layoutMode, `content-width-${contentWidth}`]"
-      :style="{ paddingLeft: fixSiderbar && isDesktop() ? `${sidebarOpened ? 200 : 80}px` : '0' }">
+      :style="{ paddingLeft: fixSiderbar && isDesktop() ? `${sidebarOpened ? 150 : 80}px` : '0' }">
       <!-- layout header -->
       <global-header
         :mode="layoutMode"
@@ -65,7 +65,7 @@
       />
 
       <!-- layout content -->
-      <a-layout-content :style="{ height: '100%', paddingTop: fixedHeader ? '59px' : '0' }">
+      <a-layout-content :style="{ height: '100%', paddingTop: fixedHeader ? '49px' : '0' }">
         <slot></slot>
       </a-layout-content>
 
@@ -292,7 +292,7 @@
         transition: width .2s;
 
         &.ant-header-side-opened {
-          width: calc(100% - 200px)
+          width: calc(100% - 150px)
         }
 
         &.ant-header-side-closed {
@@ -322,7 +322,7 @@
           transition: all .3s;
 
           height: 70%;
-          line-height: 46px;
+          line-height: 36px;
 
           &.action-full {
             height: 100%;
@@ -435,7 +435,7 @@
         margin: auto;
         padding: 0 20px 0 0;
         display: flex;
-        height: 59px;
+        height: 49px;
 
         .ant-menu.ant-menu-horizontal {
           border: none;
@@ -474,7 +474,7 @@
 
         .header-index-right {
           float: right;
-          height: 59px;
+          height: 49px;
           overflow: hidden;
           .action:hover {
             background-color: rgba(0, 0, 0, 0.05);

@@ -1,67 +1,72 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="1250"
-    :visible="visible"
-    @cancel="handleCancel"
-    cancelText="关闭"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
-    <template slot="footer">
-      <a-button key="back" @click="handleCancel">取消</a-button>
-    </template>
-    <!-- 查询区域 -->
-    <div class="table-page-search-wrapper">
-      <!-- 搜索区域 -->
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
-          <a-col :md="6" :sm="8">
-            <a-form-item label="单据编号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="请输入单据编号查询" v-model="queryParam.number"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="8">
-            <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-              <a-input placeholder="请输入名称、规格、型号" v-model="queryParam.materialParam"></a-input>
-            </a-form-item>
-          </a-col>
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :md="6" :sm="24">
-              <a-button type="primary" @click="searchQuery">查询</a-button>
-              <a-button style="margin-left: 8px" v-print="'#debtAccountPrint'" icon="printer">打印</a-button>
-              <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="1250"
+      :visible="visible"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:20px;height: 95%;overflow-y: hidden">
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel">取消</a-button>
+      </template>
+      <!-- 查询区域 -->
+      <div class="table-page-search-wrapper">
+        <!-- 搜索区域 -->
+        <a-form layout="inline" @keyup.enter.native="searchQuery">
+          <a-row :gutter="24">
+            <a-col :md="6" :sm="8">
+              <a-form-item label="单据编号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-input placeholder="请输入单据编号查询" v-model="queryParam.number"></a-input>
+              </a-form-item>
             </a-col>
+            <a-col :md="6" :sm="8">
+              <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-input placeholder="请输入名称、规格、型号" v-model="queryParam.materialParam"></a-input>
+              </a-form-item>
+            </a-col>
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-col :md="6" :sm="24">
+                <a-button type="primary" @click="searchQuery">查询</a-button>
+                <a-button style="margin-left: 8px" v-print="'#debtAccountPrint'" icon="printer">打印</a-button>
+                <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+              </a-col>
+            </span>
+          </a-row>
+        </a-form>
+      </div>
+      <!-- table区域-begin -->
+      <section ref="debtPrint" id="debtAccountPrint">
+        <a-table
+          bordered
+          ref="table"
+          size="middle"
+          rowKey="id"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="false"
+          :loading="loading"
+          @change="handleTableChange">
+          <span slot="numberCustomRender" slot-scope="text, record">
+            <a @click="myHandleDetail(record)">{{record.number}}</a>
           </span>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- table区域-begin -->
-    <section ref="debtPrint" id="debtAccountPrint">
-      <a-table
-        bordered
-        ref="table"
-        size="middle"
-        rowKey="id"
-        :columns="columns"
-        :dataSource="dataSource"
-        :pagination="false"
-        :loading="loading"
-        @change="handleTableChange">
-        <span slot="numberCustomRender" slot-scope="text, record">
-          <a @click="myHandleDetail(record)">{{record.number}}</a>
-        </span>
-        <span slot="customTitle">
-          实际欠款
-          <a-tooltip title="实际欠款=本单欠款-退货单欠款（主要针对存在退货的情况）">
-            <a-icon type="question-circle" />
-          </a-tooltip>
-        </span>
-      </a-table>
-    </section>
-    <!-- table区域-end -->
-    <!-- 表单区域 -->
-    <bill-detail ref="modalDetail"></bill-detail>
-  </a-modal>
+          <span slot="customTitle">
+            实际欠款
+            <a-tooltip title="实际欠款=本单欠款-退货单欠款（主要针对存在退货的情况）">
+              <a-icon type="question-circle" />
+            </a-tooltip>
+          </span>
+        </a-table>
+      </section>
+      <!-- table区域-end -->
+      <!-- 表单区域 -->
+      <bill-detail ref="modalDetail"></bill-detail>
+    </a-modal>
+  </div>
 </template>
 
 <script>

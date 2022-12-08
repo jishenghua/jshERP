@@ -1,38 +1,44 @@
 <template>
-  <a-modal
-    :title="title"
-    :width="800"
-    :ok=false
-    :visible="visible"
-    :confirmLoading="confirmLoading"
-    :okButtonProps="{ props: {disabled: disableSubmit} }"
-    @ok="handleOk"
-    @cancel="handleCancel"
-    cancelText="关闭">
-
-    <a-spin :spinning="confirmLoading">
-      <a-form :form="form" id="organizationModal">
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
-          <a-input placeholder="请输入名称" v-decorator="['orgAbr', validatorRules.orgAbr ]"/>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
-          <a-input placeholder="请输入编号" v-decorator="['orgNo', validatorRules.orgNo ]"/>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级机构">
-          <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-                         allow-clear :treeDefaultExpandAll="true"
-               :treeData="departTree" v-decorator="[ 'parentId' ]" placeholder="请选择上级机构">
-          </a-tree-select>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
-          <a-input-number v-decorator="[ 'sort' ]"/>
-        </a-form-item>
-        <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-          <a-textarea placeholder="请输入备注":rows="2" v-decorator.trim="[ 'remark' ]" />
-        </a-form-item>
-      </a-form>
-    </a-spin>
-  </a-modal>
+  <div ref="container">
+    <a-modal
+      :title="title"
+      :width="800"
+      :ok=false
+      :visible="visible"
+      :confirmLoading="confirmLoading"
+      :getContainer="() => $refs.container"
+      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskClosable="false"
+      :okButtonProps="{ props: {disabled: disableSubmit} }"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      cancelText="关闭"
+      wrapClassName="ant-modal-cust-warp"
+      style="top:50px;height: 80%;overflow-y: hidden">
+      <a-spin :spinning="confirmLoading">
+        <a-form :form="form" id="organizationModal">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
+            <a-input placeholder="请输入名称" v-decorator="['orgAbr', validatorRules.orgAbr ]"/>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
+            <a-input placeholder="请输入编号" v-decorator="['orgNo', validatorRules.orgNo ]"/>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级机构">
+            <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
+                           allow-clear :treeDefaultExpandAll="true"
+                 :treeData="departTree" v-decorator="[ 'parentId' ]" placeholder="请选择上级机构">
+            </a-tree-select>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
+            <a-input-number v-decorator="[ 'sort' ]"/>
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
+            <a-textarea placeholder="请输入备注":rows="2" v-decorator.trim="[ 'remark' ]" />
+          </a-form-item>
+        </a-form>
+      </a-spin>
+    </a-modal>
+  </div>
 </template>
 
 <script>
@@ -165,5 +171,5 @@
 </script>
 
 <style scoped>
-
+  @import '~@assets/less/common.less'
 </style>

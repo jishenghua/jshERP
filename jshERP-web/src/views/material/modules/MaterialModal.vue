@@ -13,7 +13,7 @@
     cancelText="关闭"
     wrapClassName="ant-modal-material-warp"
     :id="prefixNo"
-    style="top:5%;height: 100%;overflow-y: hidden">
+    style="top:20px;height: 95%;overflow-y: hidden">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
