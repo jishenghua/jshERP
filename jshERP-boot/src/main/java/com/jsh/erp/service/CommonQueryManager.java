@@ -128,7 +128,7 @@ public class CommonQueryManager {
      * @return
      */
     public int checkIsNameExist(String apiName, Long id, String name) throws Exception{
-        if (StringUtil.isNotEmpty(apiName)) {
+        if (StringUtil.isNotEmpty(apiName) && name!=null) {
             return container.getCommonQuery(apiName).checkIsNameExist(id, name);
         }
         return 0;

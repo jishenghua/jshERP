@@ -58,7 +58,7 @@ public class SupplierController {
     @GetMapping(value = "/checkIsNameAndTypeExist")
     @ApiOperation(value = "检查名称和类型是否存在")
     public String checkIsNameAndTypeExist(@RequestParam Long id,
-                                          @RequestParam(value ="name") String name,
+                                          @RequestParam(value ="name", required = false) String name,
                                           @RequestParam(value ="type") String type,
                                           HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();

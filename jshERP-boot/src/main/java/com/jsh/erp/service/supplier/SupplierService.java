@@ -272,6 +272,7 @@ public class SupplierService {
     }
 
     public int checkIsNameAndTypeExist(Long id, String name, String type)throws Exception {
+        name = name == null? "": name;
         SupplierExample example = new SupplierExample();
         example.createCriteria().andIdNotEqualTo(id).andSupplierEqualTo(name).andTypeEqualTo(type)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
