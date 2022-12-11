@@ -12,7 +12,7 @@
       @cancel="handleCancel"
       cancelText="关闭"
       wrapClassName="ant-modal-cust-warp"
-      style="top:30%;height: 40%;overflow-y: hidden">
+      style="top:25%;height: 40%;overflow-y: hidden">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form" id="platformConfigModal">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="配置名称">

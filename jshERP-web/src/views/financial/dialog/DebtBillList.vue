@@ -11,7 +11,7 @@
       @cancel="handleCancel"
       cancelText="关闭"
       wrapClassName="ant-modal-cust-warp"
-      style="top:5%;height: 100%;overflow-y: hidden">
+      style="top:20px;height: 95%;overflow-y: hidden">
       <!-- 查询区域 -->
       <div class="table-page-search-wrapper">
         <!-- 搜索区域 -->

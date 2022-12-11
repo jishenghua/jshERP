@@ -12,7 +12,7 @@
       @cancel="handleCancel"
       cancelText="关闭"
       wrapClassName="ant-modal-cust-warp"
-      style="top:25%;height: 50%;overflow-y: hidden">
+      style="top:20%;height: 50%;overflow-y: hidden">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="机器码">
