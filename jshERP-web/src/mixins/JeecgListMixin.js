@@ -64,7 +64,7 @@ export const JeecgListMixin = {
   },
   created() {
     if(this.isDesktop()) {
-      this.cardStyle = 'height:' + (document.documentElement.clientHeight-125) + 'px'
+      this.cardStyle = 'height:' + (document.documentElement.clientHeight-100) + 'px'
     }
     if(!this.disableMixinCreated){
       //console.log(' -- mixin created -- ')

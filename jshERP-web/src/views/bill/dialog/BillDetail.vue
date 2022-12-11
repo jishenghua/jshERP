@@ -6,9 +6,9 @@
     :maskClosable="false"
     :keyboard="false"
     :forceRender="true"
+    :style="modalStyle"
     @cancel="handleCancel"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:20px;height: 95%;overflow-y: hidden">
+    wrapClassName="ant-modal-cust-warp">
     <template slot="footer">
       <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
       <!--此处为解决缓存问题-->
@@ -1019,6 +1019,7 @@
         title: "详情",
         width: '1600px',
         visible: false,
+        modalStyle: '',
         model: {},
         isCanBackCheck: true,
         billType: '',
@@ -1456,8 +1457,9 @@
         this.billType = type
         //附件下载
         this.fileList = record.fileName
-        this.visible = true;
-        this.model = Object.assign({}, record);
+        this.visible = true
+        this.modalStyle = 'top:20px;height: 95%;'
+        this.model = Object.assign({}, record)
         if(this.model.backAmount) {
           this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
         } else {
@@ -1523,8 +1525,9 @@
         this.close()
       },
       close() {
-        this.$emit('close');
-        this.visible = false;
+        this.$emit('close')
+        this.visible = false
+        this.modalStyle = ''
       },
       myHandleDetail(billNumber) {
         findBillDetailByNumber({ number: billNumber }).then((res) => {

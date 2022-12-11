@@ -5,12 +5,12 @@
       :width="width"
       :visible="visible"
       :getContainer="() => $refs.container"
-      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskStyle="{'top':'89px','left':'151px'}"
       :maskClosable="false"
+      :style="modalStyle"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:20px;height: 95%;overflow-y: hidden">
+      wrapClassName="ant-modal-cust-warp">
       <template slot="footer">
         <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
@@ -41,6 +41,7 @@
         title: "三联打印预览",
         width: '1000px',
         visible: false,
+        modalStyle: '',
         billPrintUrl: '',
         height: "",
         model: {},
@@ -54,8 +55,9 @@
       show(record, billPrintUrl, billPrintHeight) {
         this.height = billPrintHeight
         this.billPrintUrl = billPrintUrl
-        this.visible = true;
-        this.model = Object.assign({}, record);
+        this.visible = true
+        this.modalStyle = 'top:20px;height: 95%;'
+        this.model = Object.assign({}, record)
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))
         });
@@ -65,8 +67,9 @@
       },
       close() {
         this.billPrintUrl = ''
-        this.$emit('close');
-        this.visible = false;
+        this.$emit('close')
+        this.visible = false
+        this.modalStyle = ''
       }
     }
   }

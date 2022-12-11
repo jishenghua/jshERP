@@ -13,7 +13,7 @@
     cancelText="关闭"
     wrapClassName="ant-modal-material-warp"
     :id="prefixNo"
-    style="top:20px;height: 95%;overflow-y: hidden">
+    :style="modalStyle">
     <template slot="footer">
       <a-button key="back" v-if="isReadOnly" @click="handleCancel">
         关闭
@@ -295,6 +295,7 @@
       return {
         title:"操作",
         visible: false,
+        modalStyle: '',
         categoryTree: [],
         unitList: [],
         depotList: [],
@@ -436,10 +437,10 @@
         this.getAllTable().then(editableTables => {
           editableTables[0].add()
         })
-        this.edit({});
+        this.edit({})
         this.$nextTick(() => {
           handleIntroJs('material', 11)
-        });
+        })
       },
       edit (record) {
         this.form.resetFields();
@@ -450,6 +451,7 @@
         this.manySkuStatus = false
         this.maxBarCodeInfo = ''
         this.visible = true
+        this.modalStyle = 'top:20px;height: 95%;'
         if(JSON.stringify(record) === '{}') {
           this.fileList = []
         } else {
@@ -517,8 +519,9 @@
         })
       },
       close () {
-        this.$emit('close');
+        this.$emit('close')
         this.visible = false
+        this.modalStyle = ''
         this.unitStatus = false
         this.manyUnitStatus = true
         this.unitChecked = false

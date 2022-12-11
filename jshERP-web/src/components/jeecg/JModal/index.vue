@@ -5,7 +5,7 @@
       :class="getClass(modalClass)"
       :style="getStyle(modalStyle)"
       :visible="visible"
-      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskStyle="{'top':'89px','left':'151px'}"
       :getContainer="() => $refs.container"
       v-bind="_attrs"
       v-on="$listeners"

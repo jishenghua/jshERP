@@ -6,7 +6,7 @@
       :visible="visible"
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
-      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskStyle="{'top':'89px','left':'151px'}"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"

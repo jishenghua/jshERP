@@ -6,9 +6,9 @@
     :maskClosable="false"
     :keyboard="false"
     :forceRender="true"
+    :style="modalStyle"
     @cancel="handleCancel"
-    wrapClassName="ant-modal-cust-warp"
-    style="top:5%;height: 100%;overflow-y: hidden">
+    wrapClassName="ant-modal-cust-warp">
     <template slot="footer">
       <!--此处为解决缓存问题-->
       <a-button v-if="financialType === '收预付款'" v-print="'#advanceInPrint'" ghost type="primary">打印</a-button>
@@ -410,6 +410,7 @@
         title: "详情",
         width: '1600px',
         visible: false,
+        modalStyle: '',
         model: {},
         isCanBackCheck: true,
         financialType: '',
@@ -478,8 +479,9 @@
         this.financialType = type
         //附件下载
         this.fileList = record.fileName
-        this.visible = true;
-        this.model = Object.assign({}, record);
+        this.visible = true
+        this.modalStyle = 'top:20px;height: 95%;'
+        this.model = Object.assign({}, record)
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))
         });
@@ -525,8 +527,9 @@
         this.close()
       },
       close() {
-        this.$emit('close');
-        this.visible = false;
+        this.$emit('close')
+        this.visible = false
+        this.modalStyle = ''
       },
     }
   }

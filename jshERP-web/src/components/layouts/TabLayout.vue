@@ -6,7 +6,6 @@
       v-if="multipage"
       :active-key="activePage"
       class="tab-layout-tabs"
-      style="height:52px"
       :hide-add="true"
       type="editable-card"
       @change="changePage"
@@ -401,7 +400,7 @@
 
   /*美化弹出Tab样式*/
   .ant-tabs-nav-container {
-    margin-top: 4px;
+    margin-top: 0px;
   }
 
   /* 修改 ant-tabs 样式 */
@@ -412,7 +411,7 @@
     padding: 0 20px;
 
     .ant-tabs-bar {
-      margin: 4px 0 0;
+      margin: 0px;
       border: none;
     }
 
@@ -452,6 +451,7 @@
       border-bottom: 1px solid transparent !important;
     }
     .ant-tabs-tab-active {
+      height: 35px !important;
       border-color: @primary-color!important;
     }
   }

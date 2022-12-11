@@ -6,11 +6,11 @@
       :visible="visible"
       :confirm-loading="confirmLoading"
       :getContainer="() => $refs.container"
-      :maskStyle="{'top':'101px','left':'151px'}"
+      :maskStyle="{'top':'89px','left':'151px'}"
       :maskClosable="false"
       @cancel="handleCancel"
       wrapClassName="ant-modal-cust-warp"
-      style="top:25%;height: 45%;overflow-y: hidden">
+      style="top:20%;height: 45%;overflow-y: hidden">
       <template slot="footer">
         <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
