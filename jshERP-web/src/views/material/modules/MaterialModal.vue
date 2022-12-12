@@ -1,7 +1,7 @@
 <template>
   <j-modal
     :title="title"
-    :width="1300"
+    :width="width"
     :visible="visible"
     :confirmLoading="confirmLoading"
     :maskClosable="false"
@@ -44,7 +44,7 @@
                   data-step="4" data-title="单位" data-intro="此处支持单个单位和多单位，勾选多单位就可以切换到多单位的下拉框，多单位需要先在【计量单位】页面进行录入。
                   比如牛奶有瓶和箱两种单位，12瓶=1箱，这就构成了多单位，多单位中有个换算比例">
                   <a-row class="form-row" :gutter="24">
-                    <a-col :lg="15" :md="15" :sm="24">
+                    <a-col :lg="14" :md="14" :sm="24">
                       <a-input placeholder="输入单位" v-if="!unitChecked" v-decorator.trim="[ 'unit', validatorRules.unit ]" @change="onlyUnitOnChange" />
                       <a-select :value="unitList" placeholder="选择多单位" v-decorator="[ 'unitId', validatorRules.unitId ]" @change="manyUnitOnChange"
                         showSearch optionFilterProp="children" v-if="unitChecked" :dropdownMatchSelectWidth="false">
@@ -60,7 +60,7 @@
                         </a-select-option>
                       </a-select>
                     </a-col>
-                    <a-col :lg="9" :md="9" :sm="24">
+                    <a-col :lg="10" :md="10" :sm="24">
                       <a-checkbox :checked="unitChecked" @change="unitOnChange">多单位</a-checkbox>
                     </a-col>
                   </a-row>
@@ -294,6 +294,7 @@
     data () {
       return {
         title:"操作",
+        width: '1300px',
         visible: false,
         modalStyle: '',
         categoryTree: [],
@@ -421,6 +422,8 @@
     },
     created () {
       this.loadParseMaterialProperty()
+      let realScreenWidth = window.screen.width
+      this.width = realScreenWidth<1500?'1200px':'1550px'
     },
     methods: {
       // 获取所有的editableTable实例
@@ -1132,7 +1135,7 @@
 <style scoped>
   .input-table {
     max-width: 100%;
-    min-width: 1550px;
+    min-width: 1200px;
   }
   .tag-info {
     font-size:14px;

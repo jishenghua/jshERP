@@ -472,7 +472,7 @@
     },
     created () {
       let realScreenWidth = window.screen.width
-      this.width = realScreenWidth<1500?'1300px':'1550px'
+      this.width = realScreenWidth<1500?'1200px':'1550px'
     },
     methods: {
       show(record, type) {

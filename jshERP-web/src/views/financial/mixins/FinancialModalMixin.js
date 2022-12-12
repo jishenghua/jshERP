@@ -37,7 +37,7 @@ export const FinancialModalMixin = {
     let userInfo = Vue.ls.get(USER_INFO)
     this.isTenant = userInfo.id === userInfo.tenantId? true:false
     let realScreenWidth = window.screen.width
-    this.width = realScreenWidth<1500?'1300px':'1550px'
+    this.width = realScreenWidth<1500?'1200px':'1550px'
   },
   computed: {
     readOnly: function() {

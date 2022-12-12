@@ -1325,12 +1325,12 @@
     },
     created () {
       let realScreenWidth = window.screen.width
-      this.width = realScreenWidth<1500?'1300px':'1550px'
+      this.width = realScreenWidth<1500?'1200px':'1550px'
       this.tableWidth = {
-        'width': realScreenWidth<1500?'1250px':'1500px'
+        'width': realScreenWidth<1500?'1150px':'1500px'
       }
       this.tableWidthRetail = {
-        'width': realScreenWidth<1500?'900px':'1100px'
+        'width': realScreenWidth<1500?'800px':'1100px'
       }
     },
     methods: {
