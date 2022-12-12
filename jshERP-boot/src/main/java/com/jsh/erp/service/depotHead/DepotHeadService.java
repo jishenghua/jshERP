@@ -305,8 +305,12 @@ public class DepotHeadService {
     public Map<String, BigDecimal> getFinishDepositMapByNumberList(List<String> numberList) {
         List<FinishDepositVo> list = depotHeadMapperEx.getFinishDepositByNumberList(numberList);
         Map<String,BigDecimal> finishDepositMap = new HashMap<>();
-        for(FinishDepositVo finishDepositVo : list){
-            finishDepositMap.put(finishDepositVo.getNumber(), finishDepositVo.getFinishDeposit());
+        if(list!=null && list.size()>0) {
+            for (FinishDepositVo finishDepositVo : list) {
+                if(finishDepositVo!=null) {
+                    finishDepositMap.put(finishDepositVo.getNumber(), finishDepositVo.getFinishDeposit());
+                }
+            }
         }
         return finishDepositMap;
     }
@@ -314,8 +318,12 @@ public class DepotHeadService {
     public Map<String, Integer> getBillSizeMapByLinkNumberList(List<String> numberList) throws Exception {
         List<DepotHead> list = getBillListByLinkNumberList(numberList);
         Map<String, Integer> billListMap = new HashMap<>();
-        for(DepotHead depotHead : list){
-            billListMap.put(depotHead.getLinkNumber(), list.size());
+        if(list!=null && list.size()>0) {
+            for (DepotHead depotHead : list) {
+                if(depotHead!=null) {
+                    billListMap.put(depotHead.getLinkNumber(), list.size());
+                }
+            }
         }
         return billListMap;
     }
@@ -323,8 +331,12 @@ public class DepotHeadService {
     public Map<Long,Integer> getFinancialBillNoMapByBillIdList(List<Long> idList) {
         List<AccountItem> list = accountHeadService.getFinancialBillNoByBillIdList(idList);
         Map<Long, Integer> billListMap = new HashMap<>();
-        for(AccountItem accountItem : list){
-            billListMap.put(accountItem.getBillId(), list.size());
+        if(list!=null && list.size()>0) {
+            for (AccountItem accountItem : list) {
+                if(accountItem!=null) {
+                    billListMap.put(accountItem.getBillId(), list.size());
+                }
+            }
         }
         return billListMap;
     }
