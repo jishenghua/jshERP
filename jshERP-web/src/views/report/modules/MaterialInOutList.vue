@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1250"
+      :width="1200"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'89px','left':'151px'}"
@@ -79,8 +79,8 @@
           { title: '条码', dataIndex: 'barCode', width: 100},
           { title: '名称', dataIndex: 'materialName', width: 200},
           { title: '仓库名称', dataIndex: 'depotName', width: 80},
-          { title: '数量', dataIndex: 'basicNumber', width: 80},
-          { title: '日期', dataIndex: 'operTime', width: 100}
+          { title: '数量', dataIndex: 'basicNumber', width: 70},
+          { title: '日期', dataIndex: 'operTime', width: 110}
         ],
         labelCol: {
           xs: { span: 1 },

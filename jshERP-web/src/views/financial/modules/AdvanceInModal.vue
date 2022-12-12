@@ -61,6 +61,7 @@
           :loading="accountTable.loading"
           :columns="accountTable.columns"
           :dataSource="accountTable.dataSource"
+          :minWidth="minWidth"
           :maxHeight="300"
           :rowNumber="false"
           :rowSelection="true"

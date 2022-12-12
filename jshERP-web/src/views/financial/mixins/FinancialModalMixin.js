@@ -38,6 +38,7 @@ export const FinancialModalMixin = {
     this.isTenant = userInfo.id === userInfo.tenantId? true:false
     let realScreenWidth = window.screen.width
     this.width = realScreenWidth<1500?'1200px':'1550px'
+    this.minWidth = realScreenWidth<1500?1150:1500
   },
   computed: {
     readOnly: function() {

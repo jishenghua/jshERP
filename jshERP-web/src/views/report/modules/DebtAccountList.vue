@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1250"
+      :width="1200"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'89px','left':'151px'}"
@@ -127,7 +127,7 @@
             }
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
-          { title: '操作员', dataIndex: 'userName',width:60},
+          { title: '操作员', dataIndex: 'userName',width:60, ellipsis:true},
           { title: '本单欠款', dataIndex: 'needDebt',width:70},
           { dataIndex: 'realNeedDebt',width:80,
             slots: { title: 'customTitle' }
