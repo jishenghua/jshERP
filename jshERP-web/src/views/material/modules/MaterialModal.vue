@@ -44,7 +44,7 @@
                   data-step="4" data-title="单位" data-intro="此处支持单个单位和多单位，勾选多单位就可以切换到多单位的下拉框，多单位需要先在【计量单位】页面进行录入。
                   比如牛奶有瓶和箱两种单位，12瓶=1箱，这就构成了多单位，多单位中有个换算比例">
                   <a-row class="form-row" :gutter="24">
-                    <a-col :lg="15" :md="15" :sm="24">
+                    <a-col :lg="15" :md="15" :sm="24" style="padding:0px 0px 0px 12px;">
                       <a-input placeholder="输入单位" v-if="!unitChecked" v-decorator.trim="[ 'unit', validatorRules.unit ]" @change="onlyUnitOnChange" />
                       <a-select :value="unitList" placeholder="选择多单位" v-decorator="[ 'unitId', validatorRules.unitId ]" @change="manyUnitOnChange"
                         showSearch optionFilterProp="children" v-if="unitChecked" :dropdownMatchSelectWidth="false">
@@ -60,7 +60,7 @@
                         </a-select-option>
                       </a-select>
                     </a-col>
-                    <a-col :lg="9" :md="9" :sm="24">
+                    <a-col :lg="9" :md="9" :sm="24" style="padding:0px; text-align:center">
                       <a-checkbox :checked="unitChecked" @change="unitOnChange">多单位</a-checkbox>
                     </a-col>
                   </a-row>
@@ -190,28 +190,28 @@
           </a-tab-pane>
           <a-tab-pane key="2" tab="扩展信息" forceRender>
             <a-row v-if="mpShort.mfrs.enabled" class="form-row" :gutter="24">
-              <a-col :lg="8" :md="8" :sm="8">
+              <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.mfrs.name">
                   <a-input v-decorator.trim="[ 'mfrs' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField1.enabled" class="form-row" :gutter="24">
-              <a-col :lg="8" :md="8" :sm="8">
+              <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">
                   <a-input v-decorator.trim="[ 'otherField1' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField2.enabled" class="form-row" :gutter="24">
-              <a-col :lg="8" :md="8" :sm="8">
+              <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField2.name">
                   <a-input v-decorator.trim="[ 'otherField2' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
             <a-row v-if="mpShort.otherField3.enabled" class="form-row" :gutter="24">
-              <a-col :lg="8" :md="8" :sm="8">
+              <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField3.name">
                   <a-input v-decorator.trim="[ 'otherField3' ]" />
                 </a-form-item>
@@ -423,7 +423,7 @@
     created () {
       this.loadParseMaterialProperty()
       let realScreenWidth = window.screen.width
-      this.width = realScreenWidth<1500?'1200px':'1550px'
+      this.width = realScreenWidth<1500?'1200px':'1400px'
     },
     methods: {
       // 获取所有的editableTable实例
