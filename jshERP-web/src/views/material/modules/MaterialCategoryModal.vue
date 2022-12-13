@@ -8,7 +8,7 @@
       :confirmLoading="confirmLoading"
       :okButtonProps="{ props: {disabled: disableSubmit} }"
       :getContainer="() => $refs.container"
-      :maskStyle="{'top':'89px','left':'151px'}"
+      :maskStyle="{'top':'93px','left':'154px'}"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"

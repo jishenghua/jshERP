@@ -6,7 +6,7 @@
       :visible="visible"
       :confirm-loading="confirmLoading"
       :getContainer="() => $refs.container"
-      :maskStyle="{'top':'89px','left':'151px'}"
+      :maskStyle="{'top':'93px','left':'154px'}"
       :maskClosable="false"
       @cancel="handleCancel"
       wrapClassName="ant-modal-cust-warp"

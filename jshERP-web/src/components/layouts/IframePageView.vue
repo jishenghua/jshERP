@@ -28,7 +28,7 @@
         if (this.isMobile()) {
           this.height = 800
         } else {
-          this.height = document.documentElement.clientHeight-105
+          this.height = document.documentElement.clientHeight-100
         }
         console.log("------url------"+url)
         console.log("------token------"+Vue.ls.get(ACCESS_TOKEN))
