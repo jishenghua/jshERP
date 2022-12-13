@@ -93,12 +93,6 @@
                   <div slot="title">色弱模式</div>
                 </a-list-item-meta>
               </a-list-item>
-              <a-list-item>
-                <a-switch slot="actions" size="small" :defaultChecked="multipage" @change="onMultipageWeak" />
-                <a-list-item-meta>
-                  <div slot="title">多页签模式</div>
-                </a-list-item-meta>
-              </a-list-item>
             </a-list>
           </div>
         </div>

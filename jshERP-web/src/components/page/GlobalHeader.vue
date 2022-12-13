@@ -11,11 +11,6 @@
         class="trigger"
         :type="collapsed ? 'menu-fold' : 'menu-unfold'"
         @click="toggle"></a-icon>
-      <a-icon
-        v-else
-        class="trigger"
-        :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-        @click="toggle"/>
 
       <span v-if="device === 'desktop'"></span>
       <span v-else>{{ systemTitle }}</span>
