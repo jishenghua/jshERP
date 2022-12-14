@@ -146,6 +146,11 @@
                 <a-icon v-if="record.imgName" style="font-size: 18px" theme="twoTone" type="file-image" />
               </a-popover>
             </template>
+            <template slot="customName" slot-scope="text, record">
+              {{record.name}}
+              <a-tag v-if="record.enableSerialNumber==1" color="orange">序</a-tag>
+              <a-tag v-if="record.enableBatchNumber==1" color="orange">批</a-tag>
+            </template>
             <template slot="customRenderStock" slot-scope="text, record">
               <a-tooltip :title="record.bigUnitStock">
                 {{text}}
@@ -154,14 +159,6 @@
             <template slot="customRenderEnabled" slot-scope="enabled">
               <a-tag v-if="enabled" color="green">启用</a-tag>
               <a-tag v-if="!enabled" color="orange">禁用</a-tag>
-            </template>
-            <template slot="customRenderEnableSerialNumber" slot-scope="enableSerialNumber">
-              <a-tag v-if="enableSerialNumber==1" color="green">有</a-tag>
-              <a-tag v-if="enableSerialNumber==0" color="orange">无</a-tag>
-            </template>
-            <template slot="customRenderEnableBatchNumber" slot-scope="enableBatchNumber">
-              <a-tag v-if="enableBatchNumber==1" color="green">有</a-tag>
-              <a-tag v-if="enableBatchNumber==0" color="orange">无</a-tag>
             </template>
           </a-table>
         </div>
@@ -238,11 +235,11 @@
             width: 100,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 140, scopedSlots: { customRender: 'customBarCode' }},
-          {title: '名称', dataIndex: 'name'},
-          {title: '规格', dataIndex: 'standard'},
-          {title: '型号', dataIndex: 'model'},
-          {title: '颜色', dataIndex: 'color'},
+          {title: '条码', dataIndex: 'mBarCode', width: 160, scopedSlots: { customRender: 'customBarCode' }},
+          {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
+          {title: '规格', dataIndex: 'standard', width: 120},
+          {title: '型号', dataIndex: 'model', width: 120},
+          {title: '颜色', dataIndex: 'color', width: 70, ellipsis:true},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
           {title: '单位', dataIndex: 'unit', width: 100, ellipsis:true,
@@ -266,13 +263,7 @@
           {title: '零售价', dataIndex: 'commodityDecimal', width: 80},
           {title: '销售价', dataIndex: 'wholesaleDecimal', width: 80},
           {title: '最低售价', dataIndex: 'lowDecimal', width: 80},
-          {title: '备注', dataIndex: 'remark'},
-          {title: '序列号', dataIndex: 'enableSerialNumber', align: "center", width: 60,
-            scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
-          },
-          {title: '批号', dataIndex: 'enableBatchNumber', align: "center", width: 60,
-            scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
-          },
+          {title: '备注', dataIndex: 'remark', width: 80},
           {title: '状态', dataIndex: 'enabled', align: "center", width: 60,
             scopedSlots: { customRender: 'customRenderEnabled' }
           }
