@@ -6,12 +6,13 @@
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:20px;height: 95%;overflow-y: hidden">
+      style="top:20px;height: 95%;">
       <!-- 查询区域 -->
       <div class="table-page-search-wrapper" v-if="selectType === 'list'">
         <!-- 搜索区域 -->
@@ -103,12 +104,13 @@
 <script>
   import BillDetail from './BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import {mixinDevice} from '@/utils/mixin'
   import { findBillDetailByNumber } from '@/api/api'
   import { getAction } from '@/api/manage'
   import Vue from 'vue'
   export default {
     name: 'LinkBillList',
-    mixins:[JeecgListMixin],
+    mixins:[JeecgListMixin, mixinDevice],
     components: {
       BillDetail
     },

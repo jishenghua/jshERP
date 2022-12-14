@@ -7,12 +7,13 @@
       :confirm-loading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:30%;height: 30%;overflow-y: hidden">
+      style="top:30%;height: 30%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -30,8 +31,10 @@
 </template>
 
 <script>
+  import {mixinDevice} from '@/utils/mixin'
   export default {
     name: 'BatchSetStockModal',
+    mixins: [mixinDevice],
     data () {
       return {
         title:"批量设置",

@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:15%;height: 60%;overflow-y: hidden">
+      style="top:15%;height: 60%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -68,8 +69,10 @@
   import pick from 'lodash.pick'
   import {addSupplier,editSupplier,checkSupplier } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "MemberModal",
+    mixins: [mixinDevice],
     data () {
       return {
         title:"操作",

@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:20%;height: 50%;overflow-y: hidden">
+      style="top:20%;height: 50%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item label="旧密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -32,9 +33,11 @@
 
 <script>
   import { putAction } from '@/api/manage'
+  import {mixinDevice} from '@/utils/mixin'
   import md5 from 'md5'
   export default {
     name: "UserPassword",
+    mixins: [mixinDevice],
     data () {
       return {
         title:"修改密码",

@@ -7,11 +7,12 @@
       :confirm-loading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:20%;height: 45%;overflow-y: hidden">
+      style="top:20%;height: 45%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-row class="form-row" :gutter="24">
@@ -67,8 +68,10 @@
 
 <script>
   import {queryMaterialCategoryTreeList, batchUpdateMaterial} from '@/api/api'
+  import {mixinDevice} from '@/utils/mixin'
   export default {
     name: 'BatchSetInfoModal',
+    mixins: [mixinDevice],
     data () {
       return {
         title:"批量编辑",

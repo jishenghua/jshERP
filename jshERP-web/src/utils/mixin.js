@@ -33,6 +33,13 @@ const mixinDevice = {
     },
     isDesktop () {
       return this.device === 'desktop'
+    },
+    wrapClassNameInfo () {
+      if(this.device === 'desktop') {
+        return 'ant-modal-cust-warp depot-mask'
+      } else {
+        return 'ant-modal-cust-warp'
+      }
     }
   }
 }

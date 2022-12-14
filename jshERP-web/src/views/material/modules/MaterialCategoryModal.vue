@@ -9,11 +9,12 @@
       :okButtonProps="{ props: {disabled: disableSubmit} }"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:100px;height: 50%;overflow-y: hidden"
+      style="top:100px;height: 50%;"
       cancelText="关闭">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
@@ -43,11 +44,13 @@
 
 <script>
   import { httpAction } from '@/api/manage'
+  import {mixinDevice} from '@/utils/mixin'
   import { queryMaterialCategoryTreeList, checkMaterialCategory } from '@/api/api'
   import pick from 'lodash.pick'
   import ATextarea from 'ant-design-vue/es/input/TextArea'
   export default {
     name: "MaterialCategoryModal",
+    mixins: [mixinDevice],
     components: { ATextarea },
     data () {
       return {

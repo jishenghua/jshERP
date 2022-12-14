@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:5%;height: 95%;overflow-y: hidden">
+      style="top:5%;height: 95%;">
       <a-spin :spinning="confirmLoading">
         <div class="table-page-search-wrapper">
           <!-- 按钮区域 -->
@@ -69,9 +70,10 @@
   import { getAction } from '@/api/manage'
   import { updateBtnStrByRoleId } from '@/api/api'
   import { removeByVal } from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "RolePushBtnModal",
-    mixins:[JeecgListMixin],
+    mixins:[JeecgListMixin, mixinDevice],
     data () {
       return {
         title:"操作",

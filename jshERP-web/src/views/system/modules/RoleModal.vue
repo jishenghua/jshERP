@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:15%;height: 60%;overflow-y: hidden">
+      style="top:15%;height: 60%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -56,8 +57,10 @@
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import {addRole,editRole,checkRole } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "RoleModal",
+    mixins: [mixinDevice],
     components: {
       JSelectMultiple
     },

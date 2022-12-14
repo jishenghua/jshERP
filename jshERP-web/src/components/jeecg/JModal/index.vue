@@ -5,8 +5,11 @@
       :class="getClass(modalClass)"
       :style="getStyle(modalStyle)"
       :visible="visible"
-      :maskStyle="{'top':'93px','left':'154px'}"
       :getContainer="() => $refs.container"
+      :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
+      :maskClosable="false"
       v-bind="_attrs"
       v-on="$listeners"
       @ok="handleOk"
@@ -49,10 +52,12 @@
 
   import { getClass, getStyle } from '@/utils/props-util'
   import { triggerWindowResizeEvent, handleIntroJs } from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   import Vue from 'vue'
 
   export default {
     name: 'JModal',
+    mixins: [mixinDevice],
     props: {
       title: String,
       // 可使用 .sync 修饰符

@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:5%;height: 90%;overflow-y: hidden">
+      style="top:5%;height: 90%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -62,9 +63,11 @@
   import FunctionTreeModal from './FunctionTreeModal'
   import {addFunction,editFunction,checkFunction, checkNumber } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   export default {
     name: "FunctionModal",
+    mixins: [mixinDevice],
     components: {
       FunctionTreeModal,
       JSelectMultiple

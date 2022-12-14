@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:30%;height: 35%;overflow-y: hidden">
+      style="top:30%;height: 35%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -35,8 +36,10 @@
 <script>
   import pick from 'lodash.pick'
   import { getAction } from '@/api/manage'
+  import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "BatchSetDepot",
+    mixins: [mixinDevice],
     data () {
       return {
         title:"操作",

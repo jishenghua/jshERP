@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:15%;height: 60%;overflow-y: hidden">
+      style="top:15%;height: 60%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="登录名称">
@@ -41,11 +42,13 @@
 </template>
 <script>
   import pick from 'lodash.pick'
+  import {mixinDevice} from '@/utils/mixin'
   import {registerUser,editTenant,checkTenant } from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
   import md5 from 'md5'
   export default {
     name: "TenantModal",
+    mixins: [mixinDevice],
     components: {
       JDate
     },

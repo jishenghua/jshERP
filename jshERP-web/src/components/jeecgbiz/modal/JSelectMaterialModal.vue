@@ -3,11 +3,11 @@
     :width="modalWidth"
     :visible="visible"
     :title="title"
+    :wrapClassName="wrapClassNameInfo()"
     @ok="handleSubmit"
     @cancel="close"
     cancelText="关闭"
     style="top:5%;height: 90%;overflow-y: hidden"
-    wrapClassName="ant-modal-cust-warp"
   >
     <a-row :gutter="10" style="padding: 10px; margin: -10px">
       <a-col :md="24" :sm="24">
@@ -113,11 +113,12 @@
   import {filterObj, getMpListShort} from '@/utils/util'
   import {getMaterialBySelect, queryMaterialCategoryTreeList} from '@/api/api'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import {mixinDevice} from '@/utils/mixin'
   import Vue from 'vue'
 
   export default {
     name: 'JSelectMaterialModal',
-    mixins:[JeecgListMixin],
+    mixins:[JeecgListMixin, mixinDevice],
     components: {
       MaterialModal: () => import('@/views/material/modules/MaterialModal')
     },

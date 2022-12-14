@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:20%;height: 50%;overflow-y: hidden">
+      style="top:20%;height: 50%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="机器码">
@@ -29,9 +30,11 @@
 <script>
   import pick from 'lodash.pick'
   import {getPlatformConfigByKey } from '@/api/api'
+  import {mixinDevice} from '@/utils/mixin'
   import { getAction, postAction } from '../../../api/manage'
   export default {
     name: "PluginModal",
+    mixins: [mixinDevice],
     data () {
       return {
         title:"操作",

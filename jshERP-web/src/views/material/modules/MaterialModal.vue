@@ -4,14 +4,12 @@
     :width="width"
     :visible="visible"
     :confirmLoading="confirmLoading"
-    :maskClosable="false"
     v-bind:prefixNo="prefixNo"
     switchHelp
     switchFullscreen
     @ok="handleOk"
     @cancel="handleCancel"
     cancelText="关闭"
-    wrapClassName="ant-modal-material-warp"
     :id="prefixNo"
     :style="modalStyle">
     <template slot="footer">

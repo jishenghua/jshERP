@@ -6,11 +6,12 @@
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       :style="modalStyle"
       @cancel="handleCancel"
-      cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp">
+      cancelText="关闭">
       <template slot="footer">
         <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
@@ -34,8 +35,10 @@
 
 <script>
   import pick from 'lodash.pick'
+  import {mixinDevice} from '@/utils/mixin'
   export default {
     name: 'BillPrintIframe',
+    mixins: [mixinDevice],
     data () {
       return {
         title: "三联打印预览",

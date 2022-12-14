@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:25%;height: 40%;overflow-y: hidden">
+      style="top:25%;height: 40%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form" id="platformConfigModal">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="配置名称">
@@ -30,8 +31,10 @@
   import pick from 'lodash.pick'
   import {addPlatformConfig,editPlatformConfig } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "PlatformConfigModal",
+    mixins: [mixinDevice],
     data () {
       return {
         title:"操作",

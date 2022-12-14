@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:5%;height: 85%;overflow-y: hidden">
+      style="top:5%;height: 85%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -69,9 +70,11 @@
   import {addUser,editUser,queryOrganizationTreeList,roleAllList} from '@/api/api'
   import { disabledAuthFilter } from "@/utils/authFilter"
   import {autoJumpNextInput} from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   import JImageUpload from '../../../components/jeecg/JImageUpload'
   export default {
     name: "UserModal",
+    mixins: [mixinDevice],
     components: {
       JImageUpload,
       JSelectPosition

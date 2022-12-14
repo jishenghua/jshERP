@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:5%;height: 95%;overflow-y: hidden">
+      style="top:5%;height: 95%;">
       <a-spin :spinning="confirmLoading">
         <div class="drawer-bootom-button">
           <a-dropdown :trigger="['click']" placement="topCenter">
@@ -50,10 +51,12 @@
 </template>
 <script>
   import pick from 'lodash.pick'
+  import {mixinDevice} from '@/utils/mixin'
   import {addUserBusiness,editUserBusiness,checkUserBusiness} from '@/api/api'
   import {getAction} from '../../../api/manage'
   export default {
     name: "UserDepotModal",
+    mixins: [mixinDevice],
     data () {
       return {
         title:"操作",

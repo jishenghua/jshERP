@@ -59,7 +59,7 @@
     <span class="action">
       <a class="logout_title" href="javascript:;" @click="handleLogout">
         <a-icon type="logout"/>
-        <span v-if="isDesktop()">&nbsp;退出登录</span>
+        <span>&nbsp;退出登录</span>
       </a>
     </span>
     <user-password ref="userPassword"></user-password>
@@ -186,7 +186,9 @@
         }
       },
       filterOption(input, option) {
-        return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        if(option && option.componentOptions && option.componentOptions.children && option.componentOptions.children[0]) {
+          return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        }
       },
       // update_begin author:sunjianlei date:20191230 for: 解决外部链接打开失败的问题
       searchMethods(value) {

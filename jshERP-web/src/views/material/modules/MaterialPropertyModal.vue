@@ -7,12 +7,13 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:10%;height: 70%;overflow-y: hidden">
+      style="top:10%;height: 70%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
@@ -34,9 +35,11 @@
 </template>
 <script>
   import pick from 'lodash.pick'
+  import {mixinDevice} from '@/utils/mixin'
   import {editMaterialProperty } from '@/api/api'
   export default {
     name: "MaterialPropertyModal",
+    mixins: [mixinDevice],
     data () {
       return {
         title:"操作",

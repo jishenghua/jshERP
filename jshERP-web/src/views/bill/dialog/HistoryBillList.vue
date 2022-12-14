@@ -6,11 +6,12 @@
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:50px;height: 90%;overflow-y: hidden">
+      style="top:50px;height: 90%;">
       <template slot="footer">
         <a-button @click="handleCancel">关闭</a-button>
       </template>
@@ -92,11 +93,12 @@
 <script>
   import BillDetail from './BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+  import {mixinDevice} from '@/utils/mixin'
   import { findBySelectSup, findBySelectCus, findBillDetailByNumber} from '@/api/api'
   import Vue from 'vue'
   export default {
     name: 'HistoryBillList',
-    mixins:[JeecgListMixin],
+    mixins:[JeecgListMixin, mixinDevice],
     components: {
       BillDetail,
     },

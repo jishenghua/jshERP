@@ -8,13 +8,14 @@
       :confirmLoading="confirmLoading"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       :okButtonProps="{ props: {disabled: disableSubmit} }"
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:50px;height: 80%;overflow-y: hidden">
+      style="top:50px;height: 80%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form" id="organizationModal">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
@@ -45,10 +46,12 @@
   import { httpAction } from '@/api/manage'
   import { queryOrganizationTreeList, checkOrganization } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   import pick from 'lodash.pick'
   import ATextarea from 'ant-design-vue/es/input/TextArea'
   export default {
     name: "OrganizationModal",
+    mixins: [mixinDevice],
     components: { ATextarea },
     data () {
       return {

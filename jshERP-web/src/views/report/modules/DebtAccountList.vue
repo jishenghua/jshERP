@@ -6,11 +6,12 @@
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
+      :wrapClassName="wrapClassNameInfo()"
+      :mask="isDesktop()"
       :maskClosable="false"
       @cancel="handleCancel"
       cancelText="关闭"
-      wrapClassName="ant-modal-cust-warp"
-      style="top:20px;height: 95%;overflow-y: hidden">
+      style="top:20px;height: 95%;">
       <template slot="footer">
         <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
@@ -73,11 +74,12 @@
   import BillDetail from '../../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { openDownloadDialog, sheet2blob} from "@/utils/util"
+  import {mixinDevice} from '@/utils/mixin'
   import { findBillDetailByNumber } from '@/api/api'
   import Vue from 'vue'
   export default {
     name: 'DebtAccountList',
-    mixins:[JeecgListMixin],
+    mixins:[JeecgListMixin, mixinDevice],
     components: {
       BillDetail
     },
