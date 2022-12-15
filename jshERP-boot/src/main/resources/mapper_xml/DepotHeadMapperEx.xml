@@ -98,7 +98,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+                or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+                or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}
@@ -194,7 +196,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}
