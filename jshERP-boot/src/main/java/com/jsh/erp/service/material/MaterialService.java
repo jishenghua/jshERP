@@ -111,7 +111,7 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String materialParam, String color, String weight, String expiryNum,
+    public List<MaterialVo4Unit> select(String materialParam, String color, String materialOther, String weight, String expiryNum,
                                         String enableSerialNumber, String enableBatchNumber, String enabled,
                                         String remark, String categoryId, String mpList, int offset, int rows)
             throws Exception{
@@ -126,7 +126,7 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list= materialMapperEx.selectByConditionMaterial(materialParam, color, weight, expiryNum,
+            list= materialMapperEx.selectByConditionMaterial(materialParam, color, materialOther, weight, expiryNum,
                     enableSerialNumber, enableBatchNumber, enabled, remark, idList, mpList, offset, rows);
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
@@ -143,7 +143,7 @@ public class MaterialService {
         return resList;
     }
 
-    public Long countMaterial(String materialParam, String color, String weight, String expiryNum,
+    public Long countMaterial(String materialParam, String color, String materialOther, String weight, String expiryNum,
                               String enableSerialNumber, String enableBatchNumber, String enabled,
                               String remark, String categoryId,String mpList)throws Exception {
         Long result =null;
@@ -152,7 +152,7 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            result= materialMapperEx.countsByMaterial(materialParam, color, weight, expiryNum,
+            result= materialMapperEx.countsByMaterial(materialParam, color, materialOther, weight, expiryNum,
                     enableSerialNumber, enableBatchNumber, enabled, remark, idList, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);

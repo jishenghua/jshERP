@@ -51,6 +51,11 @@
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
         </if>
+        <if test="materialOther != null and materialOther !=''">
+            <bind name="bindOther" value="'%'+materialOther+'%'"/>
+            and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
+                or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+        </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
         </if>
@@ -100,6 +105,11 @@
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
+        </if>
+        <if test="materialOther != null and materialOther !=''">
+            <bind name="bindOther" value="'%'+materialOther+'%'"/>
+            and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
+            or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}

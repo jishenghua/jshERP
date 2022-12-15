@@ -19,6 +19,7 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> selectByConditionMaterial(
             @Param("materialParam") String materialParam,
             @Param("color") String color,
+            @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
             @Param("enableSerialNumber") String enableSerialNumber,
@@ -33,6 +34,7 @@ public interface MaterialMapperEx {
     Long countsByMaterial(
             @Param("materialParam") String materialParam,
             @Param("color") String color,
+            @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
             @Param("enableSerialNumber") String enableSerialNumber,
