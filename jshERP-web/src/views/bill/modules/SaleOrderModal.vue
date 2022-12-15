@@ -71,14 +71,14 @@
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
-              <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
+              <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 8px 0 12px">
                 <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
-              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px">
+              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px 18px 0 0">
                 <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
