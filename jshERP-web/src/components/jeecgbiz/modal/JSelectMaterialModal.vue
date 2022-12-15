@@ -92,13 +92,10 @@
                 <a-icon v-if="record.imgName" style="font-size: 18px" theme="twoTone" type="file-image" />
               </a-popover>
             </template>
-            <template slot="customRenderEnableSerialNumber" slot-scope="enableSerialNumber">
-              <a-tag v-if="enableSerialNumber==1" color="green">有</a-tag>
-              <a-tag v-if="enableSerialNumber==0" color="orange">无</a-tag>
-            </template>
-            <template slot="customRenderEnableBatchNumber" slot-scope="enableBatchNumber">
-              <a-tag v-if="enableBatchNumber==1" color="green">有</a-tag>
-              <a-tag v-if="enableBatchNumber==0" color="orange">无</a-tag>
+            <template slot="customName" slot-scope="text, record">
+              {{record.name}}
+              <a-tag v-if="record.enableSerialNumber==1" color="orange">序</a-tag>
+              <a-tag v-if="record.enableBatchNumber==1" color="orange">批</a-tag>
             </template>
           </a-table>
         </div>
@@ -144,7 +141,7 @@
         categoryTree:[],
         columns: [
           {dataIndex: 'mBarCode', title: '条码', scopedSlots: { customRender: 'customBarCode' }},
-          {dataIndex: 'name', title: '名称'},
+          {dataIndex: 'name', title: '名称', scopedSlots: { customRender: 'customName' }},
           {dataIndex: 'categoryName', title: '类别'},
           {dataIndex: 'standard', title: '规格'},
           {dataIndex: 'model', title: '型号'},
@@ -152,13 +149,7 @@
           {dataIndex: 'unit', title: '单位'},
           {dataIndex: 'sku', title: '多属性'},
           {dataIndex: 'stock', title: '库存'},
-          {dataIndex: 'expand', title: '扩展信息'},
-          {dataIndex: 'enableSerialNumber', title: '序列号', align: "center",
-            scopedSlots: { customRender: 'customRenderEnableSerialNumber' }
-          },
-          {dataIndex: 'enableBatchNumber', title: '批号', align: "center",
-            scopedSlots: { customRender: 'customRenderEnableBatchNumber' }
-          }
+          {dataIndex: 'expand', title: '扩展信息'}
         ],
         scrollTrigger: {},
         dataSource: [],
