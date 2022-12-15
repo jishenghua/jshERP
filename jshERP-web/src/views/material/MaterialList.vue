@@ -36,17 +36,6 @@
                 </a-col>
               </span>
               <template v-if="toggleSearchStatus">
-
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="基础重量" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input-number style="width: 100%" placeholder="请输入基础重量查询" v-model="queryParam.weight"></a-input-number>
-                  </a-form-item>
-                </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="保质期" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input-number style="width: 100%" placeholder="请输入保质期查询" v-model="queryParam.expiryNum"></a-input-number>
-                  </a-form-item>
-                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择状态" v-model="queryParam.enabled">
@@ -69,6 +58,21 @@
                       <a-select-option value="1">有</a-select-option>
                       <a-select-option value="0">无</a-select-option>
                     </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="扩展信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input style="width: 100%" placeholder="请输入扩展信息查询" v-model="queryParam.materialOther"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="基础重量" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input-number style="width: 100%" placeholder="请输入基础重量查询" v-model="queryParam.weight"></a-input-number>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="保质期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input-number style="width: 100%" placeholder="请输入保质期查询" v-model="queryParam.expiryNum"></a-input-number>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
@@ -210,6 +214,7 @@
           categoryId:'',
           materialParam:'',
           color:'',
+          materialOther:'',
           weight:'',
           expiryNum:'',
           enabled: '',
