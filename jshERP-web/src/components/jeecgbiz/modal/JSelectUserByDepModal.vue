@@ -21,7 +21,6 @@
             :treeData="departTree"
             :expandAction="false"
             :expandedKeys.sync="expandedKeys"
-            @select="onDepSelect"
           />
         </a-card>
       </a-col>
@@ -181,20 +180,6 @@
         if (arg === 1) {
           this.ipagination.current = 1;
         }
-        if (this.selectedDepIds && this.selectedDepIds.length > 0) {
-          await this.initQueryUserByDepId(this.selectedDepIds)
-        } else {
-          this.loading = true
-          let params = this.getQueryParams()//查询条件
-          await getUserList(params).then((res) => {
-            if (res.success) {
-              this.dataSource = res.result.records
-              this.ipagination.total = res.result.total
-            }
-          }).finally(() => {
-            this.loading = false
-          })
-        }
       },
       // 触发屏幕自适应
       resetScreenSize() {
@@ -269,33 +254,12 @@
         }
         this.selectUserIds = userIds.substring(1);
       },
-      // 点击树节点,筛选出对应的用户
-      onDepSelect(selectedDepIds) {
-        if (selectedDepIds[0] != null) {
-          this.initQueryUserByDepId(selectedDepIds); // 调用方法根据选选择的id查询用户信息
-          if (this.selectedDepIds[0] !== selectedDepIds[0]) {
-            this.selectedDepIds = [selectedDepIds[0]];
-          }
-        }
-      },
       onSelectChange(selectedRowKeys, selectionRows) {
         this.selectedRowKeys = selectedRowKeys;
         this.selectionRows = selectionRows;
       },
       onSearch() {
         this.loadData(1);
-      },
-      // 根据选择的id来查询用户信息
-      initQueryUserByDepId(selectedDepIds) {
-        this.loading = true
-        return queryUserByDepId({id: selectedDepIds.toString()}).then((res) => {
-          if (res.success) {
-            this.dataSource = res.result;
-            this.ipagination.total = res.result.length;
-          }
-        }).finally(() => {
-          this.loading = false
-        })
       },
       queryDepartTree() {
       },
