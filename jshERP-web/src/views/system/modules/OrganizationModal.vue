@@ -31,7 +31,7 @@
             </a-tree-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
-            <a-input-number v-decorator="[ 'sort' ]"/>
+            <a-input v-decorator="[ 'sort' ]"/>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
             <a-textarea placeholder="请输入备注":rows="2" v-decorator.trim="[ 'remark' ]" />
