@@ -337,7 +337,6 @@
             {
               title: '条码', key: 'barCode', width: '15%', type: FormTypes.input, defaultValue: '', placeholder: '请输入${title}',
               validateRules: [{ required: true, message: '${title}不能为空' },
-                { pattern: /[^%&',;=?$x22]+$/, message: '含有%&\',;=?$"等字符' },
                 { pattern: /^.{4,40}$/, message: '长度为4到40位' },
                 { handler: this.validateBarCode}]
             },
