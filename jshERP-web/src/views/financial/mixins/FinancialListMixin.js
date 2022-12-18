@@ -1,4 +1,5 @@
-import {findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail, getUserList, getPersonByType, getAccount} from '@/api/api'
+import {findFinancialDetailByNumber, findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail,
+  getUserList, getPersonByType, getAccount} from '@/api/api'
 import Vue from 'vue'
 
 export const FinancialListMixin = {
@@ -43,7 +44,13 @@ export const FinancialListMixin = {
         if(this.btnEnableList.indexOf(2)===-1) {
           this.$refs.modalForm.isCanCheck = false
         }
-        this.handleEdit(record);
+        //查询单条财务信息
+        findFinancialDetailByNumber({ billNo: record.billNo }).then((res) => {
+          if (res && res.code === 200) {
+            let item = res.data
+            this.handleEdit(item)
+          }
+        })
       } else {
         this.$message.warning("抱歉，只有未审核的单据才能编辑！")
       }

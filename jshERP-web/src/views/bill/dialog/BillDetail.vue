@@ -1454,39 +1454,45 @@
         })
       },
       show(record, type) {
-        this.billType = type
-        //附件下载
-        this.fileList = record.fileName
-        this.visible = true
-        this.modalStyle = 'top:20px;height: 95%;'
-        this.model = Object.assign({}, record)
-        if(this.model.backAmount) {
-          this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
-        } else {
-          this.model.getAmount = this.model.changeAmount
-        }
-        this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - (this.model.deposit + this.model.changeAmount)).toFixed(2)
-        this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'id'))
-        });
-        let showType = 'basic'
-        if(record.status === '3') {
-          showType = 'basic'
-        } else if(record.purchaseStatus === '3') {
-          showType = 'purchase'
-        }
-        let params = {
-          headerId: this.model.id,
-          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
-          linkType: showType,
-          isReadOnly: '1'
-        }
-        let url = this.readOnly ? this.url.detailList : this.url.detailList;
-        this.requestSubTableData(record, type, url, params);
-        this.initPlatform()
-        this.getSystemConfig()
-        this.getBillListByLinkNumber(this.model.number)
-        this.getFinancialBillNoByBillId(this.model.id)
+        //查询单条单据信息
+        findBillDetailByNumber({ number: record.number }).then((res) => {
+          if (res && res.code === 200) {
+            let item = res.data
+            this.billType = type
+            //附件下载
+            this.fileList = item.fileName
+            this.visible = true
+            this.modalStyle = 'top:20px;height: 95%;'
+            this.model = Object.assign({}, item)
+            if (this.model.backAmount) {
+              this.model.getAmount = (this.model.changeAmount + this.model.backAmount).toFixed(2)
+            } else {
+              this.model.getAmount = this.model.changeAmount
+            }
+            this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - (this.model.deposit + this.model.changeAmount)).toFixed(2)
+            this.$nextTick(() => {
+              this.form.setFieldsValue(pick(this.model, 'id'))
+            });
+            let showType = 'basic'
+            if (item.status === '3') {
+              showType = 'basic'
+            } else if (item.purchaseStatus === '3') {
+              showType = 'purchase'
+            }
+            let params = {
+              headerId: this.model.id,
+              mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+              linkType: showType,
+              isReadOnly: '1'
+            }
+            let url = this.readOnly ? this.url.detailList : this.url.detailList;
+            this.requestSubTableData(item, type, url, params);
+            this.initPlatform()
+            this.getSystemConfig()
+            this.getBillListByLinkNumber(this.model.number)
+            this.getFinancialBillNoByBillId(this.model.id)
+          }
+        })
       },
       requestSubTableData(record, type, url, params, success) {
         this.loading = true

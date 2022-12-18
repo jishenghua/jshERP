@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import {getAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
-import {findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount} from '@/api/api'
+import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount} from '@/api/api'
 
 export const BillListMixin = {
   data () {
@@ -59,7 +59,13 @@ export const BillListMixin = {
         if(this.btnEnableList.indexOf(2)===-1) {
           this.$refs.modalForm.isCanCheck = false
         }
-        this.handleEdit(record);
+        //查询单条单据信息
+        findBillDetailByNumber({ number: record.number }).then((res) => {
+          if (res && res.code === 200) {
+            let item = res.data
+            this.handleEdit(item)
+          }
+        })
       } else {
         this.$message.warning("抱歉，只有未审核的单据才能编辑！")
       }

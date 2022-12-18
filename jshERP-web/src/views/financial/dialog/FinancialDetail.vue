@@ -399,6 +399,7 @@
 <script>
   import pick from 'lodash.pick'
   import { getAction, postAction } from '@/api/manage'
+  import { findFinancialDetailByNumber } from '@/api/api'
   import JUpload from '@/components/jeecg/JUpload'
   export default {
     name: 'FinancialDetail',
@@ -476,20 +477,26 @@
     },
     methods: {
       show(record, type) {
-        this.financialType = type
-        //附件下载
-        this.fileList = record.fileName
-        this.visible = true
-        this.modalStyle = 'top:20px;height: 95%;'
-        this.model = Object.assign({}, record)
-        this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'id'))
-        });
-        let params = {
-          headerId: this.model.id,
-        }
-        let url = this.readOnly ? this.url.detailList : this.url.detailList;
-        this.requestSubTableData(url, params);
+        //查询单条财务信息
+        findFinancialDetailByNumber({ billNo: record.billNo }).then((res) => {
+          if (res && res.code === 200) {
+            let item = res.data
+            this.financialType = type
+            //附件下载
+            this.fileList = item.fileName
+            this.visible = true
+            this.modalStyle = 'top:20px;height: 95%;'
+            this.model = Object.assign({}, item)
+            this.$nextTick(() => {
+              this.form.setFieldsValue(pick(this.model, 'id'))
+            });
+            let params = {
+              headerId: this.model.id,
+            }
+            let url = this.readOnly ? this.url.detailList : this.url.detailList;
+            this.requestSubTableData(url, params);
+          }
+        })
       },
       requestSubTableData(url, params, success) {
         this.loading = true
