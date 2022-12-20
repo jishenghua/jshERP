@@ -12,7 +12,7 @@ module.exports = {
     configureWebpack: config => {
     // 生产环境取消 console.log
         if (process.env.NODE_ENV === 'production') {
-            config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
+            config.optimization.minimizer[0].options.minimizer.options.compress.drop_console = true
         }
     },
     chainWebpack: (config) => {
@@ -30,6 +30,12 @@ module.exports = {
                 deleteOriginalAssets: false // 删除源文件
             }))
         }
+        // 忽略md文件
+        config.module
+          .rule('markdown')
+          .test(/\.md$/)
+          .use('null-loader')
+            .loader('null-loader')
     },
     css: {
         loaderOptions: {
@@ -42,6 +48,8 @@ module.exports = {
                 },
                 javascriptEnabled: true
             }
+
+          
         }
     },
     devServer: {
@@ -52,7 +60,9 @@ module.exports = {
                 ws: false,
                 changeOrigin: true
             }
-        }
+        },
+        // 不检查host
+        allowedHosts: 'all'
     },
-    lintOnSave: undefined
+    lintOnSave: false
 }
