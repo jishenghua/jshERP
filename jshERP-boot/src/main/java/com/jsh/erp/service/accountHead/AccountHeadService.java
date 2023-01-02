@@ -395,7 +395,9 @@ public class AccountHeadService {
                 if(ah.getTotalPrice() != null) {
                     ah.setTotalPrice(ah.getTotalPrice().abs());
                 }
-                ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
+                if(ah.getBillTime() !=null) {
+                    ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
+                }
                 resList.add(ah);
             }
         }

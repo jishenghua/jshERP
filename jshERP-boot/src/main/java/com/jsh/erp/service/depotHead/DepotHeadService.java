@@ -811,7 +811,9 @@ public class DepotHeadService {
                     if(StringUtil.isNotEmpty(dh.getSalesMan())) {
                         dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
                     }
-                    dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                    if(dh.getOperTime() != null) {
+                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                    }
                     //商品信息简述
                     if(materialsListMap!=null) {
                         dh.setMaterialsList(materialsListMap.get(dh.getId()));
