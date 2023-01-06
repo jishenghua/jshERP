@@ -652,13 +652,16 @@ public class DepotItemService {
             materialSumMap.put(materialAndSum.getMaterialExtendId(), materialAndSum.getOperNumber());
         }
         for(DepotItemVo4MaterialAndSum materialAndSum : linkList) {
-            BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
-            if(materialSum!=null) {
-                if(materialSum.compareTo(materialAndSum.getOperNumber()) != 0) {
+            //过滤掉原单里面有数量为0的商品
+            if(materialAndSum.getOperNumber().compareTo(BigDecimal.ZERO) != 0) {
+                BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
+                if (materialSum != null) {
+                    if (materialSum.compareTo(materialAndSum.getOperNumber()) != 0) {
+                        res = BusinessConstants.BILLS_STATUS_SKIPING;
+                    }
+                } else {
                     res = BusinessConstants.BILLS_STATUS_SKIPING;
                 }
-            } else {
-                res = BusinessConstants.BILLS_STATUS_SKIPING;
             }
         }
         return res;
