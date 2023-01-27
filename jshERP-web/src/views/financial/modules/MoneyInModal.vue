@@ -116,7 +116,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠金额">
-              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'discountMoney', validatorRules.discountMoney ]" @keyup="onKeyUpDiscountMoney" />
+              <a-input placeholder="请输入优惠金额" v-decorator.trim="[ 'discountMoney', validatorRules.discountMoney ]" @change="onChangeDiscountMoney" />
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">

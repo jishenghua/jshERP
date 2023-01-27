@@ -131,7 +131,7 @@
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" data-step="6" data-title="收款金额"
                                data-intro="收款金额为收银员收取用户的实际金额">
                     <span slot="label" style="font-size: 20px;line-height:20px">收款金额</span>
-                    <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @keyup="onKeyUpGetAmount"/>
+                    <a-input v-decorator.trim="[ 'getAmount' ]" :style="{color:'red'}" defaultValue="0" @change="onChangeGetAmount"/>
                   </a-form-item>
                 </a-col>
                 <a-col :lg="24" :md="6" :sm="6">
@@ -394,7 +394,7 @@
         });
       },
       //改变收款金额
-      onKeyUpGetAmount(e) {
+      onChangeGetAmount(e) {
         const value = e.target.value
         let changeAmount = this.form.getFieldValue('changeAmount')-0
         let backAmount = (value - changeAmount).toFixed(2)-0

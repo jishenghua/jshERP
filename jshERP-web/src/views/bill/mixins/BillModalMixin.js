@@ -594,7 +594,7 @@ export const BillModalMixin = {
       });
     },
     //改变优惠率
-    onKeyUpDiscount(e) {
+    onChangeDiscount(e) {
       const value = e.target.value-0
       let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
       let deposit = this.form.getFieldValue('deposit')
@@ -612,7 +612,7 @@ export const BillModalMixin = {
       });
     },
     //改变付款优惠
-    onKeyUpDiscountMoney(e) {
+    onChangeDiscountMoney(e) {
       const value = e.target.value-0
       let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
       let deposit = this.form.getFieldValue('deposit')
@@ -630,7 +630,7 @@ export const BillModalMixin = {
       });
     },
     //其它费用
-    onKeyUpOtherMoney(e) {
+    onChangeOtherMoney(e) {
       const value = e.target.value-0
       let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0
       let deposit = this.form.getFieldValue('deposit')
@@ -643,7 +643,7 @@ export const BillModalMixin = {
       });
     },
     //改变扣除订金
-    onKeyUpDeposit(e){
+    onChangeDeposit(e){
       const value = e.target.value-0
       let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0
       let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
@@ -656,7 +656,7 @@ export const BillModalMixin = {
       });
     },
     //改变本次付款
-    onKeyUpChangeAmount(e) {
+    onChangeChangeAmount(e) {
       const value = e.target.value-0
       let discountLastMoney = this.form.getFieldValue('discountLastMoney')-0
       let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0

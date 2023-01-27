@@ -212,7 +212,7 @@ export const FinancialModalMixin = {
       });
     },
     //改变优惠金额
-    onKeyUpDiscountMoney(e) {
+    onChangeDiscountMoney(e) {
       const value = e.target.value-0
       let totalPrice = this.form.getFieldValue('totalPrice')-0
       let changeAmount = (totalPrice-value).toFixed(2)
