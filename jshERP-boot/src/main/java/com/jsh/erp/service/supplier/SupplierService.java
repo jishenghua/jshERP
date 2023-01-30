@@ -505,7 +505,7 @@ public class SupplierService {
         try {
             for(Supplier s: mList) {
                 SupplierExample example = new SupplierExample();
-                example.createCriteria().andSupplierEqualTo(s.getSupplier()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                example.createCriteria().andSupplierEqualTo(s.getSupplier()).andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 List<Supplier> list= supplierMapper.selectByExample(example);
                 if(list.size() <= 0) {
                     supplierMapper.insertSelective(s);
