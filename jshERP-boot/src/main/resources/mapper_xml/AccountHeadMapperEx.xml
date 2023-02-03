@@ -10,7 +10,7 @@
     </resultMap>
 
     <select id="selectByConditionAccountHead" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
-        select ah.*, s.supplier OrganName, p.Name HandsPersonName, u.username userName, a.Name AccountName
+        select distinct ah.*, s.supplier OrganName, p.Name HandsPersonName, u.username userName, a.Name AccountName
         from jsh_account_head ah
         left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
         left join jsh_depot_head dh on dh.id=ai.bill_id and ifnull(dh.delete_flag,'0') !='1'
@@ -72,8 +72,8 @@
 
     <select id="countsByAccountHead" resultType="java.lang.Long">
         SELECT
-        COUNT(ah.id)
-        FROM jsh_account_head ah
+        COUNT(1) from
+        (select distinct ah.* FROM jsh_account_head ah
         left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
         left join jsh_depot_head dh on dh.id=ai.bill_id and ifnull(dh.delete_flag,'0') !='1'
         WHERE 1=1
@@ -120,7 +120,7 @@
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
         </if>
-        and ifnull(ah.delete_flag,'0') !='1'
+        and ifnull(ah.delete_flag,'0') !='1') tb
     </select>
 
     <select id="findAllMoney" resultType="java.math.BigDecimal">
