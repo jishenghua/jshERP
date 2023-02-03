@@ -1,11 +1,13 @@
 package com.jsh.erp.service.platformConfig;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.PlatformConfig;
 import com.jsh.erp.datasource.entities.PlatformConfigExample;
 import com.jsh.erp.datasource.mappers.PlatformConfigMapper;
 import com.jsh.erp.datasource.mappers.PlatformConfigMapperEx;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,9 @@ import java.util.List;
 @Service
 public class PlatformConfigService {
     private Logger logger = LoggerFactory.getLogger(PlatformConfigService.class);
+
+    @Resource
+    private UserService userService;
 
     @Resource
     private PlatformConfigMapper platformConfigMapper;
@@ -51,7 +56,9 @@ public class PlatformConfigService {
     public List<PlatformConfig> select(String platformKey, int offset, int rows)throws Exception {
         List<PlatformConfig> list=null;
         try{
-            list=platformConfigMapperEx.selectByConditionPlatformConfig(platformKey, offset, rows);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                list = platformConfigMapperEx.selectByConditionPlatformConfig(platformKey, offset, rows);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -61,7 +68,9 @@ public class PlatformConfigService {
     public Long countPlatformConfig(String platformKey)throws Exception {
         Long result=null;
         try{
-            result=platformConfigMapperEx.countsByPlatformConfig(platformKey);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = platformConfigMapperEx.countsByPlatformConfig(platformKey);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -73,7 +82,9 @@ public class PlatformConfigService {
         PlatformConfig platformConfig = JSONObject.parseObject(obj.toJSONString(), PlatformConfig.class);
         int result=0;
         try{
-            result=platformConfigMapper.insertSelective(platformConfig);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = platformConfigMapper.insertSelective(platformConfig);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -85,7 +96,9 @@ public class PlatformConfigService {
         PlatformConfig platformConfig = JSONObject.parseObject(obj.toJSONString(), PlatformConfig.class);
         int result=0;
         try{
-            result = platformConfigMapper.updateByPrimaryKeySelective(platformConfig);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = platformConfigMapper.updateByPrimaryKeySelective(platformConfig);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -96,7 +109,9 @@ public class PlatformConfigService {
     public int deletePlatformConfig(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
-            result=platformConfigMapper.deleteByPrimaryKey(id);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = platformConfigMapper.deleteByPrimaryKey(id);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -110,7 +125,9 @@ public class PlatformConfigService {
         example.createCriteria().andIdIn(idList);
         int result=0;
         try{
-            result=platformConfigMapper.deleteByExample(example);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = platformConfigMapper.deleteByExample(example);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -120,11 +137,13 @@ public class PlatformConfigService {
     public int updatePlatformConfigByKey(String platformKey, String platformValue)throws Exception {
         int result=0;
         try{
-            PlatformConfig platformConfig = new PlatformConfig();
-            platformConfig.setPlatformValue(platformValue);
-            PlatformConfigExample example = new PlatformConfigExample();
-            example.createCriteria().andPlatformKeyEqualTo(platformKey);
-            result = platformConfigMapper.updateByExampleSelective(platformConfig, example);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                PlatformConfig platformConfig = new PlatformConfig();
+                platformConfig.setPlatformValue(platformValue);
+                PlatformConfigExample example = new PlatformConfigExample();
+                example.createCriteria().andPlatformKeyEqualTo(platformKey);
+                result = platformConfigMapper.updateByExampleSelective(platformConfig, example);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

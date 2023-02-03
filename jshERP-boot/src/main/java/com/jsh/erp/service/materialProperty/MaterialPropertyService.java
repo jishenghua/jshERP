@@ -64,7 +64,9 @@ public class MaterialPropertyService {
     public List<MaterialProperty> select(String name, int offset, int rows)throws Exception {
         List<MaterialProperty>  list=null;
         try{
-            list=materialPropertyMapperEx.selectByConditionMaterialProperty(name, offset, rows);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                list = materialPropertyMapperEx.selectByConditionMaterialProperty(name, offset, rows);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -74,7 +76,9 @@ public class MaterialPropertyService {
     public Long countMaterialProperty(String name)throws Exception {
         Long  result=null;
         try{
-            result=materialPropertyMapperEx.countsByMaterialProperty(name);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = materialPropertyMapperEx.countsByMaterialProperty(name);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -86,9 +90,11 @@ public class MaterialPropertyService {
         MaterialProperty materialProperty = JSONObject.parseObject(obj.toJSONString(), MaterialProperty.class);
         int  result=0;
         try{
-            result=materialPropertyMapper.insertSelective(materialProperty);
-            logService.insertLog("商品属性",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialProperty.getNativeName()).toString(), request);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = materialPropertyMapper.insertSelective(materialProperty);
+                logService.insertLog("商品属性",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialProperty.getNativeName()).toString(), request);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -100,9 +106,11 @@ public class MaterialPropertyService {
         MaterialProperty materialProperty = JSONObject.parseObject(obj.toJSONString(), MaterialProperty.class);
         int  result=0;
         try{
-            result=materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
-            logService.insertLog("商品属性",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialProperty.getNativeName()).toString(), request);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
+                logService.insertLog("商品属性",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialProperty.getNativeName()).toString(), request);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -121,14 +129,16 @@ public class MaterialPropertyService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMaterialPropertyByIds(String ids) throws Exception{
-        logService.insertLog("商品属性",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         int  result=0;
         try{
-            result=materialPropertyMapperEx.batchDeleteMaterialPropertyByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = materialPropertyMapperEx.batchDeleteMaterialPropertyByIds(new Date(), userInfo == null ? null : userInfo.getId(), idArray);
+                logService.insertLog("商品属性",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

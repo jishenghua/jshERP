@@ -77,7 +77,9 @@ public class FunctionService {
     public List<FunctionEx> select(String name, String type, int offset, int rows)throws Exception {
         List<FunctionEx> list=null;
         try{
-            list= functionMapperEx.selectByConditionFunction(name, type, offset, rows);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                list = functionMapperEx.selectByConditionFunction(name, type, offset, rows);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -87,7 +89,9 @@ public class FunctionService {
     public Long countFunction(String name, String type)throws Exception {
         Long result=null;
         try{
-            result= functionMapperEx.countsByFunction(name, type);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = functionMapperEx.countsByFunction(name, type);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -99,11 +103,13 @@ public class FunctionService {
         Function functions = JSONObject.parseObject(obj.toJSONString(), Function.class);
         int result=0;
         try{
-            functions.setState(false);
-            functions.setType("电脑版");
-            result=functionsMapper.insertSelective(functions);
-            logService.insertLog("功能",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(functions.getName()).toString(),request);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                functions.setState(false);
+                functions.setType("电脑版");
+                result = functionsMapper.insertSelective(functions);
+                logService.insertLog("功能",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(functions.getName()).toString(), request);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -115,9 +121,11 @@ public class FunctionService {
         Function functions = JSONObject.parseObject(obj.toJSONString(), Function.class);
         int result=0;
         try{
-            result=functionsMapper.updateByPrimaryKeySelective(functions);
-            logService.insertLog("功能",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(functions.getName()).toString(), request);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = functionsMapper.updateByPrimaryKeySelective(functions);
+                logService.insertLog("功能",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(functions.getName()).toString(), request);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -142,13 +150,15 @@ public class FunctionService {
         for(Function functions: list){
             sb.append("[").append(functions.getName()).append("]");
         }
-        logService.insertLog("功能", sb.toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         int result=0;
         try{
-            result = functionMapperEx.batchDeleteFunctionByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = functionMapperEx.batchDeleteFunctionByIds(new Date(), userInfo == null ? null : userInfo.getId(), idArray);
+                logService.insertLog("功能", sb.toString(),
+                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
