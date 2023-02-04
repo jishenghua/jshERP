@@ -8,3 +8,7 @@
 
 ## front
 **/*.lock
+
+TODO
+application.properties
+.data
