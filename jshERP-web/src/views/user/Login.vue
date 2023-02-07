@@ -280,14 +280,10 @@
       },
       //加载商品属性
       initMPropertyShort(){
-        let mPropertyListShort = '';
-        let params = {};
-        params.currentPage = 1;
-        params.pageSize = 100;
-        getAction('/materialProperty/list', params).then((res) => {
+        getAction('/materialProperty/getAllList').then((res) => {
           if(res && res.code === 200){
             if(res.data) {
-              let thisRows = res.data.rows; //属性列表
+              let thisRows = res.data; //属性列表
               Vue.ls.set('materialPropertyList', thisRows, 7 * 24 * 60 * 60 * 1000);
             }
           }
