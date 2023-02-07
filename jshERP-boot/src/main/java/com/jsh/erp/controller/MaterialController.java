@@ -175,7 +175,7 @@ public class MaterialController {
     @ApiOperation(value = "查找商品信息")
     public JSONObject findBySelect(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                   @RequestParam(value = "q", required = false) String q,
-                                  @RequestParam("mpList") String mpList,
+                                  @RequestParam(value = "mpList", required = false) String mpList,
                                   @RequestParam(value = "depotId", required = false) Long depotId,
                                   @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
                                   @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
@@ -184,9 +184,12 @@ public class MaterialController {
                                   HttpServletRequest request) throws Exception{
         JSONObject object = new JSONObject();
         try {
+            String[] mpArr = new String[]{};
+            if(StringUtil.isNotEmpty(mpList)){
+                mpArr= mpList.split(",");
+            }
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, enableSerialNumber,
                     enableBatchNumber, (currentPage-1)*pageSize, pageSize);
-            String[] mpArr = mpList.split(",");
             int total = materialService.findBySelectWithBarCodeCount(categoryId, q, enableSerialNumber,
                     enableBatchNumber);
             object.put("total", total);
