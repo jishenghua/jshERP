@@ -30,7 +30,7 @@
               </a-col>
               <a-col :md="4" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/规格/型号/颜色" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="3" :sm="24">
@@ -151,13 +151,13 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '库存流水', dataIndex: 'action', align:"center", width: 100,
+          {title: '库存流水', dataIndex: 'action', align:"center", width: 60,
             scopedSlots: { customRender: 'action' }
           },
           {title: '条码', dataIndex: 'mBarCode', width: 80},
           {title: '名称', dataIndex: 'name', width: 140, ellipsis:true},
-          {title: '规格', dataIndex: 'standard', width: 80, ellipsis:true},
-          {title: '型号', dataIndex: 'model', width: 80, ellipsis:true},
+          {title: '规格', dataIndex: 'standard', width: 100, ellipsis:true},
+          {title: '型号', dataIndex: 'model', width: 100, ellipsis:true},
           {title: '颜色', dataIndex: 'color', width: 80, ellipsis:true},
           {title: '类别', dataIndex: 'categoryName', width: 80, ellipsis:true},
           {title: '单位', dataIndex: 'unitName', width: 60, ellipsis:true},
