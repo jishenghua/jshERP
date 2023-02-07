@@ -585,7 +585,7 @@
         </if>
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam})
+            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam} or m.color like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
@@ -626,7 +626,7 @@
         </if>
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam})
+            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam} or m.color like #{bindParam})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
