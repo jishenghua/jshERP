@@ -1,19 +1,17 @@
 package com.jsh.erp.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.exception.BusinessRunTimeException;
-import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.datasource.entities.MaterialProperty;
 import com.jsh.erp.service.materialProperty.MaterialPropertyService;
+import com.jsh.erp.utils.BaseResponseInfo;
 import io.swagger.annotations.Api;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Description
@@ -26,5 +24,23 @@ import javax.annotation.Resource;
 @Api(tags = {"商品扩展字段"})
 public class MaterialPropertyController {
 
+    @Resource
+    private MaterialPropertyService materialPropertyService;
+
+    @GetMapping(value = "/getAllList")
+    @ApiOperation(value = "查询全部商品扩展字段信息")
+    public BaseResponseInfo getAllList(HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            List<MaterialProperty> list = materialPropertyService.getMaterialProperty();
+            res.code = 200;
+            res.data = list;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 
 }
