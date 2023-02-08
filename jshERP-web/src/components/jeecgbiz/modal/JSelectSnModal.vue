@@ -6,7 +6,7 @@
     @ok="handleSubmit"
     @cancel="close"
     cancelText="关闭"
-    style="top:5%;height: 90%;overflow-y: hidden"
+    style="top:12%;height: 90%;overflow-y: hidden"
     wrapClassName="ant-modal-cust-warp">
     <a-row :gutter="10" style="padding: 10px; margin: -10px">
       <a-col :md="16" :sm="24">

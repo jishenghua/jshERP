@@ -6,7 +6,7 @@
     @ok="handleSubmit"
     @cancel="close"
     cancelText="关闭"
-    style="top:5%;height: 90%;overflow-y: hidden"
+    style="top:12%;height: 90%;overflow-y: hidden"
     wrapClassName="ant-modal-cust-warp">
     <a-row :gutter="24">
       <a-col :md="24" :sm="24">
@@ -192,6 +192,7 @@
         if(!this.queryParam.multiName) {
           return
         }
+        this.queryParam.multiName = this.queryParam.multiName.replaceAll('，',',')
         let nameArr = this.queryParam.multiName.split(',')
         for (let i = 0; i < nameArr.length; i++) {
           let checkObj = {

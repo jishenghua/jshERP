@@ -6,9 +6,8 @@
     @ok="handleSubmit"
     @cancel="close"
     cancelText="关闭"
-    style="top:5%;height: 90%;overflow-y: hidden"
-    wrapClassName="ant-modal-cust-warp"
-  >
+    style="top:12%;height: 90%;overflow-y: hidden"
+    wrapClassName="ant-modal-cust-warp">
     <a-row :gutter="10" style="padding: 10px; margin: -10px">
       <a-col :md="24" :sm="24">
         <!-- 查询区域 -->
