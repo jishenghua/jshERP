@@ -113,9 +113,7 @@ public class TenantService {
             if(tenant.getExpireTime()==null) {
                 tenant.setExpireTime(Tools.addDays(new Date(), tryDayLimit)); //租户允许试用的天数
             }
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = tenantMapper.insertSelective(tenant);
-            }
+            result = tenantMapper.insertSelective(tenant);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
