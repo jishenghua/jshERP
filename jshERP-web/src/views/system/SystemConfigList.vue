@@ -35,7 +35,7 @@
             </a-form-item>
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="负库存">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
-              （如果启用则单据支持负库存，批次商品除外）
+              （如果启用则单据支持<b>负库存</b>录入）
             </a-form-item>
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="以销定购">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="purchaseBySaleFlagSwitch" @change="onPurchaseBySaleChange"></a-switch>
