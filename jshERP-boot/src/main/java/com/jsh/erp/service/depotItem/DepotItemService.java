@@ -399,6 +399,8 @@ public class DepotItemService {
         deleteDepotItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
         if (null != rowArr && rowArr.size()>0) {
+            //针对组装单、拆卸单校验是否存在组合件和普通子件
+            checkAssembleWithMaterialType(rowArr, depotHead.getSubType());
             for (int i = 0; i < rowArr.size(); i++) {
                 DepotItem depotItem = new DepotItem();
                 JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
@@ -770,6 +772,30 @@ public class DepotItemService {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * 针对组装单、拆卸单校验是否存在组合件和普通子件
+     * @param rowArr
+     * @param subType
+     */
+    public void checkAssembleWithMaterialType(JSONArray rowArr, String subType) {
+        if(BusinessConstants.SUB_TYPE_ASSEMBLE.equals(subType) ||
+                BusinessConstants.SUB_TYPE_DISASSEMBLE.equals(subType)) {
+            if(rowArr.size() > 1) {
+                JSONObject firstRowObj = JSONObject.parseObject(rowArr.getString(0));
+                JSONObject secondRowObj = JSONObject.parseObject(rowArr.getString(1));
+                String firstMaterialType = firstRowObj.getString("mType");
+                String secondMaterialType = secondRowObj.getString("mType");
+                if(!"组合件".equals(firstMaterialType) || !"普通子件".equals(secondMaterialType)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG));
+                }
+            } else {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG));
             }
         }
     }

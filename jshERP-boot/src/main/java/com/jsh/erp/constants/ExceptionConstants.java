@@ -394,6 +394,10 @@ public class ExceptionConstants {
     //单据录入-本次欠款金额不能大于关联单据实际的欠款
     public static final int DEPOT_HEAD_BACK_BILL_DEBT_OVER_CODE = 8500019;
     public static final String DEPOT_HEAD_BACK_BILL_DEBT_OVER_MSG = "抱歉，本次欠款金额不能大于关联单据实际的欠款";
+    //单据录入-单据明细中必须要有组合件和普通子件
+    public static final int DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE = 8000020;
+    public static final String DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG = "抱歉，单据明细中必须要有组合件和普通子件";
+
     /**
      *  单据明细信息
      * type = 90
