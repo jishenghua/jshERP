@@ -23,7 +23,7 @@
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="用户数量限制">
             <a-input-number style="width:100%" placeholder="请输入用户数量限制" v-decorator.trim="[ 'userNumLimit' ]" />
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="租户类型">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="租户类型" v-if="model.id">
             <a-select style="width:100%" placeholder="请选择租户类型" v-decorator.trim="[ 'type' ]">
               <a-select-option value="0">试用租户</a-select-option>
               <a-select-option value="1">付费租户</a-select-option>
