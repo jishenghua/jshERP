@@ -434,9 +434,16 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("snList"))) {
                     depotItem.setSnList(rowObj.getString("snList"));
                     if(StringUtil.isExist(rowObj.get("depotId"))) {
-                        Long depotId = rowObj.getLong("depotId");
-                        serialNumberService.addSerialNumberByBill(depotHead.getType(), depotHead.getSubType(),
-                                depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
+                        String [] snArray = depotItem.getSnList().split(",");
+                        int operNum = rowObj.getInteger("operNumber");
+                        if(snArray.length == operNum) {
+                            Long depotId = rowObj.getLong("depotId");
+                            serialNumberService.addSerialNumberByBill(depotHead.getType(), depotHead.getSubType(),
+                                    depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
+                        } else {
+                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SN_NUMBERE_FAILED_CODE,
+                                    String.format(ExceptionConstants.DEPOT_HEAD_SN_NUMBERE_FAILED_MSG, barCode));
+                        }
                     }
                 } else {
                     //入库或出库

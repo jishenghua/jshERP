@@ -397,6 +397,9 @@ public class ExceptionConstants {
     //单据录入-单据明细中必须要有组合件和普通子件
     public static final int DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE = 8000020;
     public static final String DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG = "抱歉，单据明细中必须要有组合件和普通子件";
+    //单据录入-商品条码XXX的数量与序列号不一致
+    public static final int DEPOT_HEAD_SN_NUMBERE_FAILED_CODE = 8000021;
+    public static final String DEPOT_HEAD_SN_NUMBERE_FAILED_MSG = "抱歉，商品条码:%s的数量与序列号不一致";
 
     /**
      *  单据明细信息
