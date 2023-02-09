@@ -183,6 +183,7 @@ public class DepotItemController {
                 BigDecimal totalAllPrice = BigDecimal.ZERO;
                 BigDecimal totalTaxMoney = BigDecimal.ZERO;
                 BigDecimal totalTaxLastMoney = BigDecimal.ZERO;
+                BigDecimal totalWeight = BigDecimal.ZERO;
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", diEx.getId());
@@ -226,6 +227,8 @@ public class DepotItemController {
                         item.put("taxMoney", diEx.getTaxMoney());
                         item.put("taxLastMoney", diEx.getTaxLastMoney());
                     }
+                    BigDecimal allWeight = diEx.getBasicNumber()==null||diEx.getWeight()==null?BigDecimal.ZERO:diEx.getBasicNumber().multiply(diEx.getWeight());
+                    item.put("weight", allWeight);
                     item.put("remark", diEx.getRemark());
                     item.put("linkId", diEx.getLinkId());
                     item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
@@ -240,6 +243,7 @@ public class DepotItemController {
                     totalAllPrice = totalAllPrice.add(diEx.getAllPrice()==null?BigDecimal.ZERO:diEx.getAllPrice());
                     totalTaxMoney = totalTaxMoney.add(diEx.getTaxMoney()==null?BigDecimal.ZERO:diEx.getTaxMoney());
                     totalTaxLastMoney = totalTaxLastMoney.add(diEx.getTaxLastMoney()==null?BigDecimal.ZERO:diEx.getTaxLastMoney());
+                    totalWeight = totalWeight.add(allWeight);
                 }
                 if(StringUtil.isNotEmpty(isReadOnly) && "1".equals(isReadOnly)) {
                     JSONObject footItem = new JSONObject();
@@ -247,6 +251,7 @@ public class DepotItemController {
                     footItem.put("allPrice", totalAllPrice);
                     footItem.put("taxMoney", totalTaxMoney);
                     footItem.put("taxLastMoney", totalTaxLastMoney);
+                    footItem.put("weight", totalWeight);
                     dataArray.add(footItem);
                 }
             }

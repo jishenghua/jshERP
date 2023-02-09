@@ -48,6 +48,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String barCode;
 
+    private BigDecimal weight;
+
     public Long getMId() {
         return MId;
     }
@@ -222,5 +224,13 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setBarCode(String barCode) {
         this.barCode = barCode;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 }
