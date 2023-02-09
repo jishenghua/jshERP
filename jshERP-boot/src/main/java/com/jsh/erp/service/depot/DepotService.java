@@ -125,7 +125,12 @@ public class DepotService {
         int result=0;
         try{
             depot.setType(0);
-            depot.setIsDefault(false);
+            List<Depot> depotList = getDepot();
+            if(depotList.size() == 0) {
+                depot.setIsDefault(true);
+            } else {
+                depot.setIsDefault(false);
+            }
             depot.setEnabled(true);
             result=depotMapper.insertSelective(depot);
             //新增仓库时给当前用户自动授权

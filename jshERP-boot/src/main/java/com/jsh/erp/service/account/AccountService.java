@@ -138,7 +138,12 @@ public class AccountService {
         if(account.getInitialAmount() == null) {
             account.setInitialAmount(BigDecimal.ZERO);
         }
-        account.setIsDefault(false);
+        List<Account> accountList = getAccountByParam(null, null);
+        if(accountList.size() == 0) {
+            account.setIsDefault(true);
+        } else {
+            account.setIsDefault(false);
+        }
         account.setEnabled(true);
         int result=0;
         try{
