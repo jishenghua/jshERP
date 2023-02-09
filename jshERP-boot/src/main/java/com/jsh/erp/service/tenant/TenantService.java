@@ -71,11 +71,11 @@ public class TenantService {
         return list;
     }
 
-    public List<TenantEx> select(String loginName, String type, String enabled, int offset, int rows)throws Exception {
+    public List<TenantEx> select(String loginName, String type, String enabled, String remark, int offset, int rows)throws Exception {
         List<TenantEx> list= new ArrayList<>();
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                list = tenantMapperEx.selectByConditionTenant(loginName, type, enabled, offset, rows);
+                list = tenantMapperEx.selectByConditionTenant(loginName, type, enabled, remark, offset, rows);
                 if (null != list) {
                     for (TenantEx tenantEx : list) {
                         tenantEx.setCreateTimeStr(Tools.getCenternTime(tenantEx.getCreateTime()));
@@ -89,11 +89,11 @@ public class TenantService {
         return list;
     }
 
-    public Long countTenant(String loginName, String type, String enabled)throws Exception {
+    public Long countTenant(String loginName, String type, String enabled, String remark)throws Exception {
         Long result=null;
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = tenantMapperEx.countsByTenant(loginName, type, enabled);
+                result = tenantMapperEx.countsByTenant(loginName, type, enabled, remark);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);

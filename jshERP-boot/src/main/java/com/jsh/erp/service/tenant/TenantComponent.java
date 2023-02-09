@@ -36,7 +36,8 @@ public class TenantComponent implements ICommonQuery {
         String loginName = StringUtil.getInfo(search, "loginName");
         String type = StringUtil.getInfo(search, "type");
         String enabled = StringUtil.getInfo(search, "enabled");
-        return tenantService.select(loginName, type, enabled, QueryUtils.offset(map), QueryUtils.rows(map));
+        String remark = StringUtil.getInfo(search, "remark");
+        return tenantService.select(loginName, type, enabled, remark, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
@@ -45,7 +46,8 @@ public class TenantComponent implements ICommonQuery {
         String loginName = StringUtil.getInfo(search, "loginName");
         String type = StringUtil.getInfo(search, "type");
         String enabled = StringUtil.getInfo(search, "enabled");
-        return tenantService.countTenant(loginName, type, enabled);
+        String remark = StringUtil.getInfo(search, "remark");
+        return tenantService.countTenant(loginName, type, enabled, remark);
     }
 
     @Override

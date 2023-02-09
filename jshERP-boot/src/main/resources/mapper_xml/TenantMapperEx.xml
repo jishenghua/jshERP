@@ -21,6 +21,10 @@
         <if test="enabled != null and enabled != ''">
             and enabled = #{enabled}
         </if>
+        <if test="remark != null">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
+        </if>
         order by id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -40,6 +44,10 @@
         </if>
         <if test="enabled != null and enabled != ''">
             and enabled = #{enabled}
+        </if>
+        <if test="remark != null">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and remark like #{bindRemark}
         </if>
     </select>
 </mapper>
