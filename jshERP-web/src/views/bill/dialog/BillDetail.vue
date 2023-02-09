@@ -1130,6 +1130,7 @@
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseBackColumns: [
@@ -1152,6 +1153,7 @@
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOrderColumns: [
@@ -1193,6 +1195,7 @@
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleBackColumns: [
@@ -1215,6 +1218,7 @@
           { title: '税率(%)', dataIndex: 'taxRate'},
           { title: '税额', dataIndex: 'taxMoney'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         otherInColumns: [
@@ -1379,6 +1383,9 @@
           if(ds[i].sku) {
             needAddkeywords.push('sku')
           }
+          if(ds[i].weight) {
+            needAddkeywords.push('weight')
+          }
         }
         if(record.status === '3') {
           //部分采购|部分销售的时候显示全部列
@@ -1401,7 +1408,7 @@
           let currentCol = []
           for(let i=0; i<this.defColumns.length; i++){
             //移除列
-            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku']
+            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight']
             if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
               let info = {}
               info.title = this.defColumns[i].title
