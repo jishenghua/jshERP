@@ -139,7 +139,7 @@
           },
           { title: '创建时间', dataIndex: 'createTimeStr', width: 100, align: "center"},
           { title: '到期时间', dataIndex: 'expireTimeStr', width: 100, align: "center"},
-          { title: '描述', dataIndex: 'remark', width: 200, align: "center", ellipsis:true}
+          { title: '备注', dataIndex: 'remark', width: 200, align: "center", ellipsis:true}
         ],
         url: {
           list: "/tenant/list",

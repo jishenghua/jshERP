@@ -14,8 +14,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="描述" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入描述查询" v-model="queryParam.remark"></a-input>
+                <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入备注查询" v-model="queryParam.remark"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">

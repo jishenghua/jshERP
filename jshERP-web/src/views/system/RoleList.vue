@@ -138,7 +138,7 @@
             title: '价格屏蔽', align:"left", dataIndex: 'priceLimitStr', width: 100
           },
           {
-            title: '描述', align:"left", dataIndex: 'description', width: 150
+            title: '备注', align:"left", dataIndex: 'description', width: 150
           },
           { title: '排序', align:"left", dataIndex: 'sort', width: 50},
           { title: '状态',dataIndex: 'enabled',width:60,align:"center",

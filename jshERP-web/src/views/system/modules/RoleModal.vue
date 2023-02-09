@@ -41,8 +41,8 @@
               <a-icon type="question-circle" style="width:6%; padding-left: 5px; font-size: 18px;" />
             </a-tooltip>
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="描述">
-            <a-textarea :rows="1" placeholder="请输入描述" v-decorator="[ 'description', validatorRules.description ]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
+            <a-textarea :rows="1" placeholder="请输入备注" v-decorator="[ 'description', validatorRules.description ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
             <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
