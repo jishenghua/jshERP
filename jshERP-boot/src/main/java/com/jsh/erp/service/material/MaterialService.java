@@ -471,17 +471,19 @@ public class MaterialService {
             }
             Workbook workbook = Workbook.getWorkbook(file.getInputStream());
             Sheet src = workbook.getSheet(0);
+            //获取真实的行数，剔除掉空白行
+            int rightRows = ExcelUtils.getRightRows(src);
             List<Depot> depotList= depotService.getDepot();
             int depotCount = depotList.size();
             Map<String, Long> depotMap = parseDepotToMap(depotList);
             User user = userService.getCurrentUser();
             List<MaterialWithInitStock> mList = new ArrayList<>();
             //单次导入超出1000条
-            if(src.getRows()>1002) {
+            if(rightRows > 1002) {
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_CODE,
                         String.format(ExceptionConstants.MATERIAL_IMPORT_OVER_LIMIT_MSG));
             }
-            for (int i = 2; i < src.getRows(); i++) {
+            for (int i = 2; i < rightRows; i++) {
                 String name = ExcelUtils.getContent(src, i, 0); //名称
                 String standard = ExcelUtils.getContent(src, i, 1); //规格
                 String model = ExcelUtils.getContent(src, i, 2); //型号

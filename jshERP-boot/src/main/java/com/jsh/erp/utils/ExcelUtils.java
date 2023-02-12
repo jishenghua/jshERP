@@ -207,6 +207,31 @@ public class ExcelUtils {
 		}
 	}
 
+	/**
+	 * 获取真实的行数，剔除掉空白行
+	 * @param src
+	 * @return
+	 */
+	public static int getRightRows(Sheet src) {
+		int rsRows = src.getRows(); //行数
+		int rsCols = src.getColumns(); //列数
+		int nullCellNum;
+		int rightRows = rsRows;
+		for (int i = 1; i < rsRows; i++) { //统计行中为空的单元格数
+			nullCellNum = 0;
+			for (int j = 0; j < rsCols; j++) {
+				String val = src.getCell(j, i).getContents().trim();
+				if (StringUtils.isEmpty(val)) {
+					nullCellNum++;
+				}
+			}
+			if (nullCellNum >= rsCols) { //如果nullCellNum大于或等于总的列数
+				rightRows--; //行数减一
+			}
+		}
+		return rightRows;
+	}
+
 	public static String getDateContent(Sheet src, int rowNum, int colNum) {
 		// 日期 类型的处理
 		Cell c = src.getRow(rowNum)[colNum];
