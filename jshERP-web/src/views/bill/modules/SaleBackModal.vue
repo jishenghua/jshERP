@@ -390,7 +390,7 @@
         this.$refs.linkBillList.show('出库', '销售', '客户', "1")
         this.$refs.linkBillList.title = "选择销售出库"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
         this.backStatus = false
         this.materialTable.columns[1].type = FormTypes.normal
@@ -416,7 +416,7 @@
           this.materialTable.dataSource = listEx
           ///给优惠后金额重新赋值
           allTaxLastMoney = allTaxLastMoney?allTaxLastMoney:0
-          let discountMoney = (discount*allTaxLastMoney/100).toFixed(2)-0
+          let discount = (discountMoney/allTaxLastMoney*100).toFixed(2)-0
           let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
           this.$nextTick(() => {
             this.form.setFieldsValue({

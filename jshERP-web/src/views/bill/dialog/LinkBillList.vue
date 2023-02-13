@@ -127,7 +127,7 @@
         selectType: 'list',
         linkNumber: '',
         organId: '',
-        discount: '',
+        discountMoney: '',
         deposit: '',
         remark: '',
         queryParam: {
@@ -261,7 +261,7 @@
             let record = this.selectBillRows[0]
             this.linkNumber = record.number
             this.organId = record.organId
-            this.discount = record.discount
+            this.discountMoney = record.discountMoney
             this.deposit = record.changeAmount - record.finishDeposit
             this.remark = record.remark
             this.loadDetailData(1)
@@ -269,7 +269,7 @@
         } else {
           if(this.selectedDetailRowKeys.length) {
             this.getSelectBillDetailRows()
-            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discount, this.deposit, this.remark)
+            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discountMoney, this.deposit, this.remark)
             this.close()
           } else {
             this.$message.warning('抱歉，请选择单据明细！')
