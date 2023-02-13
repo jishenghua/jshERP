@@ -329,9 +329,13 @@ export const BillModalMixin = {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if (res.code === 200) {
           let arr = res.data
-          for (let i = 0; i < arr.length; i++) {
-            if(arr[i].isDefault){
-              target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+          if(arr.length===1) {
+            target.setValues([{rowKey: row.id, values: {depotId: arr[0].id+''}}])
+          } else {
+            for (let i = 0; i < arr.length; i++) {
+              if(arr[i].isDefault){
+                target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+              }
             }
           }
         }
