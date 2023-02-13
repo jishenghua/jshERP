@@ -361,7 +361,7 @@ public class UserController {
                                HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         ue.setUsername(ue.getLoginName());
-        userService.checkUserNameAndLoginName(ue); //检查用户名和登录名
+        userService.checkLoginName(ue); //检查登录名
         ue = userService.registerUser(ue,manageRoleId,request);
         return result;
     }

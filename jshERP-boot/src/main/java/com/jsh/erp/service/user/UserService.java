@@ -387,7 +387,7 @@ public class UserService {
                     BusinessConstants.LOG_OPERATION_TYPE_ADD,
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             //检查用户名和登录名
-            checkUserNameAndLoginName(ue);
+            checkLoginName(ue);
             //新增用户信息
             ue= this.addUser(ue);
             if(ue==null){
@@ -528,7 +528,7 @@ public class UserService {
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             //检查用户名和登录名
-            checkUserNameAndLoginName(ue);
+            checkLoginName(ue);
             //更新用户信息
             ue = this.updateUser(ue);
             if (ue == null) {
@@ -593,14 +593,12 @@ public class UserService {
         return null;
     }
     /**
-     * create by: cjl
-     * description:
-     *  检查用户名称和登录名不能重复
+     *  检查登录名不能重复
      * create time: 2019/3/12 11:36
      * @Param: userEx
      * @return void
      */
-    public void checkUserNameAndLoginName(UserEx userEx)throws Exception{
+    public void checkLoginName(UserEx userEx)throws Exception{
         List<User> list=null;
         if(userEx==null){
             return;
@@ -627,46 +625,8 @@ public class UserService {
                                 ExceptionConstants.USER_LOGIN_NAME_ALREADY_EXISTS_MSG);
                     }
                 }
-
             }
         }
-        //检查用户名
-        if(!StringUtils.isEmpty(userEx.getUsername())){
-            String userName=userEx.getUsername();
-            list=this.getUserListByUserName(userName);
-            if(list!=null&&list.size()>0){
-                if(list.size()>1){
-                    //超过一条数据存在，该用户名已存在
-                    logger.error("异常码[{}],异常提示[{}],参数,userName:[{}]",
-                            ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_CODE,ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG,userName);
-                    throw new BusinessRunTimeException(ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_CODE,
-                            ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG);
-                }
-                //一条数据，新增时抛出异常，修改时和当前的id不同时抛出异常
-                if(list.size()==1){
-                    if(userId==null||(userId!=null&&!userId.equals(list.get(0).getId()))){
-                        logger.error("异常码[{}],异常提示[{}],参数,userName:[{}]",
-                                ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_CODE,ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG,userName);
-                        throw new BusinessRunTimeException(ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_CODE,
-                                ExceptionConstants.USER_USER_NAME_ALREADY_EXISTS_MSG);
-                    }
-                }
-
-            }
-        }
-
-    }
-    /**
-     * 通过用户名获取用户列表
-     * */
-    public List<User> getUserListByUserName(String userName)throws Exception{
-        List<User> list =null;
-        try{
-            list=userMapperEx.getUserListByUserNameOrLoginName(userName,null);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
     }
     /**
      * 通过登录名获取用户列表

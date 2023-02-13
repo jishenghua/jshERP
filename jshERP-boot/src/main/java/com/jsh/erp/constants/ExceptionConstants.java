@@ -52,9 +52,6 @@ public class ExceptionConstants {
     //修改用户信息失败
     public static final int USER_EDIT_FAILED_CODE = 500002;
     public static final String USER_EDIT_FAILED_MSG = "修改用户信息失败";
-    //用户名已存在
-    public static final int USER_USER_NAME_ALREADY_EXISTS_CODE = 500003;
-    public static final String USER_USER_NAME_ALREADY_EXISTS_MSG = "用户名在本系统已存在";
     //登录名已存在
     public static final int USER_LOGIN_NAME_ALREADY_EXISTS_CODE = 500003;
     public static final String USER_LOGIN_NAME_ALREADY_EXISTS_MSG = "登录名在本系统已存在";
