@@ -416,7 +416,10 @@
           this.materialTable.dataSource = listEx
           ///给优惠后金额重新赋值
           allTaxLastMoney = allTaxLastMoney?allTaxLastMoney:0
-          let discount = (discountMoney/allTaxLastMoney*100).toFixed(2)-0
+          let discount = 0
+          if(allTaxLastMoney!==0) {
+            discount = (discountMoney/allTaxLastMoney*100).toFixed(2)-0
+          }
           let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
           this.$nextTick(() => {
             this.form.setFieldsValue({
