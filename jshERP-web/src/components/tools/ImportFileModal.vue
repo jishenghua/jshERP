@@ -11,7 +11,7 @@
       :mask="isDesktop()"
       :maskClosable="false"
       @cancel="handleCancel"
-      style="top:20%;height: 45%;">
+      style="top:20%;height: 55%;">
       <template slot="footer">
         <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
