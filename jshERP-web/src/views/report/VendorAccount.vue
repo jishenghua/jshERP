@@ -137,25 +137,23 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
+            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '欠款详情', dataIndex: 'action', align:"center", width: 80,
+          {title: '欠款详情', dataIndex: 'action', align:"center", width: 150, fixed: 'left',
             scopedSlots: { customRender: 'action' }
           },
-          {title: '供应商', dataIndex: 'supplier', width: 150, ellipsis:true},
-          {title: '联系人', dataIndex: 'contacts', width: 100, ellipsis:true},
-          {title: '手机号码', dataIndex: 'telephone', width: 100},
-          {title: '联系电话', dataIndex: 'phoneNum', width: 100},
-          {title: '电子邮箱', dataIndex: 'email', width: 100},
-          {title: '期初应付', dataIndex: 'preNeed', width: 80},
-          {title: '本期欠款', dataIndex: 'debtMoney', width: 80},
-          {title: '本期付款', dataIndex: 'backMoney', width: 80},
-          {dataIndex: 'allNeed', width: 80,
-            slots: { title: 'customTitle' }
-          }
+          {title: '供应商', dataIndex: 'supplier', width: 200, fixed: 'left'},
+          {title: '联系人', dataIndex: 'contacts'},
+          {title: '手机号码', dataIndex: 'telephone'},
+          {title: '联系电话', dataIndex: 'phoneNum'},
+          {title: '电子邮箱', dataIndex: 'email'},
+          {title: '期初应付', dataIndex: 'preNeed'},
+          {title: '本期欠款', dataIndex: 'debtMoney'},
+          {title: '本期付款', dataIndex: 'backMoney'},
+          {dataIndex: 'allNeed', slots: { title: 'customTitle' } }
         ],
         url: {
           list: "/depotHead/getStatementAccount",
@@ -165,6 +163,9 @@
     created () {
       this.initSupplier()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
+    },
+    mounted () {
+      this.scroll.x = 1620
     },
     methods: {
       getQueryParams() {

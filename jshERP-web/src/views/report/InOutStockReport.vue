@@ -130,25 +130,25 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
+            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 100},
-          {title: '名称', dataIndex: 'materialName', width: 120, ellipsis:true},
-          {title: '规格', dataIndex: 'materialStandard', width: 80, ellipsis:true},
-          {title: '型号', dataIndex: 'materialModel', width: 80, ellipsis:true},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 80, ellipsis:true},
-          {title: '单位', dataIndex: 'unitName', width: 60, ellipsis:true},
-          {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
-          {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum, width: 80},
-          {title: '入库数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 60},
-          {title: '出库数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 60},
-          {title: '本月结存数量', dataIndex: 'thisSum', sorter: (a, b) => a.thisSum - b.thisSum, width: 80,
+          {title: '条码', dataIndex: 'barCode', width: 150, fixed: 'left'},
+          {title: '名称', dataIndex: 'materialName', width: 150, fixed: 'left'},
+          {title: '规格', dataIndex: 'materialStandard'},
+          {title: '型号', dataIndex: 'materialModel'},
+          {title: '扩展信息', dataIndex: 'materialOther'},
+          {title: '单位', dataIndex: 'unitName'},
+          {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice},
+          {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum},
+          {title: '入库数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum},
+          {title: '出库数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum},
+          {title: '本月结存数量', dataIndex: 'thisSum', sorter: (a, b) => a.thisSum - b.thisSum,
             scopedSlots: { customRender: 'customRenderStock' }
           },
-          {title: '结存金额', dataIndex: 'thisAllPrice', sorter: (a, b) => a.thisAllPrice - b.thisAllPrice, width: 60}
+          {title: '结存金额', dataIndex: 'thisAllPrice', sorter: (a, b) => a.thisAllPrice - b.thisAllPrice}
         ],
         url: {
           list: "/depotItem/findByAll",
@@ -160,6 +160,9 @@
     created() {
       this.getDepotData()
       this.getTotalCountMoney()
+    },
+    mounted () {
+      this.scroll.x = 2500
     },
     methods: {
       moment,
