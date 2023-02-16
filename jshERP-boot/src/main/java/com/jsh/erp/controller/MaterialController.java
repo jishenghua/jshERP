@@ -352,10 +352,10 @@ public class MaterialController {
                     objs[7] = m.getCommodityUnit();
                     objs[8] = m.getWeight() == null? "" : m.getWeight().toString();
                     objs[9] = m.getExpiryNum() == null? "" : m.getExpiryNum().toString();
-                    objs[10] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().toString();
-                    objs[11] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().toString();
-                    objs[12] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().toString();
-                    objs[13] = m.getLowDecimal() == null? "" : m.getLowDecimal().toString();
+                    objs[10] = m.getPurchaseDecimal() == null? "" : m.getPurchaseDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[11] = m.getCommodityDecimal() == null? "" : m.getCommodityDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[12] = m.getWholesaleDecimal() == null? "" : m.getWholesaleDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[13] = m.getLowDecimal() == null? "" : m.getLowDecimal().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
                     objs[14] = m.getRemark();
                     objs[15] = m.getEnabled() ? "启用" : "禁用";
                     objs[16] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无";

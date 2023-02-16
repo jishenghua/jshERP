@@ -552,7 +552,7 @@ public class SupplierService {
                     objs[2] = s.getTelephone();
                     objs[3] = s.getPhoneNum();
                     objs[4] = s.getEmail();
-                    objs[5] = s.getAdvanceIn() == null? "" : s.getAdvanceIn().toString();
+                    objs[5] = s.getAdvanceIn() == null? "" : s.getAdvanceIn().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
                     objs[6] = s.getDescription();
                     objs[7] = s.getSort();
                     objs[8] = s.getEnabled() ? "启用" : "禁用";
@@ -608,14 +608,14 @@ public class SupplierService {
                 objs[4] = s.getEmail();
                 objs[5] = s.getFax();
                 if(("客户").equals(s.getType())) {
-                    objs[6] = s.getBeginNeedGet() == null? "" : s.getBeginNeedGet().toString();
-                    objs[7] = s.getAllNeedGet() == null? "" : s.getAllNeedGet().toString();
+                    objs[6] = s.getBeginNeedGet() == null? "" : s.getBeginNeedGet().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[7] = s.getAllNeedGet() == null? "" : s.getAllNeedGet().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
                 } else if(("供应商").equals(s.getType())) {
-                    objs[6] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().toString();
-                    objs[7] = s.getAllNeedPay() == null? "" : s.getAllNeedPay().toString();
+                    objs[6] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[7] = s.getAllNeedPay() == null? "" : s.getAllNeedPay().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
                 }
                 objs[8] = s.getTaxNum();
-                objs[9] = s.getTaxRate() == null? "" : s.getTaxRate().toString();
+                objs[9] = s.getTaxRate() == null? "" : s.getTaxRate().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
                 objs[10] = s.getBankName();
                 objs[11] = s.getAccountNumber();
                 objs[12] = s.getAddress();
