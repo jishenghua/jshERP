@@ -120,6 +120,7 @@
       }
     },
     created () {
+      this.checkScreen()
       this.currdatetime = new Date().getTime();
       Vue.ls.remove(ACCESS_TOKEN)
       this.getRouterData()
@@ -314,6 +315,51 @@
         } else {
           this.showWeixinFlag = true
         }
+      },
+      checkScreen() {
+        let percentage = ''
+        let basicWidth = 1920
+        const currentWidth = window.screen.width
+        const currentHeight = window.screen.height
+        //浏览器的当前比例
+        const currentRatio = window.devicePixelRatio.toFixed(2)
+        //浏览器需要调整的比例
+        let needRatio = 1
+        let ratio = currentWidth/basicWidth
+        if(ratio>0.5 && ratio<0.67) {
+          percentage = '50%'
+          needRatio = 0.5
+        } if(ratio>=0.67 && ratio<0.75) {
+          percentage = '67%'
+          needRatio = 0.67
+        } else if(ratio>=0.75 && ratio<0.8) {
+          percentage = '75%'
+          needRatio = 0.75
+        } else if(ratio>=0.8 && ratio<0.9) {
+          percentage = '80%'
+          needRatio = 0.8
+        } else if(ratio>=1.1 && ratio<1.25) {
+          percentage = '110%'
+          needRatio = 1.1
+        } else if(ratio>=1.25 && ratio<1.5) {
+          percentage = '125%'
+          needRatio = 1.25
+        } else if(ratio>=1.5 && ratio<1.75) {
+          percentage = '150%'
+          needRatio = 1.5
+        }
+        //console.log(currentRatio)
+        //console.log(needRatio)
+        if(currentRatio-0 !== needRatio) {
+          this.openNotificationWithIcon('warning', currentWidth, currentHeight, percentage)
+        }
+      },
+      openNotificationWithIcon(type, currentWidth, currentHeight, percentage) {
+        this.$notification[type]({
+          message: '浏览器的缩放比例调整提示',
+          description: '检测到您显示器的分辨率为：' + currentWidth + '*' + currentHeight + ' ，为了获得更好的操作体验，建议您将浏览器的缩放比例调整至' + percentage,
+          duration: 15
+        });
       },
     }
   }
