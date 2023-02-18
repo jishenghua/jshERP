@@ -358,7 +358,7 @@
         this.$notification[type]({
           message: '浏览器的缩放比例调整提示',
           description: '检测到您显示器的分辨率为：' + currentWidth + '*' + currentHeight + ' ，为了获得更好的操作体验，建议您将浏览器的缩放比例调整至' + percentage,
-          duration: 15
+          duration: 10
         });
       },
     }
