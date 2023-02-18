@@ -151,7 +151,7 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '库存流水', dataIndex: 'action', align:"center", width: 150, fixed: 'left',
+          {title: '库存流水', dataIndex: 'action', align:"center", width: 100, fixed: 'left',
             scopedSlots: { customRender: 'action' }
           },
           {title: '条码', dataIndex: 'mBarCode', width: 150, fixed: 'left'},
@@ -178,7 +178,7 @@
       this.loadTreeData()
     },
     mounted () {
-      this.scroll.x = 2500
+      this.scroll.x = 2100
     },
     methods: {
       moment,

@@ -201,7 +201,7 @@
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
-      this.scroll.x = 2500
+      this.scroll.x = 2300
     },
     methods: {
       moment,

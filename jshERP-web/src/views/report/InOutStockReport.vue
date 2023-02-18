@@ -162,7 +162,7 @@
       this.getTotalCountMoney()
     },
     mounted () {
-      this.scroll.x = 2500
+      this.scroll.x = 2100
     },
     methods: {
       moment,
