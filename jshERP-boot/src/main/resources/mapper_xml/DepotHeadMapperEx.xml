@@ -311,7 +311,7 @@
             <foreach collection="organArray" item="organId" separator=",">
                 #{organId}
             </foreach>
-            ) or dh.sub_type='采购退货' or dh.sub_type='零售')
+            ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
         </if>
         <if test="number != null and number !=''">
             <bind name="bindNumber" value="'%'+number+'%'"/>
@@ -366,7 +366,7 @@
             <foreach collection="organArray" item="organId" separator=",">
                 #{organId}
             </foreach>
-            ) or dh.sub_type='采购退货' or dh.sub_type='零售')
+            ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
         </if>
         <if test="number != null and number !=''">
             <bind name="bindNumber" value="'%'+number+'%'"/>
