@@ -1,50 +1,98 @@
 <template>
   <a-card :style="cardStyle" :bordered="false">
-    <a-row :gutter="24">
-      <a-col :md="12">
-        <a-spin :spinning="confirmLoading">
-          <a-form :form="form" id="systemConfigModal">
+    <a-spin :spinning="confirmLoading">
+      <a-form :form="form" id="systemConfigModal">
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司名称">
               <a-input placeholder="请输入公司名称" v-decorator.trim="[ 'companyName', validatorRules.companyName]" />
             </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系人">
               <a-input placeholder="请输入联系人" v-decorator.trim="[ 'companyContacts' ]" />
             </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司地址">
               <a-input placeholder="请输入公司地址" v-decorator.trim="[ 'companyAddress' ]" />
             </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司电话">
               <a-input placeholder="请输入公司电话" v-decorator.trim="[ 'companyTel' ]" />
             </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司传真">
               <a-input placeholder="请输入公司传真" v-decorator.trim="[ 'companyFax' ]" />
             </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司邮编">
               <a-input placeholder="请输入公司邮编" v-decorator.trim="[ 'companyPostCode' ]" />
             </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售协议">
               <a-input placeholder="请输入销售协议" v-decorator.trim="[ 'saleAgreement', validatorRules.saleAgreement ]" />
             </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24"></a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库权限">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="depotFlagSwitch" @change="onDepotChange"></a-switch>
               （如果启用则需要到<b>用户管理</b>进行<b>分配仓库</b>）
             </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24"></a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户权限">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerFlagSwitch" @change="onCustomerChange"></a-switch>
               （如果启用则需要到<b>用户管理</b>进行<b>分配客户</b>）
             </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24"></a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="负库存">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
               （如果启用则单据支持<b>负库存</b>录入）
             </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24"></a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="以销定购">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="purchaseBySaleFlagSwitch" @change="onPurchaseBySaleChange"></a-switch>
               （如果启用则根据销售订单来定制采购订单，进货后再发给客户）
             </a-form-item>
-          </a-form>
-        </a-spin>
-      </a-col>
-    </a-row>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24"></a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24" v-if="isShowApproval">
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
+              （如果启用多级审核，则需配置流程，最多支持5级，开启后请刷新页面）
+            </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24"></a-col>
+        </a-row>
+      </a-form>
+    </a-spin>
     <a-row :gutter="24">
       <a-col :md="12" align="middle">
         <a-button type="primary" @click="handleOk">保存</a-button>
@@ -73,7 +121,9 @@
         customerFlagSwitch: false, //客户权限状态
         minusStockFlagSwitch: false, //负库存状态
         purchaseBySaleFlagSwitch: false, //以销定购状态
+        multiLevelApprovalFlagSwitch: false, //多级审核
         isReadOnly: false,
+        isShowApproval: false,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -118,6 +168,9 @@
       onPurchaseBySaleChange(checked) {
         this.model.purchaseBySaleFlag = checked?'1':'0'
       },
+      onMultiLevelApprovalChange(checked) {
+        this.model.multiLevelApprovalFlag = checked?'1':'0'
+      },
       init () {
         let param = {
           search: {"companyName":""},
@@ -133,7 +186,7 @@
             this.$nextTick(() => {
               this.form.setFieldsValue(pick(this.model,'companyName', 'companyContacts', 'companyAddress',
                 'companyTel', 'companyFax', 'companyPostCode', 'saleAgreement', 'depotFlag', 'customerFlag',
-                'minusStockFlag', 'purchaseBySaleFlag'))
+                'minusStockFlag', 'purchaseBySaleFlag', 'multiLevelApprovalFlag'))
               autoJumpNextInput('systemConfigModal')
             });
             if(record.id) {
@@ -149,9 +202,20 @@
               if (record.purchaseBySaleFlag != null) {
                 this.purchaseBySaleFlagSwitch = record.purchaseBySaleFlag == '1' ? true : false;
               }
+              if (record.multiLevelApprovalFlag != null) {
+                this.multiLevelApprovalFlagSwitch = record.multiLevelApprovalFlag == '1' ? true : false;
+              }
             }
           } else {
             this.$message.info(res.data);
+          }
+        })
+        //校验是否存在多级审批插件
+        getAction('/plugin/checkByPluginId', { pluginIds: 'workflow' }).then((res)=> {
+          if (res.code === 200) {
+            if(res.data) {
+              this.isShowApproval = true
+            }
           }
         })
       },
@@ -187,6 +251,7 @@
         this.customerFlagSwitch = false
         this.minusStockFlagSwitch = false
         this.purchaseBySaleFlagSwitch = false
+        this.multiLevelApprovalFlag = false
       }
     }
   }
