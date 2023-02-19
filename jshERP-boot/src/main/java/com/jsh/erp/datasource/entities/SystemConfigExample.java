@@ -934,6 +934,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andMultiLevelApprovalFlagIsNull() {
+            addCriterion("multi_level_approval_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagIsNotNull() {
+            addCriterion("multi_level_approval_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagEqualTo(String value) {
+            addCriterion("multi_level_approval_flag =", value, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagNotEqualTo(String value) {
+            addCriterion("multi_level_approval_flag <>", value, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagGreaterThan(String value) {
+            addCriterion("multi_level_approval_flag >", value, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("multi_level_approval_flag >=", value, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagLessThan(String value) {
+            addCriterion("multi_level_approval_flag <", value, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagLessThanOrEqualTo(String value) {
+            addCriterion("multi_level_approval_flag <=", value, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagLike(String value) {
+            addCriterion("multi_level_approval_flag like", value, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagNotLike(String value) {
+            addCriterion("multi_level_approval_flag not like", value, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagIn(List<String> values) {
+            addCriterion("multi_level_approval_flag in", values, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagNotIn(List<String> values) {
+            addCriterion("multi_level_approval_flag not in", values, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagBetween(String value1, String value2) {
+            addCriterion("multi_level_approval_flag between", value1, value2, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiLevelApprovalFlagNotBetween(String value1, String value2) {
+            addCriterion("multi_level_approval_flag not between", value1, value2, "multiLevelApprovalFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

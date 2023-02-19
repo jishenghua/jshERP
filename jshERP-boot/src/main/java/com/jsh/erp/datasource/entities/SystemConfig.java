@@ -25,6 +25,8 @@ public class SystemConfig {
 
     private String purchaseBySaleFlag;
 
+    private String multiLevelApprovalFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -123,6 +125,14 @@ public class SystemConfig {
 
     public void setPurchaseBySaleFlag(String purchaseBySaleFlag) {
         this.purchaseBySaleFlag = purchaseBySaleFlag == null ? null : purchaseBySaleFlag.trim();
+    }
+
+    public String getMultiLevelApprovalFlag() {
+        return multiLevelApprovalFlag;
+    }
+
+    public void setMultiLevelApprovalFlag(String multiLevelApprovalFlag) {
+        this.multiLevelApprovalFlag = multiLevelApprovalFlag == null ? null : multiLevelApprovalFlag.trim();
     }
 
     public Long getTenantId() {

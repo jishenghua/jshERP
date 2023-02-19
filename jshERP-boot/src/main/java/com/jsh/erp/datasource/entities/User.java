@@ -9,6 +9,8 @@ public class User {
 
     private String password;
 
+    private String leaderFlag;
+
     private String position;
 
     private String department;
@@ -59,6 +61,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+
+    public String getLeaderFlag() {
+        return leaderFlag;
+    }
+
+    public void setLeaderFlag(String leaderFlag) {
+        this.leaderFlag = leaderFlag == null ? null : leaderFlag.trim();
     }
 
     public String getPosition() {

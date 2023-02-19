@@ -374,6 +374,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andLeaderFlagIsNull() {
+            addCriterion("leader_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagIsNotNull() {
+            addCriterion("leader_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagEqualTo(String value) {
+            addCriterion("leader_flag =", value, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagNotEqualTo(String value) {
+            addCriterion("leader_flag <>", value, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagGreaterThan(String value) {
+            addCriterion("leader_flag >", value, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("leader_flag >=", value, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagLessThan(String value) {
+            addCriterion("leader_flag <", value, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagLessThanOrEqualTo(String value) {
+            addCriterion("leader_flag <=", value, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagLike(String value) {
+            addCriterion("leader_flag like", value, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagNotLike(String value) {
+            addCriterion("leader_flag not like", value, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagIn(List<String> values) {
+            addCriterion("leader_flag in", values, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagNotIn(List<String> values) {
+            addCriterion("leader_flag not in", values, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagBetween(String value1, String value2) {
+            addCriterion("leader_flag between", value1, value2, "leaderFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andLeaderFlagNotBetween(String value1, String value2) {
+            addCriterion("leader_flag not between", value1, value2, "leaderFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andPositionIsNull() {
             addCriterion("position is null");
             return (Criteria) this;

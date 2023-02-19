@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2022-10-02 16:27:25
+Date: 2023-02-20 00:10:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -845,6 +845,7 @@ CREATE TABLE `jsh_system_config` (
   `customer_flag` varchar(1) DEFAULT '0' COMMENT '客户启用标记，0未启用，1启用',
   `minus_stock_flag` varchar(1) DEFAULT '0' COMMENT '负库存启用标记，0未启用，1启用',
   `purchase_by_sale_flag` varchar(1) DEFAULT '0' COMMENT '以销定购启用标记，0未启用，1启用',
+  `multi_level_approval_flag` varchar(1) DEFAULT '0' COMMENT '多级审核启用标记，0未启用，1启用',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -853,7 +854,7 @@ CREATE TABLE `jsh_system_config` (
 -- ----------------------------
 -- Records of jsh_system_config
 -- ----------------------------
-INSERT INTO `jsh_system_config` VALUES ('11', '公司test', '小李', '地址1', '12345678', null, null, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '63', '0');
+INSERT INTO `jsh_system_config` VALUES ('11', '公司test', '小李', '地址1', '12345678', null, null, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '0', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_tenant
@@ -914,6 +915,7 @@ CREATE TABLE `jsh_user` (
   `username` varchar(255) NOT NULL COMMENT '用户姓名--例如张三',
   `login_name` varchar(255) NOT NULL COMMENT '登录用户名',
   `password` varchar(50) DEFAULT NULL COMMENT '登陆密码',
+  `leader_flag` varchar(1) DEFAULT '0' COMMENT '是否经理，0否，1是',
   `position` varchar(200) DEFAULT NULL COMMENT '职位',
   `department` varchar(255) DEFAULT NULL COMMENT '所属部门',
   `email` varchar(100) DEFAULT NULL COMMENT '电子邮箱',
@@ -930,9 +932,9 @@ CREATE TABLE `jsh_user` (
 -- ----------------------------
 -- Records of jsh_user
 -- ----------------------------
-INSERT INTO `jsh_user` VALUES ('63', '测试用户', 'jsh', 'e10adc3949ba59abbe56e057f20f883e', '主管', null, '666666@qq.com', '1123123123132', '1', '1', '0', '', null, '63');
-INSERT INTO `jsh_user` VALUES ('120', '管理员', 'admin', 'e10adc3949ba59abbe56e057f20f883e', null, null, null, null, '1', '0', '0', null, null, '0');
-INSERT INTO `jsh_user` VALUES ('131', 'test123', 'test123', 'e10adc3949ba59abbe56e057f20f883e', '总监', null, '7777777@qq.com', '', '1', '0', '0', '', null, '63');
+INSERT INTO `jsh_user` VALUES ('63', '测试用户', 'jsh', 'e10adc3949ba59abbe56e057f20f883e', '0', '主管', null, '666666@qq.com', '1123123123132', '1', '1', '0', '', null, '63');
+INSERT INTO `jsh_user` VALUES ('120', '管理员', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '0', null, null, null, null, '1', '0', '0', null, null, '0');
+INSERT INTO `jsh_user` VALUES ('131', 'test123', 'test123', 'e10adc3949ba59abbe56e057f20f883e', '0', '总监', null, '7777777@qq.com', '', '1', '0', '0', '', null, '63');
 
 -- ----------------------------
 -- Table structure for jsh_user_business

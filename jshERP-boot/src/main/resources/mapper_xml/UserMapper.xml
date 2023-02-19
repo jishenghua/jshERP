@@ -6,6 +6,7 @@
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="login_name" jdbcType="VARCHAR" property="loginName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="leader_flag" jdbcType="VARCHAR" property="leaderFlag" />
     <result column="position" jdbcType="VARCHAR" property="position" />
     <result column="department" jdbcType="VARCHAR" property="department" />
     <result column="email" jdbcType="VARCHAR" property="email" />
@@ -76,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, username, login_name, password, position, department, email, phonenum, ismanager, 
-    isystem, Status, description, remark, tenant_id
+    id, username, login_name, password, leader_flag, position, department, email, phonenum, 
+    ismanager, isystem, Status, description, remark, tenant_id
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.UserExample" resultMap="BaseResultMap">
     select
@@ -111,15 +112,17 @@
   </delete>
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.User">
     insert into jsh_user (id, username, login_name, 
-      password, position, department, 
-      email, phonenum, ismanager, 
-      isystem, Status, description, 
-      remark, tenant_id)
+      password, leader_flag, position, 
+      department, email, phonenum, 
+      ismanager, isystem, Status, 
+      description, remark, tenant_id
+      )
     values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR}, #{ismanager,jdbcType=TINYINT}, 
-      #{isystem,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{description,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT})
+      #{password,jdbcType=VARCHAR}, #{leaderFlag,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, 
+      #{department,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR}, 
+      #{ismanager,jdbcType=TINYINT}, #{isystem,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+      #{description,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.User">
     insert into jsh_user
@@ -135,6 +138,9 @@
       </if>
       <if test="password != null">
         password,
+      </if>
+      <if test="leaderFlag != null">
+        leader_flag,
       </if>
       <if test="position != null">
         position,
@@ -179,6 +185,9 @@
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="leaderFlag != null">
+        #{leaderFlag,jdbcType=VARCHAR},
       </if>
       <if test="position != null">
         #{position,jdbcType=VARCHAR},
@@ -233,6 +242,9 @@
       <if test="record.password != null">
         password = #{record.password,jdbcType=VARCHAR},
       </if>
+      <if test="record.leaderFlag != null">
+        leader_flag = #{record.leaderFlag,jdbcType=VARCHAR},
+      </if>
       <if test="record.position != null">
         position = #{record.position,jdbcType=VARCHAR},
       </if>
@@ -274,6 +286,7 @@
       username = #{record.username,jdbcType=VARCHAR},
       login_name = #{record.loginName,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
+      leader_flag = #{record.leaderFlag,jdbcType=VARCHAR},
       position = #{record.position,jdbcType=VARCHAR},
       department = #{record.department,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
@@ -299,6 +312,9 @@
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="leaderFlag != null">
+        leader_flag = #{leaderFlag,jdbcType=VARCHAR},
       </if>
       <if test="position != null">
         position = #{position,jdbcType=VARCHAR},
@@ -338,6 +354,7 @@
     set username = #{username,jdbcType=VARCHAR},
       login_name = #{loginName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
+      leader_flag = #{leaderFlag,jdbcType=VARCHAR},
       position = #{position,jdbcType=VARCHAR},
       department = #{department,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},

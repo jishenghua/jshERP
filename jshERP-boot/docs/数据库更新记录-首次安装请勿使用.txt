@@ -1422,3 +1422,12 @@ alter table jsh_depot_item add purchase_unit_price decimal(24,6) DEFAULT NULL CO
 -- 给角色表增加价格屏蔽字段
 -- --------------------------------------------------------
 alter table jsh_role add price_limit varchar(50) DEFAULT NULL COMMENT '价格屏蔽 1-屏蔽采购价 2-屏蔽零售价 3-屏蔽销售价' after type;
+
+-- --------------------------------------------------------
+-- 时间 2023年02月19日
+-- by jishenghua
+-- 给系统参数表增加多级审核开关字段
+-- 给用户表增加是否经理字段，默认为否
+-- --------------------------------------------------------
+alter table jsh_system_config add multi_level_approval_flag varchar(1) DEFAULT '0' COMMENT '多级审核启用标记，0未启用，1启用' after purchase_by_sale_flag;
+alter table jsh_user add leader_flag varchar(1) DEFAULT '0' COMMENT '是否经理，0否，1是' after password;
