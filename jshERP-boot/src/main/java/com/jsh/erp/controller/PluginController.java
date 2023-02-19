@@ -329,4 +329,37 @@ public class PluginController {
         }
         return res;
     }
+
+    /**
+     * 根据插件标识判断是否存在
+     * @param pluginIds 多个用逗号隔开
+     * @return
+     */
+    @GetMapping("/checkByPluginId")
+    @ApiOperation(value = "根据插件标识判断是否存在")
+    public BaseResponseInfo checkByTag(@RequestParam("pluginIds") String pluginIds){
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            boolean data = false;
+            if(StringUtil.isNotEmpty(pluginIds)) {
+                String[] pluginIdList = pluginIds.split(",");
+                List<PluginInfo> list = pluginOperator.getPluginInfo();
+                for (PluginInfo pi : list) {
+                    String info = pi.getPluginDescriptor().getPluginId();
+                    for (int i = 0; i < pluginIdList.length; i++) {
+                        if (pluginIdList[i].equals(info)) {
+                            data = true;
+                        }
+                    }
+                }
+            }
+            res.code = 200;
+            res.data = data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
 }
