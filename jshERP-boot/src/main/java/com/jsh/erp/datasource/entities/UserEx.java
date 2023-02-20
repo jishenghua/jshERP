@@ -28,6 +28,8 @@ public class UserEx extends User{
 
     private String expireTime;
 
+    private String leaderFlagStr;
+
     public String getOrgAbr() {
         return orgAbr;
     }
@@ -98,5 +100,13 @@ public class UserEx extends User{
 
     public void setExpireTime(String expireTime) {
         this.expireTime = expireTime;
+    }
+
+    public String getLeaderFlagStr() {
+        return leaderFlagStr;
+    }
+
+    public void setLeaderFlagStr(String leaderFlagStr) {
+        this.leaderFlagStr = leaderFlagStr;
     }
 }

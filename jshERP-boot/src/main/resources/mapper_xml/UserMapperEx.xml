@@ -18,7 +18,7 @@
         left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
         where ub.type='UserRole' and ub.key_id=tb.id limit 0,1) roleName
         from (
-        select user.id, user.username, user.login_name, user.position, user.email, user.phonenum,
+        select user.id, user.username, user.login_name, user.position, user.leader_flag, user.email, user.phonenum,
         user.description, user.remark,user.isystem,org.id as orgaId,user.tenant_id,user.status,org.org_abr,
         rel.user_blng_orga_dspl_seq,rel.id as orgaUserRelId
         FROM jsh_user user
@@ -135,4 +135,13 @@
         update jsh_user set Status='2'
         where tenant_id=#{tenantId} and id!=#{tenantId} and Status!='1'
     </update>
+
+    <select id="getListByOrgaId" resultType="com.jsh.erp.datasource.entities.User">
+        select u.*,our.orga_id from jsh_user u
+        left join jsh_orga_user_rel our on u.id=our.user_id
+        where u.leader_flag='1' and orga_id= #{orgaId}
+        <if test="id != null">
+            and u.id != #{id}
+        </if>
+    </select>
 </mapper>

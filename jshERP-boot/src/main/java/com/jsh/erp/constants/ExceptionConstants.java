@@ -67,6 +67,9 @@ public class ExceptionConstants {
     //租户不能被删除
     public static final int USER_LIMIT_TENANT_DELETE_CODE = 500008;
     public static final String USER_LIMIT_TENANT_DELETE_MSG = "抱歉，租户不能被删除";
+    //当前机构已经存在经理
+    public static final int USER_LEADER_IS_EXIST_CODE = 500009;
+    public static final String USER_LEADER_IS_EXIST_MSG = "抱歉，当前机构已经存在经理";
 
     /**
      * 角色信息
