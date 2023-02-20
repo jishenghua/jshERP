@@ -44,6 +44,12 @@
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="职位">
             <a-input placeholder="请输入职位" v-decorator.trim="[ 'position' ]" />
           </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否经理">
+            <a-select placeholder="请选择是否经理" v-decorator="[ 'leaderFlag' ]">
+              <a-select-option value="1">是</a-select-option>
+              <a-select-option value="0">否</a-select-option>
+            </a-select>
+          </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="电话号码">
             <a-input placeholder="请输入电话号码" v-decorator.trim="[ 'phonenum' ]" />
           </a-form-item>
@@ -139,7 +145,7 @@
         this.visible = true;
         this.model = Object.assign({}, record);
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'loginName','username','roleId','orgaId','position',
+          this.form.setFieldsValue(pick(this.model,'loginName','username','roleId','orgaId','position','leaderFlag',
             'phonenum','email','userBlngOrgaDsplSeq','description'))
           autoJumpNextInput('userModal')
         });
