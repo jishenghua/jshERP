@@ -94,7 +94,7 @@
       </a-form>
     </a-spin>
     <a-row :gutter="24">
-      <a-col :md="12" align="middle">
+      <a-col :md="24" align="middle">
         <a-button type="primary" @click="handleOk">保存</a-button>
         <a-button style="margin-left:20px" @click="handleReset">重置</a-button>
       </a-col>
