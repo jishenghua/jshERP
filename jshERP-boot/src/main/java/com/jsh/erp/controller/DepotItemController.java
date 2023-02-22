@@ -75,10 +75,21 @@ public class DepotItemController {
             @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
             @RequestParam(value = "depotIds",required = false) String depotIds,
             @RequestParam(value = "sku",required = false) String sku,
+            @RequestParam(value = "batchNumber",required = false) String batchNumber,
+            @RequestParam(value = "number",required = false) String number,
+            @RequestParam(value = "beginTime",required = false) String beginTime,
+            @RequestParam(value = "endTime",required = false) String endTime,
             @RequestParam("materialId") Long mId,
             HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
-        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, sku, mId, (currentPage-1)*pageSize, pageSize);
+        if(StringUtil.isNotEmpty(beginTime)) {
+            beginTime = beginTime + BusinessConstants.DAY_FIRST_TIME;
+        }
+        if(StringUtil.isNotEmpty(endTime)) {
+            endTime = endTime + BusinessConstants.DAY_LAST_TIME;
+        }
+        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, sku,
+                batchNumber, StringUtil.toNull(number), beginTime, endTime, mId, (currentPage-1)*pageSize, pageSize);
         JSONArray dataArray = new JSONArray();
         if (list != null) {
             for (DepotItemVo4DetailByTypeAndMId d: list) {
@@ -105,7 +116,8 @@ public class DepotItemController {
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
         objectMap.put("rows", dataArray);
-        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, sku, mId));
+        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, sku,
+                batchNumber, StringUtil.toNull(number), beginTime, endTime, mId));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 
