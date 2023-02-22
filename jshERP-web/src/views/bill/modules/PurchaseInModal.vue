@@ -14,7 +14,7 @@
     style="top:20px;height: 95%;">
     <template slot="footer">
       <a-button @click="handleCancel">取消</a-button>
-      <a-button v-if="isCanCheck" @click="handleOkAndCheck">保存并审核</a-button>
+      <a-button v-if="checkFlag && isCanCheck" @click="handleOkAndCheck">保存并审核</a-button>
       <a-button type="primary" @click="handleOk">保存</a-button>
     </template>
     <a-spin :spinning="confirmLoading">
@@ -378,6 +378,7 @@
           this.model.tenantId = ''
           this.copyAddInit(this.prefixNo)
         }
+        this.initSystemConfig()
         this.initSupplier()
         this.initDepot()
         this.initAccount()

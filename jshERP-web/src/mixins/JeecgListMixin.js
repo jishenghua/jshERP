@@ -59,7 +59,7 @@ export const JeecgListMixin = {
       /** 是否加载时就执行 */
       disableMixinCreated: false,
       /* 按钮权限 */
-      btnEnableList: ''
+      btnEnableList: '',
     }
   },
   created() {

@@ -86,7 +86,7 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
-              （如果启用多级审核，则需配置流程，最多支持5级，开启后请刷新页面）
+              （如果启用多级审核，则需配置流程，开启会自动刷新浏览器）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
@@ -122,6 +122,7 @@
         minusStockFlagSwitch: false, //负库存状态
         purchaseBySaleFlagSwitch: false, //以销定购状态
         multiLevelApprovalFlagSwitch: false, //多级审核
+        originalMultiLevelApprovalFlag: '0', //原始多级审核状态
         isReadOnly: false,
         isShowApproval: false,
         labelCol: {
@@ -204,6 +205,7 @@
               }
               if (record.multiLevelApprovalFlag != null) {
                 this.multiLevelApprovalFlagSwitch = record.multiLevelApprovalFlag == '1' ? true : false;
+                this.originalMultiLevelApprovalFlag = record.multiLevelApprovalFlag
               }
             }
           } else {
@@ -236,6 +238,10 @@
               if(res.code === 200){
                 this.init()
                 that.$message.info('保存成功！');
+                //如果多级审核切换状态需要刷新浏览器
+                if(this.originalMultiLevelApprovalFlag!= formData.multiLevelApprovalFlag) {
+                  location.reload()
+                }
               }else{
                 that.$message.warning(res.data.message);
               }

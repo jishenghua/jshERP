@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import {getAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
-import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount} from '@/api/api'
+import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount, getCurrentSystemConfig} from '@/api/api'
 
 export const BillListMixin = {
   data () {
     return {
+      /* 原始审核是否开启 */
+      checkFlag: true,
       supList: [],
       cusList: [],
       retailList: [],
@@ -102,6 +104,13 @@ export const BillListMixin = {
     },
     onDateOk(value) {
       console.log(value);
+    },
+    initSystemConfig() {
+      getCurrentSystemConfig().then((res) => {
+        if(res.code === 200 && res.data){
+          this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+        }
+      })
     },
     initSupplier() {
       let that = this;

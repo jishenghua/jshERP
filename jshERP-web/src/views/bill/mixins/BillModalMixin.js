@@ -1,6 +1,6 @@
 import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
-  getPersonByNumType, getBatchNumberList} from '@/api/api'
+  getPersonByNumType, getBatchNumberList, getCurrentSystemConfig} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
@@ -29,6 +29,8 @@ export const BillModalMixin = {
       minWidth: 1100,
       isCanCheck: true,
       isTenant: false,
+      /* 原始审核是否开启 */
+      checkFlag: true,
       validatorRules:{
         price:{
           rules: [
@@ -144,6 +146,13 @@ export const BillModalMixin = {
           }
         }
       }
+    },
+    initSystemConfig() {
+      getCurrentSystemConfig().then((res) => {
+        if(res.code === 200 && res.data){
+          this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+        }
+      })
     },
     initSupplier() {
       let that = this;

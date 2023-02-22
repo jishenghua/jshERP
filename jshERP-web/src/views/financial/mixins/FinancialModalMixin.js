@@ -1,5 +1,6 @@
 import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-import {findBySelectSup,findBySelectCus,findBySelectRetail,findBySelectOrgan,findStockByDepotAndBarCode,getAccount,getPersonByType,findInOutItemByParam} from '@/api/api'
+import {findBySelectSup,findBySelectCus,findBySelectRetail,findBySelectOrgan,findStockByDepotAndBarCode,getAccount,
+  getPersonByType,findInOutItemByParam,getCurrentSystemConfig} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
@@ -18,6 +19,8 @@ export const FinancialModalMixin = {
       billStatus: '0',
       isCanCheck: true,
       isTenant: false,
+      /* 原始审核是否开启 */
+      checkFlag: true,
       spans: {
         labelCol1: {span: 2},
         wrapperCol1: {span: 22},
@@ -65,6 +68,13 @@ export const FinancialModalMixin = {
             }
           }
         })
+      })
+    },
+    initSystemConfig() {
+      getCurrentSystemConfig().then((res) => {
+        if(res.code === 200 && res.data){
+          this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+        }
       })
     },
     initSupplier() {

@@ -1,10 +1,12 @@
 import {findFinancialDetailByNumber, findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail,
-  getUserList, getPersonByType, getAccount} from '@/api/api'
+  getUserList, getPersonByType, getAccount, getCurrentSystemConfig} from '@/api/api'
 import Vue from 'vue'
 
 export const FinancialListMixin = {
   data () {
     return {
+      /* 原始审核是否开启 */
+      checkFlag: true,
       supList: [],
       cusList: [],
       organList: [],
@@ -79,6 +81,13 @@ export const FinancialListMixin = {
         roleType: Vue.ls.get('roleType')
       }
       this.loadData(1);
+    },
+    initSystemConfig() {
+      getCurrentSystemConfig().then((res) => {
+        if(res.code === 200 && res.data){
+          this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+        }
+      })
     },
     initSupplier() {
       let that = this;

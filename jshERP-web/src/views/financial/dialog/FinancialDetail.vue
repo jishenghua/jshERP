@@ -18,8 +18,10 @@
       <a-button v-if="financialType === '收款'" v-print="'#moneyInPrint'" ghost type="primary">打印</a-button>
       <a-button v-if="financialType === '付款'" v-print="'#moneyOutPrint'" ghost type="primary">打印</a-button>
       <!--反审核-->
-      <a-button v-if="isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
+      <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
+      <!--发起多级审核-->
+      <a-button v-if="!checkFlag && model.status==='0'" @click="handleWorkflow()" type="primary">提交流程</a-button>
     </template>
     <a-form :form="form">
       <!--收预付款-->
@@ -394,16 +396,19 @@
         </a-row>
       </template>
     </a-form>
+    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import { getAction, postAction } from '@/api/manage'
-  import { findFinancialDetailByNumber } from '@/api/api'
+  import { findFinancialDetailByNumber, getCurrentSystemConfig, getPlatformConfigByKey } from '@/api/api'
+  import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import JUpload from '@/components/jeecg/JUpload'
   export default {
     name: 'FinancialDetail',
     components: {
+      WorkflowIframe,
       JUpload
     },
     data () {
@@ -416,6 +421,8 @@
         isCanBackCheck: true,
         financialType: '',
         fileList: [],
+        /* 原始审核是否开启 */
+        checkFlag: true,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 6 },
@@ -495,6 +502,7 @@
             }
             let url = this.readOnly ? this.url.detailList : this.url.detailList;
             this.requestSubTableData(url, params);
+            this.getSystemConfig()
           }
         })
       },
@@ -507,6 +515,23 @@
           }
         }).finally(() => {
           this.loading = false
+        })
+      },
+      getSystemConfig() {
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data){
+            this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+          }
+        })
+      },
+      //发起流程
+      handleWorkflow() {
+        getPlatformConfigByKey({"platformKey": "send_workflow_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.billNo
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 500)
+            this.$refs.modalWorkflow.title = "发起流程"
+          }
         })
       },
       handleBackCheck() {

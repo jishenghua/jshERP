@@ -36,8 +36,10 @@
       <a-button v-if="billType === '组装单'||billType === '拆卸单'" @click="assembleExportExcel()">导出</a-button>
       <a-button v-if="billType === '盘点复盘'" @click="stockCheckReplayExportExcel()">导出</a-button>
       <!--反审核-->
-      <a-button v-if="isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
+      <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
+      <!--发起多级审核-->
+      <a-button v-if="!checkFlag && model.status==='0'" @click="handleWorkflow()" type="primary">提交流程</a-button>
     </template>
     <a-form :form="form">
       <!--零售出库-->
@@ -1001,6 +1003,7 @@
       </template>
     </a-form>
     <bill-print-iframe ref="modalDetail"></bill-print-iframe>
+    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
     <financial-detail ref="financialDetailModal"></financial-detail>
   </j-modal>
 </template>
@@ -1011,6 +1014,7 @@
   import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
   import { getMpListShort, openDownloadDialog, sheet2blob } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
+  import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import FinancialDetail from '../../financial/dialog/FinancialDetail'
   import JUpload from '@/components/jeecg/JUpload'
   import Vue from 'vue'
@@ -1018,6 +1022,7 @@
     name: 'BillDetail',
     components: {
       BillPrintIframe,
+      WorkflowIframe,
       FinancialDetail,
       JUpload
     },
@@ -1035,6 +1040,8 @@
         purchaseBySaleFlag: false,
         linkNumberList: [],
         financialBillNoList: [],
+        /* 原始审核是否开启 */
+        checkFlag: true,
         tableWidth: {
           'width': '1500px'
         },
@@ -1450,6 +1457,7 @@
         getCurrentSystemConfig().then((res) => {
           if(res.code === 200 && res.data){
             this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
+            this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
           }
         })
       },
@@ -1575,8 +1583,18 @@
           if (res && res.code === 200) {
             let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
             let billPrintHeight = this.dataSource.length*50 + 600
-            this.$refs.modalDetail.show(this.model, billPrintUrl, billPrintHeight);
-            this.$refs.modalDetail.title = this.billType + "-三联打印预览";
+            this.$refs.modalDetail.show(this.model, billPrintUrl, billPrintHeight)
+            this.$refs.modalDetail.title = this.billType + "-三联打印预览"
+          }
+        })
+      },
+      //发起流程
+      handleWorkflow() {
+        getPlatformConfigByKey({"platformKey": "send_workflow_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.number
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 500)
+            this.$refs.modalWorkflow.title = "发起流程"
           }
         })
       },
