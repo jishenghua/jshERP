@@ -710,6 +710,7 @@ INSERT INTO `jsh_platform_config` VALUES ('5', 'bill_print_url', '三联打印�
 INSERT INTO `jsh_platform_config` VALUES ('6', 'pay_fee_url', '租户续费地址', '');
 INSERT INTO `jsh_platform_config` VALUES ('7', 'register_flag', '注册启用标记', '1');
 INSERT INTO `jsh_platform_config` VALUES ('8', 'app_activation_code', '手机端激活码', '');
+INSERT INTO `jsh_platform_config` VALUES ('9', 'send_workflow_url', '发起流程地址', '');
 
 -- ----------------------------
 -- Table structure for jsh_role
