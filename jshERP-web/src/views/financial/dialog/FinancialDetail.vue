@@ -528,8 +528,8 @@
       handleWorkflow() {
         getPlatformConfigByKey({"platformKey": "send_workflow_url"}).then((res)=> {
           if (res && res.code === 200) {
-            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.billNo
-            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 500)
+            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.billNo + '&type=2'
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
             this.$refs.modalWorkflow.title = "发起流程"
           }
         })

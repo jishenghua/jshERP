@@ -59,7 +59,7 @@
         this.height = height
         this.sendWorkflowUrl = sendWorkflowUrl
         this.visible = true
-        this.modalStyle = 'top:20%; height: 50%;'
+        this.modalStyle = 'top:20%; height: 55%;'
         this.model = Object.assign({}, record)
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))
