@@ -1,5 +1,5 @@
 <configuration>
-    <property name="LOG_FILE" value="${logs.home}/jshERP"/>
+    <property name="LOG_FILE" value="logs/jshERP"/>
     <property name="LOG_PATTERN" value="%d{yyyy/MM/dd-HH:mm:ss} %-5level [%thread] %logger - %msg%n"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
