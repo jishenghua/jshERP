@@ -599,6 +599,7 @@ CREATE TABLE `jsh_msg` (
   `msg_content` varchar(500) DEFAULT NULL COMMENT '消息内容',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `type` varchar(20) DEFAULT NULL COMMENT '消息类型',
+  `user_id` bigint(20) NULL DEFAULT NULL COMMENT '接收人id' ,
   `status` varchar(1) DEFAULT NULL COMMENT '状态，1未读 2已读',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_Flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
@@ -608,7 +609,7 @@ CREATE TABLE `jsh_msg` (
 -- ----------------------------
 -- Records of jsh_msg
 -- ----------------------------
-INSERT INTO `jsh_msg` VALUES ('2', '标题1', '内容1', '2019-09-10 00:11:39', '类型1', '2', '63', '0');
+INSERT INTO `jsh_msg` VALUES ('2', '标题1', '内容1', '2019-09-10 00:11:39', '类型1', '63', '2', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_organization

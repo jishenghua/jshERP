@@ -1429,7 +1429,9 @@ alter table jsh_role add price_limit varchar(50) DEFAULT NULL COMMENT '价格屏
 -- 给系统参数表增加多级审核开关字段
 -- 给用户表增加是否经理字段，默认为否
 -- 给平台配置表增加发起流程地址
+-- 给消息表增加接收人字段
 -- --------------------------------------------------------
 alter table jsh_system_config add multi_level_approval_flag varchar(1) DEFAULT '0' COMMENT '多级审核启用标记，0未启用，1启用' after purchase_by_sale_flag;
 alter table jsh_user add leader_flag varchar(1) DEFAULT '0' COMMENT '是否经理，0否，1是' after password;
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('send_workflow_url', '发起流程地址', '');
+alter table jsh_msg add user_id bigint(20) DEFAULT NULL COMMENT '接收人id' after type;
