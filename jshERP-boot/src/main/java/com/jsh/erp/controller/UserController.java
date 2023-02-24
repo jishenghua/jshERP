@@ -494,6 +494,7 @@ public class UserController {
             data.put("expireTime", Tools.parseDateToStr(tenant.getExpireTime()));
             data.put("userCurrentNum", userCurrentNum);
             data.put("userNumLimit", tenant.getUserNumLimit());
+            data.put("tenantId", tenant.getTenantId());
             res.code = 200;
             res.data = data;
         } catch (Exception e) {

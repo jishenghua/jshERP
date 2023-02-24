@@ -8,6 +8,9 @@
         FROM jsh_msg
         WHERE 1=1
         and ifnull(delete_Flag,'0') !='1'
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
             and msg_title like #{bindName}
@@ -17,17 +20,22 @@
             limit #{offset},#{rows}
         </if>
     </select>
+
     <select id="countsByMsg" resultType="java.lang.Long">
         SELECT
         COUNT(id)
         FROM jsh_msg
         WHERE 1=1
         and ifnull(delete_Flag,'0') !='1'
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
             and msg_title like #{bindName}
         </if>
     </select>
+
     <update id="batchDeleteMsgByIds">
         update jsh_msg
         set delete_Flag='1'
@@ -39,29 +47,6 @@
         )
     </update>
 
-    <insert id="insertSelectiveByTask" parameterType="com.jsh.erp.datasource.entities.Msg">
-        insert into jsh_msg(msg_title,msg_content,create_time,type,status,tenant_id)
-        values (
-            #{msgTitle,jdbcType=VARCHAR},
-            #{msgContent,jdbcType=VARCHAR},
-            #{createTime,jdbcType=TIMESTAMP},
-            #{type,jdbcType=VARCHAR},
-            #{status,jdbcType=VARCHAR},
-            #{tenantId,jdbcType=BIGINT}
-        )
-    </insert>
-
-    <select id="checkIsNameExistByTask" resultType="java.lang.Integer">
-        SELECT
-        COUNT(id)
-        FROM jsh_msg
-        WHERE 1=1
-        and ifnull(delete_Flag,'0') !='1'
-        <if test="msgTitle != null">
-            and msg_title = #{msgTitle}
-        </if>
-    </select>
-
     <select id="getMsgCountByStatus" resultType="java.lang.Long">
         SELECT
         COUNT(id)
@@ -70,6 +55,9 @@
         and ifnull(delete_Flag,'0') !='1'
         <if test="status != null">
             and status = #{status}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
         </if>
     </select>
 </mapper>

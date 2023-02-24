@@ -82,7 +82,7 @@ public class MsgService {
         try{
             User userInfo = userService.getCurrentUser();
             if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
-                list = msgMapperEx.selectByConditionMsg(name, offset, rows);
+                list = msgMapperEx.selectByConditionMsg(userInfo.getId(), name, offset, rows);
                 if (null != list) {
                     for (MsgEx msgEx : list) {
                         if (msgEx.getCreateTime() != null) {
@@ -105,7 +105,7 @@ public class MsgService {
         try{
             User userInfo = userService.getCurrentUser();
             if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
-                result = msgMapperEx.countsByMsg(name);
+                result = msgMapperEx.countsByMsg(userInfo.getId(), name);
             }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
@@ -235,7 +235,8 @@ public class MsgService {
             User userInfo = userService.getCurrentUser();
             if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
                 MsgExample example = new MsgExample();
-                example.createCriteria().andStatusEqualTo(status).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                example.createCriteria().andStatusEqualTo(status).andUserIdEqualTo(userInfo.getId())
+                        .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 List<Msg> list = msgMapper.selectByExample(example);
                 if (null != list) {
                     for (Msg msg : list) {
