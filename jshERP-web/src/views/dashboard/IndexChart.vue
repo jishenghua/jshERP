@@ -196,7 +196,8 @@
           type: '',
           expireTime: '',
           userCurrentNum: '',
-          userNumLimit: ''
+          userNumLimit: '',
+          tenantId: ''
         }
       }
     },
@@ -250,7 +251,8 @@
                       let msgParam = {
                         'msgTitle': '试用到期提醒',
                         'msgContent': '试用期即将结束，请您及时续费，过期将会影响正常使用！',
-                        'type': '试用到期'
+                        'type': '试用到期',
+                        'userId': this.tenant.tenantId
                       }
                       postAction("/msg/add",msgParam).then(res=>{
                         if(res && res.code === 200) {
