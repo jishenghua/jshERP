@@ -2,7 +2,7 @@ import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
   getPersonByNumType, getBatchNumberList, getCurrentSystemConfig} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
-import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
+import { getMpListShort, getNowFormatDateTime, getCheckFlag } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
 import Vue from 'vue'
 
@@ -150,7 +150,9 @@ export const BillModalMixin = {
     initSystemConfig() {
       getCurrentSystemConfig().then((res) => {
         if(res.code === 200 && res.data){
-          this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+          let multiBillType = res.data.multiBillType
+          let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
+          this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
         }
       })
     },

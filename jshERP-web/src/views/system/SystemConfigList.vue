@@ -136,6 +136,7 @@
         multiLevelApprovalFlagSwitch: false, //多级审核
         originalMultiLevelApprovalFlag: '0', //原始多级审核状态
         multiBillTypeSelect: [], //单据类型
+        originalMultiBillTypeSelect: [], //原始单据类型
         isReadOnly: false,
         isShowApproval: false,
         labelCol: {
@@ -246,6 +247,7 @@
               }
               if (record.multiBillType != null && record.multiBillType != '') {
                 this.multiBillTypeSelect = record.multiBillType.split(',')
+                this.originalMultiBillTypeSelect = record.multiBillType
               }
             }
           } else {
@@ -280,7 +282,8 @@
                 this.init()
                 that.$message.info('保存成功！');
                 //如果多级审核切换状态需要刷新浏览器
-                if(this.originalMultiLevelApprovalFlag!= formData.multiLevelApprovalFlag) {
+                if(this.originalMultiLevelApprovalFlag!= formData.multiLevelApprovalFlag ||
+                  this.originalMultiBillTypeSelect!=formData.multiBillType) {
                   location.reload()
                 }
               }else{

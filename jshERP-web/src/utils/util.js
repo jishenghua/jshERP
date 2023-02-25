@@ -543,6 +543,21 @@ export function removeByVal(arrylist, val) {
   }
 }
 
+export function getCheckFlag(multiBillType, multiLevelApprovalFlag, prefixNo) {
+  if(multiLevelApprovalFlag==='1') {
+    //开启
+    if(multiBillType) {
+      let multiBillTypeArr = multiBillType.split(',')
+      return multiBillTypeArr.indexOf(prefixNo) <= -1
+    } else {
+      return true
+    }
+  } else {
+    //关闭
+    return true
+  }
+}
+
 /**
  * 将字符串中单个金额中的数值转为负数
  * @param str

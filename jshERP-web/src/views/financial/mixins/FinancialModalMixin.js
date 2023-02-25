@@ -2,7 +2,7 @@ import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTabl
 import {findBySelectSup,findBySelectCus,findBySelectRetail,findBySelectOrgan,findStockByDepotAndBarCode,getAccount,
   getPersonByType,findInOutItemByParam,getCurrentSystemConfig} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
-import { getMpListShort, getNowFormatDateTime } from "@/utils/util"
+import { getCheckFlag, getNowFormatDateTime } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
 import Vue from 'vue'
 
@@ -73,7 +73,9 @@ export const FinancialModalMixin = {
     initSystemConfig() {
       getCurrentSystemConfig().then((res) => {
         if(res.code === 200 && res.data){
-          this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+          let multiBillType = res.data.multiBillType
+          let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
+          this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
         }
       })
     },

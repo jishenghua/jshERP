@@ -1012,7 +1012,7 @@
   import pick from 'lodash.pick'
   import { getAction, postAction } from '@/api/manage'
   import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
-  import { getMpListShort, openDownloadDialog, sheet2blob } from "@/utils/util"
+  import { getMpListShort, getCheckFlag, openDownloadDialog, sheet2blob } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
   import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import FinancialDetail from '../../financial/dialog/FinancialDetail'
@@ -1040,7 +1040,7 @@
         purchaseBySaleFlag: false,
         linkNumberList: [],
         financialBillNoList: [],
-        /* 原始审核是否开启 */
+        /* 原始反审核是否开启 */
         checkFlag: true,
         tableWidth: {
           'width': '1500px'
@@ -1457,7 +1457,9 @@
         getCurrentSystemConfig().then((res) => {
           if(res.code === 200 && res.data){
             this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
-            this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+            let multiBillType = res.data.multiBillType
+            let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
+            this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
           }
         })
       },
@@ -1475,12 +1477,13 @@
           }
         })
       },
-      show(record, type) {
+      show(record, type, prefixNo) {
         //查询单条单据信息
         findBillDetailByNumber({ number: record.number }).then((res) => {
           if (res && res.code === 200) {
             let item = res.data
             this.billType = type
+            this.prefixNo = prefixNo
             //附件下载
             this.fileList = item.fileName
             this.visible = true

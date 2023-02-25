@@ -403,6 +403,7 @@
   import pick from 'lodash.pick'
   import { getAction, postAction } from '@/api/manage'
   import { findFinancialDetailByNumber, getCurrentSystemConfig, getPlatformConfigByKey } from '@/api/api'
+  import { getCheckFlag } from "@/utils/util"
   import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import JUpload from '@/components/jeecg/JUpload'
   export default {
@@ -421,7 +422,7 @@
         isCanBackCheck: true,
         financialType: '',
         fileList: [],
-        /* 原始审核是否开启 */
+        /* 原始反审核是否开启 */
         checkFlag: true,
         labelCol: {
           xs: { span: 24 },
@@ -483,12 +484,13 @@
       this.width = realScreenWidth<1500?'1200px':'1550px'
     },
     methods: {
-      show(record, type) {
+      show(record, type, prefixNo) {
         //查询单条财务信息
         findFinancialDetailByNumber({ billNo: record.billNo }).then((res) => {
           if (res && res.code === 200) {
             let item = res.data
             this.financialType = type
+            this.prefixNo = prefixNo
             //附件下载
             this.fileList = item.fileName
             this.visible = true
@@ -520,7 +522,9 @@
       getSystemConfig() {
         getCurrentSystemConfig().then((res) => {
           if(res.code === 200 && res.data){
-            this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+            let multiBillType = res.data.multiBillType
+            let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
+            this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
           }
         })
       },

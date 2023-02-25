@@ -1,5 +1,6 @@
 import {findFinancialDetailByNumber, findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail,
   getUserList, getPersonByType, getAccount, getCurrentSystemConfig} from '@/api/api'
+import { getCheckFlag } from "@/utils/util"
 import Vue from 'vue'
 
 export const FinancialListMixin = {
@@ -7,6 +8,7 @@ export const FinancialListMixin = {
     return {
       /* 原始审核是否开启 */
       checkFlag: true,
+      prefixNo: '',
       supList: [],
       cusList: [],
       organList: [],
@@ -64,11 +66,11 @@ export const FinancialListMixin = {
         this.$message.warning("抱歉，只有未审核的单据才能删除！")
       }
     },
-    myHandleDetail(record, type) {
+    myHandleDetail(record, type, prefixNo) {
       if(this.btnEnableList.indexOf(7)===-1) {
         this.$refs.modalDetail.isCanBackCheck = false
       }
-      this.handleDetail(record, type);
+      this.handleDetail(record, type, prefixNo);
     },
     handleApprove(record) {
       this.$refs.modalForm.action = "approve";
@@ -85,7 +87,9 @@ export const FinancialListMixin = {
     initSystemConfig() {
       getCurrentSystemConfig().then((res) => {
         if(res.code === 200 && res.data){
-          this.checkFlag = res.data.multiLevelApprovalFlag==='1'?false:true
+          let multiBillType = res.data.multiBillType
+          let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
+          this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
         }
       })
     },

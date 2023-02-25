@@ -142,7 +142,7 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
-              <a @click="myHandleDetail(record, '销售出库')">查看</a>
+              <a @click="myHandleDetail(record, '销售出库', prefixNo)">查看</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a v-if="btnEnableList.indexOf(1)>-1" @click="myHandleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -209,6 +209,7 @@
           status: "",
           remark: ""
         },
+        prefixNo: 'XSCK',
         labelCol: {
           span: 5
         },
