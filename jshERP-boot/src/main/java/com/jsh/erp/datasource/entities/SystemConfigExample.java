@@ -1004,6 +1004,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andMultiBillTypeIsNull() {
+            addCriterion("multi_bill_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeIsNotNull() {
+            addCriterion("multi_bill_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeEqualTo(String value) {
+            addCriterion("multi_bill_type =", value, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeNotEqualTo(String value) {
+            addCriterion("multi_bill_type <>", value, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeGreaterThan(String value) {
+            addCriterion("multi_bill_type >", value, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("multi_bill_type >=", value, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeLessThan(String value) {
+            addCriterion("multi_bill_type <", value, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeLessThanOrEqualTo(String value) {
+            addCriterion("multi_bill_type <=", value, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeLike(String value) {
+            addCriterion("multi_bill_type like", value, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeNotLike(String value) {
+            addCriterion("multi_bill_type not like", value, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeIn(List<String> values) {
+            addCriterion("multi_bill_type in", values, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeNotIn(List<String> values) {
+            addCriterion("multi_bill_type not in", values, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeBetween(String value1, String value2) {
+            addCriterion("multi_bill_type between", value1, value2, "multiBillType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiBillTypeNotBetween(String value1, String value2) {
+            addCriterion("multi_bill_type not between", value1, value2, "multiBillType");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;
