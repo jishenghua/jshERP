@@ -86,7 +86,14 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
-              （如果启用多级审核，则需配置流程，开启会自动刷新浏览器）
+              <a-select placeholder="请选择流程类型" v-model="multiBillTypeSelect" style="width:400px;padding-left:10px"
+                        mode="multiple" :maxTagCount="6" :dropdownMatchSelectWidth="false"
+                        showSearch allow-clear optionFilterProp="children">
+                <a-select-option v-for="(item,index) in billTypeList" :key="index" :value="item.key">
+                  {{ item.value }}
+                </a-select-option>
+              </a-select>
+              <br/>（如果启用多级审核，则需配置流程，开启会自动刷新浏览器）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
@@ -104,13 +111,18 @@
 <!-- b y 7 5 2 7  1 8 9 2 0 -->
 <script>
   import pick from 'lodash.pick'
-  import {addSystemConfig,editSystemConfig,checkSystemConfig } from '@/api/api'
-  import {autoJumpNextInput} from "@/utils/util"
-  import {getAction } from '@/api/manage'
-  import {mixinDevice} from '@/utils/mixin.js'
+  import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
+  import { addSystemConfig, editSystemConfig } from '@/api/api'
+  import { autoJumpNextInput } from '@/utils/util'
+  import { getAction } from '@/api/manage'
+  import { mixinDevice } from '@/utils/mixin.js'
+
   export default {
     name: "SystemConfigList",
     mixins: [mixinDevice],
+    components: {
+      JSelectMultiple
+    },
     data () {
       return {
         title:"操作",
@@ -123,6 +135,7 @@
         purchaseBySaleFlagSwitch: false, //以销定购状态
         multiLevelApprovalFlagSwitch: false, //多级审核
         originalMultiLevelApprovalFlag: '0', //原始多级审核状态
+        multiBillTypeSelect: [], //单据类型
         isReadOnly: false,
         isShowApproval: false,
         labelCol: {
@@ -135,6 +148,27 @@
         },
         confirmLoading: false,
         form: this.$form.createForm(this),
+        billTypeList: [
+          { 'key': 'LSCK', 'value': '零售出库' },
+          { 'key': 'LSTH', 'value': '零售退货' },
+          { 'key': 'CGDD', 'value': '采购订单' },
+          { 'key': 'CGRK', 'value': '采购入库' },
+          { 'key': 'CGTH', 'value': '采购退货' },
+          { 'key': 'XSDD', 'value': '销售订单' },
+          { 'key': 'XSCK', 'value': '销售出库' },
+          { 'key': 'XSTH', 'value': '销售退货' },
+          { 'key': 'QTRK', 'value': '其它入库单' },
+          { 'key': 'QTCK', 'value': '其它出库单' },
+          { 'key': 'DBCK', 'value': '调拨出库' },
+          { 'key': 'ZZD', 'value': '组装单' },
+          { 'key': 'CXD', 'value': '拆卸单' },
+          { 'key': 'SR', 'value': '收入单' },
+          { 'key': 'ZC', 'value': '支出单' },
+          { 'key': 'SK', 'value': '收款单' },
+          { 'key': 'FK', 'value': '付款单' },
+          { 'key': 'ZZ', 'value': '转账单' },
+          { 'key': 'SYF', 'value': '收预付款单' },
+        ],
         validatorRules:{
           companyName:{
             rules: [
@@ -171,6 +205,9 @@
       },
       onMultiLevelApprovalChange(checked) {
         this.model.multiLevelApprovalFlag = checked?'1':'0'
+        if(!checked) {
+          this.multiBillTypeSelect = []
+        }
       },
       init () {
         let param = {
@@ -187,7 +224,7 @@
             this.$nextTick(() => {
               this.form.setFieldsValue(pick(this.model,'companyName', 'companyContacts', 'companyAddress',
                 'companyTel', 'companyFax', 'companyPostCode', 'saleAgreement', 'depotFlag', 'customerFlag',
-                'minusStockFlag', 'purchaseBySaleFlag', 'multiLevelApprovalFlag'))
+                'minusStockFlag', 'purchaseBySaleFlag', 'multiLevelApprovalFlag', 'multiLevelApprovalFlag'))
               autoJumpNextInput('systemConfigModal')
             });
             if(record.id) {
@@ -206,6 +243,9 @@
               if (record.multiLevelApprovalFlag != null) {
                 this.multiLevelApprovalFlagSwitch = record.multiLevelApprovalFlag == '1' ? true : false;
                 this.originalMultiLevelApprovalFlag = record.multiLevelApprovalFlag
+              }
+              if (record.multiBillType != null && record.multiBillType != '') {
+                this.multiBillTypeSelect = record.multiBillType.split(',')
               }
             }
           } else {
@@ -228,6 +268,7 @@
           if (!err) {
             that.confirmLoading = true;
             let formData = Object.assign(this.model, values);
+            formData.multiBillType = this.multiBillTypeSelect.join(",")
             let obj;
             if(!this.model.id){
               obj=addSystemConfig(formData);
@@ -257,7 +298,9 @@
         this.customerFlagSwitch = false
         this.minusStockFlagSwitch = false
         this.purchaseBySaleFlagSwitch = false
-        this.multiLevelApprovalFlag = false
+        this.multiLevelApprovalFlagSwitch = false
+        this.multiLevelApprovalFlagSwitch = false
+        this.multiBillTypeSelect = []
       }
     }
   }
