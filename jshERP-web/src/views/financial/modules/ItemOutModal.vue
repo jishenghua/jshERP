@@ -142,6 +142,7 @@
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 1,
         visible: false,
+        prefixNo: 'ZC',
         model: {},
         fileList:[],
         labelCol: {

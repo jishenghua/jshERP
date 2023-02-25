@@ -12,7 +12,7 @@
         :type="collapsed ? 'menu-fold' : 'menu-unfold'"
         @click="toggle"></a-icon>
 
-      <span v-if="device === 'desktop'"></span>
+      <span v-if="device === 'desktop'" class="company-name">{{ companyName }}</span>
       <span v-else>{{ systemTitle }}</span>
 
       <user-menu :theme="theme" @searchGlobalHeader="searchGlobalHeader" />
@@ -45,6 +45,7 @@
   import UserMenu from '../tools/UserMenu'
   import SMenu from '../menu/'
   import Logo from '../tools/Logo'
+  import { getCurrentSystemConfig } from '@/api/api'
 
   import { mixin } from '@/utils/mixin.js'
 
@@ -86,6 +87,7 @@
       return {
         headerBarFixed: false,
         systemTitle: window.SYS_TITLE,
+        companyName: '',
         //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
         topMenuStyle: {
           headerIndexLeft: {},
@@ -117,6 +119,9 @@
         this.buildTopMenuStyle()
       }
       //update-end--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
+    },
+    created () {
+      this.initSystemConfig()
     },
     methods: {
       handleScroll() {
@@ -154,7 +159,14 @@
       },
       searchGlobalHeader(key, id, title, component){
         this.$emit("searchGlobalLayout", key, id, title, component)
-      }
+      },
+      initSystemConfig() {
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data){
+            this.companyName = res.data.companyName
+          }
+        })
+      },
       //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
     }
   }
@@ -210,6 +222,11 @@
   .ant-layout-header {
     height: @height;
     line-height: @height;
+  }
+
+  .company-name {
+    font-size:16px;
+    padding-left:10px
   }
 
   /* update_end author:scott date:20190220 for: 缩小首页布局顶部的高度*/

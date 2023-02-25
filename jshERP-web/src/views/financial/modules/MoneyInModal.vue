@@ -174,6 +174,7 @@
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 0,
         visible: false,
+        prefixNo: 'SK',
         model: {},
         fileList:[],
         labelCol: {
@@ -231,7 +232,7 @@
       editAfter() {
         this.billStatus = '0'
         if (this.action === 'add') {
-          this.addInit("SK")
+          this.addInit(this.prefixNo)
           this.fileList = []
         } else {
           this.model.billTime = this.model.billTimeStr
