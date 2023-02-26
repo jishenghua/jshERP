@@ -1438,6 +1438,9 @@ INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platfor
 -- 时间 2023年02月25日
 -- by jishenghua
 -- 给消息表增加接收人字段
+-- 更新接收人id字段的值
 -- 给系统参数表增加流程类型
 -- --------------------------------------------------------
+alter table jsh_msg add user_id bigint(20) DEFAULT NULL COMMENT '接收人id' after type;
+update jsh_msg set user_id=tenant_id where user_id is null;
 alter table jsh_system_config add multi_bill_type varchar(200) DEFAULT NULL COMMENT '流程类型，可多选' after multi_level_approval_flag;
