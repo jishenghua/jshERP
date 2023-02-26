@@ -6,6 +6,7 @@
     :bodyStyle ="bodyStyle"
     :switchFullscreen="switchFullscreen"
     @cancel="handleCancel"
+    style="top:15%;height: 60%;"
    >
     <template slot="footer">
       <a-button key="back" @click="handleCancel">关闭</a-button>
@@ -13,6 +14,7 @@
     </template>
     <a-card class="daily-article" :loading="loading">
       <span style="font-size:18px;">{{record.msgTitle}}</span>
+      <span style="font-size:14px; padding-left:30px; color:grey">通知日期：{{record.createTimeStr}}</span>
       <a-divider />
       <span v-html="record.msgContent" class="article-content"></span>
     </a-card>

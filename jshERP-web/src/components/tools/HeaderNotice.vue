@@ -15,7 +15,7 @@
               <a-list-item :key="index" v-for="(record, index) in announcement1">
                 <div style="margin-left: 5%;width: 80%">
                   <p><a @click="showAnnouncement(record)">{{ record.msgTitle }}</a></p>
-                  <p style="color: rgba(0,0,0,.45);margin-bottom: 0px">{{ record.createTimeStr }} 发布</p>
+                  <p style="color: rgba(0,0,0,.45);margin-bottom: 0px">{{ record.createTimeStr }}</p>
                 </div>
               </a-list-item>
               <div style="margin-top: 5px;text-align: center">

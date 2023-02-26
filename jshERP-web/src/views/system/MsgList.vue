@@ -25,13 +25,11 @@
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery">查询</a-button>
               <a-button @click="searchReset" style="margin-left: 8px">重置</a-button>
+              <a-button type="primary" @click="readAll" style="margin-left: 8px" icon="book">全部标注已读</a-button>
             </span>
           </a-col>
         </a-row>
       </a-form>
-    </div>
-    <div class="table-operator">
-      <a-button type="primary" @click="readAll" icon="book">全部标注已读</a-button>
     </div>
     <div style="margin-top: 5px">
       <a-table
@@ -96,7 +94,7 @@
           width: 80
         },
         {
-          title: '时间',
+          title: '通知日期',
           dataIndex: 'createTimeStr',
           width: 90
         },
