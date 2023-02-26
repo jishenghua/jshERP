@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Function;
+import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.functions.FunctionService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
@@ -43,6 +45,9 @@ public class FunctionController {
 
     @Resource
     private UserBusinessService userBusinessService;
+
+    @Resource
+    private SystemConfigService systemConfigService;
 
     @GetMapping(value = "/checkIsNumberExist")
     @ApiOperation(value = "检查编号是否存在")
@@ -90,9 +95,15 @@ public class FunctionController {
             if(funList!=null && funList.size()>0){
                 fc = funList.get(0).getValue();
             }
+            //获取系统配置信息-是否开启多级审核
+            String approvalFlag = "0";
+            List<SystemConfig> list = systemConfigService.getSystemConfig();
+            if(list.size()>0) {
+                approvalFlag = list.get(0).getMultiLevelApprovalFlag();
+            }
             List<Function> dataList = functionService.getRoleFunction(pNumber);
             if (dataList.size() != 0) {
-                dataArray = getMenuByFunction(dataList, fc);
+                dataArray = getMenuByFunction(dataList, fc, approvalFlag);
                 //增加首页菜单项
                 JSONObject homeItem = new JSONObject();
                 homeItem.put("id", 0);
@@ -108,9 +119,13 @@ public class FunctionController {
         return dataArray;
     }
 
-    public JSONArray getMenuByFunction(List<Function> dataList, String fc) throws Exception {
+    public JSONArray getMenuByFunction(List<Function> dataList, String fc, String approvalFlag) throws Exception {
         JSONArray dataArray = new JSONArray();
         for (Function function : dataList) {
+            //如果关闭多级审核，遇到任务审核菜单直接跳过
+            if("0".equals(approvalFlag) && "/workflow".equals(function.getUrl())) {
+                continue;
+            }
             JSONObject item = new JSONObject();
             List<Function> newList = functionService.getRoleFunction(function.getNumber());
             item.put("id", function.getId());
@@ -119,7 +134,7 @@ public class FunctionController {
             item.put("url", function.getUrl());
             item.put("component", function.getComponent());
             if (newList.size()>0) {
-                JSONArray childrenArr = getMenuByFunction(newList, fc);
+                JSONArray childrenArr = getMenuByFunction(newList, fc, approvalFlag);
                 if(childrenArr.size()>0) {
                     item.put("children", childrenArr);
                     dataArray.add(item);
