@@ -659,7 +659,7 @@ public class MaterialService {
                         BigDecimal initStock = getInitStock(mId, depotId);
                         BigDecimal currentNumber = getCurrentStockByMaterialIdAndDepotId(mId, depotId);
                         //当前库存的更新：减去初始库存，再加上导入的新初始库存
-                        if(currentNumber!=null && initStock!=null) {
+                        if(currentNumber!=null && initStock!=null && stock!=null) {
                             currentNumber = currentNumber.subtract(initStock).add(stock);
                         }
                         MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
