@@ -237,6 +237,7 @@ public class MsgService {
                 MsgExample example = new MsgExample();
                 example.createCriteria().andStatusEqualTo(status).andUserIdEqualTo(userInfo.getId())
                         .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                example.setOrderByClause("id desc");
                 List<Msg> list = msgMapper.selectByExample(example);
                 if (null != list) {
                     for (Msg msg : list) {
@@ -247,7 +248,7 @@ public class MsgService {
                             msgEx.setMsgContent(msg.getMsgContent());
                             msgEx.setStatus(msg.getStatus());
                             msgEx.setType(msg.getType());
-                            msgEx.setCreateTimeStr(Tools.parseDateToStr(msg.getCreateTime()));
+                            msgEx.setCreateTimeStr(Tools.getCenternTime(msg.getCreateTime()));
                             resList.add(msgEx);
                         }
                     }
