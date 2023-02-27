@@ -224,8 +224,7 @@
             this.visible = true;
             this.$nextTick(() => {
               this.form.setFieldsValue(pick(this.model,'companyName', 'companyContacts', 'companyAddress',
-                'companyTel', 'companyFax', 'companyPostCode', 'saleAgreement', 'depotFlag', 'customerFlag',
-                'minusStockFlag', 'purchaseBySaleFlag', 'multiLevelApprovalFlag', 'multiLevelApprovalFlag'))
+                'companyTel', 'companyFax', 'companyPostCode', 'saleAgreement'))
               autoJumpNextInput('systemConfigModal')
             });
             if(record.id) {
