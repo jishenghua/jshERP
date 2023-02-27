@@ -130,17 +130,17 @@
             dataIndex: 'action',
             scopedSlots: {customRender: 'action'},
             align: "center",
-            width: 160
+            width: 200
           },
           { title: '登录名称', dataIndex: 'loginName', width: 100, align: "left"},
           { title: '用户姓名', dataIndex: 'username', width: 100, align: "left"},
           { title: '用户类型', dataIndex: 'userType', width: 80, align: "left" },
           { title: '角色', dataIndex: 'roleName', width: 100, align: "left"},
-          { title: '机构', dataIndex: 'orgAbr', width: 140, align: "left"},
-          { title: '是否经理', dataIndex: 'leaderFlagStr', width: 80, align: "left"},
-          { title: '电话号码', dataIndex: 'phonenum', width: 120, align: "left"},
-          { title: '排序', dataIndex: 'userBlngOrgaDsplSeq', width: 60, align: "left"},
-          { title: '状态',dataIndex: 'status',width:70,align:"center",
+          { title: '机构', dataIndex: 'orgAbr', width: 100, align: "left"},
+          { title: '是否经理', dataIndex: 'leaderFlagStr', width: 60, align: "left"},
+          { title: '电话号码', dataIndex: 'phonenum', width: 80, align: "left"},
+          { title: '排序', dataIndex: 'userBlngOrgaDsplSeq', width: 40, align: "left"},
+          { title: '状态',dataIndex: 'status',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderFlag' }
           }
         ],
