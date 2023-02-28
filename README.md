@@ -5,6 +5,11 @@
 * 推荐使用网络版（100元1年）淘宝链接：https://item.taobao.com/item.htm?id=674169489573
 * 平台地址：http://cloud.huaxiaerp.vip 欢迎大家注册租户进行使用
 * 欢迎加入华夏ERP交流QQ群(入群帮安装)，群3：805736336(满)、群4：146571538
+* 
+# project
+  https://github.com/jishenghua/jshERP
+  http://www.huaxiaerp.com/thread-9-1-1.html
+  https://www.kdocs.cn/l/sio8YkRC5wOU
 
 # 定制和插件
 * 如有ERP私人定制需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
