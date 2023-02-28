@@ -8,6 +8,9 @@
 * 
 # project
   https://github.com/jishenghua/jshERP
+  http://www.huaxiaerp.com/thread-9-1-1.html
+  https://www.kdocs.cn/l/sio8YkRC5wOU
+
 # 定制和插件
 * 如有ERP私人定制需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
 * 如需更多功能，欢迎购买作者小店的插件 https://shop104070207.taobao.com/ 谢谢支持
