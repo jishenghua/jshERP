@@ -860,62 +860,66 @@
 
     <select id="getBuyAndSaleBasicStatistics" resultType="java.math.BigDecimal">
         SELECT
-        ifnull(sum(discount_last_money),0)
-        FROM jsh_depot_head
+        ifnull(sum(dh.discount_last_money),0)
+        FROM jsh_depot_head dh left join jsh_depot_item di on dh.id = di.header_id
         WHERE 1=1
+        and di.id is not null
         <if test="type != null">
-            and type=#{type}
+            and dh.type=#{type}
         </if>
         <if test="subType != null">
-            and sub_type=#{subType}
+            and dh.sub_type=#{subType}
         </if>
         <if test="hasSupplier == 1">
-            and organ_id is not null
+            and dh.organ_id is not null
         </if>
         <if test="hasSupplier == 0">
-            and organ_id is null
+            and dh.organ_id is null
         </if>
         <if test="beginTime != null">
-            and oper_time >= #{beginTime}
+            and dh.oper_time >= #{beginTime}
         </if>
         <if test="endTime != null">
-            and oper_time &lt;= #{endTime}
+            and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="creatorArray != null">
-            and creator in (
+            and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
             </foreach>
             )
         </if>
-        and ifnull(delete_flag,'0') !='1'
+        and ifnull(dh.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag,'0') !='1'
     </select>
 
     <select id="getBuyAndSaleRetailStatistics" resultType="java.math.BigDecimal">
         SELECT
-        ifnull(sum(total_price),0)
-        FROM jsh_depot_head
+        ifnull(sum(dh.total_price),0)
+        FROM jsh_depot_head dh left join jsh_depot_item di on dh.id = di.header_id
         WHERE 1=1
+        and di.id is not null
         <if test="type != null">
-            and type=#{type}
+            and dh.type=#{type}
         </if>
         <if test="subType != null">
-            and sub_type=#{subType}
+            and dh.sub_type=#{subType}
         </if>
         <if test="beginTime != null">
-            and oper_time >= #{beginTime}
+            and dh.oper_time >= #{beginTime}
         </if>
         <if test="endTime != null">
-            and oper_time &lt;= #{endTime}
+            and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="creatorArray != null">
-            and creator in (
+            and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
             </foreach>
             )
         </if>
-        and ifnull(delete_flag,'0') !='1'
+        and ifnull(dh.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag,'0') !='1'
     </select>
 
     <select id="debtList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
