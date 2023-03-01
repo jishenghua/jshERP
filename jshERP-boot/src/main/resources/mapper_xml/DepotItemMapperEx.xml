@@ -456,7 +456,9 @@
 
     <select id="inOrOutPrice" resultType="java.math.BigDecimal">
         select ifnull(sum(discount_last_money),0) as allMoney from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id = di.header_id
         where 1=1
+        and di.id is not null
         and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
@@ -468,11 +470,14 @@
             )
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag, '0') != '1'
     </select>
 
     <select id="inOrOutRetailPrice" resultType="java.math.BigDecimal">
         select ifnull(sum(total_price),0) as allMoney from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id = di.header_id
         where 1=1
+        and di.id is not null
         and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
@@ -484,6 +489,7 @@
             )
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag, '0') != '1'
     </select>
 
     <select id="getStockCheckSumByDepotList"  resultType="java.math.BigDecimal">
