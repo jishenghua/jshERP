@@ -318,6 +318,28 @@ public class StringUtil {
     }
 
     /**
+     * 校验条码长度为4到40位
+     * @param value
+     * @return
+     */
+    public static boolean checkBarCodeLength(Object value) {
+        if(value!=null) {
+            String str = value.toString();
+            if(isNotEmpty(str)) {
+                if(str.length()>=4 && str.length()<=40 ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 判断对象是否为数字（含小数）
      * @param str
      * @return

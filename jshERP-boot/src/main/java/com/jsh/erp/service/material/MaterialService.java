@@ -545,15 +545,15 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ENABLED_ERROR_CODE,
                             String.format(ExceptionConstants.MATERIAL_ENABLED_ERROR_MSG, i+1));
                 }
-                //校验基础条码是否是正整数
-                if(!StringUtil.isPositiveLong(barCode)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_CODE,
-                            String.format(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_MSG, barCode));
+                //校验基础条码长度为4到40位
+                if(!StringUtil.checkBarCodeLength(barCode)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_CODE,
+                            String.format(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_MSG, barCode));
                 }
-                //校验副条码是否是正整数
-                if(StringUtil.isNotEmpty(manyBarCode) && !StringUtil.isPositiveLong(manyBarCode)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_CODE,
-                            String.format(ExceptionConstants.MATERIAL_BARCODE_NOT_INTEGER_MSG, manyBarCode));
+                //校验副条码长度为4到40位
+                if(StringUtil.isNotEmpty(manyBarCode) && !StringUtil.checkBarCodeLength(manyBarCode)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_CODE,
+                            String.format(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_MSG, manyBarCode));
                 }
                 //批量校验excel中有无重复条码
                 batchCheckExistBarCodeByParam(mList, barCode, manyBarCode);
