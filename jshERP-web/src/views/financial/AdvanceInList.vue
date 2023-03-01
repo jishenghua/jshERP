@@ -131,7 +131,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <advance-in-modal ref="modalForm" @ok="modalFormOk"></advance-in-modal>
-        <financial-detail ref="modalDetail" @ok="modalFormOk"></financial-detail>
+        <financial-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></financial-detail>
       </a-card>
     </a-col>
   </a-row>

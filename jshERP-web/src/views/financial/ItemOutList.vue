@@ -140,7 +140,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <item-out-modal ref="modalForm" @ok="modalFormOk"></item-out-modal>
-        <financial-detail ref="modalDetail" @ok="modalFormOk"></financial-detail>
+        <financial-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></financial-detail>
       </a-card>
     </a-col>
   </a-row>

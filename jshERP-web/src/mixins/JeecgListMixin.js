@@ -272,7 +272,11 @@ export const JeecgListMixin = {
     },
     modalFormOk() {
       // 新增/修改 成功时，重载列表
-      this.loadData();
+      this.loadData()
+    },
+    modalFormClose() {
+      // 关闭页面时，重载列表
+      this.loadData()
     },
     handleDetail:function(record, type, prefixNo){
       this.$refs.modalDetail.show(record, type, prefixNo);

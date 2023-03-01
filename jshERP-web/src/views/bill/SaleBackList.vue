@@ -152,7 +152,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <sale-back-modal ref="modalForm" @ok="modalFormOk"></sale-back-modal>
-        <bill-detail ref="modalDetail" @ok="modalFormOk"></bill-detail>
+        <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
   </a-row>
