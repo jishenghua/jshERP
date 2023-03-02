@@ -859,10 +859,12 @@
     </select>
 
     <select id="getBuyAndSaleBasicStatistics" resultType="java.math.BigDecimal">
-        SELECT
-        ifnull(sum(dh.discount_last_money),0)
-        FROM jsh_depot_head dh left join jsh_depot_item di on dh.id = di.header_id
-        WHERE 1=1
+        select
+        ifnull(sum(discount_last_money),0) from
+        (select distinct dh.id, dh.discount_last_money
+        from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id = di.header_id
+        where 1=1
         and di.id is not null
         <if test="type != null">
             and dh.type=#{type}
@@ -890,14 +892,16 @@
             )
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag,'0') !='1') tb
     </select>
 
     <select id="getBuyAndSaleRetailStatistics" resultType="java.math.BigDecimal">
-        SELECT
-        ifnull(sum(dh.total_price),0)
-        FROM jsh_depot_head dh left join jsh_depot_item di on dh.id = di.header_id
-        WHERE 1=1
+        select
+        ifnull(sum(total_price),0) from
+        (select distinct dh.id, dh.total_price
+        from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id = di.header_id
+        where 1=1
         and di.id is not null
         <if test="type != null">
             and dh.type=#{type}
@@ -919,7 +923,7 @@
             )
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag,'0') !='1') tb
     </select>
 
     <select id="debtList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
