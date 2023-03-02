@@ -88,7 +88,7 @@ public class AccountHeadComponent implements ICommonQuery {
 
     @Override
     public int checkIsNameExist(Long id, String name)throws Exception {
-        return accountHeadService.checkIsNameExist(id, name);
+        return 0;
     }
 
 }

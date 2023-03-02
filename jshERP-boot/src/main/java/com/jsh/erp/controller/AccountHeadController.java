@@ -104,7 +104,7 @@ public class AccountHeadController {
         AccountHeadVo4ListEx ahl = new AccountHeadVo4ListEx();
         try {
             List<AccountHeadVo4ListEx> list = accountHeadService.getDetailByNumber(billNo);
-            if(list.size() == 1) {
+            if(list.size()>0) {
                 ahl = list.get(0);
             }
             res.code = 200;

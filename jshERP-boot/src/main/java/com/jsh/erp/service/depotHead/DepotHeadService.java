@@ -515,9 +515,16 @@ public class DepotHeadService {
         return list;
     }
 
-    public int checkIsNameExist(Long id, String name)throws Exception {
+    /**
+     * 校验单据编号是否存在
+     * @param id
+     * @param number
+     * @return
+     * @throws Exception
+     */
+    public int checkIsBillNumberExist(Long id, String number)throws Exception {
         DepotHeadExample example = new DepotHeadExample();
-        example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andIdNotEqualTo(id).andNumberEqualTo(number).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<DepotHead> list = null;
         try{
             list = depotHeadMapper.selectByExample(example);
@@ -894,6 +901,11 @@ public class DepotHeadService {
                                       HttpServletRequest request) throws Exception {
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        //校验单号是否重复
+        if(checkIsBillNumberExist(0L, depotHead.getNumber())>0) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
+                    String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
+        }
         String subType = depotHead.getSubType();
         //结算账户校验
         if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
@@ -984,6 +996,11 @@ public class DepotHeadService {
     public void updateDepotHeadAndDetail(String beanJson, String rows,HttpServletRequest request)throws Exception {
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        //校验单号是否重复
+        if(checkIsBillNumberExist(depotHead.getId(), depotHead.getNumber())>0) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
+                    String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
+        }
         //获取之前的金额数据
         BigDecimal preTotalPrice = getDepotHead(depotHead.getId()).getTotalPrice().abs();
         String subType = depotHead.getSubType();

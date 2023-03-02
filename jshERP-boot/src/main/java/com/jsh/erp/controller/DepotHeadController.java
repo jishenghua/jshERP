@@ -368,7 +368,7 @@ public class DepotHeadController {
         DepotHeadVo4List dhl = new DepotHeadVo4List();
         try {
             List<DepotHeadVo4List> list = depotHeadService.getDetailByNumber(number);
-            if(list.size() == 1) {
+            if(list.size()>0) {
                 dhl = list.get(0);
             }
             res.code = 200;

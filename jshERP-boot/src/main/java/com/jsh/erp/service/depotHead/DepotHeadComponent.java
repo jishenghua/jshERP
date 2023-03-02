@@ -96,7 +96,7 @@ public class DepotHeadComponent implements ICommonQuery {
 
     @Override
     public int checkIsNameExist(Long id, String name)throws Exception {
-        return depotHeadService.checkIsNameExist(id, name);
+        return 0;
     }
 
 }

@@ -225,9 +225,16 @@ public class AccountHeadService {
         return 1;
     }
 
-    public int checkIsNameExist(Long id, String name)throws Exception {
+    /**
+     * 校验单据编号是否存在
+     * @param id
+     * @param billNo
+     * @return
+     * @throws Exception
+     */
+    public int checkIsBillNoExist(Long id, String billNo)throws Exception {
         AccountHeadExample example = new AccountHeadExample();
-        example.createCriteria().andIdNotEqualTo(id).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andIdNotEqualTo(id).andBillNoEqualTo(billNo).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<AccountHead> list = null;
         try{
             list = accountHeadMapper.selectByExample(example);
@@ -273,6 +280,11 @@ public class AccountHeadService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void addAccountHeadAndDetail(String beanJson, String rows, HttpServletRequest request) throws Exception {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
+        //校验单号是否重复
+        if(checkIsBillNoExist(0L, accountHead.getBillNo())>0) {
+            throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_BILL_NO_EXIST_CODE,
+                    String.format(ExceptionConstants.ACCOUNT_HEAD_BILL_NO_EXIST_MSG));
+        }
         User userInfo=userService.getCurrentUser();
         accountHead.setCreator(userInfo==null?null:userInfo.getId());
         if(StringUtil.isEmpty(accountHead.getStatus())) {
@@ -299,6 +311,11 @@ public class AccountHeadService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateAccountHeadAndDetail(String beanJson, String rows, HttpServletRequest request) throws Exception {
         AccountHead accountHead = JSONObject.parseObject(beanJson, AccountHead.class);
+        //校验单号是否重复
+        if(checkIsBillNoExist(accountHead.getId(), accountHead.getBillNo())>0) {
+            throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_BILL_NO_EXIST_CODE,
+                    String.format(ExceptionConstants.ACCOUNT_HEAD_BILL_NO_EXIST_MSG));
+        }
         //获取之前的金额数据
         BigDecimal preTotalPrice = getAccountHead(accountHead.getId()).getTotalPrice().abs();
         accountHeadMapper.updateByPrimaryKeySelective(accountHead);
