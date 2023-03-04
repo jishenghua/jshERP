@@ -226,7 +226,7 @@
 
   .company-name {
     font-size:16px;
-    padding-left:10px
+    padding-left:16px
   }
 
   /* update_end author:scott date:20190220 for: 缩小首页布局顶部的高度*/
