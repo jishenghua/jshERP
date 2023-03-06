@@ -12,6 +12,11 @@
                   <a-input placeholder="请输入角色名称查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入备注查询" v-model="queryParam.description"></a-input>
+                </a-form-item>
+              </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
@@ -108,7 +113,10 @@
           offset: 1
         },
         // 查询条件
-        queryParam: {name:'',},
+        queryParam: {
+          name: '',
+          description: '',
+        },
         // 表头
         columns: [
           {
