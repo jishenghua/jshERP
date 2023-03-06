@@ -44,6 +44,7 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
+            :components="handleDrag(columns)"
             :pagination="false"
             :scroll="scroll"
             :loading="loading"
@@ -108,23 +109,23 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
+            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '仓库', dataIndex: 'depotName', width: 150, fixed: 'left'},
-          {title: '条码', dataIndex: 'barCode', width: 150, fixed: 'left'},
-          {title: '名称', dataIndex: 'mname', width: 150, fixed: 'left'},
-          {title: '规格', dataIndex: 'mstandard'},
-          {title: '型号', dataIndex: 'mmodel'},
-          {title: '扩展信息', dataIndex: 'materialOther'},
-          {title: '单位', dataIndex: 'materialUnit'},
-          {title: '库存', dataIndex: 'currentNumber', sorter: (a, b) => a.currentNumber - b.currentNumber},
-          {title: '最低安全库存', dataIndex: 'lowSafeStock', sorter: (a, b) => a.lowSafeStock - b.lowSafeStock},
-          {title: '最高安全库存', dataIndex: 'highSafeStock', sorter: (a, b) => a.highSafeStock - b.highSafeStock},
-          {title: '建议入库量', dataIndex: 'lowCritical', sorter: (a, b) => a.lowCritical - b.lowCritical},
-          {title: '建议出库量', dataIndex: 'highCritical', sorter: (a, b) => a.highCritical - b.highCritical}
+          {title: '仓库', dataIndex: 'depotName', width: 100, ellipsis:true},
+          {title: '条码', dataIndex: 'barCode', width: 100},
+          {title: '名称', dataIndex: 'mname', width: 100, ellipsis:true},
+          {title: '规格', dataIndex: 'mstandard', width: 80, ellipsis:true},
+          {title: '型号', dataIndex: 'mmodel', width: 80, ellipsis:true},
+          {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
+          {title: '单位', dataIndex: 'materialUnit', width: 60, ellipsis:true},
+          {title: '库存', dataIndex: 'currentNumber', sorter: (a, b) => a.currentNumber - b.currentNumber, width: 80},
+          {title: '最低安全库存', dataIndex: 'lowSafeStock', sorter: (a, b) => a.lowSafeStock - b.lowSafeStock, width: 100},
+          {title: '最高安全库存', dataIndex: 'highSafeStock', sorter: (a, b) => a.highSafeStock - b.highSafeStock, width: 100},
+          {title: '建议入库量', dataIndex: 'lowCritical', sorter: (a, b) => a.lowCritical - b.lowCritical, width: 80},
+          {title: '建议出库量', dataIndex: 'highCritical', sorter: (a, b) => a.highCritical - b.highCritical, width: 80}
         ],
         url: {
           list: "/depotItem/findStockWarningCount"

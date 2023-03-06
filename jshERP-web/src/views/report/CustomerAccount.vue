@@ -53,6 +53,7 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
+            :components="handleDrag(columns)"
             :pagination="false"
             :scroll="scroll"
             :loading="loading"
@@ -137,23 +138,25 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
+            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '欠款详情', dataIndex: 'action', align:"center", width: 150, fixed: 'left',
+          {title: '欠款详情', dataIndex: 'action', align:"center", width: 80,
             scopedSlots: { customRender: 'action' }
           },
-          {title: '客户', dataIndex: 'supplier', width: 200, fixed: 'left'},
-          {title: '联系人', dataIndex: 'contacts'},
-          {title: '手机号码', dataIndex: 'telephone'},
-          {title: '联系电话', dataIndex: 'phoneNum'},
-          {title: '电子邮箱', dataIndex: 'email'},
-          {title: '期初应收', dataIndex: 'preNeed'},
-          {title: '本期欠款', dataIndex: 'debtMoney'},
-          {title: '本期收款', dataIndex: 'backMoney'},
-          {dataIndex: 'allNeed', slots: { title: 'customTitle' } }
+          {title: '客户', dataIndex: 'supplier', width: 150, ellipsis:true},
+          {title: '联系人', dataIndex: 'contacts', width: 100, ellipsis:true},
+          {title: '手机号码', dataIndex: 'telephone', width: 100},
+          {title: '联系电话', dataIndex: 'phoneNum', width: 100},
+          {title: '电子邮箱', dataIndex: 'email', width: 100},
+          {title: '期初应收', dataIndex: 'preNeed', width: 80},
+          {title: '本期欠款', dataIndex: 'debtMoney', width: 80},
+          {title: '本期收款', dataIndex: 'backMoney', width: 80},
+          {dataIndex: 'allNeed', width: 80,
+            slots: { title: 'customTitle' }
+          }
         ],
         url: {
           list: "/depotHead/getStatementAccount",

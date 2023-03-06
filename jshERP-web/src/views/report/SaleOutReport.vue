@@ -48,6 +48,7 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
+            :components="handleDrag(columns)"
             :pagination="false"
             :scroll="scroll"
             :loading="loading"
@@ -115,22 +116,22 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
+            title: '#', dataIndex: 'rowIndex', width:60, align:"center",
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 160, fixed: 'left'},
-          {title: '名称', dataIndex: 'materialName', width: 160, fixed: 'left'},
-          {title: '规格', dataIndex: 'materialStandard'},
-          {title: '型号', dataIndex: 'materialModel'},
-          {title: '扩展信息', dataIndex: 'materialOther'},
-          {title: '单位', dataIndex: 'materialUnit'},
-          {title: '销售数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum},
-          {title: '销售金额', dataIndex: 'outSumPrice', sorter: (a, b) => a.outSumPrice - b.outSumPrice},
-          {title: '退货数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum},
-          {title: '退货金额', dataIndex: 'inSumPrice', sorter: (a, b) => a.inSumPrice - b.inSumPrice},
-          {title: '实际销售金额', dataIndex: 'outInSumPrice', sorter: (a, b) => a.outInSumPrice - b.outInSumPrice}
+          {title: '条码', dataIndex: 'barCode', width: 160},
+          {title: '名称', dataIndex: 'materialName', width: 160, ellipsis:true},
+          {title: '规格', dataIndex: 'materialStandard', width: 80, ellipsis:true},
+          {title: '型号', dataIndex: 'materialModel', width: 80, ellipsis:true},
+          {title: '扩展信息', dataIndex: 'materialOther', width: 150, ellipsis:true},
+          {title: '单位', dataIndex: 'materialUnit', width: 80, ellipsis:true},
+          {title: '销售数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 80},
+          {title: '销售金额', dataIndex: 'outSumPrice', sorter: (a, b) => a.outSumPrice - b.outSumPrice, width: 80},
+          {title: '退货数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 80},
+          {title: '退货金额', dataIndex: 'inSumPrice', sorter: (a, b) => a.inSumPrice - b.inSumPrice, width: 80},
+          {title: '实际销售金额', dataIndex: 'outInSumPrice', sorter: (a, b) => a.outInSumPrice - b.outInSumPrice, width: 100}
         ],
         url: {
           list: "/depotItem/saleOut"
@@ -141,7 +142,7 @@
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
-      this.scroll.x = 2100
+      this.scroll.x = 1620
     },
     methods: {
       moment,

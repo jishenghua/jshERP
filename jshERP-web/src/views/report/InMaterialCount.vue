@@ -72,6 +72,7 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
+            :components="handleDrag(columns)"
             :pagination="false"
             :scroll="scroll"
             :loading="loading"
@@ -146,19 +147,19 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
+            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 200, fixed: 'left'},
-          {title: '名称', dataIndex: 'mName', width: 200, fixed: 'left'},
-          {title: '规格', dataIndex: 'standard'},
-          {title: '型号', dataIndex: 'model'},
-          {title: '类别', dataIndex: 'categoryName'},
-          {title: '单位', dataIndex: 'materialUnit'},
-          {title: '入库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum},
-          {title: '入库金额', dataIndex: 'priceSum', sorter: (a, b) => a.priceSum - b.priceSum}
+          {title: '条码', dataIndex: 'barCode', width: 120},
+          {title: '名称', dataIndex: 'mName', width: 120, ellipsis:true},
+          {title: '规格', dataIndex: 'standard', width: 100, ellipsis:true},
+          {title: '型号', dataIndex: 'model', width: 100, ellipsis:true},
+          {title: '类别', dataIndex: 'categoryName', width: 120, ellipsis:true},
+          {title: '单位', dataIndex: 'materialUnit', width: 120, ellipsis:true},
+          {title: '入库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum, width: 120},
+          {title: '入库金额', dataIndex: 'priceSum', sorter: (a, b) => a.priceSum - b.priceSum, width: 120}
         ],
         url: {
           list: "/depotHead/findInOutMaterialCount",

@@ -91,6 +91,7 @@
             rowKey="id"
             :columns="columns"
             :dataSource="dataSource"
+            :components="handleDrag(columns)"
             :pagination="false"
             :scroll="scroll"
             :loading="loading"
@@ -175,27 +176,27 @@
         // 表头
         columns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:60, align:"center", fixed: 'left',
+            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
           {
-            title: '单据编号', dataIndex: 'number', width: 150, fixed: 'left',
+            title: '单据编号', dataIndex: 'number', width: 100,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          {title: '条码', dataIndex: 'barCode', width: 150, fixed: 'left'},
-          {title: '名称', dataIndex: 'mname', width: 150, fixed: 'left'},
-          {title: '规格', dataIndex: 'standard'},
-          {title: '型号', dataIndex: 'model'},
-          {title: '单位', dataIndex: 'mUnit'},
-          {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber},
-          {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice},
-          {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice},
-          {title: '调出仓库', dataIndex: 'dname'},
-          {title: '调入仓库', dataIndex: 'sname'},
-          {title: '调拨日期', dataIndex: 'operTime'},
-          {title: '备注', dataIndex: 'newRemark'}
+          {title: '条码', dataIndex: 'barCode', width: 80},
+          {title: '名称', dataIndex: 'mname', width: 120, ellipsis:true},
+          {title: '规格', dataIndex: 'standard', width: 60, ellipsis:true},
+          {title: '型号', dataIndex: 'model', width: 60, ellipsis:true},
+          {title: '单位', dataIndex: 'mUnit', width: 60, ellipsis:true},
+          {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber, width: 60},
+          {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
+          {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice, width: 60},
+          {title: '调出仓库', dataIndex: 'dname', width: 80},
+          {title: '调入仓库', dataIndex: 'sname', width: 80},
+          {title: '调拨日期', dataIndex: 'operTime', width: 80},
+          {title: '备注', dataIndex: 'newRemark', width: 100, ellipsis:true}
         ],
         url: {
           list: "/depotHead/findAllocationDetail",
@@ -208,7 +209,7 @@
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
-      this.scroll.x = 2100
+      this.scroll.x = 1620
     },
     methods: {
       moment,
