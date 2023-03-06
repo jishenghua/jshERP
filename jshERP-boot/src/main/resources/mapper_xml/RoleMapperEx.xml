@@ -12,6 +12,10 @@
             <bind name="bindName" value="'%'+name+'%'"/>
             and name like #{bindName}
         </if>
+        <if test="description != null">
+            <bind name="bindDescription" value="'%'+description+'%'"/>
+            and description like #{bindDescription}
+        </if>
         order by sort asc, id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -26,6 +30,10 @@
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
             and name like #{bindName}
+        </if>
+        <if test="description != null">
+            <bind name="bindDescription" value="'%'+description+'%'"/>
+            and description like #{bindDescription}
         </if>
     </select>
     <update id="batchDeleteRoleByIds">

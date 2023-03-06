@@ -32,14 +32,16 @@ public class RoleComponent implements ICommonQuery {
     private List<?> getRoleList(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
-        return roleService.select(name, QueryUtils.offset(map), QueryUtils.rows(map));
+        String description = StringUtil.getInfo(search, "description");
+        return roleService.select(name, description, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
     @Override
     public Long counts(Map<String, String> map) throws Exception{
         String search = map.get(Constants.SEARCH);
         String name = StringUtil.getInfo(search, "name");
-        return roleService.countRole(name);
+        String description = StringUtil.getInfo(search, "description");
+        return roleService.countRole(name, description);
     }
 
     @Override

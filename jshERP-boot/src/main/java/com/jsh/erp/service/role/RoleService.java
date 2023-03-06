@@ -75,10 +75,10 @@ public class RoleService {
         return list;
     }
 
-    public List<RoleEx> select(String name, int offset, int rows)throws Exception {
+    public List<RoleEx> select(String name, String description, int offset, int rows)throws Exception {
         List<RoleEx> list=null;
         try{
-            list=roleMapperEx.selectByConditionRole(name, offset, rows);
+            list=roleMapperEx.selectByConditionRole(name, description, offset, rows);
             for(RoleEx roleEx: list) {
                 String priceLimit = roleEx.getPriceLimit();
                 if(StringUtil.isNotEmpty(priceLimit)) {
@@ -94,10 +94,10 @@ public class RoleService {
         return list;
     }
 
-    public Long countRole(String name)throws Exception {
+    public Long countRole(String name, String description)throws Exception {
         Long result=null;
         try{
-            result=roleMapperEx.countsByRole(name);
+            result=roleMapperEx.countsByRole(name, description);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
