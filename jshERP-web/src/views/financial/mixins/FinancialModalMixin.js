@@ -168,6 +168,10 @@ export const FinancialModalMixin = {
         }
       })
     },
+    //选择供应商或客户的触发事件
+    onChangeOrgan(value) {
+      this.accountTable.dataSource = []
+    },
     addSupplier() {
       this.$refs.vendorModalForm.add();
       this.$refs.vendorModalForm.title = "新增";
