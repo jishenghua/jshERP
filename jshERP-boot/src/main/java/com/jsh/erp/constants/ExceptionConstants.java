@@ -403,6 +403,9 @@ public class ExceptionConstants {
     //单据录入-单据编号已经存在
     public static final int DEPOT_HEAD_BILL_NUMBER_EXIST_CODE = 8000022;
     public static final String DEPOT_HEAD_BILL_NUMBER_EXIST_MSG = "抱歉，单据编号已经存在";
+    //单据录入-单据当前状态下不能修改
+    public static final int DEPOT_HEAD_BILL_CANNOT_EDIT_CODE = 8000023;
+    public static final String DEPOT_HEAD_BILL_CANNOT_EDIT_MSG = "抱歉，单据当前状态下不能修改";
 
     /**
      *  单据明细信息
