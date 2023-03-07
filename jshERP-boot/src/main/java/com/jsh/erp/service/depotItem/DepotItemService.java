@@ -11,6 +11,7 @@ import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
+import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.log.LogService;
@@ -61,6 +62,8 @@ public class DepotItemService {
     private UserService userService;
     @Resource
     private SystemConfigService systemConfigService;
+    @Resource
+    private DepotService depotService;
     @Resource
     private RoleService roleService;
     @Resource
@@ -863,8 +866,9 @@ public class DepotItemService {
      * @param endTime
      * @return
      */
-    public BigDecimal getSkuStockByParam(Long depotId, Long meId, String beginTime, String endTime){
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getSkuStockByParam(depotId, meId, beginTime, endTime);
+    public BigDecimal getSkuStockByParam(Long depotId, Long meId, String beginTime, String endTime) throws Exception {
+        List<Long> depotList = depotService.parseDepotList(depotId);
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getSkuStockByParamWithDepotList(depotList, meId, beginTime, endTime);
         BigDecimal stockSum = BigDecimal.ZERO;
         if(stockObj!=null) {
             BigDecimal inTotal = stockObj.getInTotal();
@@ -889,11 +893,8 @@ public class DepotItemService {
      * @param endTime
      * @return
      */
-    public BigDecimal getStockByParam(Long depotId, Long mId, String beginTime, String endTime){
-        List<Long> depotList = new ArrayList<>();
-        if(depotId != null) {
-            depotList.add(depotId);
-        }
+    public BigDecimal getStockByParam(Long depotId, Long mId, String beginTime, String endTime) throws Exception {
+        List<Long> depotList = depotService.parseDepotList(depotId);
         return getStockByParamWithDepotList(depotList, mId, beginTime, endTime);
     }
 
@@ -970,7 +971,7 @@ public class DepotItemService {
      * @param depotItem
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void updateCurrentStock(DepotItem depotItem){
+    public void updateCurrentStock(DepotItem depotItem) throws Exception {
         updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getDepotId());
         if(depotItem.getAnotherDepotId()!=null){
             updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getAnotherDepotId());
@@ -982,7 +983,7 @@ public class DepotItemService {
      * @param mId
      * @param dId
      */
-    public void updateCurrentStockFun(Long mId, Long dId) {
+    public void updateCurrentStockFun(Long mId, Long dId) throws Exception {
         if(mId!=null && dId!=null) {
             MaterialCurrentStockExample example = new MaterialCurrentStockExample();
             example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(dId)

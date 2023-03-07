@@ -287,6 +287,21 @@ public class DepotService {
         return id;
     }
 
+    public List<Long> parseDepotList(Long depotId) throws Exception {
+        List<Long> depotList = new ArrayList<>();
+        if(depotId !=null) {
+            depotList.add(depotId);
+        } else {
+            //未选择仓库时默认为当前用户有权限的仓库
+            JSONArray depotArr = findDepotByCurrentUser();
+            for(Object obj: depotArr) {
+                JSONObject object = JSONObject.parseObject(obj.toString());
+                depotList.add(object.getLong("id"));
+            }
+        }
+        return depotList;
+    }
+
     public JSONArray findDepotByCurrentUser() throws Exception {
         JSONArray arr = new JSONArray();
         String type = "UserDepot";

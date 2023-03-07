@@ -116,8 +116,8 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
-    DepotItemVo4Stock getSkuStockByParam(
-            @Param("depotId") Long depotId,
+    DepotItemVo4Stock getSkuStockByParamWithDepotList(
+            @Param("depotList") List<Long> depotList,
             @Param("meId") Long meId,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
