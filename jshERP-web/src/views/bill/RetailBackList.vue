@@ -150,7 +150,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <retail-back-modal ref="modalForm" @ok="modalFormOk"></retail-back-modal>
+        <retail-back-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></retail-back-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>

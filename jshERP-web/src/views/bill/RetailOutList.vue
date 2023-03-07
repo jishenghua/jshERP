@@ -145,7 +145,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <retail-out-modal ref="modalForm" @ok="modalFormOk"></retail-out-modal>
+        <retail-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></retail-out-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>

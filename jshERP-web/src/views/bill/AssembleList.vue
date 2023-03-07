@@ -127,7 +127,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <assemble-modal ref="modalForm" @ok="modalFormOk"></assemble-modal>
+        <assemble-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></assemble-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>

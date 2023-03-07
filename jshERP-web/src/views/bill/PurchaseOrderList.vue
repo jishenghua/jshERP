@@ -132,7 +132,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <purchase-order-modal ref="modalForm" @ok="modalFormOk"></purchase-order-modal>
+        <purchase-order-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></purchase-order-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>

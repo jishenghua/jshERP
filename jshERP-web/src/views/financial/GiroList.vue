@@ -130,7 +130,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <giro-modal ref="modalForm" @ok="modalFormOk"></giro-modal>
+        <giro-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></giro-modal>
         <financial-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></financial-detail>
       </a-card>
     </a-col>

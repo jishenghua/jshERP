@@ -169,7 +169,7 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <purchase-in-modal ref="modalForm" @ok="modalFormOk"></purchase-in-modal>
+        <purchase-in-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></purchase-in-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
       </a-card>
     </a-col>
