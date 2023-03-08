@@ -8,9 +8,9 @@
     <result column="other_unit" jdbcType="VARCHAR" property="otherUnit" />
     <result column="other_unit_two" jdbcType="VARCHAR" property="otherUnitTwo" />
     <result column="other_unit_three" jdbcType="VARCHAR" property="otherUnitThree" />
-    <result column="ratio" jdbcType="INTEGER" property="ratio" />
-    <result column="ratio_two" jdbcType="INTEGER" property="ratioTwo" />
-    <result column="ratio_three" jdbcType="INTEGER" property="ratioThree" />
+    <result column="ratio" jdbcType="DECIMAL" property="ratio" />
+    <result column="ratio_two" jdbcType="DECIMAL" property="ratioTwo" />
+    <result column="ratio_three" jdbcType="DECIMAL" property="ratioThree" />
     <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
@@ -115,7 +115,7 @@
       )
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{basicUnit,jdbcType=VARCHAR}, 
       #{otherUnit,jdbcType=VARCHAR}, #{otherUnitTwo,jdbcType=VARCHAR}, #{otherUnitThree,jdbcType=VARCHAR}, 
-      #{ratio,jdbcType=INTEGER}, #{ratioTwo,jdbcType=INTEGER}, #{ratioThree,jdbcType=INTEGER}, 
+      #{ratio,jdbcType=DECIMAL}, #{ratioTwo,jdbcType=DECIMAL}, #{ratioThree,jdbcType=DECIMAL}, 
       #{enabled,jdbcType=BIT}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
       )
   </insert>
@@ -179,13 +179,13 @@
         #{otherUnitThree,jdbcType=VARCHAR},
       </if>
       <if test="ratio != null">
-        #{ratio,jdbcType=INTEGER},
+        #{ratio,jdbcType=DECIMAL},
       </if>
       <if test="ratioTwo != null">
-        #{ratioTwo,jdbcType=INTEGER},
+        #{ratioTwo,jdbcType=DECIMAL},
       </if>
       <if test="ratioThree != null">
-        #{ratioThree,jdbcType=INTEGER},
+        #{ratioThree,jdbcType=DECIMAL},
       </if>
       <if test="enabled != null">
         #{enabled,jdbcType=BIT},
@@ -226,13 +226,13 @@
         other_unit_three = #{record.otherUnitThree,jdbcType=VARCHAR},
       </if>
       <if test="record.ratio != null">
-        ratio = #{record.ratio,jdbcType=INTEGER},
+        ratio = #{record.ratio,jdbcType=DECIMAL},
       </if>
       <if test="record.ratioTwo != null">
-        ratio_two = #{record.ratioTwo,jdbcType=INTEGER},
+        ratio_two = #{record.ratioTwo,jdbcType=DECIMAL},
       </if>
       <if test="record.ratioThree != null">
-        ratio_three = #{record.ratioThree,jdbcType=INTEGER},
+        ratio_three = #{record.ratioThree,jdbcType=DECIMAL},
       </if>
       <if test="record.enabled != null">
         enabled = #{record.enabled,jdbcType=BIT},
@@ -256,9 +256,9 @@
       other_unit = #{record.otherUnit,jdbcType=VARCHAR},
       other_unit_two = #{record.otherUnitTwo,jdbcType=VARCHAR},
       other_unit_three = #{record.otherUnitThree,jdbcType=VARCHAR},
-      ratio = #{record.ratio,jdbcType=INTEGER},
-      ratio_two = #{record.ratioTwo,jdbcType=INTEGER},
-      ratio_three = #{record.ratioThree,jdbcType=INTEGER},
+      ratio = #{record.ratio,jdbcType=DECIMAL},
+      ratio_two = #{record.ratioTwo,jdbcType=DECIMAL},
+      ratio_three = #{record.ratioThree,jdbcType=DECIMAL},
       enabled = #{record.enabled,jdbcType=BIT},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
@@ -285,13 +285,13 @@
         other_unit_three = #{otherUnitThree,jdbcType=VARCHAR},
       </if>
       <if test="ratio != null">
-        ratio = #{ratio,jdbcType=INTEGER},
+        ratio = #{ratio,jdbcType=DECIMAL},
       </if>
       <if test="ratioTwo != null">
-        ratio_two = #{ratioTwo,jdbcType=INTEGER},
+        ratio_two = #{ratioTwo,jdbcType=DECIMAL},
       </if>
       <if test="ratioThree != null">
-        ratio_three = #{ratioThree,jdbcType=INTEGER},
+        ratio_three = #{ratioThree,jdbcType=DECIMAL},
       </if>
       <if test="enabled != null">
         enabled = #{enabled,jdbcType=BIT},
@@ -312,9 +312,9 @@
       other_unit = #{otherUnit,jdbcType=VARCHAR},
       other_unit_two = #{otherUnitTwo,jdbcType=VARCHAR},
       other_unit_three = #{otherUnitThree,jdbcType=VARCHAR},
-      ratio = #{ratio,jdbcType=INTEGER},
-      ratio_two = #{ratioTwo,jdbcType=INTEGER},
-      ratio_three = #{ratioThree,jdbcType=INTEGER},
+      ratio = #{ratio,jdbcType=DECIMAL},
+      ratio_two = #{ratioTwo,jdbcType=DECIMAL},
+      ratio_three = #{ratioThree,jdbcType=DECIMAL},
       enabled = #{enabled,jdbcType=BIT},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}

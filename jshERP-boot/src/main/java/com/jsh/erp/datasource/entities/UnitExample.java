@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -524,52 +525,52 @@ public class UnitExample {
             return (Criteria) this;
         }
 
-        public Criteria andRatioEqualTo(Integer value) {
+        public Criteria andRatioEqualTo(BigDecimal value) {
             addCriterion("ratio =", value, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioNotEqualTo(Integer value) {
+        public Criteria andRatioNotEqualTo(BigDecimal value) {
             addCriterion("ratio <>", value, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioGreaterThan(Integer value) {
+        public Criteria andRatioGreaterThan(BigDecimal value) {
             addCriterion("ratio >", value, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioGreaterThanOrEqualTo(Integer value) {
+        public Criteria andRatioGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("ratio >=", value, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioLessThan(Integer value) {
+        public Criteria andRatioLessThan(BigDecimal value) {
             addCriterion("ratio <", value, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioLessThanOrEqualTo(Integer value) {
+        public Criteria andRatioLessThanOrEqualTo(BigDecimal value) {
             addCriterion("ratio <=", value, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioIn(List<Integer> values) {
+        public Criteria andRatioIn(List<BigDecimal> values) {
             addCriterion("ratio in", values, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioNotIn(List<Integer> values) {
+        public Criteria andRatioNotIn(List<BigDecimal> values) {
             addCriterion("ratio not in", values, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioBetween(Integer value1, Integer value2) {
+        public Criteria andRatioBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ratio between", value1, value2, "ratio");
             return (Criteria) this;
         }
 
-        public Criteria andRatioNotBetween(Integer value1, Integer value2) {
+        public Criteria andRatioNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ratio not between", value1, value2, "ratio");
             return (Criteria) this;
         }
@@ -584,52 +585,52 @@ public class UnitExample {
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoEqualTo(Integer value) {
+        public Criteria andRatioTwoEqualTo(BigDecimal value) {
             addCriterion("ratio_two =", value, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoNotEqualTo(Integer value) {
+        public Criteria andRatioTwoNotEqualTo(BigDecimal value) {
             addCriterion("ratio_two <>", value, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoGreaterThan(Integer value) {
+        public Criteria andRatioTwoGreaterThan(BigDecimal value) {
             addCriterion("ratio_two >", value, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoGreaterThanOrEqualTo(Integer value) {
+        public Criteria andRatioTwoGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("ratio_two >=", value, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoLessThan(Integer value) {
+        public Criteria andRatioTwoLessThan(BigDecimal value) {
             addCriterion("ratio_two <", value, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoLessThanOrEqualTo(Integer value) {
+        public Criteria andRatioTwoLessThanOrEqualTo(BigDecimal value) {
             addCriterion("ratio_two <=", value, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoIn(List<Integer> values) {
+        public Criteria andRatioTwoIn(List<BigDecimal> values) {
             addCriterion("ratio_two in", values, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoNotIn(List<Integer> values) {
+        public Criteria andRatioTwoNotIn(List<BigDecimal> values) {
             addCriterion("ratio_two not in", values, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoBetween(Integer value1, Integer value2) {
+        public Criteria andRatioTwoBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ratio_two between", value1, value2, "ratioTwo");
             return (Criteria) this;
         }
 
-        public Criteria andRatioTwoNotBetween(Integer value1, Integer value2) {
+        public Criteria andRatioTwoNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ratio_two not between", value1, value2, "ratioTwo");
             return (Criteria) this;
         }
@@ -644,52 +645,52 @@ public class UnitExample {
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeEqualTo(Integer value) {
+        public Criteria andRatioThreeEqualTo(BigDecimal value) {
             addCriterion("ratio_three =", value, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeNotEqualTo(Integer value) {
+        public Criteria andRatioThreeNotEqualTo(BigDecimal value) {
             addCriterion("ratio_three <>", value, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeGreaterThan(Integer value) {
+        public Criteria andRatioThreeGreaterThan(BigDecimal value) {
             addCriterion("ratio_three >", value, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andRatioThreeGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("ratio_three >=", value, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeLessThan(Integer value) {
+        public Criteria andRatioThreeLessThan(BigDecimal value) {
             addCriterion("ratio_three <", value, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeLessThanOrEqualTo(Integer value) {
+        public Criteria andRatioThreeLessThanOrEqualTo(BigDecimal value) {
             addCriterion("ratio_three <=", value, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeIn(List<Integer> values) {
+        public Criteria andRatioThreeIn(List<BigDecimal> values) {
             addCriterion("ratio_three in", values, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeNotIn(List<Integer> values) {
+        public Criteria andRatioThreeNotIn(List<BigDecimal> values) {
             addCriterion("ratio_three not in", values, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeBetween(Integer value1, Integer value2) {
+        public Criteria andRatioThreeBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ratio_three between", value1, value2, "ratioThree");
             return (Criteria) this;
         }
 
-        public Criteria andRatioThreeNotBetween(Integer value1, Integer value2) {
+        public Criteria andRatioThreeNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("ratio_three not between", value1, value2, "ratioThree");
             return (Criteria) this;
         }

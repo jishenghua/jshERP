@@ -16,6 +16,7 @@
     <result column="purchase_by_sale_flag" jdbcType="VARCHAR" property="purchaseBySaleFlag" />
     <result column="multi_level_approval_flag" jdbcType="VARCHAR" property="multiLevelApprovalFlag" />
     <result column="multi_bill_type" jdbcType="VARCHAR" property="multiBillType" />
+    <result column="amount_approval_flag" jdbcType="VARCHAR" property="amountApprovalFlag" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -80,7 +81,7 @@
   <sql id="Base_Column_List">
     id, company_name, company_contacts, company_address, company_tel, company_fax, company_post_code, 
     sale_agreement, depot_flag, customer_flag, minus_stock_flag, purchase_by_sale_flag, 
-    multi_level_approval_flag, multi_bill_type, tenant_id, delete_flag
+    multi_level_approval_flag, multi_bill_type, amount_approval_flag, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample" resultMap="BaseResultMap">
     select
@@ -118,13 +119,15 @@
       company_post_code, sale_agreement, depot_flag, 
       customer_flag, minus_stock_flag, purchase_by_sale_flag, 
       multi_level_approval_flag, multi_bill_type, 
-      tenant_id, delete_flag)
+      amount_approval_flag, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{companyContacts,jdbcType=VARCHAR}, 
       #{companyAddress,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyFax,jdbcType=VARCHAR}, 
       #{companyPostCode,jdbcType=VARCHAR}, #{saleAgreement,jdbcType=VARCHAR}, #{depotFlag,jdbcType=VARCHAR}, 
       #{customerFlag,jdbcType=VARCHAR}, #{minusStockFlag,jdbcType=VARCHAR}, #{purchaseBySaleFlag,jdbcType=VARCHAR}, 
       #{multiLevelApprovalFlag,jdbcType=VARCHAR}, #{multiBillType,jdbcType=VARCHAR}, 
-      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+      #{amountApprovalFlag,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
     insert into jsh_system_config
@@ -170,6 +173,9 @@
       </if>
       <if test="multiBillType != null">
         multi_bill_type,
+      </if>
+      <if test="amountApprovalFlag != null">
+        amount_approval_flag,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -220,6 +226,9 @@
       </if>
       <if test="multiBillType != null">
         #{multiBillType,jdbcType=VARCHAR},
+      </if>
+      <if test="amountApprovalFlag != null">
+        #{amountApprovalFlag,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -280,6 +289,9 @@
       <if test="record.multiBillType != null">
         multi_bill_type = #{record.multiBillType,jdbcType=VARCHAR},
       </if>
+      <if test="record.amountApprovalFlag != null">
+        amount_approval_flag = #{record.amountApprovalFlag,jdbcType=VARCHAR},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -307,6 +319,7 @@
       purchase_by_sale_flag = #{record.purchaseBySaleFlag,jdbcType=VARCHAR},
       multi_level_approval_flag = #{record.multiLevelApprovalFlag,jdbcType=VARCHAR},
       multi_bill_type = #{record.multiBillType,jdbcType=VARCHAR},
+      amount_approval_flag = #{record.amountApprovalFlag,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -355,6 +368,9 @@
       <if test="multiBillType != null">
         multi_bill_type = #{multiBillType,jdbcType=VARCHAR},
       </if>
+      <if test="amountApprovalFlag != null">
+        amount_approval_flag = #{amountApprovalFlag,jdbcType=VARCHAR},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -379,6 +395,7 @@
       purchase_by_sale_flag = #{purchaseBySaleFlag,jdbcType=VARCHAR},
       multi_level_approval_flag = #{multiLevelApprovalFlag,jdbcType=VARCHAR},
       multi_bill_type = #{multiBillType,jdbcType=VARCHAR},
+      amount_approval_flag = #{amountApprovalFlag,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

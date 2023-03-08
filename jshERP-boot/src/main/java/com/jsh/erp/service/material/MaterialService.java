@@ -567,12 +567,12 @@ public class MaterialService {
                 basicObj.put("lowDecimal", lowDecimal);
                 materialExObj.put("basic", basicObj);
                 if(StringUtil.isNotEmpty(manyUnit) && StringUtil.isNotEmpty(ratio)){ //多单位
-                    //校验比例是否是正整数
-                    if(!StringUtil.isPositiveLong(ratio.trim())) {
+                    //校验比例是否是数字（含小数）
+                    if(!StringUtil.isPositiveBigDecimal(ratio.trim())) {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_RATIO_NOT_INTEGER_CODE,
                                 String.format(ExceptionConstants.MATERIAL_RATIO_NOT_INTEGER_MSG, i+1));
                     }
-                    Long unitId = unitService.getUnitIdByParam(unit, manyUnit, Integer.parseInt(ratio.trim()));
+                    Long unitId = unitService.getUnitIdByParam(unit, manyUnit, new BigDecimal(ratio.trim()));
                     if(unitId != null) {
                         m.setUnitId(unitId);
                     } else {
@@ -1140,8 +1140,8 @@ public class MaterialService {
         String bigUnitStock = "";
         if(null!= unitId) {
             Unit unit = unitService.getUnit(unitId);
-            if(unit.getRatio()!=0 && stock!=null) {
-                bigUnitStock = stock.divide(BigDecimal.valueOf(unit.getRatio()),2,BigDecimal.ROUND_HALF_UP) + unit.getOtherUnit();
+            if(unit.getRatio()!=null && unit.getRatio().compareTo(BigDecimal.ZERO)!=0 && stock!=null) {
+                bigUnitStock = stock.divide(unit.getRatio(),2,BigDecimal.ROUND_HALF_UP) + unit.getOtherUnit();
             }
         }
         return bigUnitStock;

@@ -15,6 +15,7 @@ import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
@@ -61,6 +62,9 @@ public class DepotItemController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private SystemConfigService systemConfigService;
 
     /**
      * 根据仓库和商品查询单据列表
@@ -474,11 +478,12 @@ public class DepotItemController {
         endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
         try {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBugOrSale(StringUtil.toNull(materialParam),
-                    "buy", beginTime, endTime, creatorArray, (currentPage-1)*pageSize, pageSize);
+                    "buy", beginTime, endTime, creatorArray, amountApprovalFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBugOrSaleCount(StringUtil.toNull(materialParam),
-                    "buy", beginTime, endTime, creatorArray);
+                    "buy", beginTime, endTime, creatorArray, amountApprovalFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -546,11 +551,12 @@ public class DepotItemController {
         endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
         try {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBugOrSale(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, (currentPage-1)*pageSize, pageSize);
+                    "sale", beginTime, endTime, creatorArray, amountApprovalFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBugOrSaleCount(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray);
+                    "sale", beginTime, endTime, creatorArray, amountApprovalFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();

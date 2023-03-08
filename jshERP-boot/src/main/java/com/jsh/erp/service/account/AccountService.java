@@ -10,6 +10,7 @@ import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
@@ -55,6 +56,8 @@ public class AccountService {
     private LogService logService;
     @Resource
     private UserService userService;
+    @Resource
+    private SystemConfigService systemConfigService;
 
     public Account getAccount(long id) throws Exception{
         return accountMapper.selectByPrimaryKey(id);
@@ -105,16 +108,19 @@ public class AccountService {
             JshException.readFail(logger, e);
         }
         String timeStr = Tools.getCurrentMonth();
+        Boolean apprFlag = systemConfigService.getAmountApprovalFlag();
         if (null != list && null !=timeStr) {
             for (AccountVo4List al : list) {
                 DecimalFormat df = new DecimalFormat(".##");
-                BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month").add(getAccountSumByHead(al.getId(), timeStr, "month")).add(getAccountSumByDetail(al.getId(), timeStr, "month")).add(getManyAccountSum(al.getId(), timeStr, "month"));
+                BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month", apprFlag).add(getAccountSumByHead(al.getId(), timeStr, "month", apprFlag))
+                        .add(getAccountSumByDetail(al.getId(), timeStr, "month", apprFlag)).add(getManyAccountSum(al.getId(), timeStr, "month", apprFlag));
                 String thisMonthAmountFmt = "0";
                 if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
                     thisMonthAmountFmt = df.format(thisMonthAmount);
                 }
                 al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
-                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month").add(getAccountSumByHead(al.getId(), "", "month")).add(getAccountSumByDetail(al.getId(), "", "month")).add(getManyAccountSum(al.getId(), "", "month")) .add(al.getInitialAmount()) ;
+                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month", apprFlag).add(getAccountSumByHead(al.getId(), "", "month", apprFlag))
+                        .add(getAccountSumByDetail(al.getId(), "", "month", apprFlag)).add(getManyAccountSum(al.getId(), "", "month", apprFlag)) .add(al.getInitialAmount()) ;
                 al.setCurrentAmount(currentAmount);
                 resList.add(al);
             }
@@ -273,28 +279,32 @@ public class AccountService {
      * @param id
      * @return
      */
-    public BigDecimal getAccountSum(Long id, String timeStr, String type) throws Exception{
+    public BigDecimal getAccountSum(Long id, String timeStr, String type, Boolean apprFlag) throws Exception{
         BigDecimal accountSum = BigDecimal.ZERO;
         try {
             DepotHeadExample example = new DepotHeadExample();
+            DepotHeadExample.Criteria criteria = example.createCriteria();
             if (!timeStr.equals("")) {
                 Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
                 Date mTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 if (type.equals("month")) {
-                    example.createCriteria().andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
+                    criteria.andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
                     .andOperTimeGreaterThanOrEqualTo(bTime).andOperTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 } else if (type.equals("date")) {
-                    example.createCriteria().andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
+                    criteria.andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
                     .andOperTimeLessThanOrEqualTo(mTime).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 }
             } else {
-                example.createCriteria().andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
+                criteria.andAccountIdEqualTo(id).andPayTypeNotEqualTo("预付款")
                         .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             }
             List<DepotHead> dataList=null;
             try{
+                if(apprFlag) {
+                    criteria.andStatusEqualTo("1");
+                }
                 dataList = depotHeadMapper.selectByExample(example);
             }catch(Exception e){
                 JshException.readFail(logger, e);
@@ -318,29 +328,33 @@ public class AccountService {
      * @param id
      * @return
      */
-    public BigDecimal getAccountSumByHead(Long id, String timeStr, String type) throws Exception{
+    public BigDecimal getAccountSumByHead(Long id, String timeStr, String type, Boolean apprFlag) throws Exception{
         BigDecimal accountSum = BigDecimal.ZERO;
         try {
             AccountHeadExample example = new AccountHeadExample();
+            AccountHeadExample.Criteria criteria = example.createCriteria();
             if (!timeStr.equals("")) {
                 Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
                 Date mTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 if (type.equals("month")) {
-                    example.createCriteria().andAccountIdEqualTo(id)
+                    criteria.andAccountIdEqualTo(id)
                             .andBillTimeGreaterThanOrEqualTo(bTime).andBillTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 } else if (type.equals("date")) {
-                    example.createCriteria().andAccountIdEqualTo(id)
+                    criteria.andAccountIdEqualTo(id)
                             .andBillTimeLessThanOrEqualTo(mTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 }
             } else {
-                example.createCriteria().andAccountIdEqualTo(id)
+                criteria.andAccountIdEqualTo(id)
                         .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             }
             List<AccountHead> dataList=null;
             try{
+                if(apprFlag) {
+                    criteria.andStatusEqualTo("1");
+                }
                 dataList = accountHeadMapper.selectByExample(example);
             }catch(Exception e){
                 JshException.readFail(logger, e);
@@ -364,24 +378,28 @@ public class AccountService {
      * @param id
      * @return
      */
-    public BigDecimal getAccountSumByDetail(Long id, String timeStr, String type)throws Exception {
+    public BigDecimal getAccountSumByDetail(Long id, String timeStr, String type, Boolean apprFlag)throws Exception {
         BigDecimal accountSum =BigDecimal.ZERO ;
         try {
             AccountHeadExample example = new AccountHeadExample();
+            AccountHeadExample.Criteria criteria = example.createCriteria();
             if (!timeStr.equals("")) {
                 Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
                 Date mTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 if (type.equals("month")) {
-                    example.createCriteria().andBillTimeGreaterThanOrEqualTo(bTime).andBillTimeLessThanOrEqualTo(eTime)
+                    criteria.andBillTimeGreaterThanOrEqualTo(bTime).andBillTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 } else if (type.equals("date")) {
-                    example.createCriteria().andBillTimeLessThanOrEqualTo(mTime)
+                    criteria.andBillTimeLessThanOrEqualTo(mTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 }
             }
             List<AccountHead> dataList=null;
             try{
+                if(apprFlag) {
+                    criteria.andStatusEqualTo("1");
+                }
                 dataList = accountHeadMapper.selectByExample(example);
             }catch(Exception e){
                 JshException.readFail(logger, e);
@@ -423,20 +441,21 @@ public class AccountService {
      * @param id
      * @return
      */
-    public BigDecimal getManyAccountSum(Long id, String timeStr, String type)throws Exception {
+    public BigDecimal getManyAccountSum(Long id, String timeStr, String type, Boolean apprFlag)throws Exception {
         BigDecimal accountSum = BigDecimal.ZERO;
         try {
             DepotHeadExample example = new DepotHeadExample();
+            DepotHeadExample.Criteria criteria = example.createCriteria();
             if (!timeStr.equals("")) {
                 Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
                 Date mTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
                 if (type.equals("month")) {
-                    example.createCriteria().andAccountIdListLike("%" +id.toString() + "%")
+                    criteria.andAccountIdListLike("%" +id.toString() + "%")
                             .andOperTimeGreaterThanOrEqualTo(bTime).andOperTimeLessThanOrEqualTo(eTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 } else if (type.equals("date")) {
-                    example.createCriteria().andAccountIdListLike("%" +id.toString() + "%")
+                    criteria.andAccountIdListLike("%" +id.toString() + "%")
                             .andOperTimeLessThanOrEqualTo(mTime)
                             .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 }
@@ -446,6 +465,9 @@ public class AccountService {
             }
             List<DepotHead> dataList=null;
             try{
+                if(apprFlag) {
+                    criteria.andStatusEqualTo("1");
+                }
                 dataList = depotHeadMapper.selectByExample(example);
             }catch(Exception e){
                 JshException.readFail(logger, e);
@@ -548,12 +570,13 @@ public class AccountService {
             String timeStr = Tools.getCurrentMonth();
             BigDecimal allMonthAmount = BigDecimal.ZERO;
             BigDecimal allCurrentAmount = BigDecimal.ZERO;
+            Boolean apprFlag = systemConfigService.getAmountApprovalFlag();
             if (null != list && null !=timeStr) {
                 for (Account a : list) {
-                    BigDecimal monthAmount = getAccountSum(a.getId(), timeStr, "month").add(getAccountSumByHead(a.getId(), timeStr, "month"))
-                            .add(getAccountSumByDetail(a.getId(), timeStr, "month")).add(getManyAccountSum(a.getId(), timeStr, "month"));
-                    BigDecimal currentAmount = getAccountSum(a.getId(), "", "month").add(getAccountSumByHead(a.getId(), "", "month"))
-                            .add(getAccountSumByDetail(a.getId(), "", "month")).add(getManyAccountSum(a.getId(), "", "month")).add(a.getInitialAmount());
+                    BigDecimal monthAmount = getAccountSum(a.getId(), timeStr, "month", apprFlag).add(getAccountSumByHead(a.getId(), timeStr, "month", apprFlag))
+                            .add(getAccountSumByDetail(a.getId(), timeStr, "month", apprFlag)).add(getManyAccountSum(a.getId(), timeStr, "month", apprFlag));
+                    BigDecimal currentAmount = getAccountSum(a.getId(), "", "month", apprFlag).add(getAccountSumByHead(a.getId(), "", "month", apprFlag))
+                            .add(getAccountSumByDetail(a.getId(), "", "month", apprFlag)).add(getManyAccountSum(a.getId(), "", "month", apprFlag)).add(a.getInitialAmount());
                     allMonthAmount = allMonthAmount.add(monthAmount);
                     allCurrentAmount = allCurrentAmount.add(currentAmount);
                 }

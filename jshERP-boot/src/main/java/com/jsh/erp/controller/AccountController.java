@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.account.AccountService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import io.swagger.annotations.Api;
@@ -38,6 +39,9 @@ public class AccountController {
 
     @Resource
     private AccountService accountService;
+
+    @Resource
+    private SystemConfigService systemConfigService;
 
     /**
      * 查找结算账户信息-下拉框
@@ -117,12 +121,13 @@ public class AccountController {
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
+                Boolean apprFlag = systemConfigService.getAmountApprovalFlag();
                 for (AccountVo4InOutList aEx : dataList) {
                     String type = aEx.getType().replace("其它", "");
                     aEx.setType(type);
                     String timeStr = aEx.getOperTime().toString();
-                    BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date").add(accountService.getAccountSumByHead(accountId, timeStr, "date"))
-                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date")).add(accountService.getManyAccountSum(accountId, timeStr, "date")).add(initialAmount);
+                    BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date", apprFlag).add(accountService.getAccountSumByHead(accountId, timeStr, "date", apprFlag))
+                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date", apprFlag)).add(accountService.getManyAccountSum(accountId, timeStr, "date", apprFlag)).add(initialAmount);
                     aEx.setBalance(balance);
                     aEx.setAccountId(accountId);
                     dataArray.add(aEx);

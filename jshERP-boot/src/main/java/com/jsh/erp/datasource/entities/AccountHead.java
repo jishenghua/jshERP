@@ -32,6 +32,8 @@ public class AccountHead {
 
     private String status;
 
+    private String source;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -146,6 +148,14 @@ public class AccountHead {
 
     public void setStatus(String status) {
         this.status = status == null ? null : status.trim();
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source == null ? null : source.trim();
     }
 
     public Long getTenantId() {

@@ -68,6 +68,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("amountApprovalFlag") Boolean amountApprovalFlag,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -76,7 +77,8 @@ public interface DepotItemMapperEx {
             @Param("billType") String billType,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
-            @Param("creatorArray") String[] creatorArray);
+            @Param("creatorArray") String[] creatorArray,
+            @Param("amountApprovalFlag") Boolean amountApprovalFlag);
 
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,
@@ -101,14 +103,16 @@ public interface DepotItemMapperEx {
             @Param("subType") String subType,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
-            @Param("creatorArray") String[] creatorArray);
+            @Param("creatorArray") String[] creatorArray,
+            @Param("amountApprovalFlag") Boolean amountApprovalFlag);
 
     BigDecimal inOrOutRetailPrice(
             @Param("type") String type,
             @Param("subType") String subType,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
-            @Param("creatorArray") String[] creatorArray);
+            @Param("creatorArray") String[] creatorArray,
+            @Param("amountApprovalFlag") Boolean amountApprovalFlag);
 
     BigDecimal getStockCheckSumByDepotList(
             @Param("depotList") List<Long> depotList,

@@ -29,6 +29,8 @@ public class SystemConfig {
 
     private String multiBillType;
 
+    private String amountApprovalFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -143,6 +145,14 @@ public class SystemConfig {
 
     public void setMultiBillType(String multiBillType) {
         this.multiBillType = multiBillType == null ? null : multiBillType.trim();
+    }
+
+    public String getAmountApprovalFlag() {
+        return amountApprovalFlag;
+    }
+
+    public void setAmountApprovalFlag(String amountApprovalFlag) {
+        this.amountApprovalFlag = amountApprovalFlag == null ? null : amountApprovalFlag.trim();
     }
 
     public Long getTenantId() {

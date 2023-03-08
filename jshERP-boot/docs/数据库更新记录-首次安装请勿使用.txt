@@ -1444,3 +1444,17 @@ INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platfor
 alter table jsh_msg add user_id bigint(20) DEFAULT NULL COMMENT '接收人id' after type;
 update jsh_msg set user_id=tenant_id where user_id is null;
 alter table jsh_system_config add multi_bill_type varchar(200) DEFAULT NULL COMMENT '流程类型，可多选' after multi_level_approval_flag;
+
+-- --------------------------------------------------------
+-- 时间 2023年03月08日
+-- by jishenghua
+-- 给计量单位表修改比例的字段类型
+-- 给系统参数表增加金额审核启用标记
+-- 给单据增加来源字段
+-- --------------------------------------------------------
+alter table jsh_unit change ratio ratio decimal(24,3) DEFAULT NULL COMMENT '比例';
+alter table jsh_unit change ratio_two ratio_two decimal(24,3) DEFAULT NULL COMMENT '比例2';
+alter table jsh_unit change ratio_three ratio_three decimal(24,3) DEFAULT NULL COMMENT '比例3';
+alter table jsh_system_config add amount_approval_flag varchar(1) DEFAULT '0' COMMENT '金额审核启用标记，0未启用，1启用' after multi_bill_type;
+alter table jsh_depot_head add source varchar(1) DEFAULT '0' COMMENT '单据来源，0-pc，1-手机' after purchase_status;
+alter table jsh_account_head add source varchar(1) DEFAULT '0' COMMENT '单据来源，0-pc，1-手机' after status;

@@ -1074,6 +1074,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andAmountApprovalFlagIsNull() {
+            addCriterion("amount_approval_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagIsNotNull() {
+            addCriterion("amount_approval_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagEqualTo(String value) {
+            addCriterion("amount_approval_flag =", value, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagNotEqualTo(String value) {
+            addCriterion("amount_approval_flag <>", value, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagGreaterThan(String value) {
+            addCriterion("amount_approval_flag >", value, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("amount_approval_flag >=", value, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagLessThan(String value) {
+            addCriterion("amount_approval_flag <", value, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagLessThanOrEqualTo(String value) {
+            addCriterion("amount_approval_flag <=", value, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagLike(String value) {
+            addCriterion("amount_approval_flag like", value, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagNotLike(String value) {
+            addCriterion("amount_approval_flag not like", value, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagIn(List<String> values) {
+            addCriterion("amount_approval_flag in", values, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagNotIn(List<String> values) {
+            addCriterion("amount_approval_flag not in", values, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagBetween(String value1, String value2) {
+            addCriterion("amount_approval_flag between", value1, value2, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountApprovalFlagNotBetween(String value1, String value2) {
+            addCriterion("amount_approval_flag not between", value1, value2, "amountApprovalFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

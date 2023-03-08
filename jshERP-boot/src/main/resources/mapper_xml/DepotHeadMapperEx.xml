@@ -313,6 +313,9 @@
             </foreach>
             ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
         </if>
+        <if test="amountApprovalFlag">
+            and dh.status = '1'
+        </if>
         <if test="number != null and number !=''">
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
@@ -367,6 +370,9 @@
                 #{organId}
             </foreach>
             ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
+        </if>
+        <if test="amountApprovalFlag">
+            and dh.status = '1'
         </if>
         <if test="number != null and number !=''">
             <bind name="bindNumber" value="'%'+number+'%'"/>
@@ -439,6 +445,9 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
+        <if test="amountApprovalFlag">
+            and dh.status = '1'
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id
         <if test="offset != null and rows != null">
@@ -496,6 +505,9 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
+        <if test="amountApprovalFlag">
+            and dh.status = '1'
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id) a
     </select>
@@ -536,6 +548,9 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="amountApprovalFlag">
+            and dh.status = '1'
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -585,6 +600,9 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="amountApprovalFlag">
+            and dh.status = '1'
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -884,6 +902,9 @@
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
         </if>
+        <if test="amountApprovalFlag">
+            and dh.status = '1'
+        </if>
         <if test="creatorArray != null">
             and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
@@ -914,6 +935,9 @@
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="amountApprovalFlag">
+            and dh.status = '1'
         </if>
         <if test="creatorArray != null">
             and dh.creator in (

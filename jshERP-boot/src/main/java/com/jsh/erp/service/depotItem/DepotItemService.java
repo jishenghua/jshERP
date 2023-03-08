@@ -314,10 +314,10 @@ public class DepotItemService {
     }
 
     public List<DepotItemVo4WithInfoEx> getListWithBugOrSale(String materialParam, String billType,
-                     String beginTime, String endTime, String[] creatorArray, Integer offset, Integer rows)throws Exception {
+                     String beginTime, String endTime, String[] creatorArray, Boolean amountApprovalFlag, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, creatorArray, offset, rows);
+            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, creatorArray, amountApprovalFlag, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -325,10 +325,10 @@ public class DepotItemService {
     }
 
     public int getListWithBugOrSaleCount(String materialParam, String billType,
-                     String beginTime, String endTime, String[] creatorArray)throws Exception {
+                     String beginTime, String endTime, String[] creatorArray, Boolean amountApprovalFlag)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray);
+            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray, amountApprovalFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -363,9 +363,10 @@ public class DepotItemService {
         BigDecimal result= BigDecimal.ZERO;
         try{
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
             String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
             String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
-            result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime, creatorArray);
+            result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime, creatorArray, amountApprovalFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -384,9 +385,10 @@ public class DepotItemService {
         BigDecimal result= BigDecimal.ZERO;
         try{
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
             String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
             String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
-            result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime, creatorArray);
+            result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime, creatorArray, amountApprovalFlag);
             result = result.abs();
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -494,11 +496,11 @@ public class DepotItemService {
                         if (unit.equals(basicUnit)) { //如果等于基本单位
                             depotItem.setBasicNumber(oNumber); //数量一致
                         } else if (unit.equals(unitInfo.getOtherUnit())) { //如果等于副单位
-                            depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(unitInfo.getRatio())) ); //数量乘以比例
+                            depotItem.setBasicNumber(oNumber.multiply(unitInfo.getRatio())); //数量乘以比例
                         } else if (unit.equals(unitInfo.getOtherUnitTwo())) { //如果等于副单位2
-                            depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(unitInfo.getRatioTwo())) ); //数量乘以比例
+                            depotItem.setBasicNumber(oNumber.multiply(unitInfo.getRatioTwo())); //数量乘以比例
                         } else if (unit.equals(unitInfo.getOtherUnitThree())) { //如果等于副单位3
-                            depotItem.setBasicNumber(oNumber.multiply(new BigDecimal(unitInfo.getRatioThree())) ); //数量乘以比例
+                            depotItem.setBasicNumber(oNumber.multiply(unitInfo.getRatioThree())); //数量乘以比例
                         }
                     } else {
                         depotItem.setBasicNumber(oNumber); //其他情况
@@ -1034,14 +1036,14 @@ public class DepotItemService {
         }
         BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
         //根据多单位情况进行数量的转换
-        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
+            count = count.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);
         }
-        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioTwo()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo()!=null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO)!=0) {
+            count = count.divide(unitInfo.getRatioTwo(),2,BigDecimal.ROUND_HALF_UP);
         }
-        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioThree()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree()!=null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO)!=0) {
+            count = count.divide(unitInfo.getRatioThree(),2,BigDecimal.ROUND_HALF_UP);
         }
         return count;
     }
@@ -1064,14 +1066,14 @@ public class DepotItemService {
         String linkNumber = depotHead.getNumber(); //订单号
         BigDecimal count = depotItemMapperEx.getRealFinishNumber(meId, linkId, linkNumber, currentHeaderId, goToType);
         //根据多单位情况进行数量的转换
-        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
+            count = count.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);
         }
-        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioTwo()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo()!=null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO)!=0) {
+            count = count.divide(unitInfo.getRatioTwo(),2,BigDecimal.ROUND_HALF_UP);
         }
-        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != 0) {
-            count = count.divide(BigDecimal.valueOf(unitInfo.getRatioThree()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree()!=null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO)!=0) {
+            count = count.divide(unitInfo.getRatioThree(),2,BigDecimal.ROUND_HALF_UP);
         }
         return count;
     }

@@ -58,6 +58,8 @@ public class DepotHead {
 
     private String purchaseStatus;
 
+    private String source;
+
     private String linkNumber;
 
     private Long tenantId;
@@ -278,6 +280,14 @@ public class DepotHead {
 
     public void setPurchaseStatus(String purchaseStatus) {
         this.purchaseStatus = purchaseStatus == null ? null : purchaseStatus.trim();
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source == null ? null : source.trim();
     }
 
     public String getLinkNumber() {

@@ -1,5 +1,7 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
+
 public class Unit {
     private Long id;
 
@@ -13,11 +15,11 @@ public class Unit {
 
     private String otherUnitThree;
 
-    private Integer ratio;
+    private BigDecimal ratio;
 
-    private Integer ratioTwo;
+    private BigDecimal ratioTwo;
 
-    private Integer ratioThree;
+    private BigDecimal ratioThree;
 
     private Boolean enabled;
 
@@ -73,27 +75,27 @@ public class Unit {
         this.otherUnitThree = otherUnitThree == null ? null : otherUnitThree.trim();
     }
 
-    public Integer getRatio() {
+    public BigDecimal getRatio() {
         return ratio;
     }
 
-    public void setRatio(Integer ratio) {
+    public void setRatio(BigDecimal ratio) {
         this.ratio = ratio;
     }
 
-    public Integer getRatioTwo() {
+    public BigDecimal getRatioTwo() {
         return ratioTwo;
     }
 
-    public void setRatioTwo(Integer ratioTwo) {
+    public void setRatioTwo(BigDecimal ratioTwo) {
         this.ratioTwo = ratioTwo;
     }
 
-    public Integer getRatioThree() {
+    public BigDecimal getRatioThree() {
         return ratioThree;
     }
 
-    public void setRatioThree(Integer ratioThree) {
+    public void setRatioThree(BigDecimal ratioThree) {
         this.ratioThree = ratioThree;
     }
 

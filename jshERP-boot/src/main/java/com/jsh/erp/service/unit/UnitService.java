@@ -217,7 +217,7 @@ public class UnitService {
      * @param ratio
      * @return
      */
-    public Long getUnitIdByParam(String basicUnit, String otherUnit, Integer ratio){
+    public Long getUnitIdByParam(String basicUnit, String otherUnit, BigDecimal ratio){
         Long unitId = null;
         UnitExample example = new UnitExample();
         example.createCriteria().andBasicUnitEqualTo(basicUnit).andOtherUnitEqualTo(otherUnit).andRatioEqualTo(ratio)
@@ -237,14 +237,14 @@ public class UnitService {
      * @return
      */
     public BigDecimal parseStockByUnit(BigDecimal stock, Unit unitInfo, String materialUnit) {
-        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != 0) {
-            stock = stock.divide(BigDecimal.valueOf(unitInfo.getRatio()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
+            stock = stock.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);
         }
-        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != 0) {
-            stock = stock.divide(BigDecimal.valueOf(unitInfo.getRatioTwo()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo()!=null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO)!=0) {
+            stock = stock.divide(unitInfo.getRatioTwo(),2,BigDecimal.ROUND_HALF_UP);
         }
-        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != 0) {
-            stock = stock.divide(BigDecimal.valueOf(unitInfo.getRatioThree()),2,BigDecimal.ROUND_HALF_UP);
+        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree()!=null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO)!=0) {
+            stock = stock.divide(unitInfo.getRatioThree(),2,BigDecimal.ROUND_HALF_UP);
         }
         return stock;
     }
