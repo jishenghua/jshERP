@@ -216,4 +216,21 @@ public class SystemConfigService {
         }
         return amountApprovalFlag;
     }
+
+    /**
+     * 获取多级审核开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getMultiLevelApprovalFlag() throws Exception {
+        boolean multiLevelApprovalFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getMultiLevelApprovalFlag();
+            if(("1").equals(flag)) {
+                multiLevelApprovalFlag = true;
+            }
+        }
+        return multiLevelApprovalFlag;
+    }
 }

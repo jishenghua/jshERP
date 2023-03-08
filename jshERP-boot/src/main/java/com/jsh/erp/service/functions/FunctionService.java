@@ -10,6 +10,7 @@ import com.jsh.erp.datasource.mappers.FunctionMapper;
 import com.jsh.erp.datasource.mappers.FunctionMapperEx;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
@@ -36,6 +37,8 @@ public class FunctionService {
     private FunctionMapperEx functionMapperEx;
     @Resource
     private UserService userService;
+    @Resource
+    private SystemConfigService systemConfigService;
     @Resource
     private LogService logService;
 
@@ -204,12 +207,19 @@ public class FunctionService {
     }
 
     public List<Function> findRoleFunction(String pnumber)throws Exception{
-        FunctionExample example = new FunctionExample();
-        example.createCriteria().andEnabledEqualTo(true).andParentNumberEqualTo(pnumber)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("Sort");
         List<Function> list=null;
         try{
+            Boolean multiLevelApprovalFlag = systemConfigService.getMultiLevelApprovalFlag();
+            FunctionExample example = new FunctionExample();
+            FunctionExample.Criteria criteria = example.createCriteria();
+            criteria.andEnabledEqualTo(true).andParentNumberEqualTo(pnumber)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            if("0".equals(pnumber)) {
+                if(!multiLevelApprovalFlag) {
+                    criteria.andUrlNotEqualTo("/workflow");
+                }
+            }
+            example.setOrderByClause("Sort");
             list =functionsMapper.selectByExample(example);
         }catch(Exception e){
             JshException.readFail(logger, e);
