@@ -54,6 +54,7 @@
   import pick from 'lodash.pick'
   import {addUnit,editUnit,checkUnit } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
+  import {isDecimalTwo} from "@/utils/validate"
   import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "UnitModal",
@@ -124,20 +125,41 @@
               that.confirmLoading = false;
               return;
             }
-            if(formData.otherUnit && !formData.ratio) {
-              that.$message.warning('抱歉，比例不能为空！');
-              that.confirmLoading = false;
-              return;
+            if(formData.otherUnit) {
+              if(!formData.ratio) {
+                that.$message.warning('抱歉，比例不能为空！');
+                that.confirmLoading = false;
+                return;
+              }
+              if(!isDecimalTwo(formData.ratio)) {
+                that.$message.warning('抱歉，比例只能为数字，最多两位小数！')
+                that.confirmLoading = false
+                return
+              }
             }
-            if(formData.otherUnitTwo && !formData.ratioTwo) {
-              that.$message.warning('抱歉，比例2不能为空！');
-              that.confirmLoading = false;
-              return;
+            if(formData.otherUnitTwo) {
+              if(!formData.ratioTwo) {
+                that.$message.warning('抱歉，比例2不能为空！');
+                that.confirmLoading = false;
+                return;
+              }
+              if(!isDecimalTwo(formData.ratioTwo)) {
+                that.$message.warning('抱歉，比例2只能为数字，最多两位小数！')
+                that.confirmLoading = false
+                return
+              }
             }
-            if(formData.otherUnitThree && !formData.ratioThree) {
-              that.$message.warning('抱歉，比例3不能为空！');
-              that.confirmLoading = false;
-              return;
+            if(formData.otherUnitThree) {
+              if(!formData.ratioThree) {
+                that.$message.warning('抱歉，比例3不能为空！');
+                that.confirmLoading = false;
+                return;
+              }
+              if(!isDecimalTwo(formData.ratioThree)) {
+                that.$message.warning('抱歉，比例3只能为数字，最多两位小数！')
+                that.confirmLoading = false
+                return
+              }
             }
             if(!formData.otherUnitTwo && formData.otherUnitThree) {
               that.$message.warning('抱歉，需要先输入副单位2再输入副单位3！');
