@@ -54,7 +54,7 @@
   import pick from 'lodash.pick'
   import {addUnit,editUnit,checkUnit } from '@/api/api'
   import {autoJumpNextInput} from "@/utils/util"
-  import {isDecimalTwo} from "@/utils/validate"
+  import {isDecimalThree} from "@/utils/validate"
   import {mixinDevice} from '@/utils/mixin'
   export default {
     name: "UnitModal",
@@ -131,8 +131,8 @@
                 that.confirmLoading = false;
                 return;
               }
-              if(!isDecimalTwo(formData.ratio)) {
-                that.$message.warning('抱歉，比例只能为数字，最多两位小数！')
+              if(!isDecimalThree(formData.ratio)) {
+                that.$message.warning('抱歉，比例只能为数字，最多三位小数！')
                 that.confirmLoading = false
                 return
               }
@@ -143,8 +143,8 @@
                 that.confirmLoading = false;
                 return;
               }
-              if(!isDecimalTwo(formData.ratioTwo)) {
-                that.$message.warning('抱歉，比例2只能为数字，最多两位小数！')
+              if(!isDecimalThree(formData.ratioTwo)) {
+                that.$message.warning('抱歉，比例2只能为数字，最多三位小数！')
                 that.confirmLoading = false
                 return
               }
@@ -155,8 +155,8 @@
                 that.confirmLoading = false;
                 return;
               }
-              if(!isDecimalTwo(formData.ratioThree)) {
-                that.$message.warning('抱歉，比例3只能为数字，最多两位小数！')
+              if(!isDecimalThree(formData.ratioThree)) {
+                that.$message.warning('抱歉，比例3只能为数字，最多三位小数！')
                 that.confirmLoading = false
                 return
               }

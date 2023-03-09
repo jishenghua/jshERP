@@ -38,3 +38,13 @@ export function isDecimalTwo (s) {
   let reg = /^(([^0][0-9]+|0)\.([0-9]{1,2})$)|^([^0][0-9]+|0)$/
   return reg.test(s)
 }
+
+/**
+ * 三位小数
+ * @param {*} s
+ */
+export function isDecimalThree (s) {
+  let reg = /^(([^0][0-9]+|0)\.([0-9]{1,3})$)|^([^0][0-9]+|0)$/
+  return reg.test(s)
+}
+
