@@ -46,19 +46,19 @@
               </span>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="财务人员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择财务人员" showSearch optionFilterProp="children" v-model="queryParam.handsPersonId">
-                      <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
-                        {{ item.name }}
+                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                      <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+                        {{ item.userName }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
-                      <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
-                        {{ item.userName }}
+                  <a-form-item label="财务人员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择财务人员" showSearch optionFilterProp="children" v-model="queryParam.handsPersonId">
+                      <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
+                        {{ item.name }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
@@ -193,10 +193,10 @@
             scopedSlots: { customRender: 'action' },
           },
           { title: '往来单位', dataIndex: 'organName',width:140, ellipsis:true},
-          { title: '财务人员', dataIndex: 'handsPersonName',width:140},
           { title: '单据编号', dataIndex: 'billNo',width:160},
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
-          { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
+          { title: '操作员', dataIndex: 'userName',width:100, ellipsis:true},
+          { title: '财务人员', dataIndex: 'handsPersonName',width:100},
           { title: '支出金额', dataIndex: 'changeAmount',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
