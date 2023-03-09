@@ -27,7 +27,6 @@
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类型">
             <a-select placeholder="请选择类型" v-decorator="[ 'type', validatorRules.type]">
               <a-select-option value="业务员">业务员</a-select-option>
-              <a-select-option value="仓管员">仓管员</a-select-option>
               <a-select-option value="财务员">财务员</a-select-option>
             </a-select>
           </a-form-item>
