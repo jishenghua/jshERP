@@ -317,7 +317,7 @@
         }
       },
       checkScreen() {
-        let percentage = ''
+        let percentage = '100%'
         let basicWidth = 1920
         const currentWidth = window.screen.width
         const currentHeight = window.screen.height
