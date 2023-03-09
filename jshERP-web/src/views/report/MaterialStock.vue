@@ -137,7 +137,7 @@
         },
         ipagination:{
           pageSize: 11,
-          pageSizeOptions: ['11', '21', '31', '101', '201']
+          pageSizeOptions: ['11', '21', '31', '101', '201', '301', '1001']
         },
         depotSelected:[],
         depotList: [],
