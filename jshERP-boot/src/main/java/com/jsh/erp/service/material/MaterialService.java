@@ -1115,7 +1115,7 @@ public class MaterialService {
         List<MaterialVo4Unit> dataList = materialMapperEx.getListWithStock(depotList, idList, materialParam, zeroStock, column, order, offset, rows);
         for(MaterialVo4Unit item: dataList) {
             item.setUnitName(null!=item.getUnitId()?item.getUnitName() + "[多单位]":item.getUnitName());
-            item.setInitialStock(initialStockMap.get(item.getId()));
+            item.setInitialStock(null!=initialStockMap.get(item.getId())?initialStockMap.get(item.getId()):BigDecimal.ZERO);
             item.setBigUnitStock(getBigUnitStock(item.getCurrentStock(), item.getUnitId()));
         }
         return dataList;
