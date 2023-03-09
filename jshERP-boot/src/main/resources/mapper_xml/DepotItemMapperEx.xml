@@ -376,6 +376,12 @@
             </foreach>
             )
         </if>
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="amountApprovalFlag">
             and dh.status = '1'
         </if>
@@ -417,6 +423,12 @@
             </foreach>
             )
         </if>
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="amountApprovalFlag">
             and dh.status = '1'
         </if>
@@ -438,6 +450,12 @@
             </foreach>
             )
         </if>
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
     </select>
@@ -455,6 +473,12 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'

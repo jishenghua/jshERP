@@ -30,7 +30,7 @@ public interface DepotItemMapperEx {
             @Param("remark") String remark);
 
     List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(
-            @Param("depotIdArray") String[] depotIdArray,
+            @Param("depotIdArray") Long[] depotIdArray,
             @Param("sku") String sku,
             @Param("batchNumber") String batchNumber,
             @Param("number") String number,
@@ -41,7 +41,7 @@ public interface DepotItemMapperEx {
             @Param("rows") Integer rows);
 
     Long findDetailByDepotIdsAndMaterialIdCount(
-            @Param("depotIdArray") String[] depotIdArray,
+            @Param("depotIdArray") Long[] depotIdArray,
             @Param("sku") String sku,
             @Param("batchNumber") String batchNumber,
             @Param("number") String number,
@@ -68,6 +68,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("depotList") List<Long> depotList,
             @Param("amountApprovalFlag") Boolean amountApprovalFlag,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
@@ -78,6 +79,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("depotList") List<Long> depotList,
             @Param("amountApprovalFlag") Boolean amountApprovalFlag);
 
     BigDecimal buyOrSaleNumber(
@@ -87,6 +89,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("depotList") List<Long> depotList,
             @Param("sumType") String sumType);
 
     BigDecimal buyOrSalePrice(
@@ -96,6 +99,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("depotList") List<Long> depotList,
             @Param("sumType") String sumType);
 
     BigDecimal inOrOutPrice(
