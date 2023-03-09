@@ -68,6 +68,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String [] organArray,
             @Param("depotList") List<Long> depotList,
             @Param("amountApprovalFlag") Boolean amountApprovalFlag,
             @Param("offset") Integer offset,
@@ -79,6 +80,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String [] organArray,
             @Param("depotList") List<Long> depotList,
             @Param("amountApprovalFlag") Boolean amountApprovalFlag);
 
@@ -89,6 +91,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String [] organArray,
             @Param("depotList") List<Long> depotList,
             @Param("sumType") String sumType);
 
@@ -99,6 +102,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String [] organArray,
             @Param("depotList") List<Long> depotList,
             @Param("sumType") String sumType);
 

@@ -376,6 +376,13 @@
             </foreach>
             )
         </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         <if test="depotList.size()>0">
             and di.depot_id in
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
@@ -423,6 +430,13 @@
             </foreach>
             )
         </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         <if test="depotList.size()>0">
             and di.depot_id in
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
@@ -450,6 +464,13 @@
             </foreach>
             )
         </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
         <if test="depotList.size()>0">
             and di.depot_id in
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
@@ -471,6 +492,13 @@
             and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
+            </foreach>
+            )
+        </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
             </foreach>
             )
         </if>
