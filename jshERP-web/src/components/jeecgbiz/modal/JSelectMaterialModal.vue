@@ -6,7 +6,7 @@
     :wrapClassName="wrapClassNameInfo()"
     @ok="handleSubmit"
     @cancel="close"
-    cancelText="关闭"
+    cancelText="关闭(ESC)"
     style="top:5%;height: 90%;overflow-y: hidden"
   >
     <a-row :gutter="10" style="padding: 10px; margin: -10px">
