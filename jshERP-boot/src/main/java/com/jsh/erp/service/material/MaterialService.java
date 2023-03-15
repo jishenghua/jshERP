@@ -609,9 +609,10 @@ public class MaterialService {
                 m.setStockMap(getStockMapCache(src, depotCount, depotMap, i));
                 mList.add(m);
             }
-            List<Long> deleteStockMaterialIdList = new ArrayList<>();
-            List<MaterialCurrentStock> insertCurrentStockMaterialList = new ArrayList<>();
+            List<Long> deleteInitialStockMaterialIdList = new ArrayList<>();
+            List<Long> deleteCurrentStockMaterialIdList = new ArrayList<>();
             List<MaterialInitialStock> insertInitialStockMaterialList = new ArrayList<>();
+            List<MaterialCurrentStock> insertCurrentStockMaterialList = new ArrayList<>();
             for(MaterialWithInitStock m: mList) {
                 Long mId = 0L;
                 //判断该商品是否存在，如果不存在就新增，如果存在就更新
@@ -632,7 +633,6 @@ public class MaterialService {
                 insertOrUpdateMaterialExtend(materialExObj, "basic", "1", mId, user);
                 insertOrUpdateMaterialExtend(materialExObj, "other", "0", mId, user);
                 //给商品更新库存
-                deleteStockMaterialIdList.add(mId);
                 Map<Long, BigDecimal> stockMap = m.getStockMap();
                 for(Depot depot: depotList){
                     Long depotId = depot.getId();
@@ -644,6 +644,7 @@ public class MaterialService {
                         materialInitialStock.setDepotId(depotId);
                         materialInitialStock.setNumber(stock);
                         insertInitialStockMaterialList.add(materialInitialStock);
+                        deleteInitialStockMaterialIdList.add(mId);
                     }
                     //新增或更新当前库存
                     Long billCount = depotItemService.getCountByMaterialAndDepot(mId, depotId);
@@ -654,6 +655,7 @@ public class MaterialService {
                             materialCurrentStock.setDepotId(depotId);
                             materialCurrentStock.setCurrentNumber(stock);
                             insertCurrentStockMaterialList.add(materialCurrentStock);
+                            deleteCurrentStockMaterialIdList.add(mId);
                         }
                     } else {
                         BigDecimal initStock = getInitStock(mId, depotId);
@@ -667,16 +669,17 @@ public class MaterialService {
                         materialCurrentStock.setDepotId(depotId);
                         materialCurrentStock.setCurrentNumber(currentNumber);
                         insertCurrentStockMaterialList.add(materialCurrentStock);
+                        deleteCurrentStockMaterialIdList.add(mId);
                     }
                 }
             }
-            //批量更新库存
-            batchDeleteInitialStockByMaterialList(deleteStockMaterialIdList);
+            //批量更新库存,先删除后新增
             if(insertInitialStockMaterialList.size()>0) {
+                batchDeleteInitialStockByMaterialList(deleteInitialStockMaterialIdList);
                 materialInitialStockMapperEx.batchInsert(insertInitialStockMaterialList);
             }
-            batchDeleteCurrentStockByMaterialList(deleteStockMaterialIdList);
             if(insertCurrentStockMaterialList.size()>0) {
+                batchDeleteCurrentStockByMaterialList(deleteCurrentStockMaterialIdList);
                 materialCurrentStockMapperEx.batchInsert(insertCurrentStockMaterialList);
             }
             logService.insertLog("商品",
