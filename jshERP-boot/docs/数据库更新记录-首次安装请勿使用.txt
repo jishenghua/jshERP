@@ -1458,3 +1458,10 @@ alter table jsh_unit change ratio_three ratio_three decimal(24,3) DEFAULT NULL C
 alter table jsh_system_config add amount_approval_flag varchar(1) DEFAULT '0' COMMENT '金额审核启用标记，0未启用，1启用' after multi_bill_type;
 alter table jsh_depot_head add source varchar(1) DEFAULT '0' COMMENT '单据来源，0-pc，1-手机' after purchase_status;
 alter table jsh_account_head add source varchar(1) DEFAULT '0' COMMENT '单据来源，0-pc，1-手机' after status;
+
+-- --------------------------------------------------------
+-- 时间 2023年03月16日
+-- by jishenghua
+-- 给系统参数表增加库存审核启用标记
+-- --------------------------------------------------------
+alter table jsh_system_config add stock_approval_flag varchar(1) DEFAULT '0' COMMENT '库存审核启用标记，0未启用，1启用' after amount_approval_flag;

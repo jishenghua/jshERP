@@ -574,6 +574,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="stockApprovalFlag">
+            and dh.status = '1'
+        </if>
         <if test="beginTime != null">
             and dh.oper_time &gt;= #{beginTime}
         </if>
@@ -601,6 +604,9 @@
         and ifnull(dh.delete_flag,'0') !='1'
         and di.material_extend_id=#{meId}
         and ifnull(di.sku,'') !=''
+        <if test="stockApprovalFlag">
+            and dh.status = '1'
+        </if>
         <if test="beginTime != null">
             and dh.oper_time &gt;= #{beginTime}
         </if>
@@ -625,6 +631,9 @@
         where 1=1
         and ifnull(dh.delete_flag,'0') !='1'
         and di.material_id=#{mId}
+        <if test="stockApprovalFlag">
+            and dh.status = '1'
+        </if>
         <if test="beginTime != null">
             and dh.oper_time &gt;= #{beginTime}
         </if>

@@ -1144,6 +1144,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andStockApprovalFlagIsNull() {
+            addCriterion("stock_approval_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagIsNotNull() {
+            addCriterion("stock_approval_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagEqualTo(String value) {
+            addCriterion("stock_approval_flag =", value, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagNotEqualTo(String value) {
+            addCriterion("stock_approval_flag <>", value, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagGreaterThan(String value) {
+            addCriterion("stock_approval_flag >", value, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("stock_approval_flag >=", value, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagLessThan(String value) {
+            addCriterion("stock_approval_flag <", value, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagLessThanOrEqualTo(String value) {
+            addCriterion("stock_approval_flag <=", value, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagLike(String value) {
+            addCriterion("stock_approval_flag like", value, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagNotLike(String value) {
+            addCriterion("stock_approval_flag not like", value, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagIn(List<String> values) {
+            addCriterion("stock_approval_flag in", values, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagNotIn(List<String> values) {
+            addCriterion("stock_approval_flag not in", values, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagBetween(String value1, String value2) {
+            addCriterion("stock_approval_flag between", value1, value2, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andStockApprovalFlagNotBetween(String value1, String value2) {
+            addCriterion("stock_approval_flag not between", value1, value2, "stockApprovalFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

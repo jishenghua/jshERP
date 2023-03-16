@@ -218,6 +218,23 @@ public class SystemConfigService {
     }
 
     /**
+     * 获取库存审核开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getStockApprovalFlag() throws Exception {
+        boolean amountApprovalFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getStockApprovalFlag();
+            if(("1").equals(flag)) {
+                amountApprovalFlag = true;
+            }
+        }
+        return amountApprovalFlag;
+    }
+
+    /**
      * 获取多级审核开关
      * @return
      * @throws Exception

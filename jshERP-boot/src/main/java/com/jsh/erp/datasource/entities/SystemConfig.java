@@ -31,6 +31,8 @@ public class SystemConfig {
 
     private String amountApprovalFlag;
 
+    private String stockApprovalFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -153,6 +155,14 @@ public class SystemConfig {
 
     public void setAmountApprovalFlag(String amountApprovalFlag) {
         this.amountApprovalFlag = amountApprovalFlag == null ? null : amountApprovalFlag.trim();
+    }
+
+    public String getStockApprovalFlag() {
+        return stockApprovalFlag;
+    }
+
+    public void setStockApprovalFlag(String stockApprovalFlag) {
+        this.stockApprovalFlag = stockApprovalFlag == null ? null : stockApprovalFlag.trim();
     }
 
     public Long getTenantId() {
