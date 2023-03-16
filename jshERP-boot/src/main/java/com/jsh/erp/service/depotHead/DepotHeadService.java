@@ -563,7 +563,7 @@ public class DepotHeadService {
             DepotHeadExample example = new DepotHeadExample();
             example.createCriteria().andIdIn(dhIds);
             result = depotHeadMapper.updateByExampleSelective(depotHead, example);
-            //更新当前库存(此时开启了库存审核)
+            //更新当前库存
             if(systemConfigService.getStockApprovalFlag()) {
                 for(Long dhId: dhIds) {
                     List<DepotItem> list = depotItemService.getListByHeaderId(dhId);
