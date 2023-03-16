@@ -91,6 +91,15 @@
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
         </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="库存审核">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="stockApprovalFlagSwitch" @change="onStockApprovalChange"></a-switch>
+              （如果启用则只有审核后的单据库存才生效，涉及单据和报表展示）
+            </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24"></a-col>
+        </a-row>
         <a-row class="form-row" :gutter="24" v-if="isShowApproval">
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
@@ -143,6 +152,7 @@
         minusStockFlagSwitch: false, //负库存状态
         purchaseBySaleFlagSwitch: false, //以销定购状态
         amountApprovalFlagSwitch: false, //金额审核
+        stockApprovalFlagSwitch: false, //库存审核
         multiLevelApprovalFlagSwitch: false, //多级审核
         originalMultiLevelApprovalFlag: '0', //原始多级审核状态
         multiBillTypeSelect: [], //单据类型
@@ -217,6 +227,9 @@
       onAmountApprovalChange(checked) {
         this.model.amountApprovalFlag = checked?'1':'0'
       },
+      onStockApprovalChange(checked) {
+        this.model.stockApprovalFlag = checked?'1':'0'
+      },
       onMultiLevelApprovalChange(checked) {
         this.model.multiLevelApprovalFlag = checked?'1':'0'
         if(!checked) {
@@ -255,6 +268,9 @@
               }
               if (record.amountApprovalFlag != null) {
                 this.amountApprovalFlagSwitch = record.amountApprovalFlag == '1' ? true : false;
+              }
+              if (record.stockApprovalFlag != null) {
+                this.stockApprovalFlagSwitch = record.stockApprovalFlag == '1' ? true : false;
               }
               if (record.multiLevelApprovalFlag != null) {
                 this.multiLevelApprovalFlagSwitch = record.multiLevelApprovalFlag == '1' ? true : false;
@@ -317,6 +333,7 @@
         this.minusStockFlagSwitch = false
         this.purchaseBySaleFlagSwitch = false
         this.amountApprovalFlagSwitch = false
+        this.stockApprovalFlagSwitch = false
         this.multiLevelApprovalFlagSwitch = false
         this.multiBillTypeSelect = []
       }
