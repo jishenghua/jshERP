@@ -167,6 +167,9 @@
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
         </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
         <if test="sku != null and sku !=''">
             and di.sku = #{sku}
         </if>
@@ -200,6 +203,9 @@
             and di.another_depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
+        </if>
+        <if test="forceFlag">
+            and dh.status = '1'
         </if>
         <if test="sku != null and sku !=''">
             and di.sku = #{sku}
@@ -238,6 +244,9 @@
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
         </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
         <if test="sku != null and sku !=''">
             and di.sku = #{sku}
         </if>
@@ -265,6 +274,9 @@
             and di.another_depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
+        </if>
+        <if test="forceFlag">
+            and dh.status = '1'
         </if>
         <if test="sku != null and sku !=''">
             and di.sku = #{sku}

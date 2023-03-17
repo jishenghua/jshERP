@@ -92,7 +92,8 @@ public class DepotItemController {
         if(StringUtil.isNotEmpty(endTime)) {
             endTime = endTime + BusinessConstants.DAY_LAST_TIME;
         }
-        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, sku,
+        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, forceFlag, sku,
                 batchNumber, StringUtil.toNull(number), beginTime, endTime, mId, (currentPage-1)*pageSize, pageSize);
         JSONArray dataArray = new JSONArray();
         if (list != null) {
@@ -120,7 +121,7 @@ public class DepotItemController {
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
         objectMap.put("rows", dataArray);
-        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, sku,
+        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, forceFlag, sku,
                 batchNumber, StringUtil.toNull(number), beginTime, endTime, mId));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }

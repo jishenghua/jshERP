@@ -174,7 +174,7 @@ public class DepotItemService {
         return list==null?0:list.size();
     }
 
-    public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(String depotIds, String sku, String batchNumber,
+    public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(String depotIds, Boolean forceFlag, String sku, String batchNumber,
                                                                                       String number, String beginTime, String endTime, Long mId, int offset, int rows)throws Exception {
         Long depotId = null;
         if(StringUtil.isNotEmpty(depotIds)) {
@@ -184,14 +184,14 @@ public class DepotItemService {
         Long[] depotIdArray = StringUtil.listToLongArray(depotList);
         List<DepotItemVo4DetailByTypeAndMId> list =null;
         try{
-            list = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdList(depotIdArray, sku, batchNumber, number, beginTime, endTime, mId, offset, rows);
+            list = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdList(depotIdArray, forceFlag, sku, batchNumber, number, beginTime, endTime, mId, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long findDetailByDepotIdsAndMaterialIdCount(String depotIds, String sku, String batchNumber,
+    public Long findDetailByDepotIdsAndMaterialIdCount(String depotIds, Boolean forceFlag, String sku, String batchNumber,
                                                        String number, String beginTime, String endTime, Long mId)throws Exception {
         Long depotId = null;
         if(StringUtil.isNotEmpty(depotIds)) {
@@ -201,7 +201,7 @@ public class DepotItemService {
         Long[] depotIdArray = StringUtil.listToLongArray(depotList);
         Long result =null;
         try{
-            result = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdCount(depotIdArray, sku, batchNumber, number, beginTime, endTime, mId);
+            result = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdCount(depotIdArray, forceFlag, sku, batchNumber, number, beginTime, endTime, mId);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -873,7 +873,6 @@ public class DepotItemService {
      * @return
      */
     public BigDecimal getSkuStockByParam(Long depotId, Long meId, String beginTime, String endTime) throws Exception {
-        //获取库存审核开关
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         List<Long> depotList = depotService.parseDepotList(depotId);
         DepotItemVo4Stock stockObj = depotItemMapperEx.getSkuStockByParamWithDepotList(depotList, meId, forceFlag, beginTime, endTime);
@@ -915,7 +914,6 @@ public class DepotItemService {
      * @return
      */
     public BigDecimal getStockByParamWithDepotList(List<Long> depotList, Long mId, String beginTime, String endTime) throws Exception {
-        //获取库存审核开关
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         //初始库存
         BigDecimal initStock = materialService.getInitStockByMidAndDepotList(depotList, mId);
@@ -947,7 +945,6 @@ public class DepotItemService {
      * @return
      */
     public Map<String, BigDecimal> getIntervalMapByParamWithDepotList(List<Long> depotList, Long mId, String beginTime, String endTime) throws Exception {
-        //获取库存审核开关
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         Map<String,BigDecimal> intervalMap = new HashMap<>();
         BigDecimal inSum = BigDecimal.ZERO;

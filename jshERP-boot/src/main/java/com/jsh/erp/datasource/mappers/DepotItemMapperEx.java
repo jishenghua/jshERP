@@ -31,6 +31,7 @@ public interface DepotItemMapperEx {
 
     List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(
             @Param("depotIdArray") Long[] depotIdArray,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("sku") String sku,
             @Param("batchNumber") String batchNumber,
             @Param("number") String number,
@@ -42,6 +43,7 @@ public interface DepotItemMapperEx {
 
     Long findDetailByDepotIdsAndMaterialIdCount(
             @Param("depotIdArray") Long[] depotIdArray,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("sku") String sku,
             @Param("batchNumber") String batchNumber,
             @Param("number") String number,
