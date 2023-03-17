@@ -13,7 +13,7 @@
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      style="top:100px; height:50%;">
+      style="top:100px; height:55%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
