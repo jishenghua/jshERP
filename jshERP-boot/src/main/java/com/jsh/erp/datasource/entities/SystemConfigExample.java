@@ -1074,143 +1074,73 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagIsNull() {
-            addCriterion("amount_approval_flag is null");
+        public Criteria andForceApprovalFlagIsNull() {
+            addCriterion("force_approval_flag is null");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagIsNotNull() {
-            addCriterion("amount_approval_flag is not null");
+        public Criteria andForceApprovalFlagIsNotNull() {
+            addCriterion("force_approval_flag is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagEqualTo(String value) {
-            addCriterion("amount_approval_flag =", value, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagEqualTo(String value) {
+            addCriterion("force_approval_flag =", value, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagNotEqualTo(String value) {
-            addCriterion("amount_approval_flag <>", value, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagNotEqualTo(String value) {
+            addCriterion("force_approval_flag <>", value, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagGreaterThan(String value) {
-            addCriterion("amount_approval_flag >", value, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagGreaterThan(String value) {
+            addCriterion("force_approval_flag >", value, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagGreaterThanOrEqualTo(String value) {
-            addCriterion("amount_approval_flag >=", value, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("force_approval_flag >=", value, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagLessThan(String value) {
-            addCriterion("amount_approval_flag <", value, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagLessThan(String value) {
+            addCriterion("force_approval_flag <", value, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagLessThanOrEqualTo(String value) {
-            addCriterion("amount_approval_flag <=", value, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagLessThanOrEqualTo(String value) {
+            addCriterion("force_approval_flag <=", value, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagLike(String value) {
-            addCriterion("amount_approval_flag like", value, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagLike(String value) {
+            addCriterion("force_approval_flag like", value, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagNotLike(String value) {
-            addCriterion("amount_approval_flag not like", value, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagNotLike(String value) {
+            addCriterion("force_approval_flag not like", value, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagIn(List<String> values) {
-            addCriterion("amount_approval_flag in", values, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagIn(List<String> values) {
+            addCriterion("force_approval_flag in", values, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagNotIn(List<String> values) {
-            addCriterion("amount_approval_flag not in", values, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagNotIn(List<String> values) {
+            addCriterion("force_approval_flag not in", values, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagBetween(String value1, String value2) {
-            addCriterion("amount_approval_flag between", value1, value2, "amountApprovalFlag");
+        public Criteria andForceApprovalFlagBetween(String value1, String value2) {
+            addCriterion("force_approval_flag between", value1, value2, "forceApprovalFlag");
             return (Criteria) this;
         }
 
-        public Criteria andAmountApprovalFlagNotBetween(String value1, String value2) {
-            addCriterion("amount_approval_flag not between", value1, value2, "amountApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagIsNull() {
-            addCriterion("stock_approval_flag is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagIsNotNull() {
-            addCriterion("stock_approval_flag is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagEqualTo(String value) {
-            addCriterion("stock_approval_flag =", value, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagNotEqualTo(String value) {
-            addCriterion("stock_approval_flag <>", value, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagGreaterThan(String value) {
-            addCriterion("stock_approval_flag >", value, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagGreaterThanOrEqualTo(String value) {
-            addCriterion("stock_approval_flag >=", value, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagLessThan(String value) {
-            addCriterion("stock_approval_flag <", value, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagLessThanOrEqualTo(String value) {
-            addCriterion("stock_approval_flag <=", value, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagLike(String value) {
-            addCriterion("stock_approval_flag like", value, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagNotLike(String value) {
-            addCriterion("stock_approval_flag not like", value, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagIn(List<String> values) {
-            addCriterion("stock_approval_flag in", values, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagNotIn(List<String> values) {
-            addCriterion("stock_approval_flag not in", values, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagBetween(String value1, String value2) {
-            addCriterion("stock_approval_flag between", value1, value2, "stockApprovalFlag");
-            return (Criteria) this;
-        }
-
-        public Criteria andStockApprovalFlagNotBetween(String value1, String value2) {
-            addCriterion("stock_approval_flag not between", value1, value2, "stockApprovalFlag");
+        public Criteria andForceApprovalFlagNotBetween(String value1, String value2) {
+            addCriterion("force_approval_flag not between", value1, value2, "forceApprovalFlag");
             return (Criteria) this;
         }
 

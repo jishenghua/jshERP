@@ -130,10 +130,10 @@ public class DepotHeadController {
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
-            List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, amountApprovalFlag,
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+            List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, amountApprovalFlag,
+            int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark);
             map.put("total", total);
             //存放数据json数组
@@ -194,10 +194,10 @@ public class DepotHeadController {
             }
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
-            List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, amountApprovalFlag, StringUtil.toNull(materialParam),
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+            List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, forceFlag, StringUtil.toNull(materialParam),
                     depotList, oId, roleType, (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, amountApprovalFlag, StringUtil.toNull(materialParam),
+            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, StringUtil.toNull(materialParam),
                     depotList, oId, roleType);
             map.put("total", total);
             map.put("rows", list);
@@ -267,11 +267,11 @@ public class DepotHeadController {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, StringUtil.toNull(number),
-                    creatorArray, amountApprovalFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark, (currentPage-1)*pageSize, pageSize);
+                    creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, StringUtil.toNull(number),
-                    creatorArray, amountApprovalFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
+                    creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;

@@ -29,9 +29,7 @@ public class SystemConfig {
 
     private String multiBillType;
 
-    private String amountApprovalFlag;
-
-    private String stockApprovalFlag;
+    private String forceApprovalFlag;
 
     private Long tenantId;
 
@@ -149,20 +147,12 @@ public class SystemConfig {
         this.multiBillType = multiBillType == null ? null : multiBillType.trim();
     }
 
-    public String getAmountApprovalFlag() {
-        return amountApprovalFlag;
+    public String getForceApprovalFlag() {
+        return forceApprovalFlag;
     }
 
-    public void setAmountApprovalFlag(String amountApprovalFlag) {
-        this.amountApprovalFlag = amountApprovalFlag == null ? null : amountApprovalFlag.trim();
-    }
-
-    public String getStockApprovalFlag() {
-        return stockApprovalFlag;
-    }
-
-    public void setStockApprovalFlag(String stockApprovalFlag) {
-        this.stockApprovalFlag = stockApprovalFlag == null ? null : stockApprovalFlag.trim();
+    public void setForceApprovalFlag(String forceApprovalFlag) {
+        this.forceApprovalFlag = forceApprovalFlag == null ? null : forceApprovalFlag.trim();
     }
 
     public Long getTenantId() {

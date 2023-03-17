@@ -121,13 +121,13 @@ public class AccountController {
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
-                Boolean apprFlag = systemConfigService.getAmountApprovalFlag();
+                Boolean forceFlag = systemConfigService.getForceApprovalFlag();
                 for (AccountVo4InOutList aEx : dataList) {
                     String type = aEx.getType().replace("其它", "");
                     aEx.setType(type);
                     String timeStr = aEx.getOperTime().toString();
-                    BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date", apprFlag).add(accountService.getAccountSumByHead(accountId, timeStr, "date", apprFlag))
-                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date", apprFlag)).add(accountService.getManyAccountSum(accountId, timeStr, "date", apprFlag)).add(initialAmount);
+                    BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date", forceFlag).add(accountService.getAccountSumByHead(accountId, timeStr, "date", forceFlag))
+                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date", forceFlag)).add(accountService.getManyAccountSum(accountId, timeStr, "date", forceFlag)).add(initialAmount);
                     aEx.setBalance(balance);
                     aEx.setAccountId(accountId);
                     dataArray.add(aEx);

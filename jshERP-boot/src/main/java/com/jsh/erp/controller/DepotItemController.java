@@ -480,12 +480,12 @@ public class DepotItemController {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
             String [] organArray = null;
             List<Long> depotList = depotService.parseDepotList(null);
-            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBugOrSale(StringUtil.toNull(materialParam),
-                    "buy", beginTime, endTime, creatorArray, organArray, depotList, amountApprovalFlag, (currentPage-1)*pageSize, pageSize);
+                    "buy", beginTime, endTime, creatorArray, organArray, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBugOrSaleCount(StringUtil.toNull(materialParam),
-                    "buy", beginTime, endTime, creatorArray, organArray, depotList, amountApprovalFlag);
+                    "buy", beginTime, endTime, creatorArray, organArray, depotList, forceFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -555,12 +555,12 @@ public class DepotItemController {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
             String [] organArray = null;
             List<Long> depotList = depotService.parseDepotList(null);
-            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBugOrSale(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, organArray, depotList, amountApprovalFlag, (currentPage-1)*pageSize, pageSize);
+                    "sale", beginTime, endTime, creatorArray, organArray, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBugOrSaleCount(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, organArray, depotList, amountApprovalFlag);
+                    "sale", beginTime, endTime, creatorArray, organArray, depotList, forceFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -631,12 +631,12 @@ public class DepotItemController {
             String [] creatorArray = depotHeadService.getCreatorArray(roleType);
             String [] organArray = depotHeadService.getOrganArray("销售", "");
             List<Long> depotList = depotService.parseDepotList(null);
-            Boolean amountApprovalFlag = systemConfigService.getAmountApprovalFlag();
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBugOrSale(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, organArray, depotList, amountApprovalFlag, (currentPage-1)*pageSize, pageSize);
+                    "sale", beginTime, endTime, creatorArray, organArray, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBugOrSaleCount(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, organArray, depotList, amountApprovalFlag);
+                    "sale", beginTime, endTime, creatorArray, organArray, depotList, forceFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();

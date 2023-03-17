@@ -389,7 +389,7 @@
                 #{item}
             </foreach>
         </if>
-        <if test="amountApprovalFlag">
+        <if test="forceFlag">
             and dh.status = '1'
         </if>
         and ifnull(m.delete_flag,'0') !='1'
@@ -443,7 +443,7 @@
                 #{item}
             </foreach>
         </if>
-        <if test="amountApprovalFlag">
+        <if test="forceFlag">
             and dh.status = '1'
         </if>
         and ifnull(di.delete_flag,'0') !='1'
@@ -522,7 +522,7 @@
         and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
-        <if test="amountApprovalFlag">
+        <if test="forceFlag">
             and dh.status = '1'
         </if>
         <if test="creatorArray != null">
@@ -546,7 +546,7 @@
         and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
-        <if test="amountApprovalFlag">
+        <if test="forceFlag">
             and dh.status = '1'
         </if>
         <if test="creatorArray != null">
@@ -574,7 +574,7 @@
                 #{item}
             </foreach>
         </if>
-        <if test="stockApprovalFlag">
+        <if test="forceFlag">
             and dh.status = '1'
         </if>
         <if test="beginTime != null">
@@ -604,7 +604,7 @@
         and ifnull(dh.delete_flag,'0') !='1'
         and di.material_extend_id=#{meId}
         and ifnull(di.sku,'') !=''
-        <if test="stockApprovalFlag">
+        <if test="forceFlag">
             and dh.status = '1'
         </if>
         <if test="beginTime != null">
@@ -631,7 +631,7 @@
         where 1=1
         and ifnull(dh.delete_flag,'0') !='1'
         and di.material_id=#{mId}
-        <if test="stockApprovalFlag">
+        <if test="forceFlag">
             and dh.status = '1'
         </if>
         <if test="beginTime != null">

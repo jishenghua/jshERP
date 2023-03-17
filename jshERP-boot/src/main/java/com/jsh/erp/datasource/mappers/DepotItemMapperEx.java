@@ -70,7 +70,7 @@ public interface DepotItemMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("organArray") String [] organArray,
             @Param("depotList") List<Long> depotList,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -82,7 +82,7 @@ public interface DepotItemMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("organArray") String [] organArray,
             @Param("depotList") List<Long> depotList,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag);
+            @Param("forceFlag") Boolean forceFlag);
 
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,
@@ -112,7 +112,7 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag);
+            @Param("forceFlag") Boolean forceFlag);
 
     BigDecimal inOrOutRetailPrice(
             @Param("type") String type,
@@ -120,26 +120,26 @@ public interface DepotItemMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag);
+            @Param("forceFlag") Boolean forceFlag);
 
     BigDecimal getStockCheckSumByDepotList(
             @Param("depotList") List<Long> depotList,
             @Param("mId") Long mId,
-            @Param("stockApprovalFlag") Boolean stockApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
     DepotItemVo4Stock getSkuStockByParamWithDepotList(
             @Param("depotList") List<Long> depotList,
             @Param("meId") Long meId,
-            @Param("stockApprovalFlag") Boolean stockApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
     DepotItemVo4Stock getStockByParamWithDepotList(
             @Param("depotList") List<Long> depotList,
             @Param("mId") Long mId,
-            @Param("stockApprovalFlag") Boolean stockApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 

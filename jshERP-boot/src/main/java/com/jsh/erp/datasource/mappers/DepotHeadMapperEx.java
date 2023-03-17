@@ -69,7 +69,7 @@ public interface DepotHeadMapperEx {
             @Param("type") String type,
             @Param("creatorArray") String[] creatorArray,
             @Param("organArray") String[] organArray,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
@@ -84,7 +84,7 @@ public interface DepotHeadMapperEx {
             @Param("type") String type,
             @Param("creatorArray") String[] creatorArray,
             @Param("organArray") String[] organArray,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
@@ -95,7 +95,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
@@ -108,7 +108,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("type") String type,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
@@ -121,7 +121,7 @@ public interface DepotHeadMapperEx {
             @Param("subType") String subType,
             @Param("number") String number,
             @Param("creatorArray") String[] creatorArray,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("depotFList") List<Long> depotFList,
@@ -135,7 +135,7 @@ public interface DepotHeadMapperEx {
             @Param("subType") String subType,
             @Param("number") String number,
             @Param("creatorArray") String[] creatorArray,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("materialParam") String materialParam,
             @Param("depotList") List<Long> depotList,
             @Param("depotFList") List<Long> depotFList,
@@ -213,7 +213,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag);
+            @Param("forceFlag") Boolean forceFlag);
 
     BigDecimal getBuyAndSaleRetailStatistics(
             @Param("type") String type,
@@ -221,7 +221,7 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
-            @Param("amountApprovalFlag") Boolean amountApprovalFlag);
+            @Param("forceFlag") Boolean forceFlag);
 
     List<DepotHeadVo4List> debtList(
             @Param("organId") Long organId,

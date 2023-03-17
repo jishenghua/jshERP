@@ -108,19 +108,19 @@ public class AccountService {
             JshException.readFail(logger, e);
         }
         String timeStr = Tools.getCurrentMonth();
-        Boolean apprFlag = systemConfigService.getAmountApprovalFlag();
+        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         if (null != list && null !=timeStr) {
             for (AccountVo4List al : list) {
                 DecimalFormat df = new DecimalFormat(".##");
-                BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month", apprFlag).add(getAccountSumByHead(al.getId(), timeStr, "month", apprFlag))
-                        .add(getAccountSumByDetail(al.getId(), timeStr, "month", apprFlag)).add(getManyAccountSum(al.getId(), timeStr, "month", apprFlag));
+                BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month", forceFlag).add(getAccountSumByHead(al.getId(), timeStr, "month", forceFlag))
+                        .add(getAccountSumByDetail(al.getId(), timeStr, "month", forceFlag)).add(getManyAccountSum(al.getId(), timeStr, "month", forceFlag));
                 String thisMonthAmountFmt = "0";
                 if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
                     thisMonthAmountFmt = df.format(thisMonthAmount);
                 }
                 al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
-                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month", apprFlag).add(getAccountSumByHead(al.getId(), "", "month", apprFlag))
-                        .add(getAccountSumByDetail(al.getId(), "", "month", apprFlag)).add(getManyAccountSum(al.getId(), "", "month", apprFlag)) .add(al.getInitialAmount()) ;
+                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month", forceFlag).add(getAccountSumByHead(al.getId(), "", "month", forceFlag))
+                        .add(getAccountSumByDetail(al.getId(), "", "month", forceFlag)).add(getManyAccountSum(al.getId(), "", "month", forceFlag)) .add(al.getInitialAmount()) ;
                 al.setCurrentAmount(currentAmount);
                 resList.add(al);
             }
@@ -279,7 +279,7 @@ public class AccountService {
      * @param id
      * @return
      */
-    public BigDecimal getAccountSum(Long id, String timeStr, String type, Boolean apprFlag) throws Exception{
+    public BigDecimal getAccountSum(Long id, String timeStr, String type, Boolean forceFlag) throws Exception{
         BigDecimal accountSum = BigDecimal.ZERO;
         try {
             DepotHeadExample example = new DepotHeadExample();
@@ -302,7 +302,7 @@ public class AccountService {
             }
             List<DepotHead> dataList=null;
             try{
-                if(apprFlag) {
+                if(forceFlag) {
                     criteria.andStatusEqualTo("1");
                 }
                 dataList = depotHeadMapper.selectByExample(example);
@@ -328,7 +328,7 @@ public class AccountService {
      * @param id
      * @return
      */
-    public BigDecimal getAccountSumByHead(Long id, String timeStr, String type, Boolean apprFlag) throws Exception{
+    public BigDecimal getAccountSumByHead(Long id, String timeStr, String type, Boolean forceFlag) throws Exception{
         BigDecimal accountSum = BigDecimal.ZERO;
         try {
             AccountHeadExample example = new AccountHeadExample();
@@ -352,7 +352,7 @@ public class AccountService {
             }
             List<AccountHead> dataList=null;
             try{
-                if(apprFlag) {
+                if(forceFlag) {
                     criteria.andStatusEqualTo("1");
                 }
                 dataList = accountHeadMapper.selectByExample(example);
@@ -378,7 +378,7 @@ public class AccountService {
      * @param id
      * @return
      */
-    public BigDecimal getAccountSumByDetail(Long id, String timeStr, String type, Boolean apprFlag)throws Exception {
+    public BigDecimal getAccountSumByDetail(Long id, String timeStr, String type, Boolean forceFlag)throws Exception {
         BigDecimal accountSum =BigDecimal.ZERO ;
         try {
             AccountHeadExample example = new AccountHeadExample();
@@ -397,7 +397,7 @@ public class AccountService {
             }
             List<AccountHead> dataList=null;
             try{
-                if(apprFlag) {
+                if(forceFlag) {
                     criteria.andStatusEqualTo("1");
                 }
                 dataList = accountHeadMapper.selectByExample(example);
@@ -441,7 +441,7 @@ public class AccountService {
      * @param id
      * @return
      */
-    public BigDecimal getManyAccountSum(Long id, String timeStr, String type, Boolean apprFlag)throws Exception {
+    public BigDecimal getManyAccountSum(Long id, String timeStr, String type, Boolean forceFlag)throws Exception {
         BigDecimal accountSum = BigDecimal.ZERO;
         try {
             DepotHeadExample example = new DepotHeadExample();
@@ -465,7 +465,7 @@ public class AccountService {
             }
             List<DepotHead> dataList=null;
             try{
-                if(apprFlag) {
+                if(forceFlag) {
                     criteria.andStatusEqualTo("1");
                 }
                 dataList = depotHeadMapper.selectByExample(example);
@@ -570,13 +570,13 @@ public class AccountService {
             String timeStr = Tools.getCurrentMonth();
             BigDecimal allMonthAmount = BigDecimal.ZERO;
             BigDecimal allCurrentAmount = BigDecimal.ZERO;
-            Boolean apprFlag = systemConfigService.getAmountApprovalFlag();
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             if (null != list && null !=timeStr) {
                 for (Account a : list) {
-                    BigDecimal monthAmount = getAccountSum(a.getId(), timeStr, "month", apprFlag).add(getAccountSumByHead(a.getId(), timeStr, "month", apprFlag))
-                            .add(getAccountSumByDetail(a.getId(), timeStr, "month", apprFlag)).add(getManyAccountSum(a.getId(), timeStr, "month", apprFlag));
-                    BigDecimal currentAmount = getAccountSum(a.getId(), "", "month", apprFlag).add(getAccountSumByHead(a.getId(), "", "month", apprFlag))
-                            .add(getAccountSumByDetail(a.getId(), "", "month", apprFlag)).add(getManyAccountSum(a.getId(), "", "month", apprFlag)).add(a.getInitialAmount());
+                    BigDecimal monthAmount = getAccountSum(a.getId(), timeStr, "month", forceFlag).add(getAccountSumByHead(a.getId(), timeStr, "month", forceFlag))
+                            .add(getAccountSumByDetail(a.getId(), timeStr, "month", forceFlag)).add(getManyAccountSum(a.getId(), timeStr, "month", forceFlag));
+                    BigDecimal currentAmount = getAccountSum(a.getId(), "", "month", forceFlag).add(getAccountSumByHead(a.getId(), "", "month", forceFlag))
+                            .add(getAccountSumByDetail(a.getId(), "", "month", forceFlag)).add(getManyAccountSum(a.getId(), "", "month", forceFlag)).add(a.getInitialAmount());
                     allMonthAmount = allMonthAmount.add(monthAmount);
                     allCurrentAmount = allCurrentAmount.add(currentAmount);
                 }

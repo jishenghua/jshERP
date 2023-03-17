@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2023-03-17 19:37:08
+Date: 2023-03-17 22:17:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -852,8 +852,7 @@ CREATE TABLE `jsh_system_config` (
   `purchase_by_sale_flag` varchar(1) DEFAULT '0' COMMENT '以销定购启用标记，0未启用，1启用',
   `multi_level_approval_flag` varchar(1) DEFAULT '0' COMMENT '多级审核启用标记，0未启用，1启用',
   `multi_bill_type` varchar(200) DEFAULT NULL COMMENT '流程类型，可多选',
-  `amount_approval_flag` varchar(1) DEFAULT '0' COMMENT '金额审核启用标记，0未启用，1启用',
-  `stock_approval_flag` varchar(1) DEFAULT '0' COMMENT '库存审核启用标记，0未启用，1启用',
+  `force_approval_flag` varchar(1) DEFAULT '0' COMMENT '强审核启用标记，0未启用，1启用',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -862,7 +861,7 @@ CREATE TABLE `jsh_system_config` (
 -- ----------------------------
 -- Records of jsh_system_config
 -- ----------------------------
-INSERT INTO `jsh_system_config` VALUES ('11', '公司test', '小李', '地址1', '12345678', null, null, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '0', '', '0', '0', '63', '0');
+INSERT INTO `jsh_system_config` VALUES ('11', '公司test', '小李', '地址1', '12345678', null, null, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '0', '', '0', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_tenant
