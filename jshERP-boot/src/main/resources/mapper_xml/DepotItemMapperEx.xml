@@ -477,6 +477,9 @@
                 #{item}
             </foreach>
         </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
     </select>
@@ -507,6 +510,9 @@
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
+        </if>
+        <if test="forceFlag">
+            and dh.status = '1'
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'

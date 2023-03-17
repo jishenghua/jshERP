@@ -93,6 +93,7 @@ public interface DepotItemMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("organArray") String [] organArray,
             @Param("depotList") List<Long> depotList,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("sumType") String sumType);
 
     BigDecimal buyOrSalePrice(
@@ -104,6 +105,7 @@ public interface DepotItemMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("organArray") String [] organArray,
             @Param("depotList") List<Long> depotList,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("sumType") String sumType);
 
     BigDecimal inOrOutPrice(
