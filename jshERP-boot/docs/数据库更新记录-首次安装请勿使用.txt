@@ -1463,5 +1463,7 @@ alter table jsh_account_head add source varchar(1) DEFAULT '0' COMMENT '单据�
 -- 时间 2023年03月16日
 -- by jishenghua
 -- 给系统参数表增加库存审核启用标记
+-- 增加零售统计菜单
 -- --------------------------------------------------------
 alter table jsh_system_config add stock_approval_flag varchar(1) DEFAULT '0' COMMENT '库存审核启用标记，0未启用，1启用' after amount_approval_flag;
+insert into `jsh_function` (`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('030105', '零售统计', '0301', '/report/retail_out_report', '/report/RetailOutReport', b'0', '0615', b'1', '电脑版', '', 'profile', '0');
