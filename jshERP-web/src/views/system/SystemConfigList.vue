@@ -77,25 +77,16 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="以销定购">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="purchaseBySaleFlagSwitch" @change="onPurchaseBySaleChange"></a-switch>
-              （如果启用则根据销售订单来定制采购订单，进货后再发给客户）
+              （如果启用则根据<b>销售订单</b>来定制<b>采购订单</b>，进货后再发给客户）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="金额审核">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="amountApprovalFlagSwitch" @change="onAmountApprovalChange"></a-switch>
-              （如果启用则只有审核后的单据金额才生效，涉及首页和部分报表）
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="库存审核">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="stockApprovalFlagSwitch" @change="onStockApprovalChange"></a-switch>
-              （如果启用则只有审核后的单据库存才生效，涉及单据和报表展示）
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="强审核">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="forceApprovalFlagSwitch" @change="onForceApprovalChange"></a-switch>
+              （如果启用则只有<b>已审核</b>的单据才生效，涉及库存和报表统计）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
@@ -151,8 +142,7 @@
         customerFlagSwitch: false, //客户权限状态
         minusStockFlagSwitch: false, //负库存状态
         purchaseBySaleFlagSwitch: false, //以销定购状态
-        amountApprovalFlagSwitch: false, //金额审核
-        stockApprovalFlagSwitch: false, //库存审核
+        forceApprovalFlagSwitch: false, //强审核
         multiLevelApprovalFlagSwitch: false, //多级审核
         originalMultiLevelApprovalFlag: '0', //原始多级审核状态
         multiBillTypeSelect: [], //单据类型
@@ -224,11 +214,8 @@
       onPurchaseBySaleChange(checked) {
         this.model.purchaseBySaleFlag = checked?'1':'0'
       },
-      onAmountApprovalChange(checked) {
-        this.model.amountApprovalFlag = checked?'1':'0'
-      },
-      onStockApprovalChange(checked) {
-        this.model.stockApprovalFlag = checked?'1':'0'
+      onForceApprovalChange(checked) {
+        this.model.forceApprovalFlag = checked?'1':'0'
       },
       onMultiLevelApprovalChange(checked) {
         this.model.multiLevelApprovalFlag = checked?'1':'0'
@@ -266,11 +253,8 @@
               if (record.purchaseBySaleFlag != null) {
                 this.purchaseBySaleFlagSwitch = record.purchaseBySaleFlag == '1' ? true : false;
               }
-              if (record.amountApprovalFlag != null) {
-                this.amountApprovalFlagSwitch = record.amountApprovalFlag == '1' ? true : false;
-              }
-              if (record.stockApprovalFlag != null) {
-                this.stockApprovalFlagSwitch = record.stockApprovalFlag == '1' ? true : false;
+              if (record.forceApprovalFlag != null) {
+                this.forceApprovalFlagSwitch = record.forceApprovalFlag == '1' ? true : false;
               }
               if (record.multiLevelApprovalFlag != null) {
                 this.multiLevelApprovalFlagSwitch = record.multiLevelApprovalFlag == '1' ? true : false;
@@ -332,8 +316,7 @@
         this.customerFlagSwitch = false
         this.minusStockFlagSwitch = false
         this.purchaseBySaleFlagSwitch = false
-        this.amountApprovalFlagSwitch = false
-        this.stockApprovalFlagSwitch = false
+        this.forceApprovalFlagSwitch = false
         this.multiLevelApprovalFlagSwitch = false
         this.multiBillTypeSelect = []
       }
