@@ -1002,6 +1002,63 @@
         &lt; (dh.discount_last_money + dh.other_money - ifnull(dh.deposit,0))
         and ifnull(dh.delete_flag,'0') !='1'
         order by dh.oper_time desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="debtListCount" resultType="java.lang.Integer">
+        select count(1) from (
+        select distinct dh.*, s.supplier OrganName, u.username userName
+        from jsh_depot_head dh
+        left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
+        where 1=1
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
+        </if>
+        <if test="type != null">
+            and dh.type=#{type}
+        </if>
+        <if test="subType != null">
+            and dh.sub_type=#{subType}
+        </if>
+        <if test="status != null">
+            and dh.status =#{status}
+        </if>
+        <if test="number != null">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="depotArray != null and depotArray !=''">
+            and di.depot_id in (
+            <foreach collection="depotArray" item="depotId" separator=",">
+                #{depotId}
+            </foreach>
+            )
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and (abs(dh.change_amount)+(select ifnull(sum(abs(ai.each_amount)),0) from jsh_account_item ai where ai.bill_id=dh.id and ifnull(ai.delete_flag,'0') !='1'))
+        &lt; (dh.discount_last_money + dh.other_money - ifnull(dh.deposit,0))
+        and ifnull(dh.delete_flag,'0') !='1' ) tb
     </select>
 
     <select id="getFinishDepositByNumberList" resultType="com.jsh.erp.datasource.vo.FinishDepositVo">

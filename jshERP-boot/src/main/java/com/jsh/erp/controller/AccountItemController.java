@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
 import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -55,7 +56,11 @@ public class AccountItemController {
                     item.put("accountName", ai.getAccountName());
                     item.put("inOutItemId", ai.getInOutItemId());
                     item.put("inOutItemName", ai.getInOutItemName());
-                    item.put("billNumber", ai.getBillNumber());
+                    if(StringUtil.isNotEmpty(ai.getBillNumber())) {
+                        item.put("billNumber", ai.getBillNumber());
+                    } else {
+                        item.put("billNumber", "QiChu");
+                    }
                     item.put("needDebt", ai.getNeedDebt());
                     item.put("finishDebt", ai.getFinishDebt());
                     BigDecimal eachAmount = ai.getEachAmount();

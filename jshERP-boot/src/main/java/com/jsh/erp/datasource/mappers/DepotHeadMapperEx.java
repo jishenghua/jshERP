@@ -233,6 +233,20 @@ public interface DepotHeadMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
+            @Param("depotArray") String[] depotArray,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    int debtListCount(
+            @Param("organId") Long organId,
+            @Param("type") String type,
+            @Param("subType") String subType,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("status") String status,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("materialParam") String materialParam,
             @Param("depotArray") String[] depotArray);
 
     List<FinishDepositVo> getFinishDepositByNumberList(

@@ -1234,7 +1234,7 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4List> debtList(Long organId, String materialParam, String number, String beginTime, String endTime,
-                                              String type, String subType, String roleType, String status) {
+                                              String type, String subType, String roleType, String status, Integer offset, Integer rows) {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
@@ -1242,7 +1242,8 @@ public class DepotHeadService {
             String [] creatorArray = getCreatorArray(roleType);
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4List> list=depotHeadMapperEx.debtList(organId, type, subType, creatorArray, status, number, beginTime, endTime, materialParam, depotArray);
+            List<DepotHeadVo4List> list=depotHeadMapperEx.debtList(organId, type, subType, creatorArray, status, number,
+                    beginTime, endTime, materialParam, depotArray, offset, rows);
             if (null != list) {
                 List<Long> idList = new ArrayList<>();
                 for (DepotHeadVo4List dh : list) {
@@ -1300,5 +1301,23 @@ public class DepotHeadService {
             JshException.readFail(logger, e);
         }
         return resList;
+    }
+
+    public int debtListCount(Long organId, String materialParam, String number, String beginTime, String endTime,
+                                           String type, String subType, String roleType, String status) {
+        int total = 0;
+        try {
+            String depotIds = depotService.findDepotStrByCurrentUser();
+            String[] depotArray = depotIds.split(",");
+            String[] creatorArray = getCreatorArray(roleType);
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime, BusinessConstants.DAY_LAST_TIME);
+            total = depotHeadMapperEx.debtListCount(organId, type, subType, creatorArray, status, number,
+                    beginTime, endTime, materialParam, depotArray);
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return total;
+
     }
 }

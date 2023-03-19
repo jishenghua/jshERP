@@ -512,6 +512,8 @@ public class DepotHeadController {
     @GetMapping(value = "/debtList")
     @ApiOperation(value = "查询存在欠款的单据")
     public String debtList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                           @RequestParam("currentPage") Integer currentPage,
+                           @RequestParam("pageSize") Integer pageSize,
                            HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
         String organIdStr = StringUtil.getInfo(search, "organId");
@@ -524,12 +526,17 @@ public class DepotHeadController {
         String subType = StringUtil.getInfo(search, "subType");
         String roleType = StringUtil.getInfo(search, "roleType");
         String status = StringUtil.getInfo(search, "status");
-        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime, type, subType, roleType, status);
+        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime, type,
+                subType, roleType, status, (currentPage-1)*pageSize, pageSize);
+        int total = depotHeadService.debtListCount(organId, materialParam, number, beginTime, endTime, type,
+                subType, roleType, status);
         if (list != null) {
             objectMap.put("rows", list);
+            objectMap.put("total", total);
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {
             objectMap.put("rows", new ArrayList<>());
+            objectMap.put("total", 0);
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
     }

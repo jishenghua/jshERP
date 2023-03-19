@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
-import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
-import com.jsh.erp.datasource.mappers.SupplierMapper;
-import com.jsh.erp.datasource.mappers.SupplierMapperEx;
+import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.accountHead.AccountHeadService;
@@ -55,6 +52,8 @@ public class SupplierService {
     private AccountHeadMapperEx accountHeadMapperEx;
     @Resource
     private DepotHeadMapperEx depotHeadMapperEx;
+    @Resource
+    private AccountItemMapperEx accountItemMapperEx;
     @Resource
     private DepotHeadService depotHeadService;
     @Resource
@@ -401,6 +400,29 @@ public class SupplierService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    public Map<String, Object> getBeginNeedByOrganId(Long organId) throws Exception {
+        Supplier supplier = getSupplier(organId);
+        Map<String, Object> map = new HashMap<>();
+        BigDecimal needDebt = BigDecimal.ZERO;
+        if("供应商".equals(supplier.getType())) {
+            needDebt = supplier.getBeginNeedPay();
+        } else if("客户".equals(supplier.getType())) {
+            needDebt = supplier.getBeginNeedGet();
+        }
+        BigDecimal finishDebt = accountItemMapperEx.getFinishDebtByOrganId(organId);
+        BigDecimal eachAmount = BigDecimal.ZERO;
+        if(needDebt != null && finishDebt != null) {
+            eachAmount = needDebt.subtract(finishDebt);
+        }
+        //应收欠款
+        map.put("needDebt", needDebt);
+        //已收欠款
+        map.put("finishDebt", finishDebt);
+        //本次收款
+        map.put("eachAmount", eachAmount);
+        return map;
     }
 
     public void importVendor(MultipartFile file, HttpServletRequest request) throws Exception{

@@ -278,6 +278,30 @@ public class SupplierController {
     }
 
     /**
+     * 根据客户或供应商查询期初、期初已收等信息
+     * @param organId
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getBeginNeedByOrganId")
+    @ApiOperation(value = "根据客户或供应商查询期初、期初已收等信息")
+    public BaseResponseInfo getBeginNeedByOrganId(@RequestParam("organId") Long organId,
+                                        HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> map = supplierService.getBeginNeedByOrganId(organId);
+            res.code = 200;
+            res.data = map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
      * 导入供应商
      * @param file
      * @param request

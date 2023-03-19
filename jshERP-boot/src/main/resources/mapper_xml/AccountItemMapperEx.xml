@@ -124,4 +124,13 @@
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>
+
+    <select id="getFinishDebtByOrganId" resultType="java.math.BigDecimal">
+        select ifnull(sum(ai.each_amount),0) from jsh_account_head ah
+        left join jsh_account_item ai on ah.id = ai.header_id and ifnull(ai.delete_flag,'0') !='1'
+        where ah.organ_id = #{organId}
+        and (ah.type = '收款' or ah.type = '付款')
+        and ai.bill_id is null
+        and ifnull(ah.delete_flag,'0') !='1'
+    </select>
 </mapper>

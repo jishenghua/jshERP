@@ -59,8 +59,13 @@
             and ah.remark like #{bindRemark}
         </if>
         <if test="number != null and number !=''">
-            <bind name="bindNumber" value="'%'+number+'%'"/>
-            and dh.number like #{bindNumber}
+            <if test="number == 'QiChu'">
+                and ai.bill_id is null
+            </if>
+            <if test="number != 'QiChu'">
+                <bind name="bindNumber" value="'%'+number+'%'"/>
+                and dh.number like #{bindNumber}
+            </if>
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
         order by ah.id desc
@@ -117,8 +122,13 @@
             and ah.remark like #{bindRemark}
         </if>
         <if test="number != null and number !=''">
-            <bind name="bindNumber" value="'%'+number+'%'"/>
-            and dh.number like #{bindNumber}
+            <if test="number == 'QiChu'">
+                and ai.bill_id is null
+            </if>
+            <if test="number != 'QiChu'">
+                <bind name="bindNumber" value="'%'+number+'%'"/>
+                and dh.number like #{bindNumber}
+            </if>
         </if>
         and ifnull(ah.delete_flag,'0') !='1') tb
     </select>

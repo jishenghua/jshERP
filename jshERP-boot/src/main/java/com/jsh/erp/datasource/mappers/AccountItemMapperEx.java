@@ -37,4 +37,6 @@ public interface AccountItemMapperEx {
     int batchDeleteAccountItemByHeadIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String[] ids);
 
     BigDecimal getEachAmountByBillId(@Param("billId") Long billId);
+
+    BigDecimal getFinishDebtByOrganId(@Param("organId") Long organId);
 }
