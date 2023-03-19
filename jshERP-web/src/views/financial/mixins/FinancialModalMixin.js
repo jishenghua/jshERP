@@ -264,6 +264,35 @@ export const FinancialModalMixin = {
       typeof success === 'function' ? success(res) : ''
       tab.loading = false
     },
+    //选择期初
+    selectBeginNeed(type) {
+      let that = this
+      this.$confirm({
+        title: "确认操作",
+        content: "是否选择期初金额?",
+        onOk: function () {
+          let organId = that.form.getFieldValue('organId')
+          if(organId){
+            let listEx = []
+            let info = {}
+            info.billNumber = 'QiChu'
+            getAction('/supplier/getBeginNeedByOrganId', {'organId': organId}).then((res)=>{
+              if(res.code === 200){
+                info.needDebt = res.data.needDebt
+                info.finishDebt = res.data.finishDebt
+                info.eachAmount = res.data.eachAmount
+                listEx.push(info)
+                that.accountTable.dataSource = listEx
+              }else{
+                that.$message.info(res.data)
+              }
+            })
+          } else {
+            that.$message.warning('请选择' + type + '！');
+          }
+        }
+      })
+    },
     //保存并审核
     handleOkAndCheck() {
       this.billStatus = '1'

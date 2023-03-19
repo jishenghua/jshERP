@@ -66,6 +66,8 @@
             <div class="action-button">
               <a-button type="primary" icon="plus" @click="handleClickAdd">选择单据</a-button>
               <span class="gap"></span>
+              <a-button type="primary" icon="plus" @click="selectBeginNeed('供应商')">选择期初</a-button>
+              <span class="gap"></span>
               <a-button icon="minus" @click="handleClear">清空</a-button>
             </div>
           </a-col>
