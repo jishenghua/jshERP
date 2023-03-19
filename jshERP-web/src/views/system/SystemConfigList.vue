@@ -86,7 +86,7 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="强审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="forceApprovalFlagSwitch" @change="onForceApprovalChange"></a-switch>
-              （如果启用则只有<b>已审核</b>的单据才生效，涉及库存和报表统计）
+              （如果启用则只有<b>已审核</b>的单据才生效，涉及库存和报表，需批量修正库存）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
