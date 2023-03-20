@@ -654,9 +654,9 @@
             and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
             and ifnull(dh.delete_flag,'0') !='1') returnDebtMoney,
             (select abs(ifnull(sum(ai.each_amount),0)) from jsh_account_item ai
-            left join jsh_depot_head dh on ai.bill_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
-            where dh.organ_id=s.id
-            and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
+            left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+            where ah.organ_id=s.id and ah.type=#{billType}
+            and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
             and ifnull(ai.delete_flag,'0') !='1') backMoney
         from jsh_supplier s
         where s.enabled=1
@@ -717,9 +717,9 @@
         and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
         and ifnull(dh.delete_flag,'0') !='1') returnDebtMoney,
         (select abs(ifnull(sum(ai.each_amount),0)) from jsh_account_item ai
-        left join jsh_depot_head dh on ai.bill_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
-        where dh.organ_id=s.id
-        and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
+        left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+        where ah.organ_id=s.id and ah.type=#{billType}
+        and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
         and ifnull(ai.delete_flag,'0') !='1') backMoney
         from jsh_supplier s
         where s.enabled=1
@@ -777,9 +777,9 @@
         and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
         and ifnull(dh.delete_flag,'0') !='1') returnDebtMoney,
         (select abs(ifnull(sum(ai.each_amount),0)) from jsh_account_item ai
-        left join jsh_depot_head dh on ai.bill_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
-        where dh.organ_id=s.id
-        and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
+        left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+        where ah.organ_id=s.id and ah.type=#{billType}
+        and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
         and ifnull(ai.delete_flag,'0') !='1') backMoney
         from jsh_supplier s
         where s.enabled=1

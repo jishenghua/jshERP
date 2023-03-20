@@ -411,9 +411,9 @@ public class SupplierService {
         } else if("客户".equals(supplier.getType())) {
             needDebt = supplier.getBeginNeedGet();
         }
-        BigDecimal finishDebt = accountItemMapperEx.getFinishDebtByOrganId(organId);
+        BigDecimal finishDebt = accountItemMapperEx.getFinishDebtByOrganId(organId).abs();
         BigDecimal eachAmount = BigDecimal.ZERO;
-        if(needDebt != null && finishDebt != null) {
+        if(needDebt != null) {
             eachAmount = needDebt.subtract(finishDebt);
         }
         //应收欠款
