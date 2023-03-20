@@ -267,12 +267,13 @@ export const FinancialModalMixin = {
     //选择期初
     selectBeginNeed(type) {
       let that = this
-      this.$confirm({
-        title: "确认操作",
-        content: "是否选择期初金额?",
-        onOk: function () {
-          let organId = that.form.getFieldValue('organId')
-          if(organId){
+      let info = type === '供应商'? '付款':'收款'
+      let organId = this.form.getFieldValue('organId')
+      if(organId){
+        this.$confirm({
+          title: "确认操作",
+          content: "是否选择期初金额，对期初进行" + info + "?",
+          onOk: function () {
             let listEx = []
             let info = {}
             info.billNumber = 'QiChu'
@@ -283,15 +284,19 @@ export const FinancialModalMixin = {
                 info.eachAmount = res.data.eachAmount
                 listEx.push(info)
                 that.accountTable.dataSource = listEx
+                let changeAmount = info.eachAmount
+                that.$nextTick(() => {
+                  that.form.setFieldsValue({'totalPrice':changeAmount, 'changeAmount':changeAmount})
+                })
               }else{
                 that.$message.info(res.data)
               }
             })
-          } else {
-            that.$message.warning('请选择' + type + '！');
           }
-        }
-      })
+        })
+      } else {
+        that.$message.warning('请选择' + type + '！');
+      }
     },
     //保存并审核
     handleOkAndCheck() {
