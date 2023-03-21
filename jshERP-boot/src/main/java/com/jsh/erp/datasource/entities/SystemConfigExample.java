@@ -1144,6 +1144,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andUpdateUnitPriceFlagIsNull() {
+            addCriterion("update_unit_price_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagIsNotNull() {
+            addCriterion("update_unit_price_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagEqualTo(String value) {
+            addCriterion("update_unit_price_flag =", value, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagNotEqualTo(String value) {
+            addCriterion("update_unit_price_flag <>", value, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagGreaterThan(String value) {
+            addCriterion("update_unit_price_flag >", value, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("update_unit_price_flag >=", value, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagLessThan(String value) {
+            addCriterion("update_unit_price_flag <", value, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagLessThanOrEqualTo(String value) {
+            addCriterion("update_unit_price_flag <=", value, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagLike(String value) {
+            addCriterion("update_unit_price_flag like", value, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagNotLike(String value) {
+            addCriterion("update_unit_price_flag not like", value, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagIn(List<String> values) {
+            addCriterion("update_unit_price_flag in", values, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagNotIn(List<String> values) {
+            addCriterion("update_unit_price_flag not in", values, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagBetween(String value1, String value2) {
+            addCriterion("update_unit_price_flag between", value1, value2, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateUnitPriceFlagNotBetween(String value1, String value2) {
+            addCriterion("update_unit_price_flag not between", value1, value2, "updateUnitPriceFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

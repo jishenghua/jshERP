@@ -201,6 +201,23 @@ public class SystemConfigService {
     }
 
     /**
+     * 获取更新单价开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getUpdateUnitPriceFlag() throws Exception {
+        boolean updateUnitPriceFlag = true;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getUpdateUnitPriceFlag();
+            if(("0").equals(flag)) {
+                updateUnitPriceFlag = false;
+            }
+        }
+        return updateUnitPriceFlag;
+    }
+
+    /**
      * 获取强审核开关
      * @return
      * @throws Exception

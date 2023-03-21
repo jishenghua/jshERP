@@ -1467,3 +1467,10 @@ alter table jsh_account_head add source varchar(1) DEFAULT '0' COMMENT '单据�
 -- --------------------------------------------------------
 alter table jsh_system_config change amount_approval_flag force_approval_flag varchar(1) DEFAULT '0' COMMENT '强审核启用标记，0未启用，1启用';
 insert into `jsh_function` (`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`) VALUES ('030105', '零售统计', '0301', '/report/retail_out_report', '/report/RetailOutReport', b'0', '0615', b'1', '电脑版', '', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2023年03月08日
+-- by jishenghua
+-- 给系统参数表增加更新单价启用标记
+-- --------------------------------------------------------
+alter table jsh_system_config add update_unit_price_flag varchar(1) DEFAULT '1' COMMENT '更新单价启用标记，0未启用，1启用' after force_approval_flag;

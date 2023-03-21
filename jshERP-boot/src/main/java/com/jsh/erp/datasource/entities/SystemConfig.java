@@ -31,6 +31,8 @@ public class SystemConfig {
 
     private String forceApprovalFlag;
 
+    private String updateUnitPriceFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -153,6 +155,14 @@ public class SystemConfig {
 
     public void setForceApprovalFlag(String forceApprovalFlag) {
         this.forceApprovalFlag = forceApprovalFlag == null ? null : forceApprovalFlag.trim();
+    }
+
+    public String getUpdateUnitPriceFlag() {
+        return updateUnitPriceFlag;
+    }
+
+    public void setUpdateUnitPriceFlag(String updateUnitPriceFlag) {
+        this.updateUnitPriceFlag = updateUnitPriceFlag == null ? null : updateUnitPriceFlag.trim();
     }
 
     public Long getTenantId() {

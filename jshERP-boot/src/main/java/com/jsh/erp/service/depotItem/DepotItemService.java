@@ -826,20 +826,22 @@ public class DepotItemService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateMaterialExtendPrice(Long meId, String subType, JSONObject rowObj) throws Exception {
-        if (StringUtil.isExist(rowObj.get("unitPrice"))) {
-            BigDecimal unitPrice = rowObj.getBigDecimal("unitPrice");
-            MaterialExtend materialExtend = new MaterialExtend();
-            materialExtend.setId(meId);
-            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(subType)) {
-                materialExtend.setPurchaseDecimal(unitPrice);
+        if(systemConfigService.getUpdateUnitPriceFlag()) {
+            if (StringUtil.isExist(rowObj.get("unitPrice"))) {
+                BigDecimal unitPrice = rowObj.getBigDecimal("unitPrice");
+                MaterialExtend materialExtend = new MaterialExtend();
+                materialExtend.setId(meId);
+                if(BusinessConstants.SUB_TYPE_PURCHASE.equals(subType)) {
+                    materialExtend.setPurchaseDecimal(unitPrice);
+                }
+                if(BusinessConstants.SUB_TYPE_SALES.equals(subType)) {
+                    materialExtend.setWholesaleDecimal(unitPrice);
+                }
+                if(BusinessConstants.SUB_TYPE_RETAIL.equals(subType)) {
+                    materialExtend.setCommodityDecimal(unitPrice);
+                }
+                materialExtendService.updateMaterialExtend(materialExtend);
             }
-            if(BusinessConstants.SUB_TYPE_SALES.equals(subType)) {
-                materialExtend.setWholesaleDecimal(unitPrice);
-            }
-            if(BusinessConstants.SUB_TYPE_RETAIL.equals(subType)) {
-                materialExtend.setCommodityDecimal(unitPrice);
-            }
-            materialExtendService.updateMaterialExtend(materialExtend);
         }
     }
 
