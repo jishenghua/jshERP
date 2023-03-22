@@ -307,6 +307,7 @@
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
+        order by m.id desc, me.default_flag desc, me.id asc
         limit 0,20
     </select>
 
