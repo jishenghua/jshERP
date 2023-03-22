@@ -7,6 +7,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
+import com.jsh.erp.datasource.vo.MaterialVoSearch;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depot.DepotService;
@@ -389,6 +390,33 @@ public class MaterialService {
             }
         }
         return idList;
+    }
+
+    public JSONArray getMaterialByParam(String materialParam) {
+        JSONArray arr = new JSONArray();
+        List<MaterialVoSearch> list = materialMapperEx.getMaterialByParam(materialParam);
+        for(MaterialVoSearch item: list) {
+            JSONObject obj = new JSONObject();
+            StringBuilder sb = new StringBuilder();
+            sb.append(item.getBarCode());
+            sb.append("_").append(item.getName());
+            if(StringUtil.isNotEmpty(item.getStandard())) {
+                sb.append("(").append(item.getStandard()).append(")");
+            }
+            if(StringUtil.isNotEmpty(item.getModel())) {
+                sb.append("(").append(item.getModel()).append(")");
+            }
+            if(StringUtil.isNotEmpty(item.getColor())) {
+                sb.append("(").append(item.getColor()).append(")");
+            }
+            if(StringUtil.isNotEmpty(item.getUnit())) {
+                sb.append("(").append(item.getUnit()).append(")");
+            }
+            obj.put("barCode", item.getBarCode());
+            obj.put("materialStr", sb.toString());
+            arr.add(obj);
+        }
+        return arr;
     }
 
     public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String enableSerialNumber,

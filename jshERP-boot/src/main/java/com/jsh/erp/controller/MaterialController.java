@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.MaterialInitialStockWithMaterial;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.entities.Unit;
+import com.jsh.erp.datasource.vo.MaterialVoSearch;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
@@ -158,6 +159,29 @@ public class MaterialController {
             res.code = 200;
             res.data = mu;
         } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 根据关键词查找商品信息-条码、名称、规格、型号
+     * @param q
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getMaterialByParam")
+    @ApiOperation(value = "根据关键词查找商品信息")
+    public BaseResponseInfo getMaterialByParam(@RequestParam("q") String q,
+                                   HttpServletRequest request) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            JSONArray arr = materialService.getMaterialByParam(q);
+            res.code = 200;
+            res.data = arr;
+        } catch (Exception e) {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";

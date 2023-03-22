@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.vo.MaterialVoSearch;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -51,6 +52,8 @@ public interface MaterialMapperEx {
     List<MaterialVo4Unit> findById(@Param("id") Long id);
 
     List<MaterialVo4Unit> findByIdWithBarCode(@Param("meId") Long meId);
+
+    List<MaterialVoSearch> getMaterialByParam(@Param("materialParam") String materialParam);
 
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("idList") List<Long> idList,
                                                   @Param("q") String q,
