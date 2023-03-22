@@ -1,6 +1,15 @@
 <template>
   <div>
-    <a-input-search v-if="kind === 'material'" v-model="names" placeholder="条码|名称并回车" @pressEnter="onPressEnter" @search="onSearch"></a-input-search>
+    <a-input-group v-if="kind === 'material'" compact style="width:100%">
+      <a-select placeholder="条码|名称" :dropdownMatchSelectWidth="false" showSearch :showArrow="false"
+                v-model="names" optionFilterProp="children" style="width:80%"
+                @search="handleSearch" @change="handleChange">
+        <a-select-option v-for="item in materialData" :key="item.barCode">
+          {{ item.materialStr }}
+        </a-select-option>
+      </a-select>
+      <a-button icon="search" @click="onSearch" />
+    </a-input-group>
     <a-input-search v-if="kind === 'batch'||kind === 'sn'||kind === 'snAdd'" v-model="names" placeholder="请点开弹窗" readOnly @search="onSearch"></a-input-search>
     <j-select-material-modal v-if="kind === 'material'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
     <j-select-batch-modal v-if="kind === 'batch'" ref="selectModal" :rows="rows" :multi="multi" :bar-code="value" @ok="selectOK" @initComp="initComp"/>
@@ -14,9 +23,7 @@
   import JSelectBatchModal from './modal/JSelectBatchModal'
   import JSelectSnModal from './modal/JSelectSnModal'
   import JSelectSnAddModal from './modal/JSelectSnAddModal'
-  import { getMpListShort } from "@/utils/util"
-  import {getMaterialByBarCode} from '@/api/api'
-  import Vue from 'vue'
+  import { getMaterialByParam } from '@/api/api'
 
   export default {
     name: 'JSelectList',
@@ -49,6 +56,7 @@
       return {
         ids: "",
         names: "",
+        materialData: [],
       }
     },
     mounted() {
@@ -65,38 +73,20 @@
     },
     methods: {
       initComp(name) {
-        this.names = name
-      },
-      onPressEnter() {
-        if(this.kind === 'material') {
-          let param = {
-            barCode: this.names,
-            mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
-            prefixNo: this.prefixNo
-          }
-          getMaterialByBarCode(param).then((res) => {
-            if (res && res.code === 200) {
-              let mList = res.data
-              if(mList && mList.length === 1) {
-                //如果条码可以查到商品，则直接加载，不用弹窗再选择
-                this.$emit("change", this.names)
-              } else {
-                //匹配不到进行弹窗
-                this.$refs.selectModal.showModal(this.names)
-              }
-            }
-          })
-        } else {
-          this.$refs.selectModal.showModal()
-        }
+        this.names = name?name:'输入条码或名称'
       },
       onSearch() {
-        if(this.kind === 'material') {
-          //直接进行弹窗
-          this.$refs.selectModal.showModal(this.names)
-        } else {
-          this.$refs.selectModal.showModal()
-        }
+        this.$refs.selectModal.showModal()
+      },
+      handleSearch(value) {
+        getMaterialByParam({q: value}).then((res) => {
+          if (res && res.code === 200) {
+            this.materialData = res.data
+          }
+        })
+      },
+      handleChange(value) {
+        this.$emit("change", value)
       },
       selectOK(rows, idstr) {
         console.log("选中id", idstr)

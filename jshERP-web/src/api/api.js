@@ -53,6 +53,7 @@ const editMaterial = (params)=>putAction("/material/update",params);
 const checkMaterial = (params)=>getAction("/material/checkIsExist",params);
 const getMaterialBySelect = (params)=>getAction("/material/findBySelect",params);
 const getSerialMaterialBySelect = (params)=>getAction("/material/getMaterialEnableSerialNumberList",params);
+const getMaterialByParam = (params)=>getAction("/material/getMaterialByParam",params);
 const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode",params);
 const getMaxBarCode = (params)=>getAction("/material/getMaxBarCode",params);
 const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCodeExist",params);
@@ -149,6 +150,7 @@ export {
   checkMaterial,
   getMaterialBySelect,
   getSerialMaterialBySelect,
+  getMaterialByParam,
   getMaterialByBarCode,
   getMaxBarCode,
   checkMaterialBarCode,
