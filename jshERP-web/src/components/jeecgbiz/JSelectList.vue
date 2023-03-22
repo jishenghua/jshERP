@@ -73,7 +73,11 @@
     },
     methods: {
       initComp(name) {
-        this.names = name?name:'输入条码或名称'
+        if(this.kind === 'material') {
+          this.names = name?name:'输入条码或名称'
+        } else {
+          this.names = name
+        }
       },
       onSearch() {
         this.$refs.selectModal.showModal()
