@@ -57,6 +57,7 @@
         ids: "",
         names: "",
         materialData: [],
+        setTimeFlag: null
       }
     },
     mounted() {
@@ -74,7 +75,7 @@
     methods: {
       initComp(name) {
         if(this.kind === 'material') {
-          this.names = name?name:'输入条码或名称'
+          this.names = name?name:'请输入条码或名称'
         } else {
           this.names = name
         }
@@ -83,11 +84,17 @@
         this.$refs.selectModal.showModal()
       },
       handleSearch(value) {
-        getMaterialByParam({q: value}).then((res) => {
-          if (res && res.code === 200) {
-            this.materialData = res.data
-          }
-        })
+        let that = this
+        if(this.setTimeFlag != null){
+          clearTimeout(this.setTimeFlag);
+        }
+        this.setTimeFlag = setTimeout(()=>{
+          getMaterialByParam({q: value}).then((res) => {
+            if (res && res.code === 200) {
+              that.materialData = res.data
+            }
+          })
+        },500)
       },
       handleChange(value) {
         this.$emit("change", value)
