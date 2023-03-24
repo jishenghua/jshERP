@@ -446,7 +446,7 @@ export const JeecgListMixin = {
         let numKey = 'rowIndex'
         let totalRow = { [numKey]: '合计' }
         //需要合计的列
-        let parseCols = 'initialStock,currentStock,currentStockPrice,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,' +
+        let parseCols = 'initialStock,currentStock,currentStockPrice,currentWeight,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,' +
           'inOutSumPrice,outSum,outSumPrice,outInSumPrice,operNumber,allPrice,numSum,priceSum,prevSum,thisSum,thisAllPrice,changeAmount,' +
           'allPrice,taxMoney,currentNumber,lowSafeStock,highSafeStock,lowCritical,highCritical,preNeed,debtMoney,backMoney,allNeed,' +
           'needDebt,realNeedDebt,finishDebt,debt'

@@ -1084,6 +1084,7 @@
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         retailBackColumns: [
@@ -1103,6 +1104,7 @@
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseOrderColumns: [
@@ -1252,6 +1254,7 @@
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         otherOutColumns: [
@@ -1271,6 +1274,7 @@
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         allocationOutColumns: [
@@ -1288,6 +1292,7 @@
           { title: '数量', dataIndex: 'operNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
+          { title: '重量', dataIndex: 'weight'},
           { title: '备注', dataIndex: 'remark'}
         ],
         assembleColumns: [

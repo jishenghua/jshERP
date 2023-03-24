@@ -7,7 +7,7 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
+              <a-col :md="5" :sm="24">
                 <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select
                     mode="multiple" :maxTagCount="1"
@@ -21,38 +21,44 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-                       :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
-                  </a-tree-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="5" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="条码/名称/规格/型号/颜色" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="3" :sm="24">
-                <a-form-item label="零库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select v-model="queryParam.zeroStock">
-                    <a-select-option value="0">隐藏</a-select-option>
-                    <a-select-option value="1">显示</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="4" :sm="24">
-                <span class="table-page-search-submitButtons">
+              <a-col :md="6" :sm="24" >
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </span>
               </a-col>
-              <a-col :md="6" :sm="24">
+              <a-col :md="8" :sm="24">
                 <a-form-item>
-                  <span>总库存：{{currentStock}}，总库存金额：{{currentStockPrice}}</span>
+                  <span>总库存：{{currentStock}}，总库存金额：{{currentStockPrice}}，总重量：{{currentWeight}}</span>
                 </a-form-item>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="5" :sm="24">
+                  <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                                   :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="5" :sm="24">
+                  <a-form-item label="零库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select v-model="queryParam.zeroStock">
+                      <a-select-option value="0">隐藏</a-select-option>
+                      <a-select-option value="1">显示</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form>
         </div>
@@ -167,7 +173,8 @@
           {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60,
             scopedSlots: { customRender: 'customRenderStock' }
           },
-          {title: '库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80}
+          {title: '库存金额', dataIndex: 'currentStockPrice', sorter: (a, b) => a.currentStockPrice - b.currentStockPrice, width: 80},
+          {title: '重量', dataIndex: 'currentWeight', sorter: (a, b) => a.currentWeight - b.currentWeight, width: 60}
         ],
         url: {
           list: "/material/getListWithStock"
@@ -233,6 +240,7 @@
             this.tableAddTotalRow(this.columns, this.dataSource)
             this.currentStock = res.data.currentStock;
             this.currentStockPrice = res.data.currentStockPrice;
+            this.currentWeight = res.data.currentWeight;
           }
           if(res.code===510){
             this.$message.warning(res.data)
@@ -250,11 +258,11 @@
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '颜色', '类别', '单位', '单价', '初始库存', '库存', '库存金额']]
+        let aoa = [['条码', '名称', '规格', '型号', '颜色', '类别', '单位', '单价', '初始库存', '库存', '库存金额', '重量']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
           let item = [ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,
-            ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice]
+            ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice, ds.currentWeight]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '商品库存')
