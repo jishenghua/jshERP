@@ -765,10 +765,13 @@ public class UserService {
         int selectUserSize = list.size();
         //查询启用状态的用户的数量
         int enableUserSize = getUser().size();
-        long userNumLimit = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userNumLimit").toString());
-        if(selectUserSize + enableUserSize > userNumLimit && status == 0) {
-            throw new BusinessParamCheckingException(ExceptionConstants.USER_ENABLE_OVER_LIMIT_FAILED_CODE,
-                    ExceptionConstants.USER_ENABLE_OVER_LIMIT_FAILED_MSG);
+        User userInfo = userService.getCurrentUser();
+        Tenant tenant = tenantService.getTenantByTenantId(userInfo.getTenantId());
+        if(tenant!=null) {
+            if (selectUserSize + enableUserSize > tenant.getUserNumLimit() && status == 0) {
+                throw new BusinessParamCheckingException(ExceptionConstants.USER_ENABLE_OVER_LIMIT_FAILED_CODE,
+                        ExceptionConstants.USER_ENABLE_OVER_LIMIT_FAILED_MSG);
+            }
         }
         StringBuilder userStr = new StringBuilder();
         List<Long> idList = new ArrayList<>();

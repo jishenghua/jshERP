@@ -34,6 +34,8 @@ public class MaterialVo4Unit extends Material{
 
     private BigDecimal currentStockPrice;
 
+    private BigDecimal currentWeight;
+
     private String sku;
 
     private Long depotId;
@@ -161,6 +163,14 @@ public class MaterialVo4Unit extends Material{
 
     public void setCurrentStockPrice(BigDecimal currentStockPrice) {
         this.currentStockPrice = currentStockPrice;
+    }
+
+    public BigDecimal getCurrentWeight() {
+        return currentWeight;
+    }
+
+    public void setCurrentWeight(BigDecimal currentWeight) {
+        this.currentWeight = currentWeight;
     }
 
     public String getSku() {

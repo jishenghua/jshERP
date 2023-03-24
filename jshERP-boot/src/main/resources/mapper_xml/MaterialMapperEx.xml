@@ -22,6 +22,7 @@
         <result column="initialStock" jdbcType="DECIMAL" property="initialStock" />
         <result column="currentStock" jdbcType="DECIMAL" property="currentStock" />
         <result column="currentStockPrice" jdbcType="DECIMAL" property="currentStockPrice" />
+        <result column="currentWeight" jdbcType="DECIMAL" property="currentWeight" />
     </resultMap>
 
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultAndUnitMap" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
@@ -577,7 +578,8 @@
         select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code,
         ifnull(me.purchase_decimal,0) purchase_decimal,
         ifnull(sum(mcs.current_number),0) currentStock,
-        sum(ifnull(me.purchase_decimal, 0) * ifnull(mcs.current_number, 0)) currentStockPrice
+        sum(ifnull(me.purchase_decimal, 0) * ifnull(mcs.current_number, 0)) currentStockPrice,
+        sum(ifnull(m.weight, 0) * ifnull(mcs.current_number, 0)) currentWeight
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'
@@ -653,7 +655,8 @@
     <select id="getTotalStockAndPrice" resultType="com.jsh.erp.datasource.entities.MaterialVo4Unit">
         select
         ifnull(sum(mcs.current_number),0) currentStock,
-        sum(ifnull(me.purchase_decimal,0)*ifnull(mcs.current_number,0)) currentStockPrice
+        sum(ifnull(me.purchase_decimal,0)*ifnull(mcs.current_number,0)) currentStockPrice,
+        sum(ifnull(m.weight,0)*ifnull(mcs.current_number,0)) currentWeight
         from jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'

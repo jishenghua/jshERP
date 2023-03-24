@@ -627,6 +627,7 @@ public class MaterialController {
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock());
             map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice());
+            map.put("currentWeight", materialVo4Unit.getCurrentWeight());
             map.put("rows", dataList);
             res.code = 200;
             res.data = map;
