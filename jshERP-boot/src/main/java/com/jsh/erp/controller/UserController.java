@@ -127,16 +127,6 @@ public class UserController {
                         token = token + "_" + user.getTenantId();
                     }
                     redisService.storageObjectBySession(token,"userId",user.getId());
-                    if(user.getTenantId()!=null) {
-                        Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
-                        if(tenant!=null) {
-                            Long tenantId = tenant.getTenantId();
-                            Integer userNumLimit = tenant.getUserNumLimit();
-                            if(tenantId!=null) {
-                                redisService.storageObjectBySession(token,"userNumLimit",userNumLimit); //用户限制数
-                            }
-                        }
-                    }
                     break;
                 default:
                     break;
@@ -197,6 +187,8 @@ public class UserController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             redisService.deleteObjectBySession(request,"userId");
+            redisService.deleteObjectBySession(request,"roleType");
+            redisService.deleteObjectBySession(request,"clientIp");
         } catch(Exception e){
             e.printStackTrace();
             res.code = 500;
@@ -319,14 +311,17 @@ public class UserController {
     @ResponseBody
     public Object addUser(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
-        Long userNumLimit = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userNumLimit").toString());
+        User userInfo = userService.getCurrentUser();
+        Tenant tenant = tenantService.getTenantByTenantId(userInfo.getTenantId());
         Long count = userService.countUser(null,null);
-        if(count>= userNumLimit) {
-            throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
-                    ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
-        } else {
-            UserEx ue= JSONObject.parseObject(obj.toJSONString(), UserEx.class);
-            userService.addUserAndOrgUserRel(ue, request);
+        if(tenant!=null) {
+            if(count>= tenant.getUserNumLimit()) {
+                throw new BusinessParamCheckingException(ExceptionConstants.USER_OVER_LIMIT_FAILED_CODE,
+                        ExceptionConstants.USER_OVER_LIMIT_FAILED_MSG);
+            } else {
+                UserEx ue= JSONObject.parseObject(obj.toJSONString(), UserEx.class);
+                userService.addUserAndOrgUserRel(ue, request);
+            }
         }
         return result;
     }
