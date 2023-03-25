@@ -2,7 +2,7 @@
   <div>
     <a-input-group v-if="kind === 'material'" compact style="width:100%">
       <a-select placeholder="条码|名称" :dropdownMatchSelectWidth="false" showSearch :showArrow="false"
-                v-model="names" optionFilterProp="children" style="width:80%"
+                v-model="names" optionFilterProp="children" :style="searchWidth"
                 @search="handleSearch" @change="handleChange">
         <a-select-option v-for="item in materialData" :key="item.barCode">
           {{ item.materialStr }}
@@ -57,7 +57,8 @@
         ids: "",
         names: "",
         materialData: [],
-        setTimeFlag: null
+        setTimeFlag: null,
+        searchWidth: ""
       }
     },
     mounted() {
@@ -68,6 +69,14 @@
         this.ids = val
       }
     },
+    created () {
+      const currentWidth = window.screen.width
+      if(currentWidth<1500) {
+        this.searchWidth = 'width:75%'
+      } else {
+        this.searchWidth = 'width:81%'
+      }
+    },
     model: {
       prop: 'value',
       event: 'change'
@@ -75,7 +84,7 @@
     methods: {
       initComp(name) {
         if(this.kind === 'material') {
-          this.names = name?name:'请输入条码或名称'
+          this.names = name?name:'输入条码或名称'
         } else {
           this.names = name
         }
