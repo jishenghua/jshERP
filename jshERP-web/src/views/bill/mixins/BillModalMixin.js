@@ -18,6 +18,7 @@ export const BillModalMixin = {
         options: [],
         value: ''
       },
+      currentSelectDepotId: '',
       depotList: [],
       accountList: [],
       accountIdList: [],
@@ -337,20 +338,25 @@ export const BillModalMixin = {
     onAdded(event) {
       const { row, target } = event
       target.setValues([{rowKey: row.id, values: {operNumber:0}}])
-      getAction('/depot/findDepotByCurrentUser').then((res) => {
-        if (res.code === 200) {
-          let arr = res.data
-          if(arr.length===1) {
-            target.setValues([{rowKey: row.id, values: {depotId: arr[0].id+''}}])
-          } else {
-            for (let i = 0; i < arr.length; i++) {
-              if(arr[i].isDefault){
-                target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+      if(this.currentSelectDepotId) {
+        //如果单据选择过仓库，则直接从当前选择的仓库加载
+        target.setValues([{rowKey: row.id, values: {depotId: this.currentSelectDepotId}}])
+      } else {
+        getAction('/depot/findDepotByCurrentUser').then((res) => {
+          if (res.code === 200) {
+            let arr = res.data
+            if(arr.length===1) {
+              target.setValues([{rowKey: row.id, values: {depotId: arr[0].id+''}}])
+            } else {
+              for (let i = 0; i < arr.length; i++) {
+                if(arr[i].isDefault){
+                  target.setValues([{rowKey: row.id, values: {depotId: arr[i].id+''}}])
+                }
               }
             }
           }
-        }
-      })
+        })
+      }
     },
     //单元值改变一个字符就触发一次
     onValueChange(event) {
@@ -359,6 +365,7 @@ export const BillModalMixin = {
       let param,snList,batchNumber,operNumber,unitPrice,allPrice,taxRate,taxMoney,taxLastMoney
       switch(column.key) {
         case "depotId":
+          that.currentSelectDepotId = row.depotId
           if(row.barCode){
             that.getStockByDepotBarCode(row, target)
           }

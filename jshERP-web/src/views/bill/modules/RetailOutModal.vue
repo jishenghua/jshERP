@@ -282,6 +282,7 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         this.billStatus = '0'
+        this.currentSelectDepotId = ''
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)

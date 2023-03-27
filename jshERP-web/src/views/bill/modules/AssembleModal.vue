@@ -184,6 +184,7 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         this.billStatus = '0'
+        this.currentSelectDepotId = ''
         this.changeColumnHide()
         if (this.action === 'add') {
           this.addInit(this.prefixNo)

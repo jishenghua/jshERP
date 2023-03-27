@@ -295,6 +295,7 @@
       //调用完edit()方法之后会自动调用此方法
       editAfter() {
         this.billStatus = '0'
+        this.currentSelectDepotId = ''
         this.rowCanEdit = true
         this.materialTable.columns[1].type = FormTypes.popupJsh
         this.changeColumnHide()
