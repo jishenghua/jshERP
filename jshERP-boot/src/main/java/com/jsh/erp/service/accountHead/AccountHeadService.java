@@ -144,6 +144,10 @@ public class AccountHeadService {
     private String[] getCreatorArray(String roleType) throws Exception {
         String creator = "";
         User user = userService.getCurrentUser();
+        //再从后端获取一次角色类型，防止前端关闭了缓存功能
+        if(StringUtil.isEmpty(roleType)) {
+            roleType = userService.getRoleTypeByUserId(user.getId()).getType(); //角色类型
+        }
         if(BusinessConstants.ROLE_TYPE_PRIVATE.equals(roleType)) {
             creator = user.getId().toString();
         } else if(BusinessConstants.ROLE_TYPE_THIS_ORG.equals(roleType)) {
