@@ -194,6 +194,9 @@ public class InOutItemService {
         } else if (type.equals("out")) {
             example.createCriteria().andTypeEqualTo("支出").andEnabledEqualTo(true)
                     .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        } else {
+            example.createCriteria().andEnabledEqualTo(true)
+                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         }
         example.setOrderByClause("sort asc, id desc");
         List<InOutItem> list = null;
