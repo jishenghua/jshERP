@@ -24,15 +24,38 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </span>
               </a-col>
-              <a-col :md="8" :sm="24">
+              <a-col :md="6" :sm="24">
+                <a-form-item>
+                  <span>实际零售金额：{{realityPriceTotal}}</span>
+                </a-form-item>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select
+                      optionFilterProp="children"
+                      :dropdownMatchSelectWidth="false"
+                      showSearch allow-clear style="width: 100%"
+                      placeholder="请选择仓库"
+                      v-model="queryParam.depotId">
+                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id" :key="index">
+                        {{ depot.depotName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form>
         </div>
@@ -77,6 +100,7 @@
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import {getAction} from '@/api/manage'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -99,6 +123,7 @@
           materialParam:'',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
+          depotId: '',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
           roleType: Vue.ls.get('roleType'),
         },
@@ -109,6 +134,8 @@
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
         defaultTimeStr: '',
+        depotList: [],
+        realityPriceTotal: '',
         tabKey: "1",
         // 表头
         columns: [
@@ -136,6 +163,7 @@
       }
     },
     created () {
+      this.getDepotData()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
@@ -157,6 +185,35 @@
         console.log(dateString[0],dateString[1]);
         this.queryParam.beginTime=dateString[0];
         this.queryParam.endTime=dateString[1];
+      },
+      loadData(arg) {
+        //加载数据 若传入参数1则加载第一页的内容
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        let params = this.getQueryParams();//查询条件
+        this.loading = true;
+        getAction(this.url.list, params).then((res) => {
+          if (res.code===200) {
+            this.dataSource = res.data.rows;
+            this.ipagination.total = res.data.total;
+            this.tableAddTotalRow(this.columns, this.dataSource)
+            this.realityPriceTotal = res.data.realityPriceTotal
+          }
+          if(res.code===510){
+            this.$message.warning(res.data)
+          }
+          this.loading = false;
+        })
+      },
+      getDepotData() {
+        getAction('/depot/findDepotByCurrentUser').then((res)=>{
+          if(res.code === 200){
+            this.depotList = res.data;
+          }else{
+            this.$message.info(res.data);
+          }
+        })
       },
       searchQuery() {
         if(this.queryParam.beginTime == '' || this.queryParam.endTime == ''){
