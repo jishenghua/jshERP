@@ -841,9 +841,9 @@
     </select>
 
     <select id="getBatchNumberList" resultMap="batchNumberListMap">
-        select id, bar_code, name, standard, model, batch_number, expiration_date, sum(oper_number) total_num  from
+        select id, bar_code, name, standard, model, batch_number, expiration_date, sum(basic_number) total_num from
         (select di.batch_number id, me.bar_code, m.name, m.standard, m.model,di.batch_number,di.expiration_date,
-        di.oper_number*(case dh.type when '入库' then 1 when '出库' then -1 end) as oper_number
+        di.basic_number*(case dh.type when '入库' then 1 when '出库' then -1 end) as basic_number
         from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag, '0') != '1'
