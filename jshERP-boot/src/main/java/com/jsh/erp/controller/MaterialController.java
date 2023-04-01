@@ -234,14 +234,14 @@ public class MaterialController {
                         if(commodityUnit.equals(unit.getBasicUnit())) {
                             ratioStr = "[基本]";
                         }
-                        if(commodityUnit.equals(unit.getOtherUnit())) {
-                            ratioStr = "[" + unit.getRatio() + unit.getBasicUnit() + "]";
+                        if(commodityUnit.equals(unit.getOtherUnit()) && unit.getRatio()!=null) {
+                            ratioStr = "[" + unit.getRatio().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
                         }
-                        if(commodityUnit.equals(unit.getOtherUnitTwo())) {
-                            ratioStr = "[" + unit.getRatioTwo() + unit.getBasicUnit() + "]";
+                        if(commodityUnit.equals(unit.getOtherUnitTwo()) && unit.getRatioTwo()!=null) {
+                            ratioStr = "[" + unit.getRatioTwo().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
                         }
-                        if(commodityUnit.equals(unit.getOtherUnitThree())) {
-                            ratioStr = "[" + unit.getRatioThree() + unit.getBasicUnit() + "]";
+                        if(commodityUnit.equals(unit.getOtherUnitThree()) && unit.getRatioThree()!=null) {
+                            ratioStr = "[" + unit.getRatioThree().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
                         }
                     }
                     item.put("mBarCode", material.getmBarCode());
