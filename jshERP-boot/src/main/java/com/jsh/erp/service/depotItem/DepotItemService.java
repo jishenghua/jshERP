@@ -13,14 +13,14 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
+import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -31,7 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class DepotItemService {
@@ -65,7 +68,7 @@ public class DepotItemService {
     @Resource
     private DepotService depotService;
     @Resource
-    private RoleService roleService;
+    private UnitService unitService;
     @Resource
     private MaterialCurrentStockMapper materialCurrentStockMapper;
     @Resource
@@ -1087,8 +1090,21 @@ public class DepotItemService {
         return count;
     }
 
-    public List<DepotItemVoBatchNumberList> getBatchNumberList(String number, String name, Long depotId, String barCode, String batchNumber){
-        return depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
+    public List<DepotItemVoBatchNumberList> getBatchNumberList(String number, String name, Long depotId, String barCode, String batchNumber) throws Exception {
+        List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
+        List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
+        for(DepotItemVoBatchNumberList bn: list) {
+            if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
+                bn.setExpirationDateStr(Tools.parseDateToStr(bn.getExpirationDate()));
+                if(bn.getUnitId()!=null) {
+                    Unit unit = unitService.getUnit(bn.getUnitId());
+                    String commodityUnit = bn.getCommodityUnit();
+                    bn.setTotalNum(unitService.parseStockByUnit(bn.getTotalNum(), unit, commodityUnit));
+                }
+                reslist.add(bn);
+            }
+        }
+        return reslist;
     }
 
     public Long getCountByMaterialAndDepot(Long mId, Long depotId) {

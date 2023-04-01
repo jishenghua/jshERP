@@ -11,6 +11,8 @@ public class DepotItemVoBatchNumberList {
     private String name;
     private String standard;
     private String model;
+    private Long unitId;
+    private String commodityUnit;
     private String batchNumber;
     private Date expirationDate;
     private String expirationDateStr;
@@ -54,6 +56,22 @@ public class DepotItemVoBatchNumberList {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public Long getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(Long unitId) {
+        this.unitId = unitId;
+    }
+
+    public String getCommodityUnit() {
+        return commodityUnit;
+    }
+
+    public void setCommodityUnit(String commodityUnit) {
+        this.commodityUnit = commodityUnit;
     }
 
     public String getBatchNumber() {

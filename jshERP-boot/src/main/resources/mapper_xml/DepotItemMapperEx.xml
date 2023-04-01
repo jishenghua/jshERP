@@ -88,6 +88,8 @@
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
         <result column="model" jdbcType="VARCHAR" property="model" />
+        <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+        <result column="commodity_unit" jdbcType="VARCHAR" property="commodityUnit" />
         <result column="batch_number" jdbcType="VARCHAR" property="batchNumber" />
         <result column="expiration_date" jdbcType="TIMESTAMP" property="expirationDate" />
         <result column="total_num" jdbcType="VARCHAR" property="totalNum" />
@@ -841,14 +843,16 @@
     </select>
 
     <select id="getBatchNumberList" resultMap="batchNumberListMap">
-        select id, bar_code, name, standard, model, batch_number, expiration_date, sum(basic_number) total_num from
-        (select di.batch_number id, me.bar_code, m.name, m.standard, m.model,di.batch_number,di.expiration_date,
-        di.basic_number*(case dh.type when '入库' then 1 when '出库' then -1 end) as basic_number
+        select id, bar_code, name, standard, model, unit_id,
+        commodity_unit, batch_number, expiration_date, sum(basic_number) total_num from
+        (select di.batch_number id, me.bar_code, m.name, m.standard, m.model, m.unit_id,
+         me.commodity_unit, di.batch_number,di.expiration_date,
+         di.basic_number*(case dh.type when '入库' then 1 when '出库' then -1 end) as basic_number
         from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag, '0') != '1'
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_flag,'0') !='1'
-        where me.bar_code= #{barCode} and me.default_flag=1
+        where me.bar_code= #{barCode}
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
             and di.batch_number like #{bindName}

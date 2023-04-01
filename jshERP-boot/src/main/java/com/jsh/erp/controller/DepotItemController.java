@@ -845,16 +845,9 @@ public class DepotItemController {
                 DepotItem depotItem = depotItemService.getDepotItem(depotItemId);
                 number = depotHeadService.getDepotHead(depotItem.getHeaderId()).getNumber();
             }
-            List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
             List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(number, name, depotId, barCode, batchNumber);
-            for(DepotItemVoBatchNumberList bn: list) {
-                if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
-                    reslist.add(bn);
-                }
-                bn.setExpirationDateStr(Tools.parseDateToStr(bn.getExpirationDate()));
-            }
-            map.put("rows", reslist);
-            map.put("total", reslist.size());
+            map.put("rows", list);
+            map.put("total", list.size());
             res.code = 200;
             res.data = map;
         } catch (Exception e) {
