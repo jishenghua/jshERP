@@ -97,6 +97,12 @@ public class BusinessConstants {
     public static final String SUB_TYPE_ASSEMBLE = "组装单";
     public static final String SUB_TYPE_DISASSEMBLE = "拆卸单";
     /**
+     * 财务单据分类
+     * 收款、付款
+     * */
+    public static final String TYPE_MONEY_IN = "收款";
+    public static final String TYPE_MONEY_OUT = "付款";
+    /**
      * 批量插入sql时最大的数据条数
      * */
     public static final int BATCH_INSERT_MAX_NUMBER = 500;

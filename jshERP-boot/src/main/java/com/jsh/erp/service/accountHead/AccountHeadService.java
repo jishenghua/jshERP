@@ -102,10 +102,22 @@ public class AccountHeadService {
             if (null != list) {
                 for (AccountHeadVo4ListEx ah : list) {
                     if(ah.getChangeAmount() != null) {
-                        ah.setChangeAmount(ah.getChangeAmount().abs());
+                        if(BusinessConstants.TYPE_MONEY_IN.equals(ah.getType())) {
+                            ah.setChangeAmount(ah.getChangeAmount());
+                        } else if(BusinessConstants.TYPE_MONEY_OUT.equals(ah.getType())) {
+                            ah.setChangeAmount(BigDecimal.ZERO.subtract(ah.getChangeAmount()));
+                        } else {
+                            ah.setChangeAmount(ah.getChangeAmount().abs());
+                        }
                     }
                     if(ah.getTotalPrice() != null) {
-                        ah.setTotalPrice(ah.getTotalPrice().abs());
+                        if(BusinessConstants.TYPE_MONEY_IN.equals(ah.getType())) {
+                            ah.setTotalPrice(ah.getTotalPrice());
+                        } else if(BusinessConstants.TYPE_MONEY_OUT.equals(ah.getType())) {
+                            ah.setTotalPrice(BigDecimal.ZERO.subtract(ah.getTotalPrice()));
+                        } else {
+                            ah.setTotalPrice(ah.getTotalPrice().abs());
+                        }
                     }
                     if(ah.getBillTime() !=null) {
                         ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
@@ -340,66 +352,6 @@ public class AccountHeadService {
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillNo()).toString(), request);
     }
 
-    public BigDecimal findAllMoney(Integer supplierId, String type, String mode, String endTime) {
-        String modeName = "";
-        if (mode.equals("实际")) {
-            modeName = "change_amount";
-        } else if (mode.equals("合计")) {
-            modeName = "total_price";
-        }
-        BigDecimal result = null;
-        try{
-            result = accountHeadMapperEx.findAllMoney(supplierId, type, modeName, endTime);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
-    }
-
-    /**
-     * 统计总金额
-     * @param getS
-     * @param type
-     * @param mode 合计或者金额
-     * @param endTime
-     * @return
-     */
-    public BigDecimal allMoney(String getS, String type, String mode, String endTime) {
-        BigDecimal allMoney = BigDecimal.ZERO;
-        try {
-            Integer supplierId = Integer.valueOf(getS);
-            BigDecimal sum = findAllMoney(supplierId, type, mode, endTime);
-            if(sum != null) {
-                allMoney = sum;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //返回正数，如果负数也转为正数
-        if ((allMoney.compareTo(BigDecimal.ZERO))==-1) {
-            allMoney = allMoney.abs();
-        }
-        return allMoney;
-    }
-
-    /**
-     * 查询往来单位的累计应收和累计应付，只计入收款或付款
-     * @param supplierId
-     * @param endTime
-     * @param supType
-     * @return
-     */
-    public BigDecimal findTotalPay(Integer supplierId, String endTime, String supType) {
-        BigDecimal sum = BigDecimal.ZERO;
-        String getS = supplierId.toString();
-        if (("客户").equals(supType)) { //客户
-            sum = allMoney(getS, "收款", "合计",endTime);
-        } else if (("供应商").equals(supType)) { //供应商
-            sum = allMoney(getS, "付款", "合计",endTime);
-        }
-        return sum;
-    }
-
     public List<AccountHeadVo4ListEx> getDetailByNumber(String billNo)throws Exception {
         List<AccountHeadVo4ListEx> resList = new ArrayList<AccountHeadVo4ListEx>();
         List<AccountHeadVo4ListEx> list = null;
@@ -411,10 +363,22 @@ public class AccountHeadService {
         if (null != list) {
             for (AccountHeadVo4ListEx ah : list) {
                 if(ah.getChangeAmount() != null) {
-                    ah.setChangeAmount(ah.getChangeAmount().abs());
+                    if(BusinessConstants.TYPE_MONEY_IN.equals(ah.getType())) {
+                        ah.setChangeAmount(ah.getChangeAmount());
+                    } else if(BusinessConstants.TYPE_MONEY_OUT.equals(ah.getType())) {
+                        ah.setChangeAmount(BigDecimal.ZERO.subtract(ah.getChangeAmount()));
+                    } else {
+                        ah.setChangeAmount(ah.getChangeAmount().abs());
+                    }
                 }
                 if(ah.getTotalPrice() != null) {
-                    ah.setTotalPrice(ah.getTotalPrice().abs());
+                    if(BusinessConstants.TYPE_MONEY_IN.equals(ah.getType())) {
+                        ah.setTotalPrice(ah.getTotalPrice());
+                    } else if(BusinessConstants.TYPE_MONEY_OUT.equals(ah.getType())) {
+                        ah.setTotalPrice(BigDecimal.ZERO.subtract(ah.getTotalPrice()));
+                    } else {
+                        ah.setTotalPrice(ah.getTotalPrice().abs());
+                    }
                 }
                 if(ah.getBillTime() !=null) {
                     ah.setBillTimeStr(getCenternTime(ah.getBillTime()));

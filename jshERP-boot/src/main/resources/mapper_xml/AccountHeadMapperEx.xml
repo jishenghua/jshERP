@@ -133,13 +133,6 @@
         and ifnull(ah.delete_flag,'0') !='1') tb
     </select>
 
-    <select id="findAllMoney" resultType="java.math.BigDecimal">
-        select sum(${modeName}) as allMoney from jsh_account_head
-        where type=#{type}
-        and organ_id =#{supplierId} and bill_time &lt;= #{endTime}
-        and ifnull(delete_flag,'0') !='1'
-    </select>
-
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
         select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
         from jsh_account_head ah

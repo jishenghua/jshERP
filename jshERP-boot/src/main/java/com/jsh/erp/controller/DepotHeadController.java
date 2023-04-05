@@ -531,14 +531,11 @@ public class DepotHeadController {
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        String type = StringUtil.getInfo(search, "type");
-        String subType = StringUtil.getInfo(search, "subType");
         String roleType = StringUtil.getInfo(search, "roleType");
         String status = StringUtil.getInfo(search, "status");
-        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime, type,
-                subType, roleType, status, (currentPage-1)*pageSize, pageSize);
-        int total = depotHeadService.debtListCount(organId, materialParam, number, beginTime, endTime, type,
-                subType, roleType, status);
+        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime, roleType,
+                status, (currentPage-1)*pageSize, pageSize);
+        int total = depotHeadService.debtListCount(organId, materialParam, number, beginTime, endTime, roleType, status);
         if (list != null) {
             objectMap.put("rows", list);
             objectMap.put("total", total);

@@ -42,12 +42,6 @@ public interface AccountHeadMapperEx {
             @Param("remark") String remark,
             @Param("number") String number);
 
-    BigDecimal findAllMoney(
-            @Param("supplierId") Integer supplierId,
-            @Param("type") String type,
-            @Param("modeName") String modeName,
-            @Param("endTime") String endTime);
-
     List<AccountHeadVo4ListEx> getDetailByNumber(
             @Param("billNo") String billNo);
 

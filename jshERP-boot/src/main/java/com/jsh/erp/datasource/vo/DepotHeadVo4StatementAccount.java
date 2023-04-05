@@ -54,7 +54,7 @@ public class DepotHeadVo4StatementAccount {
     private BigDecimal returnDebtMoney;
 
     /**
-     * 本期收款
+     * 本期收付款
      */
     private BigDecimal backMoney;
 

@@ -2,7 +2,9 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.vo.AccountItemVo4List;
+import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.StringUtil;
@@ -35,15 +37,20 @@ public class AccountItemController {
     @Resource
     private AccountItemService accountItemService;
 
+    @Resource
+    private AccountHeadService accountHeadService;
+
     @GetMapping(value = "/getDetailList")
     @ApiOperation(value = "明细列表")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
                                           HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
+            String type = null;
             List<AccountItemVo4List> dataList = new ArrayList<>();
             if(headerId != 0) {
                 dataList = accountItemService.getDetailList(headerId);
+                type = accountHeadService.getAccountHead(headerId).getType();
             }
             JSONObject outer = new JSONObject();
             outer.put("total", dataList.size());
@@ -64,7 +71,13 @@ public class AccountItemController {
                     item.put("needDebt", ai.getNeedDebt());
                     item.put("finishDebt", ai.getFinishDebt());
                     BigDecimal eachAmount = ai.getEachAmount();
-                    item.put("eachAmount", (eachAmount.compareTo(BigDecimal.ZERO))==-1 ? BigDecimal.ZERO.subtract(eachAmount): eachAmount);
+                    if(BusinessConstants.TYPE_MONEY_IN.equals(type)) {
+                        item.put("eachAmount", eachAmount);
+                    } else if(BusinessConstants.TYPE_MONEY_OUT.equals(type)) {
+                        item.put("eachAmount", BigDecimal.ZERO.subtract(eachAmount));
+                    } else {
+                        item.put("eachAmount", (eachAmount.compareTo(BigDecimal.ZERO))==-1 ? BigDecimal.ZERO.subtract(eachAmount): eachAmount);
+                    }
                     item.put("remark", ai.getRemark());
                     dataArray.add(item);
                 }

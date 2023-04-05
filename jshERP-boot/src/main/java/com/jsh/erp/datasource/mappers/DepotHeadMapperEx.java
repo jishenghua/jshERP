@@ -179,25 +179,6 @@ public interface DepotHeadMapperEx {
             @Param("subTypeBack") String subTypeBack,
             @Param("billType") String billType);
 
-    BigDecimal findAllMoney(
-            @Param("supplierId") Integer supplierId,
-            @Param("type") String type,
-            @Param("subType") String subType,
-            @Param("modeName") String modeName,
-            @Param("endTime") String endTime);
-
-    BigDecimal findAllOtherMoney(
-            @Param("supplierId") Integer supplierId,
-            @Param("type") String type,
-            @Param("subType") String subType,
-            @Param("endTime") String endTime);
-
-    BigDecimal findDepositMoney(
-            @Param("supplierId") Integer supplierId,
-            @Param("type") String type,
-            @Param("subType") String subType,
-            @Param("endTime") String endTime);
-
     List<DepotHeadVo4List> getDetailByNumber(
             @Param("number") String number);
 
@@ -228,8 +209,6 @@ public interface DepotHeadMapperEx {
 
     List<DepotHeadVo4List> debtList(
             @Param("organId") Long organId,
-            @Param("type") String type,
-            @Param("subType") String subType,
             @Param("creatorArray") String[] creatorArray,
             @Param("status") String status,
             @Param("number") String number,
@@ -242,8 +221,6 @@ public interface DepotHeadMapperEx {
 
     int debtListCount(
             @Param("organId") Long organId,
-            @Param("type") String type,
-            @Param("subType") String subType,
             @Param("creatorArray") String[] creatorArray,
             @Param("status") String status,
             @Param("number") String number,
