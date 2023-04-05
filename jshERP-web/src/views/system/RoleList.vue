@@ -65,6 +65,19 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <span slot="typeTitle">
+              数据类型
+              <a-tooltip title="1、全部数据-该角色对应的用户可以看到全部单据；2、本机构数据-该角色对应的用户可以看到自己所在机构的全部单据；
+                3、个人数据-该角色对应的用户只可以看到自己的单据。单据是指采购入库、销售出库等">
+                <a-icon type="question-circle" />
+              </a-tooltip>
+            </span>
+            <span slot="priceLimitTitle">
+              价格屏蔽
+              <a-tooltip title="价格屏蔽支持多选，主要用于控制首页界面和物料的价格屏蔽">
+                <a-icon type="question-circle" />
+              </a-tooltip>
+            </span>
             <!-- 状态渲染模板 -->
             <template slot="customRenderFlag" slot-scope="enabled">
               <a-tag v-if="enabled" color="green">启用</a-tag>
@@ -140,10 +153,12 @@
             title: '角色名称', align:"left", dataIndex: 'name', width: 120
           },
           {
-            title: '数据类型', align:"left", dataIndex: 'type', width: 100
+            align:"left", dataIndex: 'type', width: 100,
+            slots: { title: 'typeTitle' }
           },
           {
-            title: '价格屏蔽', align:"left", dataIndex: 'priceLimitStr', width: 100
+            align:"left", dataIndex: 'priceLimitStr', width: 100,
+            slots: { title: 'priceLimitTitle' }
           },
           {
             title: '备注', align:"left", dataIndex: 'description', width: 150
