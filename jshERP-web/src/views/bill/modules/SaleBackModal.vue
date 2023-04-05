@@ -139,7 +139,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="本次退款">
-              <a-input placeholder="请输入本次退款" v-decorator.trim="[ 'changeAmount' ]" @change="onChangeChangeAmount" :readOnly="backStatus"/>
+              <a-input placeholder="请输入本次退款" v-decorator.trim="[ 'changeAmount' ]" @change="onChangeChangeAmount"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -217,7 +217,6 @@
         prefixNo: 'XSTH',
         fileList:[],
         rowCanEdit: true,
-        backStatus: true,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -308,14 +307,10 @@
           this.addInit(this.prefixNo)
           this.personList.value = ''
           this.fileList = []
-          this.backStatus = true
         } else {
           if(this.model.linkNumber) {
             this.rowCanEdit = false
             this.materialTable.columns[1].type = FormTypes.normal
-            this.backStatus = false
-          } else {
-            this.backStatus = true
           }
           this.model.operTime = this.model.operTimeStr
           this.model.debt = (this.model.discountLastMoney + this.model.otherMoney - this.model.changeAmount).toFixed(2)
@@ -394,7 +389,6 @@
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
-        this.backStatus = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)

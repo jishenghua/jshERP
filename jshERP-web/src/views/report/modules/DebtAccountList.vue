@@ -131,9 +131,6 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
           { title: '操作员', dataIndex: 'userName',width:60, ellipsis:true},
           { title: '本单欠款', dataIndex: 'needDebt',width:70},
-          { dataIndex: 'realNeedDebt',width:80,
-            slots: { title: 'customTitle' }
-          },
           { title: '已收欠款', dataIndex: 'finishDebt',width:70},
           { title: '待收欠款', dataIndex: 'debt',width:70}
         ],
@@ -159,11 +156,11 @@
         this.queryParam.endTime = endTime
         this.columns[2].title = organType
         if(type === '入库') {
-          this.columns[8].title = '已付欠款'
-          this.columns[9].title = '待付欠款'
+          this.columns[7].title = '已付欠款'
+          this.columns[8].title = '待付欠款'
         } else if(type === '出库') {
-          this.columns[8].title = '已收欠款'
-          this.columns[9].title = '待收欠款'
+          this.columns[7].title = '已收欠款'
+          this.columns[8].title = '待收欠款'
         }
         this.model = Object.assign({}, {});
         this.visible = true;
@@ -190,10 +187,10 @@
         console.log(value);
       },
       exportExcel() {
-        let aoa = [['单据编号', this.columns[2].title, '商品信息', '单据日期', '操作员', '本单欠款', '实际欠款', '已收欠款', '待收欠款']]
+        let aoa = [['单据编号', this.columns[2].title, '商品信息', '单据日期', '操作员', '本单欠款', '已收欠款', '待收欠款']]
         for (let i = 0; i < this.dataSource.length; i++) {
           let ds = this.dataSource[i]
-          let item = [ds.number, ds.organName, ds.materialsList, ds.operTimeStr, ds.userName, ds.needDebt, ds.realNeedDebt, ds.finishDebt, ds.debt]
+          let item = [ds.number, ds.organName, ds.materialsList, ds.operTimeStr, ds.userName, ds.needDebt, ds.finishDebt, ds.debt]
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '欠款详情')

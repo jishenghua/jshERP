@@ -282,7 +282,7 @@
         let organId = this.form.getFieldValue('organId')
         if(organId){
           this.$refs.debtBillList.show(organId, '入库', '采购', '供应商', "")
-          this.$refs.debtBillList.title = "选择采购入库欠款单据"
+          this.$refs.debtBillList.title = "选择采购欠款单据"
         } else {
           this.$message.warning('请选择供应商！');
         }

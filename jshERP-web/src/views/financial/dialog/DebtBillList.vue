@@ -65,12 +65,6 @@
         <span slot="numberCustomRender" slot-scope="text, record">
           <a @click="myHandleDetail(record)">{{record.number}}</a>
         </span>
-        <span slot="customTitle">
-          实际欠款
-          <a-tooltip title="实际欠款=本单欠款-退货单欠款（主要针对存在退货的情况）">
-            <a-icon type="question-circle" />
-          </a-tooltip>
-        </span>
       </a-table>
       <!-- table区域-end -->
       <!-- 表单区域 -->
@@ -134,9 +128,6 @@
           { title: '单据日期', dataIndex: 'operTimeStr',width:130},
           { title: '操作员', dataIndex: 'userName',width:70, ellipsis:true},
           { title: '本单欠款', dataIndex: 'needDebt',width:70 },
-          { dataIndex: 'realNeedDebt',width:80,
-            slots: { title: 'customTitle' }
-          },
           { title: '已收欠款', dataIndex: 'finishDebt',width:70 },
           { title: '待收欠款', dataIndex: 'debt',width:70 }
         ],
@@ -160,11 +151,11 @@
         this.queryParam.status = status
         this.columns[0].title = organType
         if(type === '入库') {
-          this.columns[7].title = '已付欠款'
-          this.columns[8].title = '待付欠款'
+          this.columns[6].title = '已付欠款'
+          this.columns[7].title = '待付欠款'
         } else if(type === '出库') {
-          this.columns[7].title = '已收欠款'
-          this.columns[8].title = '待收欠款'
+          this.columns[6].title = '已收欠款'
+          this.columns[7].title = '待收欠款'
         }
         this.model = Object.assign({}, {});
         this.visible = true;

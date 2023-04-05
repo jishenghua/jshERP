@@ -250,7 +250,7 @@ export const FinancialModalMixin = {
       for(let i=0; i<selectBillRows.length; i++){
         let info = selectBillRows[i]
         info.billNumber = info.number
-        info.needDebt = info.realNeedDebt
+        info.needDebt = info.needDebt
         info.eachAmount = info.debt
         if(info.eachAmount != 0) {
           changeAmount += info.eachAmount-0
@@ -279,7 +279,7 @@ export const FinancialModalMixin = {
             info.billNumber = 'QiChu'
             getAction('/supplier/getBeginNeedByOrganId', {'organId': organId}).then((res)=>{
               if(res.code === 200){
-                info.needDebt = res.data.needDebt
+                info.needDebt = res.data.needDebt?res.data.needDebt:0
                 info.finishDebt = res.data.finishDebt
                 info.eachAmount = res.data.eachAmount
                 listEx.push(info)
