@@ -568,6 +568,8 @@ public class MaterialService {
                 String enabled = ExcelUtils.getContent(src, i, 16); //状态
                 String enableSerialNumber = ExcelUtils.getContent(src, i, 17); //序列号
                 String enableBatchNumber = ExcelUtils.getContent(src, i, 18); //批号
+                String remark = ExcelUtils.getContent(src, i, 19); //备注
+                m.setRemark(remark);
                 //状态格式错误
                 if(!"1".equals(enabled) && !"0".equals(enabled)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ENABLED_ERROR_CODE,
@@ -748,7 +750,7 @@ public class MaterialService {
     private Map<Long, BigDecimal> getStockMapCache(Sheet src, int depotCount, Map<String, Long> depotMap, int i) throws Exception {
         Map<Long, BigDecimal> stockMap = new HashMap<>();
         for(int j = 1; j<= depotCount; j++) {
-            int col = 18+j;
+            int col = 19 + j;
             if(col < src.getColumns()){
                 String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                 if(StringUtil.isNotEmpty(depotName)) {
