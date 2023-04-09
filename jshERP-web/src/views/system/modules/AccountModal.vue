@@ -25,7 +25,7 @@
             <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
-            <a-input placeholder="请输入编号" v-decorator.trim="[ 'serialNo', validatorRules.serialNo]" />
+            <a-input placeholder="请输入编号" v-decorator.trim="[ 'serialNo' ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初金额">
             <a-input placeholder="请输入期初金额" v-decorator.trim="[ 'initialAmount' ]" />
@@ -74,11 +74,6 @@
               { required: true, message: '请输入名称!' },
               { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
               { validator: this.validateAccountName}
-            ]},
-          serialNo:{
-            rules: [
-              { required: true, message: '请输入编号!' },
-              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
             ]
           }
         },
