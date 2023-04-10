@@ -321,10 +321,10 @@ public class DepotItemService {
     }
 
     public List<DepotItemVo4WithInfoEx> getListWithBugOrSale(String materialParam, String billType,
-                     String beginTime, String endTime, String[] creatorArray, String [] organArray, List<Long> depotList, Boolean forceFlag, Integer offset, Integer rows)throws Exception {
+                     String beginTime, String endTime, String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, creatorArray, organArray, depotList, forceFlag, offset, rows);
+            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -332,10 +332,10 @@ public class DepotItemService {
     }
 
     public int getListWithBugOrSaleCount(String materialParam, String billType,
-                     String beginTime, String endTime, String[] creatorArray, String [] organArray, List<Long> depotList, Boolean forceFlag)throws Exception {
+                     String beginTime, String endTime, String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray, organArray, depotList, forceFlag);
+            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -343,13 +343,13 @@ public class DepotItemService {
     }
 
     public BigDecimal buyOrSale(String type, String subType, Long MId, String beginTime, String endTime,
-                                String[] creatorArray, String [] organArray, List<Long> depotList, Boolean forceFlag, String sumType) throws Exception{
+                                String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
             if (SUM_TYPE.equals(sumType)) {
-                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, creatorArray, organArray, depotList, forceFlag, sumType);
+                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, sumType);
             } else {
-                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, creatorArray, organArray, depotList, forceFlag, sumType);
+                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, sumType);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);

@@ -390,6 +390,9 @@
             </foreach>
             )
         </if>
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
+        </if>
         <if test="organArray != null and organArray !=''">
             and dh.organ_id in (
             <foreach collection="organArray" item="organId" separator=",">
@@ -444,6 +447,9 @@
             </foreach>
             )
         </if>
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
+        </if>
         <if test="organArray != null and organArray !=''">
             and dh.organ_id in (
             <foreach collection="organArray" item="organId" separator=",">
@@ -477,6 +483,9 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
         </if>
         <if test="organArray != null and organArray !=''">
             and dh.organ_id in (
@@ -513,6 +522,9 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
         </if>
         <if test="organArray != null and organArray !=''">
             and dh.organ_id in (
