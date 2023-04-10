@@ -42,6 +42,16 @@
               </a-col>
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择客户" v-model="queryParam.organId"
+                              :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
+                      <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
+                        {{ item.supplier }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select
                       optionFilterProp="children"
@@ -101,6 +111,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
+  import {findBySelectCus} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -123,6 +134,8 @@
           materialParam:'',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
+          organId: '',
+          depotId: '',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
           roleType: Vue.ls.get('roleType'),
         },
@@ -133,6 +146,7 @@
         dateFormat: 'YYYY-MM-DD',
         currentDay: moment().format('YYYY-MM-DD'),
         defaultTimeStr: '',
+        cusList: [],
         depotList: [],
         realityPriceTotal: '',
         tabKey: "1",
@@ -162,6 +176,7 @@
       }
     },
     created () {
+      this.initCustomer()
       this.getDepotData()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
@@ -204,6 +219,14 @@
           }
           this.loading = false;
         })
+      },
+      initCustomer() {
+        let that = this;
+        findBySelectCus({}).then((res)=>{
+          if(res) {
+            that.cusList = res
+          }
+        });
       },
       getDepotData() {
         getAction('/depot/findDepotByCurrentUser').then((res)=>{
