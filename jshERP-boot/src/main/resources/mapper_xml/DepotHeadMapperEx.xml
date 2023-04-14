@@ -835,6 +835,7 @@
         </foreach>
         )
     </update>
+
     <select id="getDepotHeadListByAccountIds" resultMap="com.jsh.erp.datasource.mappers.DepotHeadMapper.BaseResultMap">
         select
         <include refid="com.jsh.erp.datasource.mappers.DepotHeadMapper.Base_Column_List" />
@@ -1070,4 +1071,10 @@
         and dh.number!=#{number}
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
+
+    <update id="setAccountIdToNull">
+        update jsh_depot_head dh set dh.account_id = null
+        where dh.id=#{id}
+        and ifnull(dh.delete_flag,'0') !='1'
+    </update>
 </mapper>

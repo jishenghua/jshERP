@@ -987,6 +987,10 @@ public class DepotHeadService {
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
+        //如果存在多账户结算需要将原账户的id置空
+        if(StringUtil.isNotEmpty(depotHead.getAccountIdList())) {
+            depotHeadMapperEx.setAccountIdToNull(depotHead.getId());
+        }
         /**入库和出库处理预付款信息*/
         if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())){
             if(depotHead.getOrganId()!=null){

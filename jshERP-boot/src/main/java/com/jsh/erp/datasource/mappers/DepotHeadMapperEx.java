@@ -235,4 +235,7 @@ public interface DepotHeadMapperEx {
     BigDecimal getFinishDepositByNumberExceptCurrent(
             @Param("linkNumber") String linkNumber,
             @Param("number") String number);
+
+    void setAccountIdToNull(
+            @Param("id") Long id);
 }
