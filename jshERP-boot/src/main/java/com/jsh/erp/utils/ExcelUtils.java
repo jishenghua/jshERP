@@ -1,10 +1,14 @@
 package com.jsh.erp.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import jxl.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import jxl.format.*;
 import jxl.write.Label;
@@ -13,9 +17,24 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
+@Slf4j
 public class ExcelUtils {
 
 	public static WritableFont arial14font = null;
+
+	public static InputStream getPathByFileName(String template, String tmpFileName) {
+		File tmpFile = new File(template, tmpFileName);
+		InputStream path = null;
+		//判断文件或文件夹是否存在
+		if (tmpFile.exists()) {
+			try {
+				path = new FileInputStream(tmpFile);
+			} catch (FileNotFoundException e) {
+				log.error("", e);
+			}
+		}
+		return path;
+	}
 
 	public static File exportObjects(String fileName, String[] names,
 			String title, List<String[]> objects) throws Exception {
