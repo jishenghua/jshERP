@@ -10,7 +10,10 @@ import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.unit.UnitService;
-import com.jsh.erp.utils.*;
+import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.ExcelUtils;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -52,18 +55,6 @@ public class MaterialController {
 
     @Resource
     private DepotService depotService;
-
-    @Resource
-    private RedisService redisService;
-
-    @Value("${server.tomcat.basedir}")
-    private String basedir;
-
-    @Value("${template.path}")
-    private String templatePath;
-
-    @Value("${export.mode}")
-    private Integer exportMode;
 
     /**
      * 检查商品是否存在
@@ -363,54 +354,9 @@ public class MaterialController {
                             @RequestParam(value = "mpList", required = false) String mpList,
                             HttpServletRequest request, HttpServletResponse response) {
         try {
-            String[] mpArr = new String[]{};
-            if(StringUtil.isNotEmpty(mpList)){
-                mpArr= mpList.split(",");
-            }
-            List<MaterialVo4Unit> dataList = materialService.exportExcel(StringUtil.toNull(materialParam), StringUtil.toNull(color),
-                    StringUtil.toNull(weight), StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
-                    StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), StringUtil.toNull(categoryId));
-            if(exportMode == 0) {
-                String[] names = {"条码", "名称", "规格", "型号", "颜色", "类别", "扩展信息", "单位", "基础重量", "保质期", "采购价", "零售价", "销售价", "最低售价", "备注", "状态", "序列号", "批号"};
-                String title = "商品信息";
-                List<String[]> objects = new ArrayList<>();
-                if (null != dataList) {
-                    for (MaterialVo4Unit m : dataList) {
-                        String[] objs = new String[100];
-                        objs[0] = m.getmBarCode();
-                        objs[1] = m.getName();
-                        objs[2] = m.getStandard();
-                        objs[3] = m.getModel();
-                        objs[4] = m.getColor();
-                        objs[5] = m.getCategoryName();
-                        objs[6] = materialService.getMaterialOtherByParam(mpArr, m);
-                        objs[7] = m.getCommodityUnit();
-                        objs[8] = m.getWeight() == null ? "" : m.getWeight().toString();
-                        objs[9] = m.getExpiryNum() == null ? "" : m.getExpiryNum().toString();
-                        objs[10] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                        objs[11] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                        objs[12] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                        objs[13] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                        objs[14] = m.getRemark();
-                        objs[15] = m.getEnabled() ? "启用" : "禁用";
-                        objs[16] = "1".equals(m.getEnableSerialNumber()) ? "有" : "无";
-                        objs[17] = "1".equals(m.getEnableBatchNumber()) ? "有" : "无";
-                        objects.add(objs);
-                    }
-                }
-                File file = ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
-                ExportExecUtil.showExec(file, file.getName(), response);
-            } else {
-                List<Map<Integer, String>> list = new ArrayList<>();
-                Map<Integer, String> map = new HashMap<>();
-                list.add(map);
-                String fileName = "商品信息.xls";
-                String pathFile = basedir + File.separator + fileName;
-                InputStream path = ExcelUtils.getPathByFileName(templatePath, "goods_template_export.xls");
-                EasyExcel.write(pathFile).withTemplate(path).sheet(0).needHead(Boolean.FALSE).doWrite(list);
-                File file = new File(basedir, fileName);
-                ExportExecUtil.showExec(file, fileName, response);
-            }
+            materialService.exportExcel(StringUtil.toNull(categoryId), StringUtil.toNull(materialParam), StringUtil.toNull(color), StringUtil.toNull(weight),
+                    StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
+                    StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), mpList, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -434,14 +380,6 @@ public class MaterialController {
             e.printStackTrace();
         }
         return res;
-    }
-
-    public BigDecimal parseBigDecimalEx(String str)throws Exception{
-        if(!StringUtil.isEmpty(str)) {
-            return  new BigDecimal(str);
-        } else {
-            return null;
-        }
     }
 
     /**

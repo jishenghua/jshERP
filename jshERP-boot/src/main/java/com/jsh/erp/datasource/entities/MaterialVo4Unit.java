@@ -6,6 +6,8 @@ public class MaterialVo4Unit extends Material{
 
     private String unitName;
 
+    private BigDecimal ratio;
+
     private String categoryName;
 
     private String materialOther;
@@ -51,6 +53,14 @@ public class MaterialVo4Unit extends Material{
 
     public void setUnitName(String unitName) {
         this.unitName = unitName;
+    }
+
+    public BigDecimal getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(BigDecimal ratio) {
+        this.ratio = ratio;
     }
 
     public String getCategoryName() {

@@ -602,7 +602,7 @@ public class SupplierService {
                     objects.add(objs);
                 }
             }
-            return ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+            return ExcelUtils.exportObjectsWithoutTitle(title, "导入时本行内容请勿删除，切记！", names, title, objects);
         }
     }
 
@@ -690,6 +690,6 @@ public class SupplierService {
                 objects.add(objs);
             }
         }
-        return ExcelUtils.exportObjectsWithoutTitle(title, names, title, objects);
+        return ExcelUtils.exportObjectsWithoutTitle(title, "导入时本行内容请勿删除，切记！", names, title, objects);
     }
 }

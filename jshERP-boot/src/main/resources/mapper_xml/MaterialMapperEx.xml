@@ -3,6 +3,7 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.MaterialMapperEx">
     <resultMap extends="com.jsh.erp.datasource.mappers.MaterialMapper.BaseResultMap" id="ResultMapList" type="com.jsh.erp.datasource.entities.MaterialVo4Unit">
         <result column="unitName" jdbcType="VARCHAR" property="unitName" />
+        <result column="ratio" jdbcType="DECIMAL" property="ratio" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="bar_code" jdbcType="VARCHAR" property="mBarCode" />
         <result column="commodity_unit" jdbcType="VARCHAR" property="commodityUnit" />
@@ -366,7 +367,7 @@
     </select>
 
     <select id="exportExcel" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
-        select m.*,u.name unitName, mc.name categoryName,me.bar_code,me.commodity_unit,me.purchase_decimal, me.commodity_decimal,
+        select m.*,u.name unitName, u.ratio, mc.name categoryName,me.bar_code,me.commodity_unit,me.purchase_decimal, me.commodity_decimal,
         me.wholesale_decimal, me.low_decimal
         FROM jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
@@ -410,6 +411,13 @@
         and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc
     </select>
+
+    <select id="getOtherMaterialList" resultType="com.jsh.erp.datasource.entities.MaterialExtend">
+        select me.material_id, me.bar_code, me.commodity_unit from jsh_material_extend me
+        where me.default_flag=0 and (me.sku='' or me.sku is null)
+        group by me.material_id
+    </select>
+
     <select id="findByMaterialName"  resultType="com.jsh.erp.datasource.entities.Material">
         select m.*
         FROM jsh_material m

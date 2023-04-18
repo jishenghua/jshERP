@@ -77,6 +77,9 @@ public interface MaterialMapperEx {
             @Param("enableBatchNumber") String enableBatchNumber,
             @Param("remark") String remark,
             @Param("idList") List<Long> idList);
+
+    List<MaterialExtend> getOtherMaterialList();
+
     /**
      * 通过商品名称查询商品信息
      * */
@@ -149,4 +152,5 @@ public interface MaterialMapperEx {
             @Param("otherField3") String otherField3,
             @Param("unit") String unit,
             @Param("unitId") Long unitId);
+
 }
