@@ -1,6 +1,5 @@
 package com.jsh.erp.service.material;
 
-import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -36,7 +35,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -78,15 +76,6 @@ public class MaterialService {
     private DepotService depotService;
     @Resource
     private MaterialExtendService materialExtendService;
-
-    @Value("${server.tomcat.basedir}")
-    private String basedir;
-
-    @Value("${template.path}")
-    private String templatePath;
-
-    @Value("${export.mode}")
-    private Integer exportMode;
 
     public Material getMaterial(long id)throws Exception {
         Material result=null;
@@ -475,10 +464,6 @@ public class MaterialService {
     public void exportExcel(String categoryId, String materialParam, String color, String weight,
                                              String expiryNum, String enabled, String enableSerialNumber, String enableBatchNumber,
                                              String remark, String mpList, HttpServletResponse response)throws Exception {
-        String[] mpArr = new String[]{};
-        if(StringUtil.isNotEmpty(mpList)){
-            mpArr= mpList.split(",");
-        }
         List<Long> idList = new ArrayList<>();
         if(StringUtil.isNotEmpty(categoryId)){
             idList = getListByParentId(Long.parseLong(categoryId));
@@ -492,74 +477,61 @@ public class MaterialService {
         for(MaterialExtend me: otherDataList) {
             otherMaterialMap.put(me.getMaterialId(), me);
         }
-        if(exportMode == 0) {
-            String[] names = {"名称*", "规格", "型号", "颜色", "类别", "基础重量(kg)", "保质期(天)", "基本单位*", "副单位", "基本条码*",
-                    "副条码", "比例", "采购价", "零售价", "销售价", "最低售价", "状态*", "序列号", "批号", "备注"};
-            String title = "商品信息";
-            List<String[]> objects = new ArrayList<>();
-            if (null != dataList) {
-                for (MaterialVo4Unit m : dataList) {
-                    String[] objs = new String[100];
-                    objs[0] = m.getName();
-                    objs[1] = m.getStandard();
-                    objs[2] = m.getModel();
-                    objs[3] = m.getColor();
-                    objs[4] = m.getCategoryName();
-                    objs[5] = m.getWeight() == null ? "" : m.getWeight().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                    objs[6] = m.getExpiryNum() == null ? "" : m.getExpiryNum().toString();
-                    objs[7] = m.getCommodityUnit();
-                    objs[8] = otherMaterialMap.get(m.getId()) == null ? "": otherMaterialMap.get(m.getId()).getCommodityUnit();
-                    objs[9] = m.getmBarCode();
-                    objs[10] = otherMaterialMap.get(m.getId()) == null ? "": otherMaterialMap.get(m.getId()).getBarCode();
-                    objs[11] = m.getRatio() == null ? "" : m.getRatio().toString();
-                    objs[12] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                    objs[13] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                    objs[14] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                    objs[15] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                    objs[16] = m.getEnabled() ? "1" : "0";
-                    objs[17] = m.getEnableSerialNumber();
-                    objs[18] = m.getEnableBatchNumber();
-                    objs[19] = m.getRemark();
-                    objects.add(objs);
-                }
+        String nameStr = "名称*,规格,型号,颜色,类别,基础重量(kg),保质期(天),基本单位*,副单位,基本条码*,副条码,比例,采购价,零售价,销售价,最低售价,状态*,序列号,批号,备注";
+        List<String> nameList = StringUtil.strToStringList(nameStr);
+        //仓库列表
+        List<Depot> depotList = depotService.getAllList();
+        if (nameList != null) {
+            for(Depot depot: depotList) {
+                nameList.add(depot.getName());
             }
-            File file = ExcelUtils.exportObjectsWithoutTitle(title, "导入时本行内容请勿删除，切记！", names, title, objects);
-            ExcelUtils.downloadExcel(file, file.getName(), response);
-        } else {
-            List<Map<Integer, String>> objects = new ArrayList<>();
-            if (null != dataList) {
-                for (MaterialVo4Unit m : dataList) {
-                    Map<Integer, String> map = new HashMap<>();
-                    map.put(0, m.getName());
-                    map.put(1, m.getStandard());
-                    map.put(2, m.getModel());
-                    map.put(3, m.getColor());
-                    map.put(4, m.getCategoryName());
-                    map.put(5, m.getWeight() == null ? "" : m.getWeight().setScale(3, BigDecimal.ROUND_HALF_UP).toString());
-                    map.put(6, m.getExpiryNum() == null ? "" : m.getExpiryNum().toString());
-                    map.put(7, m.getCommodityUnit());
-                    map.put(8, otherMaterialMap.get(m.getId()) == null ? "": otherMaterialMap.get(m.getId()).getCommodityUnit());
-                    map.put(9, m.getmBarCode());
-                    map.put(10, otherMaterialMap.get(m.getId()) == null ? "": otherMaterialMap.get(m.getId()).getBarCode());
-                    map.put(11, m.getRatio() == null ? "" : m.getRatio().toString());
-                    map.put(12, m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                    map.put(13, m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                    map.put(14, m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                    map.put(15, m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                    map.put(16, m.getEnabled() ? "1" : "0");
-                    map.put(17, m.getEnableSerialNumber());
-                    map.put(18, m.getEnableBatchNumber());
-                    map.put(19, m.getRemark());
-                    objects.add(map);
-                }
-            }
-            String fileName = "商品信息.xls";
-            String pathFile = basedir + File.separator + fileName;
-            InputStream path = ExcelUtils.getPathByFileName(templatePath, "goods_template_export.xls");
-            EasyExcel.write(pathFile).withTemplate(path).sheet(0).needHead(Boolean.FALSE).doWrite(objects);
-            File file = new File(basedir, fileName);
-            ExcelUtils.downloadExcel(file, fileName, response);
         }
+        //期初库存缓存
+        List<MaterialInitialStock> misList = materialInitialStockMapperEx.getListExceptZero();
+        Map<String, BigDecimal> misMap = new HashMap<>();
+        if (misList != null) {
+            for (MaterialInitialStock mis : misList) {
+                misMap.put(mis.getMaterialId() + "_" + mis.getDepotId(), mis.getNumber());
+            }
+        }
+        String[] names = StringUtil.listToStringArray(nameList);
+        String title = "商品信息";
+        List<String[]> objects = new ArrayList<>();
+        if (null != dataList) {
+            for (MaterialVo4Unit m : dataList) {
+                String[] objs = new String[100];
+                objs[0] = m.getName();
+                objs[1] = m.getStandard();
+                objs[2] = m.getModel();
+                objs[3] = m.getColor();
+                objs[4] = m.getCategoryName();
+                objs[5] = m.getWeight() == null ? "" : m.getWeight().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[6] = m.getExpiryNum() == null ? "" : m.getExpiryNum().toString();
+                objs[7] = m.getCommodityUnit();
+                objs[8] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getCommodityUnit();
+                objs[9] = m.getmBarCode();
+                objs[10] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getBarCode();
+                objs[11] = m.getRatio() == null ? "" : m.getRatio().toString();
+                objs[12] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[13] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[14] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[15] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[16] = m.getEnabled() ? "1" : "0";
+                objs[17] = m.getEnableSerialNumber();
+                objs[18] = m.getEnableBatchNumber();
+                objs[19] = m.getRemark();
+                //仓库期初库存
+                int i = 20;
+                for(Depot depot: depotList) {
+                    BigDecimal number = misMap.get(m.getId() + "_" + depot.getId());
+                    objs[i] = number == null ? "0" : number.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    i++;
+                }
+                objects.add(objs);
+            }
+        }
+        File file = ExcelUtils.exportObjectsWithoutTitle(title, "导入时本行内容请勿删除，切记！", names, title, objects);
+        ExcelUtils.downloadExcel(file, file.getName(), response);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

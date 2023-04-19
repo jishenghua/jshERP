@@ -11,4 +11,6 @@ public interface MaterialInitialStockMapperEx {
 
     int batchInsert(List<MaterialInitialStock> list);
 
+    List<MaterialInitialStock> getListExceptZero();
+
 }

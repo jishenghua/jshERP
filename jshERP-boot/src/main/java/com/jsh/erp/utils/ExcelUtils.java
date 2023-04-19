@@ -49,23 +49,27 @@ public class ExcelUtils {
 		File excelFile = new File(fileName);
 		WritableWorkbook wtwb = Workbook.createWorkbook(excelFile);
 		WritableSheet sheet = wtwb.createSheet(title, 0);
-		sheet.getSettings().setDefaultColumnWidth(20);
+		sheet.getSettings().setDefaultColumnWidth(12);
 
 		// 标题的格式
-		WritableFont wfc = new WritableFont(WritableFont.ARIAL, 15,
+		WritableFont wfc = new WritableFont(WritableFont.ARIAL, 12,
 				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
 				jxl.format.Colour.BLACK);
 		WritableCellFormat wcfFC = new WritableCellFormat(wfc);
 		wcfFC.setVerticalAlignment(VerticalAlignment.CENTRE);
 
+		//设置边框
+		wcfFC.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
+
 		// 设置字体以及单元格格式
-		WritableFont wfont = new WritableFont(WritableFont.createFont("楷书"), 15);
+		WritableFont wfont = new WritableFont(WritableFont.createFont("楷书"), 12);
 		WritableCellFormat format = new WritableCellFormat(wfont);
 		format.setAlignment(Alignment.LEFT);
 		format.setVerticalAlignment(VerticalAlignment.TOP);
 
 		// 第一行写入提示
 		sheet.addCell(new Label(0, 0, tip, wcfFC));
+
 		// 第二行写入标题
 		for (int i = 0; i < names.length; i++) {
 			sheet.addCell(new Label(i, 1, names[i], wcfFC));

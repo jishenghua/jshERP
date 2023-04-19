@@ -10,4 +10,9 @@
     </foreach >
   </insert>
 
+  <select id="getListExceptZero" resultType="com.jsh.erp.datasource.entities.MaterialInitialStock">
+    select * from jsh_material_initial_stock where number!=0
+    and ifnull(delete_flag,'0') !='1'
+  </select>
+
 </mapper>
