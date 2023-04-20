@@ -530,7 +530,7 @@ public class MaterialService {
                 objects.add(objs);
             }
         }
-        File file = ExcelUtils.exportObjectsWithoutTitle(title, "导入时本行内容请勿删除，切记！", names, title, objects);
+        File file = ExcelUtils.exportObjectsWithoutTitle(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
         ExcelUtils.downloadExcel(file, file.getName(), response);
     }
 

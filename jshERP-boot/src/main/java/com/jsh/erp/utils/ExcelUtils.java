@@ -51,15 +51,21 @@ public class ExcelUtils {
 		WritableSheet sheet = wtwb.createSheet(title, 0);
 		sheet.getSettings().setDefaultColumnWidth(12);
 
-		// 标题的格式
-		WritableFont wfc = new WritableFont(WritableFont.ARIAL, 12,
+		// 标题的格式-红色
+		WritableFont redWF = new WritableFont(WritableFont.ARIAL, 12,
 				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
-				jxl.format.Colour.BLACK);
-		WritableCellFormat wcfFC = new WritableCellFormat(wfc);
-		wcfFC.setVerticalAlignment(VerticalAlignment.CENTRE);
+				Colour.RED);
+		WritableCellFormat redWFFC = new WritableCellFormat(redWF);
+		redWFFC.setVerticalAlignment(VerticalAlignment.CENTRE);
+		redWFFC.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
 
-		//设置边框
-		wcfFC.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
+		// 标题的格式-黑色
+		WritableFont blackWF = new WritableFont(WritableFont.ARIAL, 12,
+				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
+				Colour.BLACK);
+		WritableCellFormat blackWFFC = new WritableCellFormat(blackWF);
+		blackWFFC.setVerticalAlignment(VerticalAlignment.CENTRE);
+		blackWFFC.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
 
 		// 设置字体以及单元格格式
 		WritableFont wfont = new WritableFont(WritableFont.createFont("楷书"), 12);
@@ -68,11 +74,19 @@ public class ExcelUtils {
 		format.setVerticalAlignment(VerticalAlignment.TOP);
 
 		// 第一行写入提示
-		sheet.addCell(new Label(0, 0, tip, wcfFC));
+		if(StringUtil.isNotEmpty(tip) && tip.contains("*")) {
+			sheet.addCell(new Label(0, 0, tip, redWFFC));
+		} else {
+			sheet.addCell(new Label(0, 0, tip, blackWFFC));
+		}
 
 		// 第二行写入标题
 		for (int i = 0; i < names.length; i++) {
-			sheet.addCell(new Label(i, 1, names[i], wcfFC));
+			if(StringUtil.isNotEmpty(names[i]) && names[i].contains("*")) {
+				sheet.addCell(new Label(i, 1, names[i], redWFFC));
+			} else {
+				sheet.addCell(new Label(i, 1, names[i], blackWFFC));
+			}
 		}
 
 		// 其余行依次写入数据

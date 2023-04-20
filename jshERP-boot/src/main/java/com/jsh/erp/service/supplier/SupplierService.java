@@ -584,7 +584,7 @@ public class SupplierService {
             return exportExcelVendorOrCustomer(dataList, type);
         } else {
             //会员
-            String[] names = {"会员卡号", "联系人", "手机号码", "联系电话", "电子邮箱", "预付款", "备注", "排序", "状态"};
+            String[] names = {"会员卡号*", "联系人", "手机号码", "联系电话", "电子邮箱", "备注", "排序", "状态*"};
             String title = "信息内容";
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
@@ -595,76 +595,29 @@ public class SupplierService {
                     objs[2] = s.getTelephone();
                     objs[3] = s.getPhoneNum();
                     objs[4] = s.getEmail();
-                    objs[5] = s.getAdvanceIn() == null? "" : s.getAdvanceIn().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[6] = s.getDescription();
-                    objs[7] = s.getSort();
-                    objs[8] = s.getEnabled() ? "启用" : "禁用";
+                    objs[5] = s.getDescription();
+                    objs[6] = s.getSort();
+                    objs[7] = s.getEnabled() ? "1" : "0";
                     objects.add(objs);
                 }
             }
-            return ExcelUtils.exportObjectsWithoutTitle(title, "导入时本行内容请勿删除，切记！", names, title, objects);
+            return ExcelUtils.exportObjectsWithoutTitle(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
         }
     }
 
     private File exportExcelVendorOrCustomer(List<Supplier> dataList, String type) throws Exception {
         String beginNeedStr = "";
-        String allNeedStr = "";
         if("供应商".equals(type)) {
             beginNeedStr = "期初应付";
-            allNeedStr = "期末应付";
         } else if("客户".equals(type)) {
             beginNeedStr = "期初应收";
-            allNeedStr = "期末应收";
         }
-        String[] names = {"名称", "联系人", "手机号码", "联系电话", "电子邮箱", "传真", beginNeedStr,
-                allNeedStr, "纳税人识别号", "税率(%)", "开户行", "账号", "地址", "备注", "排序", "状态"};
+        String[] names = {"名称*", "联系人", "手机号码", "联系电话", "电子邮箱", "传真", beginNeedStr,
+                "纳税人识别号", "税率(%)", "开户行", "账号", "地址", "备注", "排序", "状态*"};
         String title = "信息内容";
         List<String[]> objects = new ArrayList<String[]>();
         if (null != dataList) {
             for (Supplier s : dataList) {
-                Integer supplierId = s.getId().intValue();
-
-                String beginTime = Tools.getYearBegin();
-                String endTime = Tools.getCenternTime(new Date());
-                BigDecimal sum = BigDecimal.ZERO;
-                String supplierType = type;
-                String inOutType = "";
-                String subType = "";
-                String typeBack = "";
-                String subTypeBack = "";
-                String billType = "";
-                if (("供应商").equals(supplierType)) {
-                    inOutType = "入库";
-                    subType = "采购";
-                    typeBack = "出库";
-                    subTypeBack = "采购退货";
-                    billType = "付款";
-                } else if (("客户").equals(supplierType)) {
-                    inOutType = "出库";
-                    subType = "销售";
-                    typeBack = "入库";
-                    subTypeBack = "销售退货";
-                    billType = "收款";
-                }
-                List<DepotHeadVo4StatementAccount> saList = depotHeadService.getStatementAccount(beginTime, endTime, supplierId, null,
-                        supplierType, inOutType, subType, typeBack, subTypeBack, billType, null, null);
-                if(saList.size()>0) {
-                    DepotHeadVo4StatementAccount item = saList.get(0);
-                    //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
-                    BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreReturnDebtMoney()).subtract(item.getPreBackMoney());
-                    item.setPreNeed(preNeed);
-                    //实际欠款 = 本期欠款-本期退货的欠款金额
-                    BigDecimal realDebtMoney = item.getDebtMoney().subtract(item.getReturnDebtMoney());
-                    item.setDebtMoney(realDebtMoney);
-                    //期末 = 期初+实际欠款-本期收款
-                    BigDecimal allNeedGet = preNeed.add(realDebtMoney).subtract(item.getBackMoney());
-                    sum = sum.add(allNeedGet);
-                }
-                if(("客户").equals(s.getType())) {
-                    s.setAllNeedGet(sum);
-                } else if(("供应商").equals(s.getType())) {
-                    s.setAllNeedPay(sum);
-                }
                 String[] objs = new String[20];
                 objs[0] = s.getSupplier();
                 objs[1] = s.getContacts();
@@ -674,22 +627,20 @@ public class SupplierService {
                 objs[5] = s.getFax();
                 if(("客户").equals(s.getType())) {
                     objs[6] = s.getBeginNeedGet() == null? "" : s.getBeginNeedGet().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[7] = s.getAllNeedGet() == null? "" : s.getAllNeedGet().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
                 } else if(("供应商").equals(s.getType())) {
                     objs[6] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                    objs[7] = s.getAllNeedPay() == null? "" : s.getAllNeedPay().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
                 }
-                objs[8] = s.getTaxNum();
-                objs[9] = s.getTaxRate() == null? "" : s.getTaxRate().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
-                objs[10] = s.getBankName();
-                objs[11] = s.getAccountNumber();
-                objs[12] = s.getAddress();
-                objs[13] = s.getDescription();
-                objs[14] = s.getSort();
-                objs[15] = s.getEnabled() ? "启用" : "禁用";
+                objs[7] = s.getTaxNum();
+                objs[8] = s.getTaxRate() == null? "" : s.getTaxRate().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                objs[9] = s.getBankName();
+                objs[10] = s.getAccountNumber();
+                objs[11] = s.getAddress();
+                objs[12] = s.getDescription();
+                objs[13] = s.getSort();
+                objs[14] = s.getEnabled() ? "1" : "0";
                 objects.add(objs);
             }
         }
-        return ExcelUtils.exportObjectsWithoutTitle(title, "导入时本行内容请勿删除，切记！", names, title, objects);
+        return ExcelUtils.exportObjectsWithoutTitle(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
     }
 }
