@@ -576,6 +576,21 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_NAME_EMPTY_MSG, i+1));
                 }
+                //名称长度超出
+                if(name.length()>100) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_OVER_CODE,
+                            String.format(ExceptionConstants.MATERIAL_NAME_OVER_MSG, i+1));
+                }
+                //规格长度超出
+                if(StringUtil.isNotEmpty(standard) && standard.length()>100) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STANDARD_OVER_CODE,
+                            String.format(ExceptionConstants.MATERIAL_STANDARD_OVER_MSG, i+1));
+                }
+                //型号长度超出
+                if(StringUtil.isNotEmpty(model) && model.length()>100) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_MODEL_OVER_CODE,
+                            String.format(ExceptionConstants.MATERIAL_MODEL_OVER_MSG, i+1));
+                }
                 //基本单位为空
                 if(StringUtil.isEmpty(unit)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,

@@ -332,6 +332,15 @@ public class ExceptionConstants {
     //EXCEL中存在重复的条码
     public static final int MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE = 80000021;
     public static final String MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG = "抱歉，EXCEL中存在重复的条码，具体条码为：%s";
+    //名称长度超出
+    public static final int MATERIAL_NAME_OVER_CODE = 8000022;
+    public static final String MATERIAL_NAME_OVER_MSG = "第%s行名称长度超出100个字符";
+    //规格长度超出
+    public static final int MATERIAL_STANDARD_OVER_CODE = 8000023;
+    public static final String MATERIAL_STANDARD_OVER_MSG = "第%s行规格长度超出100个字符";
+    //型号长度超出
+    public static final int MATERIAL_MODEL_OVER_CODE = 8000024;
+    public static final String MATERIAL_MODEL_OVER_MSG = "第%s行型号长度超出100个字符";
 
     /**
      *  单据信息
