@@ -390,12 +390,12 @@
           },
           standard:{
             rules: [
-              { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
+              { max: 100, message: '长度请小于100个字符', trigger: 'blur' }
             ]
           },
           model:{
             rules: [
-              { max: 50, message: '长度请小于50个字符', trigger: 'blur' }
+              { max: 100, message: '长度请小于100个字符', trigger: 'blur' }
             ]
           },
           unit:{
