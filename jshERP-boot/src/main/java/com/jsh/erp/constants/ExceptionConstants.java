@@ -257,15 +257,6 @@ public class ExceptionConstants {
      * 商品信息
      * type = 80
      * */
-    //添加商品信息信息失败
-    public static final int MATERIAL_ADD_FAILED_CODE = 7500000;
-    public static final String MATERIAL_ADD_FAILED_MSG = "添加商品信息失败";
-    //删除商品信息失败
-    public static final int MATERIAL_DELETE_FAILED_CODE = 7500001;
-    public static final String MATERIAL_DELETE_FAILED_MSG = "删除商品信息失败";
-    //修改商品信息失败
-    public static final int MATERIAL_EDIT_FAILED_CODE = 7500002;
-    public static final String MATERIAL_EDIT_FAILED_MSG = "修改商品信息失败";
     //商品信息不存在
     public static final int MATERIAL_NOT_EXISTS_CODE = 8000000;
     public static final String MATERIAL_NOT_EXISTS_MSG = "商品信息不存在";
@@ -386,28 +377,28 @@ public class ExceptionConstants {
     public static final int DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE = 85000014;
     public static final String DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG = "商品条码%s的数量需要修改下";
     //单据录入-商品的批号不能为空
-    public static final int DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE = 8000015;
+    public static final int DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE = 8500015;
     public static final String DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG = "抱歉，商品条码:%s的批号不能为空";
     //单据录入-会员预付款余额不足
-    public static final int DEPOT_HEAD_MEMBER_PAY_LACK_CODE = 8000016;
+    public static final int DEPOT_HEAD_MEMBER_PAY_LACK_CODE = 8500016;
     public static final String DEPOT_HEAD_MEMBER_PAY_LACK_MSG = "抱歉，会员预付款余额不足";
     //单据录入-累计订金超出原订单中的订金
-    public static final int DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE = 8000017;
+    public static final int DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE = 8500017;
     public static final String DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG = "抱歉，累计订金超出原订单中的订金";
     //单据录入-商品条码XXX的单价低于最低售价
-    public static final int DEPOT_HEAD_UNIT_PRICE_LOW_CODE = 8000018;
+    public static final int DEPOT_HEAD_UNIT_PRICE_LOW_CODE = 8500018;
     public static final String DEPOT_HEAD_UNIT_PRICE_LOW_MSG = "商品条码%s的单价低于最低售价";
     //单据录入-单据明细中必须要有组合件和普通子件
-    public static final int DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE = 8000020;
+    public static final int DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE = 8500020;
     public static final String DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG = "抱歉，单据明细中必须要有组合件和普通子件";
     //单据录入-商品条码XXX的数量与序列号不一致
-    public static final int DEPOT_HEAD_SN_NUMBERE_FAILED_CODE = 8000021;
+    public static final int DEPOT_HEAD_SN_NUMBERE_FAILED_CODE = 8500021;
     public static final String DEPOT_HEAD_SN_NUMBERE_FAILED_MSG = "抱歉，商品条码:%s的数量与序列号不一致";
     //单据录入-单据编号已经存在
-    public static final int DEPOT_HEAD_BILL_NUMBER_EXIST_CODE = 8000022;
+    public static final int DEPOT_HEAD_BILL_NUMBER_EXIST_CODE = 8500022;
     public static final String DEPOT_HEAD_BILL_NUMBER_EXIST_MSG = "抱歉，单据编号已经存在";
     //单据录入-单据当前状态下不能修改
-    public static final int DEPOT_HEAD_BILL_CANNOT_EDIT_CODE = 8000023;
+    public static final int DEPOT_HEAD_BILL_CANNOT_EDIT_CODE = 8500023;
     public static final String DEPOT_HEAD_BILL_CANNOT_EDIT_MSG = "抱歉，单据当前状态下不能修改";
 
     /**
