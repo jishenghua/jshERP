@@ -2,14 +2,6 @@
   <div class="page-header-index-wide">
     <a-row :gutter="24">
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <chart-card :loading="loading" title="今日采购" data-step="1" data-title="今日采购" data-intro="统计今日采购单据的总金额">
-          <a-tooltip title="统计今日采购单据的总金额" slot="action">
-            <a-icon type="info-circle-o" />
-          </a-tooltip>
-          <head-info :content="statistics.todayBuy"></head-info>
-        </chart-card>
-      </a-col>
-      <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <chart-card :loading="loading" title="今日销售" data-step="2" data-title="今日销售" data-intro="统计今日销售单据的总金额">
           <a-tooltip title="统计今日销售单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
@@ -26,11 +18,11 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <chart-card :loading="loading" title="本月累计采购">
-          <a-tooltip title="统计本月采购单据的总金额" slot="action">
+        <chart-card :loading="loading" title="今日采购" data-step="1" data-title="今日采购" data-intro="统计今日采购单据的总金额">
+          <a-tooltip title="统计今日采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
-          <head-info :content="statistics.monthBuy"></head-info>
+          <head-info :content="statistics.todayBuy"></head-info>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
@@ -50,11 +42,11 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <chart-card :loading="loading" title="昨日采购">
-          <a-tooltip title="统计昨日采购单据的总金额" slot="action">
+        <chart-card :loading="loading" title="本月累计采购">
+          <a-tooltip title="统计本月采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
-          <head-info :content="statistics.yesterdayBuy"></head-info>
+          <head-info :content="statistics.monthBuy"></head-info>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
@@ -74,11 +66,11 @@
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <chart-card :loading="loading" title="今年累计采购">
-          <a-tooltip title="统计今年采购单据的总金额" slot="action">
+        <chart-card :loading="loading" title="昨日采购">
+          <a-tooltip title="统计昨日采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
-          <head-info :content="statistics.yearBuy"></head-info>
+          <head-info :content="statistics.yesterdayBuy"></head-info>
         </chart-card>
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
@@ -97,14 +89,16 @@
           <head-info :content="statistics.yearRetailSale"></head-info>
         </chart-card>
       </a-col>
+      <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
+        <chart-card :loading="loading" title="今年累计采购">
+          <a-tooltip title="统计今年采购单据的总金额" slot="action">
+            <a-icon type="info-circle-o" />
+          </a-tooltip>
+          <head-info :content="statistics.yearBuy"></head-info>
+        </chart-card>
+      </a-col>
     </a-row>
     <a-row :gutter="24">
-      <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
-        <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="4" data-title="采购统计"
-                data-intro="统计往前6个月每月采购的总金额">
-          <bar title="采购统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
-        </a-card>
-      </a-col>
       <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="5" data-title="销售统计"
                 data-intro="统计往前6个月每月销售的总金额">
@@ -115,6 +109,12 @@
         <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="6" data-title="零售统计"
                 data-intro="统计往前6个月每月零售的总金额">
           <bar title="零售统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="retailPriceData"/>
+        </a-card>
+      </a-col>
+      <a-col :sm="24" :md="12" :xl="8" :style="{ paddingRight: '0px',marginBottom: '12px' }">
+        <a-card :loading="loading" :bordered="false" :body-style="{paddingRight: '5'}" data-step="4" data-title="采购统计"
+                data-intro="统计往前6个月每月采购的总金额">
+          <bar title="采购统计" :height="barHeight" :yaxisText="yaxisText" :dataSource="buyPriceData"/>
         </a-card>
       </a-col>
     </a-row>
