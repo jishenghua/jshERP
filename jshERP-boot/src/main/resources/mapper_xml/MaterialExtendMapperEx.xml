@@ -65,4 +65,14 @@
         </foreach>
         )
     </update>
+
+    <update id="specialUpdatePrice" parameterType="com.jsh.erp.datasource.entities.MaterialExtend">
+        update jsh_material_extend
+        set purchase_decimal = #{purchaseDecimal,jdbcType=DECIMAL},
+            commodity_decimal = #{commodityDecimal,jdbcType=DECIMAL},
+            wholesale_decimal = #{wholesaleDecimal,jdbcType=DECIMAL},
+            low_decimal = #{lowDecimal,jdbcType=DECIMAL}
+        where id = #{id,jdbcType=BIGINT}
+        and ifnull(delete_flag,'0') !='1'
+    </update>
 </mapper>

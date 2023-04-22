@@ -183,6 +183,8 @@ public class MaterialExtendService {
                     materialExtend.setLowDecimal(tempUpdatedJson.getBigDecimal("lowDecimal"));
                 }
                 this.updateMaterialExtend(materialExtend);
+                //如果金额为空，此处单独置空
+                materialExtendMapperEx.specialUpdatePrice(materialExtend);
             }
         }
         //处理条码的排序，基本单位排第一个
@@ -238,13 +240,13 @@ public class MaterialExtendService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateMaterialExtend(MaterialExtend MaterialExtend) throws Exception{
+    public int updateMaterialExtend(MaterialExtend materialExtend) throws Exception{
         User user = userService.getCurrentUser();
-        MaterialExtend.setUpdateTime(System.currentTimeMillis());
-        MaterialExtend.setUpdateSerial(user.getLoginName());
+        materialExtend.setUpdateTime(System.currentTimeMillis());
+        materialExtend.setUpdateSerial(user.getLoginName());
         int res =0;
         try{
-            res= materialExtendMapper.updateByPrimaryKeySelective(MaterialExtend);
+            res= materialExtendMapper.updateByPrimaryKeySelective(materialExtend);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
