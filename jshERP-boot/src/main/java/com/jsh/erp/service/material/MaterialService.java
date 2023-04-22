@@ -908,6 +908,8 @@ public class MaterialService {
             } else {
                 materialExtend.setId(meId);
                 materialExtendMapper.updateByPrimaryKeySelective(materialExtend);
+                //如果金额为空，此处单独置空
+                materialExtendMapperEx.specialUpdatePrice(materialExtend);
             }
         }
     }
