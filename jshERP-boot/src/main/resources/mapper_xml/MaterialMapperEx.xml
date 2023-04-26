@@ -415,6 +415,7 @@
     <select id="getOtherMaterialList" resultType="com.jsh.erp.datasource.entities.MaterialExtend">
         select me.material_id, me.bar_code, me.commodity_unit from jsh_material_extend me
         where me.default_flag=0 and (me.sku='' or me.sku is null)
+        and ifnull(me.delete_Flag,'0') !='1'
         group by me.material_id
     </select>
 
