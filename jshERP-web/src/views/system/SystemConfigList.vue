@@ -293,6 +293,14 @@
             }
           }
         })
+        //校验是否存在生产插件
+        getAction('/plugin/checkByPluginId', { pluginIds: 'produce' }).then((res)=> {
+          if (res.code === 200) {
+            if(res.data) {
+              this.billTypeList.push({ 'key': 'SC', 'value': '生产任务' }, { 'key': 'WW', 'value': '委外任务' })
+            }
+          }
+        })
       },
       handleOk () {
         const that = this;
