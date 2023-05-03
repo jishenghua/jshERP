@@ -4,6 +4,12 @@
       <a-select placeholder="输入条码或名称" :dropdownMatchSelectWidth="false" showSearch :showArrow="false"
                 v-model="names" optionFilterProp="children" :style="searchWidth"
                 @search="handleSearch" @change="handleChange">
+        <div slot="dropdownRender" slot-scope="menu">
+          <v-nodes :vnodes="menu" />
+          <a-divider v-if="materialData.length===20" style="margin: 4px 0;" />
+          <div v-if="materialData.length===20" style="padding: 4px 8px; cursor: pointer;"
+               @mousedown="e => e.preventDefault()">此处最多显示20条，如需更多请点击放大镜查询</div>
+        </div>
         <a-select-option v-for="item in materialData" :key="item.barCode">
           {{ item.materialStr }}
         </a-select-option>
@@ -27,7 +33,13 @@
 
   export default {
     name: 'JSelectList',
-    components: {JSelectMaterialModal, JSelectBatchModal, JSelectSnModal, JSelectSnAddModal},
+    components: {
+      JSelectMaterialModal, JSelectBatchModal, JSelectSnModal, JSelectSnAddModal,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
+    },
     props: {
       value: {
         type: String,
