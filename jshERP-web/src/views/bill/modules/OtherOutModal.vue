@@ -13,6 +13,8 @@
       <a-button @click="handleCancel">取消</a-button>
       <a-button v-if="checkFlag && isCanCheck" :loading="confirmLoading" @click="handleOkAndCheck">保存并审核</a-button>
       <a-button type="primary" :loading="confirmLoading" @click="handleOk">保存</a-button>
+      <!--发起多级审核-->
+      <a-button v-if="!checkFlag" @click="handleWorkflow()" type="primary">提交流程</a-button>
     </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
@@ -103,6 +105,7 @@
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
+    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
   </j-modal>
 </template>
 <script>
@@ -110,6 +113,7 @@
   import CustomerModal from '../../system/modules/CustomerModal'
   import DepotModal from '../../system/modules/DepotModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
+  import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -124,6 +128,7 @@
       CustomerModal,
       DepotModal,
       BatchSetDepot,
+      WorkflowIframe,
       JUpload,
       JDate,
       VNodes: {

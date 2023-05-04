@@ -20,8 +20,6 @@
       <!--反审核-->
       <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
-      <!--发起多级审核-->
-      <a-button v-if="!checkFlag && model.status==='0'" @click="handleWorkflow()" type="primary">提交流程</a-button>
     </template>
     <a-form :form="form">
       <!--收预付款-->
@@ -396,20 +394,18 @@
         </a-row>
       </template>
     </a-form>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
   import { getAction, postAction } from '@/api/manage'
-  import { findFinancialDetailByNumber, getCurrentSystemConfig, getPlatformConfigByKey } from '@/api/api'
-  import { getCheckFlag } from "@/utils/util"
-  import WorkflowIframe from '@/components/tools/WorkflowIframe'
+  import { findFinancialDetailByNumber, getCurrentSystemConfig } from '@/api/api'
+  import { getCheckFlag } from '@/utils/util'
   import JUpload from '@/components/jeecg/JUpload'
+
   export default {
     name: 'FinancialDetail',
     components: {
-      WorkflowIframe,
       JUpload
     },
     data () {
@@ -525,16 +521,6 @@
             let multiBillType = res.data.multiBillType
             let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
             this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
-          }
-        })
-      },
-      //发起流程
-      handleWorkflow() {
-        getPlatformConfigByKey({"platformKey": "send_workflow_url"}).then((res)=> {
-          if (res && res.code === 200) {
-            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.billNo + '&type=2'
-            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
-            this.$refs.modalWorkflow.title = "发起流程"
           }
         })
       },

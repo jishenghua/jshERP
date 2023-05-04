@@ -38,8 +38,6 @@
       <!--反审核-->
       <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
       <a-button key="back" @click="handleCancel">取消</a-button>
-      <!--发起多级审核-->
-      <a-button v-if="!checkFlag && model.status==='0'" @click="handleWorkflow()" type="primary">提交流程</a-button>
     </template>
     <a-form :form="form">
       <!--零售出库-->
@@ -1003,7 +1001,6 @@
       </template>
     </a-form>
     <bill-print-iframe ref="modalDetail"></bill-print-iframe>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
     <financial-detail ref="financialDetailModal"></financial-detail>
   </j-modal>
 </template>
@@ -1014,7 +1011,6 @@
   import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
   import { getMpListShort, getCheckFlag, openDownloadDialog, sheet2blob } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
-  import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import FinancialDetail from '../../financial/dialog/FinancialDetail'
   import JUpload from '@/components/jeecg/JUpload'
   import Vue from 'vue'
@@ -1022,7 +1018,6 @@
     name: 'BillDetail',
     components: {
       BillPrintIframe,
-      WorkflowIframe,
       FinancialDetail,
       JUpload
     },
@@ -1593,16 +1588,6 @@
             let billPrintHeight = this.dataSource.length*50 + 600
             this.$refs.modalDetail.show(this.model, billPrintUrl, billPrintHeight)
             this.$refs.modalDetail.title = this.billType + "-三联打印预览"
-          }
-        })
-      },
-      //发起流程
-      handleWorkflow() {
-        getPlatformConfigByKey({"platformKey": "send_workflow_url"}).then((res)=> {
-          if (res && res.code === 200) {
-            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.number + '&type=1'
-            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
-            this.$refs.modalWorkflow.title = "发起流程"
           }
         })
       },

@@ -1,6 +1,6 @@
 import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
 import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
-  getPersonByNumType, getBatchNumberList, getCurrentSystemConfig} from '@/api/api'
+  getPersonByNumType, getBatchNumberList, getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
 import { getAction,putAction } from '@/api/manage'
 import { getMpListShort, getNowFormatDateTime, getCheckFlag } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
@@ -812,5 +812,19 @@ export const BillModalMixin = {
       this.billStatus = '1'
       this.handleOk()
     },
+    //发起流程
+    handleWorkflow() {
+      if(this.model && this.model.number) {
+        getPlatformConfigByKey({ "platformKey": "send_workflow_url" }).then((res) => {
+          if (res && res.code === 200) {
+            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.number + '&type=1'
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
+            this.$refs.modalWorkflow.title = "发起流程"
+          }
+        })
+      } else {
+        this.$message.warning('请先保存单据后再提交流程！');
+      }
+    }
   }
 }

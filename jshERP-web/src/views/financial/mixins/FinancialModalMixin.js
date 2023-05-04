@@ -1,7 +1,6 @@
-import { VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-import {findBySelectSup,findBySelectCus,findBySelectRetail,findBySelectOrgan,findStockByDepotAndBarCode,getAccount,
+import {findBySelectSup,findBySelectCus,findBySelectRetail,findBySelectOrgan,getPlatformConfigByKey,getAccount,
   getPersonByType,findInOutItemByParam,getCurrentSystemConfig} from '@/api/api'
-import { getAction,putAction } from '@/api/manage'
+import { getAction } from '@/api/manage'
 import { getCheckFlag, getNowFormatDateTime } from "@/utils/util"
 import { USER_INFO } from "@/store/mutation-types"
 import Vue from 'vue'
@@ -302,6 +301,20 @@ export const FinancialModalMixin = {
     handleOkAndCheck() {
       this.billStatus = '1'
       this.handleOk()
+    },
+    //发起流程
+    handleWorkflow() {
+      if(this.model && this.model.billNo) {
+        getPlatformConfigByKey({ "platformKey": "send_workflow_url" }).then((res) => {
+          if (res && res.code === 200) {
+            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.billNo + '&type=2'
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
+            this.$refs.modalWorkflow.title = "发起流程"
+          }
+        })
+      } else {
+        this.$message.warning('请先保存单据后再提交流程！');
+      }
     },
   }
 }
