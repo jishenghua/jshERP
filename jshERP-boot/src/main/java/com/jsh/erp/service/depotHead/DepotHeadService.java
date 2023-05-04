@@ -162,8 +162,9 @@ public class DepotHeadService {
                     //欠款计算
                     BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
+                    BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
                     BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
-                    dh.setDebt(discountLastMoney.add(otherMoney).subtract((dh.getDeposit().add(changeAmount))));
+                    dh.setDebt(discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount))));
                     //是否有付款单或收款单
                     if(financialBillNoMap!=null) {
                         Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
@@ -729,48 +730,53 @@ public class DepotHeadService {
                 Map<Long,Integer> financialBillNoMap = getFinancialBillNoMapByBillIdList(idList);
                 Map<String,Integer> billSizeMap = getBillSizeMapByLinkNumberList(numberList);
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
-                for (DepotHeadVo4List dh : list) {
-                    if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
-                        String accountStr = accountService.getAccountStrByIdAndMoney(accountMap, dh.getAccountIdList(), dh.getAccountMoneyList());
-                        dh.setAccountName(accountStr);
-                    }
-                    if(dh.getAccountIdList() != null) {
-                        String accountidlistStr = dh.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                        dh.setAccountIdList(accountidlistStr);
-                    }
-                    if(dh.getAccountMoneyList() != null) {
-                        String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
-                        dh.setAccountMoneyList(accountmoneylistStr);
-                    }
-                    if(dh.getChangeAmount() != null) {
-                        dh.setChangeAmount(dh.getChangeAmount().abs());
-                    }
-                    if(dh.getTotalPrice() != null) {
-                        dh.setTotalPrice(dh.getTotalPrice().abs());
-                    }
-                    //是否有付款单或收款单
-                    if(financialBillNoMap!=null) {
-                        Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
-                        dh.setHasFinancialFlag(financialBillNoSize!=null && financialBillNoSize>0);
-                    }
-                    //是否有退款单
-                    if(billSizeMap!=null) {
-                        Integer billListSize = billSizeMap.get(dh.getNumber());
-                        dh.setHasBackFlag(billListSize!=null && billListSize>0);
-                    }
-                    if(StringUtil.isNotEmpty(dh.getSalesMan())) {
-                        dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
-                    }
-                    if(dh.getOperTime() != null) {
-                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
-                    }
-                    //商品信息简述
-                    if(materialsListMap!=null) {
-                        dh.setMaterialsList(materialsListMap.get(dh.getId()));
-                    }
-                    dh.setCreatorName(userService.getUser(dh.getCreator()).getUsername());
-                    resList.add(dh);
+                DepotHeadVo4List dh = list.get(0);
+                if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
+                    String accountStr = accountService.getAccountStrByIdAndMoney(accountMap, dh.getAccountIdList(), dh.getAccountMoneyList());
+                    dh.setAccountName(accountStr);
                 }
+                if(dh.getAccountIdList() != null) {
+                    String accountidlistStr = dh.getAccountIdList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountIdList(accountidlistStr);
+                }
+                if(dh.getAccountMoneyList() != null) {
+                    String accountmoneylistStr = dh.getAccountMoneyList().replace("[", "").replace("]", "").replaceAll("\"", "");
+                    dh.setAccountMoneyList(accountmoneylistStr);
+                }
+                if(dh.getChangeAmount() != null) {
+                    dh.setChangeAmount(dh.getChangeAmount().abs());
+                }
+                if(dh.getTotalPrice() != null) {
+                    dh.setTotalPrice(dh.getTotalPrice().abs());
+                }
+                //欠款计算
+                BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
+                BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
+                BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
+                BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
+                dh.setDebt(discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount))));
+                //是否有付款单或收款单
+                if(financialBillNoMap!=null) {
+                    Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
+                    dh.setHasFinancialFlag(financialBillNoSize!=null && financialBillNoSize>0);
+                }
+                //是否有退款单
+                if(billSizeMap!=null) {
+                    Integer billListSize = billSizeMap.get(dh.getNumber());
+                    dh.setHasBackFlag(billListSize!=null && billListSize>0);
+                }
+                if(StringUtil.isNotEmpty(dh.getSalesMan())) {
+                    dh.setSalesManStr(personService.getPersonByMapAndIds(personMap,dh.getSalesMan()));
+                }
+                if(dh.getOperTime() != null) {
+                    dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                }
+                //商品信息简述
+                if(materialsListMap!=null) {
+                    dh.setMaterialsList(materialsListMap.get(dh.getId()));
+                }
+                dh.setCreatorName(userService.getUser(dh.getCreator()).getUsername());
+                resList.add(dh);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
