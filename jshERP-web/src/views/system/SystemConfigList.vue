@@ -53,43 +53,40 @@
               （如果启用则需要到<b>用户管理</b>进行<b>分配仓库</b>）
             </a-form-item>
           </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户权限">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerFlagSwitch" @change="onCustomerChange"></a-switch>
               （如果启用则需要到<b>用户管理</b>进行<b>分配客户</b>）
             </a-form-item>
           </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="负库存">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支持负库存">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
-              （如果启用则单据支持<b>负库存</b>录入）
+              （如果启用则单据<b>支持负库存</b>录入）
             </a-form-item>
           </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="以销定购">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="purchaseBySaleFlagSwitch" @change="onPurchaseBySaleChange"></a-switch>
               （如果启用则根据<b>销售订单</b>来定制<b>采购订单</b>，进货后再发给客户）
             </a-form-item>
           </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="超出关联单据">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="overLinkBillFlagSwitch" @change="onOverLinkBillChange"></a-switch>
+              （如果启用则允许当前单据<b>超出关联单据</b>的商品数量进行出入库）
+            </a-form-item>
+          </a-col>
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="更新单价">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="updateUnitPriceFlagSwitch" @change="onUpdateUnitPriceChange"></a-switch>
               （如果启用则会根据单据录入自动更新商品单价，默认是启用状态）
             </a-form-item>
           </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
@@ -151,6 +148,7 @@
         customerFlagSwitch: false, //客户权限状态
         minusStockFlagSwitch: false, //负库存状态
         purchaseBySaleFlagSwitch: false, //以销定购状态
+        overLinkBillFlagSwitch: false, //超出关联单据状态
         updateUnitPriceFlagSwitch: true, //更新单价状态
         forceApprovalFlagSwitch: false, //强审核
         multiLevelApprovalFlagSwitch: false, //多级审核
@@ -224,6 +222,9 @@
       onPurchaseBySaleChange(checked) {
         this.model.purchaseBySaleFlag = checked?'1':'0'
       },
+      onOverLinkBillChange(checked) {
+        this.model.overLinkBillFlag = checked?'1':'0'
+      },
       onUpdateUnitPriceChange(checked) {
         this.model.updateUnitPriceFlag = checked?'1':'0'
       },
@@ -265,6 +266,9 @@
               }
               if (record.purchaseBySaleFlag != null) {
                 this.purchaseBySaleFlagSwitch = record.purchaseBySaleFlag == '1' ? true : false;
+              }
+              if (record.overLinkBillFlag != null) {
+                this.overLinkBillFlagSwitch = record.overLinkBillFlag == '1' ? true : false;
               }
               if (record.updateUnitPriceFlag != null) {
                 this.updateUnitPriceFlagSwitch = record.updateUnitPriceFlag == '1' ? true : false;
@@ -348,6 +352,7 @@
         this.customerFlagSwitch = false
         this.minusStockFlagSwitch = false
         this.purchaseBySaleFlagSwitch = false
+        this.overLinkBillFlagSwitch = false
         this.updateUnitPriceFlagSwitch = true
         this.forceApprovalFlagSwitch = false
         this.multiLevelApprovalFlagSwitch = false

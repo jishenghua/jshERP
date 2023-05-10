@@ -159,7 +159,7 @@
           </a-col>
           <a-col v-if="depositStatus" :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="扣除订金">
-              <a-input v-decorator.trim="[ 'deposit' ]" />
+              <a-input v-decorator.trim="[ 'deposit' ]" @change="onChangeDeposit"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
