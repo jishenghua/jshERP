@@ -1214,6 +1214,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andOverLinkBillFlagIsNull() {
+            addCriterion("over_link_bill_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagIsNotNull() {
+            addCriterion("over_link_bill_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagEqualTo(String value) {
+            addCriterion("over_link_bill_flag =", value, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagNotEqualTo(String value) {
+            addCriterion("over_link_bill_flag <>", value, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagGreaterThan(String value) {
+            addCriterion("over_link_bill_flag >", value, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("over_link_bill_flag >=", value, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagLessThan(String value) {
+            addCriterion("over_link_bill_flag <", value, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagLessThanOrEqualTo(String value) {
+            addCriterion("over_link_bill_flag <=", value, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagLike(String value) {
+            addCriterion("over_link_bill_flag like", value, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagNotLike(String value) {
+            addCriterion("over_link_bill_flag not like", value, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagIn(List<String> values) {
+            addCriterion("over_link_bill_flag in", values, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagNotIn(List<String> values) {
+            addCriterion("over_link_bill_flag not in", values, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagBetween(String value1, String value2) {
+            addCriterion("over_link_bill_flag between", value1, value2, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverLinkBillFlagNotBetween(String value1, String value2) {
+            addCriterion("over_link_bill_flag not between", value1, value2, "overLinkBillFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

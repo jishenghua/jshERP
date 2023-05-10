@@ -218,6 +218,23 @@ public class SystemConfigService {
     }
 
     /**
+     * 获取超出关联单据开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getOverLinkBillFlag() throws Exception {
+        boolean overLinkBillFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getOverLinkBillFlag();
+            if(("1").equals(flag)) {
+                overLinkBillFlag = true;
+            }
+        }
+        return overLinkBillFlag;
+    }
+
+    /**
      * 获取强审核开关
      * @return
      * @throws Exception

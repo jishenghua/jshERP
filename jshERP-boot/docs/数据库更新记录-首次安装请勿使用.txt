@@ -1474,3 +1474,10 @@ insert into `jsh_function` (`number`, `name`, `parent_number`, `url`, `component
 -- 给系统参数表增加更新单价启用标记
 -- --------------------------------------------------------
 alter table jsh_system_config add update_unit_price_flag varchar(1) DEFAULT '1' COMMENT '更新单价启用标记，0未启用，1启用' after force_approval_flag;
+
+-- --------------------------------------------------------
+-- 时间 2023年05月10日
+-- by jishenghua
+-- 给系统参数表增加超出关联单据启用标记
+-- --------------------------------------------------------
+alter table jsh_system_config add over_link_bill_flag varchar(1) DEFAULT '0' COMMENT '超出关联单据启用标记，0未启用，1启用' after update_unit_price_flag;

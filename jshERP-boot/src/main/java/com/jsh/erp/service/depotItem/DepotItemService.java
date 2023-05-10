@@ -521,8 +521,10 @@ public class DepotItemService {
                         BigDecimal preNumber = rowObj.getBigDecimal("preNumber");
                         BigDecimal finishNumber = rowObj.getBigDecimal("finishNumber");
                         if(depotItem.getOperNumber().add(finishNumber).compareTo(preNumber)>0) {
-                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
-                                    String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
+                            if(!systemConfigService.getOverLinkBillFlag()) {
+                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
+                                        String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
+                            }
                         }
                     } else if("update".equals(actionType)) {
                         //当前单据的类型
@@ -535,8 +537,10 @@ public class DepotItemService {
                         //除去此单据之外的已入库|已出库
                         BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
                         if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)>0) {
-                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
-                                    String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
+                            if(!systemConfigService.getOverLinkBillFlag()) {
+                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
+                                        String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
+                            }
                         }
                     }
                 }
@@ -679,7 +683,7 @@ public class DepotItemService {
             if(materialAndSum.getOperNumber().compareTo(BigDecimal.ZERO) != 0) {
                 BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
                 if (materialSum != null) {
-                    if (materialSum.compareTo(materialAndSum.getOperNumber()) != 0) {
+                    if (materialSum.compareTo(materialAndSum.getOperNumber()) < 0) {
                         res = BusinessConstants.BILLS_STATUS_SKIPING;
                     }
                 } else {

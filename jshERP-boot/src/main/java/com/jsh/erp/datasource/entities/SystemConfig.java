@@ -33,6 +33,8 @@ public class SystemConfig {
 
     private String updateUnitPriceFlag;
 
+    private String overLinkBillFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -163,6 +165,14 @@ public class SystemConfig {
 
     public void setUpdateUnitPriceFlag(String updateUnitPriceFlag) {
         this.updateUnitPriceFlag = updateUnitPriceFlag == null ? null : updateUnitPriceFlag.trim();
+    }
+
+    public String getOverLinkBillFlag() {
+        return overLinkBillFlag;
+    }
+
+    public void setOverLinkBillFlag(String overLinkBillFlag) {
+        this.overLinkBillFlag = overLinkBillFlag == null ? null : overLinkBillFlag.trim();
     }
 
     public Long getTenantId() {
