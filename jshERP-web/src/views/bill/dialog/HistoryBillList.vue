@@ -81,6 +81,8 @@
           <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
           <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
           <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
+          <a-tag v-if="record.status === '9' && queryParam.subType === '采购订单'" color="orange">审核中</a-tag>
+          <a-tag v-if="record.status === '9' && queryParam.subType === '销售订单'" color="orange">审核中</a-tag>
         </template>
       </a-table>
       <!-- table区域-end -->
