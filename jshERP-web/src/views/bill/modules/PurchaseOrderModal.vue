@@ -89,6 +89,9 @@
                 <a-button style="margin-left: 8px" @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
               </a-col>
             </a-row>
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;padding-left:20px;">
+              <a-button icon="import" @click="onImport(prefixNo)">导入明细</a-button>
+            </a-row>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">
@@ -161,6 +164,7 @@
       </a-form>
     </a-spin>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
+    <import-item-modal ref="importItemModalForm" @ok="importItemModalFormOk"></import-item-modal>
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
@@ -171,6 +175,7 @@
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
+  import ImportItemModal from '../dialog/ImportItemModal'
   import LinkBillList from '../dialog/LinkBillList'
   import VendorModal from '../../system/modules/VendorModal'
   import AccountModal from '../../system/modules/AccountModal'
@@ -189,6 +194,7 @@
     mixins: [JEditableTableMixin,BillModalMixin],
     components: {
       ManyAccountModal,
+      ImportItemModal,
       LinkBillList,
       VendorModal,
       AccountModal,
@@ -273,7 +279,8 @@
         url: {
           add: '/depotHead/addDepotHeadAndDetail',
           edit: '/depotHead/updateDepotHeadAndDetail',
-          detailList: '/depotItem/getDetailList'
+          detailList: '/depotItem/getDetailList',
+          importExcelUrl: "/depotItem/importItemExcel",
         }
       }
     },

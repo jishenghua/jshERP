@@ -807,6 +807,19 @@ export const BillModalMixin = {
       this.scanStatus = true
       this.scanBarCode = ''
     },
+    onImport(prefixNo) {
+      this.$refs.importItemModalForm.add(prefixNo);
+    },
+    importItemModalFormOk(data) {
+      this.materialTable.dataSource = data
+      this.$nextTick(() => {
+        let discountLastMoney = 0
+        for (let i = 0; i < data.length; i++) {
+          discountLastMoney += data[i].taxLastMoney
+        }
+        this.form.setFieldsValue({'discountLastMoney':discountLastMoney})
+      });
+    },
     //保存并审核
     handleOkAndCheck() {
       this.billStatus = '1'
