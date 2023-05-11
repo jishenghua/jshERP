@@ -217,4 +217,11 @@ public interface DepotItemMapperEx {
 
     List<DepotItem> getDepotItemByBatchNumber(
             @Param("batchNumber") String batchNumber);
+
+    List<MaterialVo4Unit> getBillItemByParam(
+            @Param("barCodes") String barCodes);
+
+    BigDecimal getCurrentStockByParam(
+            @Param("depotId") Long depotId,
+            @Param("mId") Long mId);
 }

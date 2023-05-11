@@ -924,4 +924,31 @@
         and di.batch_number = #{batchNumber}
         and dh.type = '入库'
     </select>
+
+    <select id="getBillItemByParam" resultType="com.jsh.erp.datasource.entities.MaterialVo4Unit">
+        select m.id, m.name, m.standard, m.model, me.id meId,me.commodity_unit commodityUnit,
+        me.purchase_decimal purchaseDecimal, me.wholesale_decimal wholesaleDecimal, me.bar_code mBarCode
+        from jsh_material m
+        left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
+        where 1=1
+        and me.default_flag='1'
+        <if test="barCodes != null">
+            and me.bar_code in (${barCodes})
+        </if>
+        and ifnull(m.delete_flag,'0') !='1'
+        order by m.id desc
+    </select>
+
+    <select id="getCurrentStockByParam" resultType="java.math.BigDecimal">
+        select sum(ifnull(current_number,0))
+        from jsh_material_current_stock
+        where 1=1
+        <if test="depotId != null">
+            and depot_id = ${depotId}
+        </if>
+        <if test="mId != null">
+            and material_id = ${mId}
+        </if>
+        and ifnull(delete_flag,'0') !='1'
+    </select>
 </mapper>

@@ -16,7 +16,6 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
-import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
@@ -1113,5 +1112,72 @@ public class DepotItemService {
 
     public Long getCountByMaterialAndDepot(Long mId, Long depotId) {
         return depotItemMapperEx.getCountByMaterialAndDepot(mId, depotId);
+    }
+
+    public JSONObject parseMapByExcelData(String barCodes, Map<String, Map<String, String>> barCodeNumMap, String prefixNo) {
+        JSONObject map = new JSONObject();
+        try {
+            JSONArray arr = new JSONArray();
+            List<MaterialVo4Unit> list = depotItemMapperEx.getBillItemByParam(barCodes);
+            for (MaterialVo4Unit m: list) {
+                JSONObject item = new JSONObject();
+                item.put("barCode", m.getmBarCode());
+                item.put("name", m.getName());
+                item.put("standard", m.getStandard());
+                if(StringUtil.isNotEmpty(m.getModel())) {
+                    item.put("model", m.getModel());
+                }
+                if(StringUtil.isNotEmpty(m.getColor())) {
+                    item.put("color", m.getColor());
+                }
+                if(StringUtil.isNotEmpty(m.getSku())) {
+                    item.put("sku", m.getSku());
+                }
+                BigDecimal stock = depotItemMapperEx.getCurrentStockByParam(null, m.getId());
+                item.put("stock", stock);
+                item.put("unit", m.getCommodityUnit());
+                Map<String, String> materialMap = barCodeNumMap.get(m.getmBarCode());
+                BigDecimal operNumber = BigDecimal.ZERO;
+                BigDecimal unitPrice = BigDecimal.ZERO;
+                BigDecimal taxRate = BigDecimal.ZERO;
+                if(materialMap.get("num")!=null) {
+                    operNumber = new BigDecimal(materialMap.get("num"));
+                }
+                if(StringUtil.isNotEmpty(materialMap.get("unitPrice"))) {
+                    unitPrice = new BigDecimal(materialMap.get("unitPrice"));
+                } else {
+                    if("CGDD".equals(prefixNo)) {
+                        unitPrice = m.getPurchaseDecimal();
+                    } else if("XSDD".equals(prefixNo)) {
+                        unitPrice = m.getWholesaleDecimal();
+                    }
+                }
+                if(materialMap.get("taxRate")!=null) {
+                    taxRate = new BigDecimal(materialMap.get("taxRate"));
+                }
+                String remark = materialMap.get("remark");
+                item.put("operNumber", operNumber);
+                item.put("unitPrice", unitPrice);
+                BigDecimal allPrice = BigDecimal.ZERO;
+                if(unitPrice!=null && unitPrice.compareTo(BigDecimal.ZERO)!=0) {
+                    allPrice = unitPrice.multiply(operNumber);
+                }
+                BigDecimal taxMoney = BigDecimal.ZERO;
+                if(taxRate.compareTo(BigDecimal.ZERO) != 0) {
+                    taxMoney = taxRate.multiply(allPrice).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                }
+                BigDecimal taxLastMoney = allPrice.add(taxMoney);
+                item.put("allPrice", allPrice);
+                item.put("taxRate", taxRate);
+                item.put("taxMoney", taxMoney);
+                item.put("taxLastMoney", taxLastMoney);
+                item.put("remark", remark);
+                arr.add(item);
+            }
+            map.put("rows", arr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 }

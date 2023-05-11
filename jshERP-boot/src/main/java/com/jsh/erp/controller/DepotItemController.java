@@ -10,31 +10,31 @@ import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
-import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jxl.Sheet;
+import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
-import static com.jsh.erp.utils.Tools.getCenternTime;
 
 /**
  * @author ji-sheng-hua 华夏erp
@@ -857,6 +857,76 @@ public class DepotItemController {
             e.printStackTrace();
             res.code = 500;
             res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * Excel导入明细
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/importItemExcel")
+    public BaseResponseInfo importItemExcel(MultipartFile file,
+                                            @RequestParam(required = false, value = "prefixNo") String prefixNo,
+                                            HttpServletRequest request, HttpServletResponse response) throws Exception{
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> data = new HashMap<>();
+        String message = "";
+        try {
+            String barCodes = "";
+            Map<String, Map<String, String>> barCodeNumMap = new HashMap<>();
+            //文件合法性校验
+            Sheet src = null;
+            try {
+                Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+                src = workbook.getSheet(0);
+            } catch (Exception e) {
+                message = "导入文件不合法，请检查";
+                data.put("message", message);
+                res.code = 400;
+                res.data = data;
+            }
+            int length = src.getRows();
+            if(length>1000) {
+                message = "导入失败，明细不能超出1000条";
+                res.code = 500;
+                data.put("message", message);
+                res.data = data;
+            } else {
+                for (int i = 2; i < length; i++) {
+                    String barCode = ExcelUtils.getContent(src, i, 0);
+                    String num = ExcelUtils.getContent(src, i, 2);
+                    String unitPrice = ExcelUtils.getContent(src, i, 3);
+                    String taxRate = ExcelUtils.getContent(src, i, 4);
+                    String remark = ExcelUtils.getContent(src, i, 5);
+                    Map<String, String> materialMap = new HashMap<>();
+                    materialMap.put("num", num);
+                    materialMap.put("unitPrice", unitPrice);
+                    materialMap.put("taxRate", taxRate);
+                    materialMap.put("remark", remark);
+                    barCodeNumMap.put(barCode, materialMap);
+                    barCodes += barCode + ",";
+                }
+                if (StringUtil.isNotEmpty(barCodes)) {
+                    barCodes = barCodes.substring(0, barCodes.length() - 1);
+                }
+                JSONObject map = depotItemService.parseMapByExcelData(barCodes, barCodeNumMap, prefixNo);
+                if (map != null) {
+                    res.code = 200;
+                } else {
+                    res.code = 500;
+                }
+                res.data = map;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "导入失败，请检查表格内容";
+            res.code = 500;
+            data.put("message", message);
+            res.data = data;
         }
         return res;
     }
