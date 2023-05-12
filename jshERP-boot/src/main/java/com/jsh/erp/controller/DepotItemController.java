@@ -877,7 +877,6 @@ public class DepotItemController {
         String message = "";
         try {
             String barCodes = "";
-            Map<String, Map<String, String>> barCodeNumMap = new HashMap<>();
             //文件合法性校验
             Sheet src = null;
             try {
@@ -889,31 +888,32 @@ public class DepotItemController {
                 res.code = 400;
                 res.data = data;
             }
-            int length = src.getRows();
-            if(length>1000) {
+            if(src.getRows()>1000) {
                 message = "导入失败，明细不能超出1000条";
                 res.code = 500;
                 data.put("message", message);
                 res.data = data;
             } else {
-                for (int i = 2; i < length; i++) {
+                List<Map<String, String>> detailList = new ArrayList<>();
+                for (int i = 2; i < src.getRows(); i++) {
                     String barCode = ExcelUtils.getContent(src, i, 0);
                     String num = ExcelUtils.getContent(src, i, 2);
                     String unitPrice = ExcelUtils.getContent(src, i, 3);
                     String taxRate = ExcelUtils.getContent(src, i, 4);
                     String remark = ExcelUtils.getContent(src, i, 5);
                     Map<String, String> materialMap = new HashMap<>();
+                    materialMap.put("barCode", barCode);
                     materialMap.put("num", num);
                     materialMap.put("unitPrice", unitPrice);
                     materialMap.put("taxRate", taxRate);
                     materialMap.put("remark", remark);
-                    barCodeNumMap.put(barCode, materialMap);
-                    barCodes += barCode + ",";
+                    detailList.add(materialMap);
+                    barCodes += "'" + barCode + "',";
                 }
                 if (StringUtil.isNotEmpty(barCodes)) {
                     barCodes = barCodes.substring(0, barCodes.length() - 1);
                 }
-                JSONObject map = depotItemService.parseMapByExcelData(barCodes, barCodeNumMap, prefixNo);
+                JSONObject map = depotItemService.parseMapByExcelData(barCodes, detailList, prefixNo);
                 if (map != null) {
                     res.code = 200;
                 } else {

@@ -931,7 +931,6 @@
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         where 1=1
-        and me.default_flag='1'
         <if test="barCodes != null">
             and me.bar_code in (${barCodes})
         </if>
