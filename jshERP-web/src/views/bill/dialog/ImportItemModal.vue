@@ -40,7 +40,7 @@
     },
     data () {
       return {
-        title:"明细导入",
+        title:"导入明细",
         visible: false,
         prefixNo: '',
         model: {},
@@ -89,7 +89,7 @@
         if (info.file.status === 'done') {
           if (info.file.response) {
             if (info.file.response.code === 200) {
-              this.$message.success('文件导入成功')
+              this.$message.success('导入成功' + info.file.response.data.rows.length + '条')
               this.$emit('ok', info.file.response.data.rows);
               this.close()
             } else if (info.file.response.code === 500) {
