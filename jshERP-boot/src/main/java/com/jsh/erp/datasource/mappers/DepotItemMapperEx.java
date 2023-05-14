@@ -56,12 +56,14 @@ public interface DepotItemMapperEx {
 
     List<DepotItemVo4WithInfoEx> findByAll(
             @Param("materialParam") String materialParam,
+            @Param("categoryIdList") List<Long> categoryIdList,
             @Param("endTime") String endTime,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     int findByAllCount(
             @Param("materialParam") String materialParam,
+            @Param("categoryIdList") List<Long> categoryIdList,
             @Param("endTime") String endTime);
 
     List<DepotItemVo4WithInfoEx> getListWithBugOrSale(

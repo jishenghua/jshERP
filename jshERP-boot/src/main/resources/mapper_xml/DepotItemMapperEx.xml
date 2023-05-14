@@ -328,6 +328,12 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
+        <if test="categoryIdList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryIdList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}
         </if>
@@ -349,6 +355,12 @@
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="categoryIdList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryIdList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="endTime != null">
             and dh.oper_time &lt;= #{endTime}

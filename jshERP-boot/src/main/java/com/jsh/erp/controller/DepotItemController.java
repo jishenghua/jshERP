@@ -324,6 +324,7 @@ public class DepotItemController {
     public BaseResponseInfo findByAll(@RequestParam("currentPage") Integer currentPage,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam(value = "depotIds",required = false) String depotIds,
+                                      @RequestParam(value = "categoryId", required = false) Long categoryId,
                                       @RequestParam("monthTime") String monthTime,
                                       @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
@@ -331,13 +332,17 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            List<Long> categoryIdList = new ArrayList<>();
+            if(categoryId != null){
+                categoryIdList = materialService.getListByParentId(categoryId);
+            }
             String timeA = Tools.firstDayOfMonth(monthTime) + BusinessConstants.DAY_FIRST_TIME;
             String timeB = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
             List<Long> depotList = parseListByDepotIds(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
-                    timeB,(currentPage-1)*pageSize, pageSize);
+                    categoryIdList, timeB,(currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
-            int total = depotItemService.findByAllCount(StringUtil.toNull(materialParam), timeB);
+            int total = depotItemService.findByAllCount(StringUtil.toNull(materialParam), categoryIdList, timeB);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -396,21 +401,28 @@ public class DepotItemController {
     @GetMapping(value = "/totalCountMoney")
     @ApiOperation(value = "统计总计金额")
     public BaseResponseInfo totalCountMoney(@RequestParam(value = "depotIds",required = false) String depotIds,
+                                            @RequestParam(value = "categoryId", required = false) Long categoryId,
                                             @RequestParam("monthTime") String monthTime,
                                             @RequestParam("materialParam") String materialParam,
                                             HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            List<Long> categoryIdList = new ArrayList<>();
+            if(categoryId != null){
+                categoryIdList = materialService.getListByParentId(categoryId);
+            }
             String endTime = Tools.lastDayOfMonth(monthTime) + BusinessConstants.DAY_LAST_TIME;
             List<Long> depotList = parseListByDepotIds(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.findByAll(StringUtil.toNull(materialParam),
-                    endTime, null, null);
+                    categoryIdList, endTime, null, null);
+            BigDecimal thisAllStock = BigDecimal.ZERO;
             BigDecimal thisAllPrice = BigDecimal.ZERO;
             if (null != dataList) {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     Long mId = diEx.getMId();
                     BigDecimal thisSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,endTime);
+                    thisAllStock = thisAllStock.add(thisSum);
                     BigDecimal unitPrice = diEx.getPurchaseDecimal();
                     if(unitPrice == null) {
                         unitPrice = BigDecimal.ZERO;
@@ -418,6 +430,7 @@ public class DepotItemController {
                     thisAllPrice = thisAllPrice.add(thisSum.multiply(unitPrice));
                 }
             }
+            map.put("totalStock", thisAllStock);
             map.put("totalCount", thisAllPrice);
             res.code = 200;
             res.data = map;

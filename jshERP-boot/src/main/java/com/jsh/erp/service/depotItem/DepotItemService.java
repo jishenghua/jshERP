@@ -299,20 +299,20 @@ public class DepotItemService {
         return list;
     }
 
-    public List<DepotItemVo4WithInfoEx> findByAll(String materialParam, String endTime, Integer offset, Integer rows)throws Exception {
+    public List<DepotItemVo4WithInfoEx> findByAll(String materialParam, List<Long> categoryIdList, String endTime, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.findByAll(materialParam, endTime, offset, rows);
+            list = depotItemMapperEx.findByAll(materialParam, categoryIdList, endTime, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findByAllCount(String materialParam, String endTime)throws Exception {
+    public int findByAllCount(String materialParam, List<Long> categoryIdList, String endTime)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.findByAllCount(materialParam, endTime);
+            result = depotItemMapperEx.findByAllCount(materialParam, categoryIdList, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
