@@ -213,16 +213,8 @@
         param.monthTime = this.queryParam.monthTime;
         getAction(this.url.totalCountMoney, param).then((res)=>{
           if(res && res.code === 200) {
-            let stock = res.data.totalStock.toString();
-            let count = res.data.totalCount.toString();
-            if (stock.lastIndexOf('.') > -1) {
-              stock = stock.substring(0, stock.lastIndexOf('.') + 3);
-            }
-            if (count.lastIndexOf('.') > -1) {
-              count = count.substring(0, count.lastIndexOf('.') + 3);
-            }
-            this.totalStockStr = stock;
-            this.totalCountMoneyStr = count;
+            this.totalStockStr = res.data.totalStock.toFixed(2)
+            this.totalCountMoneyStr = res.data.totalCount.toFixed(2)
           }
         })
       },
