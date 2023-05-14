@@ -934,6 +934,10 @@ public class DepotItemController {
                 }
                 res.data = map;
             }
+        } catch (BusinessRunTimeException e) {
+            res.code = 500;
+            data.put("message", e.getData().get("message"));
+            res.data = data;
         } catch (Exception e) {
             e.printStackTrace();
             message = "导入失败，请检查表格内容";

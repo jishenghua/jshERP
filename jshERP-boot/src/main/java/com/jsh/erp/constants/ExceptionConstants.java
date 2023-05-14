@@ -414,6 +414,10 @@ public class ExceptionConstants {
     //修改单据明细信息失败
     public static final int DEPOT_ITEM_EDIT_FAILED_CODE = 9000002;
     public static final String DEPOT_ITEM_EDIT_FAILED_MSG = "修改单据明细信息失败";
+    //单据明细-明细中商品不存在
+    public static final int DEPOT_ITEM_BARCODE_IS_NOT_EXIST_CODE = 9000003;
+    public static final String DEPOT_ITEM_BARCODE_IS_NOT_EXIST_MSG = "抱歉，商品条码:%s在商品管理中不存在";
+
     /**
      *  财务信息
      * type = 95
