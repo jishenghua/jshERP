@@ -32,18 +32,31 @@
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
-                <span class="table-page-search-submitButtons">
+              <a-col :md="6" :sm="24">
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </span>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item>
-                  <span>总结存金额：{{totalCountMoneyStr}}</span>
+                  <span>本月总结存数量：{{totalStockStr}}，总结存金额：{{totalCountMoneyStr}}</span>
                 </a-form-item>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="4" :sm="24">
+                  <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                                   :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form>
         </div>
@@ -93,6 +106,7 @@
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction } from '@/api/manage'
+  import {queryMaterialCategoryTreeList} from '@/api/api'
   import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
@@ -119,6 +133,7 @@
           depotId:'',
           monthTime: moment().format('YYYY-MM'),
           materialParam:'',
+          categoryId:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
@@ -127,6 +142,8 @@
         },
         depotSelected:[],
         depotList: [],
+        categoryTree:[],
+        totalStockStr: '0',
         totalCountMoneyStr: '0元',
         // 表头
         columns: [
@@ -160,6 +177,7 @@
     },
     created() {
       this.getDepotData()
+      this.loadTreeData()
       this.getTotalCountMoney()
     },
     mounted () {
@@ -195,10 +213,15 @@
         param.monthTime = this.queryParam.monthTime;
         getAction(this.url.totalCountMoney, param).then((res)=>{
           if(res && res.code === 200) {
+            let stock = res.data.totalStock.toString();
             let count = res.data.totalCount.toString();
+            if (stock.lastIndexOf('.') > -1) {
+              stock = stock.substring(0, stock.lastIndexOf('.') + 3);
+            }
             if (count.lastIndexOf('.') > -1) {
               count = count.substring(0, count.lastIndexOf('.') + 3);
             }
+            this.totalStockStr = stock;
             this.totalCountMoneyStr = count + "元";
           }
         })
@@ -206,6 +229,20 @@
       onChange: function (value, dateString) {
         console.log(dateString);
         this.queryParam.monthTime=dateString;
+      },
+      loadTreeData(){
+        let that = this;
+        let params = {};
+        params.id='';
+        queryMaterialCategoryTreeList(params).then((res)=>{
+          if(res){
+            that.categoryTree = [];
+            for (let i = 0; i < res.length; i++) {
+              let temp = res[i];
+              that.categoryTree.push(temp);
+            }
+          }
+        })
       },
       searchQuery() {
         if(this.queryParam.monthTime == ''){
