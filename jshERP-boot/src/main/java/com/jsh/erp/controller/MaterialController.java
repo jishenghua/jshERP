@@ -579,9 +579,9 @@ public class MaterialController {
             int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(materialParam), zeroStock);
             MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(materialParam));
             map.put("total", total);
-            map.put("currentStock", materialVo4Unit.getCurrentStock());
-            map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice());
-            map.put("currentWeight", materialVo4Unit.getCurrentWeight());
+            map.put("currentStock", materialVo4Unit.getCurrentStock()!=null?materialVo4Unit.getCurrentStock():BigDecimal.ZERO);
+            map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice()!=null?materialVo4Unit.getCurrentStockPrice():BigDecimal.ZERO);
+            map.put("currentWeight", materialVo4Unit.getCurrentWeight()!=null?materialVo4Unit.getCurrentWeight():BigDecimal.ZERO);
             map.put("rows", dataList);
             res.code = 200;
             res.data = map;
