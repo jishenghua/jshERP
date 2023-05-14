@@ -45,7 +45,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item>
-                  <span>本月总结存数量：{{totalStockStr}}，总结存金额：{{totalCountMoneyStr}}</span>
+                  <span>本月总结存：{{totalStockStr}}，总结存金额：{{totalCountMoneyStr}}</span>
                 </a-form-item>
               </a-col>
               <template v-if="toggleSearchStatus">
@@ -144,7 +144,7 @@
         depotList: [],
         categoryTree:[],
         totalStockStr: '0',
-        totalCountMoneyStr: '0元',
+        totalCountMoneyStr: '0',
         // 表头
         columns: [
           {
@@ -222,7 +222,7 @@
               count = count.substring(0, count.lastIndexOf('.') + 3);
             }
             this.totalStockStr = stock;
-            this.totalCountMoneyStr = count + "元";
+            this.totalCountMoneyStr = count;
           }
         })
       },

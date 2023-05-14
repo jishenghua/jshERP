@@ -238,9 +238,9 @@
             this.dataSource = res.data.rows;
             this.ipagination.total = res.data.total;
             this.tableAddTotalRow(this.columns, this.dataSource)
-            this.currentStock = res.data.currentStock;
-            this.currentStockPrice = res.data.currentStockPrice;
-            this.currentWeight = res.data.currentWeight;
+            this.currentStock = res.data.currentStock.toFixed(2);
+            this.currentStockPrice = res.data.currentStockPrice.toFixed(2);
+            this.currentWeight = res.data.currentWeight.toFixed(2);
           }
           if(res.code===510){
             this.$message.warning(res.data)
