@@ -400,6 +400,9 @@ public class ExceptionConstants {
     //单据录入-单据当前状态下不能修改
     public static final int DEPOT_HEAD_BILL_CANNOT_EDIT_CODE = 8500023;
     public static final String DEPOT_HEAD_BILL_CANNOT_EDIT_MSG = "抱歉，单据当前状态下不能修改";
+    //单据删除-单据中的序列号已经出库，不能删除
+    public static final int DEPOT_HEAD_SERIAL_IS_SELL_CODE = 8500024;
+    public static final String DEPOT_HEAD_SERIAL_IS_SELL_MSG = "抱歉，单据%s的序列号已经出库，不能删除";
 
     /**
      *  单据明细信息

@@ -1077,4 +1077,11 @@
         where dh.id=#{id}
         and ifnull(dh.delete_flag,'0') !='1'
     </update>
+
+    <select id="getSerialNumberBySell" resultType="java.lang.Integer">
+        select count(s.id) from jsh_depot_head dh
+        left join jsh_serial_number s on dh.number=s.in_bill_no
+        where dh.number = #{number}
+        and (s.out_bill_no is not null or s.out_bill_no!='')
+    </select>
 </mapper>

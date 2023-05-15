@@ -403,17 +403,29 @@ public class DepotHeadService {
             //只有未审核的单据才能被删除
             if("0".equals(depotHead.getStatus())) {
                 User userInfo = userService.getCurrentUser();
+                //删除入库单据，先校验序列号是否出库，如果未出库则同时删除序列号，如果已出库则不能删除单据
+                if (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())) {
+                    List<DepotItem> depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(depotHead.getId(), BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
+                    if (depotItemList != null && depotItemList.size() > 0) {
+                        //单据明细里面存在序列号商品
+                        int serialNumberSellCount = depotHeadMapperEx.getSerialNumberBySell(depotHead.getNumber());
+                        if (serialNumberSellCount > 0) {
+                            //已出库则不能删除单据
+                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SERIAL_IS_SELL_CODE,
+                                    String.format(ExceptionConstants.DEPOT_HEAD_SERIAL_IS_SELL_MSG, depotHead.getNumber()));
+                        } else {
+                            //删除序列号
+                            SerialNumberExample example = new SerialNumberExample();
+                            example.createCriteria().andInBillNoEqualTo(depotHead.getNumber());
+                            serialNumberService.deleteByExample(example);
+                        }
+                    }
+                }
                 //删除出库数据回收序列号
                 if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
                         && !BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
                     //查询单据子表列表
-                    List<DepotItem> depotItemList = null;
-                    try {
-                        depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(depotHead.getId(), BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
-                    } catch (Exception e) {
-                        JshException.readFail(logger, e);
-                    }
-
+                    List<DepotItem> depotItemList = depotItemMapperEx.findDepotItemListBydepotheadId(depotHead.getId(), BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED);
                     /**回收序列号*/
                     if (depotItemList != null && depotItemList.size() > 0) {
                         for (DepotItem depotItem : depotItemList) {

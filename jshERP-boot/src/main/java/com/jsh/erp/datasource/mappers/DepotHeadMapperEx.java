@@ -238,4 +238,7 @@ public interface DepotHeadMapperEx {
 
     void setAccountIdToNull(
             @Param("id") Long id);
+
+    int getSerialNumberBySell(
+            @Param("number") String number);
 }
