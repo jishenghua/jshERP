@@ -202,10 +202,12 @@
     methods: {
       show() {
         if(this.queryParam.type === '付款') {
+          this.columns[2].title = '供应商'
           this.columns[6].title = '合计付款'
           this.columns[8].title = '实际付款'
           this.prefixNo = 'FK'
         } else if(this.queryParam.type === '收款') {
+          this.columns[2].title = '客户'
           this.columns[6].title = '合计收款'
           this.columns[8].title = '实际收款'
           this.prefixNo = 'SK'
