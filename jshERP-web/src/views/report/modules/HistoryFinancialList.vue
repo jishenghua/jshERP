@@ -64,8 +64,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="收款账户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select placeholder="选择收款账户" showSearch optionFilterProp="children" v-model="queryParam.accountId">
+                <a-form-item label="账户信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select placeholder="选择账户信息" showSearch optionFilterProp="children" v-model="queryParam.accountId">
                     <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                       {{ item.name }}
                     </a-select-option>
@@ -100,7 +100,7 @@
         :loading="loading"
         @change="handleTableChange">
         <span slot="billNoCustomRender" slot-scope="text, record">
-          <a @click="myHandleDetail(record, '收款', prefixNo)">{{text}}</a>
+          <a @click="myHandleDetail(record, queryParam.type, prefixNo)">{{text}}</a>
         </span>
         <template slot="customRenderStatus" slot-scope="status">
           <a-tag v-if="status == '0'" color="red">未审核</a-tag>
@@ -154,7 +154,7 @@
           number: "",
           roleType: Vue.ls.get('roleType')
         },
-        prefixNo: 'SK',
+        prefixNo: '',
         disableMixinCreated: true,
         // 表头
         columns: [
@@ -201,6 +201,15 @@
     },
     methods: {
       show() {
+        if(this.queryParam.type === '付款') {
+          this.columns[6].title = '合计付款'
+          this.columns[8].title = '实际付款'
+          this.prefixNo = 'FK'
+        } else if(this.queryParam.type === '收款') {
+          this.columns[6].title = '合计收款'
+          this.columns[8].title = '实际收款'
+          this.prefixNo = 'SK'
+        }
         this.loadData(1)
       },
       close () {
