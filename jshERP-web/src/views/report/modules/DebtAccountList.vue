@@ -20,21 +20,22 @@
         <!-- 搜索区域 -->
         <a-form layout="inline" @keyup.enter.native="searchQuery">
           <a-row :gutter="24">
-            <a-col :md="6" :sm="8">
+            <a-col :md="6" :sm="24">
               <a-form-item label="单据编号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                 <a-input placeholder="请输入单据编号查询" v-model="queryParam.number"></a-input>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="8">
+            <a-col :md="6" :sm="24">
               <a-form-item label="商品信息" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                 <a-input placeholder="请输入名称、规格、型号" v-model="queryParam.materialParam"></a-input>
               </a-form-item>
             </a-col>
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-col :md="6" :sm="24">
+              <a-col :md="12" :sm="24">
                 <a-button type="primary" @click="searchQuery">查询</a-button>
                 <a-button style="margin-left: 8px" v-print="'#debtAccountPrint'" icon="printer">打印</a-button>
                 <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                <a-button style="margin-left: 8px" @click="handleHistoryFinancial" icon="history">{{historyText}}</a-button>
               </a-col>
             </span>
           </a-row>
@@ -55,23 +56,19 @@
           <span slot="numberCustomRender" slot-scope="text, record">
             <a @click="myHandleDetail(record)">{{record.number}}</a>
           </span>
-          <span slot="customTitle">
-            实际欠款
-            <a-tooltip title="实际欠款=本单欠款-退货单欠款（主要针对存在退货的情况）">
-              <a-icon type="question-circle" />
-            </a-tooltip>
-          </span>
         </a-table>
       </section>
       <!-- table区域-end -->
       <!-- 表单区域 -->
       <bill-detail ref="modalDetail"></bill-detail>
+      <history-financial-list ref="historyFinancial"></history-financial-list>
     </a-modal>
   </div>
 </template>
 
 <script>
   import BillDetail from '../../bill/dialog/BillDetail'
+  import HistoryFinancialList from './HistoryFinancialList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { openDownloadDialog, sheet2blob} from "@/utils/util"
   import {mixinDevice} from '@/utils/mixin'
@@ -81,7 +78,8 @@
     name: 'DebtAccountList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      BillDetail
+      BillDetail,
+      HistoryFinancialList
     },
     data () {
       return {
@@ -97,6 +95,8 @@
           roleType: Vue.ls.get('roleType'),
           status: ""
         },
+        historyText: '',
+        financialType: '',
         ipagination:{
           pageSize: 10001
         },
@@ -158,9 +158,13 @@
         if(type === '入库') {
           this.columns[7].title = '已付欠款'
           this.columns[8].title = '待付欠款'
+          this.historyText = '历史付款'
+          this.financialType = '付款'
         } else if(type === '出库') {
           this.columns[7].title = '已收欠款'
           this.columns[8].title = '待收欠款'
+          this.historyText = '历史收款'
+          this.financialType = '收款'
         }
         this.model = Object.assign({}, {});
         this.visible = true;
@@ -194,6 +198,15 @@
           aoa.push(item)
         }
         openDownloadDialog(sheet2blob(aoa), '欠款详情')
+      },
+      handleHistoryFinancial() {
+        this.$refs.historyFinancial.visible = true
+        this.$refs.historyFinancial.title = this.historyText
+        this.$refs.historyFinancial.queryParam.organId = this.queryParam.organId
+        this.$refs.historyFinancial.queryParam.beginTime = this.queryParam.beginTime
+        this.$refs.historyFinancial.queryParam.endTime = this.queryParam.endTime
+        this.$refs.historyFinancial.queryParam.type = this.financialType
+        this.$refs.historyFinancial.show()
       }
     }
   }
