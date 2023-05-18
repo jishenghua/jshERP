@@ -77,29 +77,25 @@
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter" style="margin-right: 8px">扫码录入</a-button>
               </a-col>
-              <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 6px 0 12px">
+              <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 8px 0 12px">
                 <a-input placeholder="请扫码商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
-              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px 12px 0 0">
+              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px 24px 0 0">
                 <a-button @click="stopScan" style="margin-right: 8px">收起扫码</a-button>
               </a-col>
             </a-row>
             <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
               <a-col :md="24" :sm="24">
-                <a-dropdown>
-                  <a-menu slot="overlay">
-                    <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
-                    <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
-                  </a-menu>
-                  <a-button>仓库操作 <a-icon type="down" /></a-button>
-                </a-dropdown>
+                <a-button @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
               </a-col>
             </a-row>
-            <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
-              <a-col :md="24" :sm="24">
-                <a-button style="margin-left: 8px" @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
-              </a-col>
-            </a-row>
+          </template>
+          <template #depotBatchSet>
+            <a-icon type="down" @click="handleBatchSetDepot" />
+          </template>
+          <template #depotAdd>
+            <a-divider v-if="isTenant" style="margin: 4px 0;" />
+            <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;" @click="addDepot"><a-icon type="plus" /> 新增仓库</div>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">

@@ -260,7 +260,7 @@ export const BillModalMixin = {
     },
     handleBatchSetDepot() {
       this.$refs.batchSetDepotModalForm.add();
-      this.$refs.batchSetDepotModalForm.title = "批量设置仓库";
+      this.$refs.batchSetDepotModalForm.title = "批量切换仓库";
       this.$refs.batchSetDepotModalForm.disableSubmit = false;
     },
     addDepot() {

@@ -60,7 +60,10 @@
               class="td"
               :key="col.key"
               :style="buildTdStyle(col)">
-              <span style="padding: 0 5px;">{{ col.title }}</span>
+              <span style="padding: 0 5px;">
+                {{ col.title }}
+                <slot name="depotBatchSet" v-if="col.key === 'depotId'" :target="getVM()"/>
+              </span>
             </div>
           </template>
         </div>
@@ -208,7 +211,10 @@
                           @blur="(v)=>handleBlurSearch(v,id,row,col)"
                           allowClear
                         >
-
+                          <div slot="dropdownRender" slot-scope="menu">
+                            <v-nodes :vnodes="menu" />
+                            <slot name="depotAdd" v-if="col.key === 'depotId'" :target="getVM()"/>
+                          </div>
                           <!--<template v-for="(opt,optKey) in col.options">-->
                           <!--<a-select-option :value="opt.value" :key="optKey">{{ opt.title }}</a-select-option>-->
                           <!--</template>-->
@@ -779,7 +785,13 @@
 
   export default {
     name: 'JEditableTable',
-    components: { JDate, Draggable, JInputPop, JFilePop, JSelectList },
+    components: {
+      JDate, Draggable, JInputPop, JFilePop, JSelectList,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
+    },
     provide() {
       return {
         parentIsJEditableTable: true,

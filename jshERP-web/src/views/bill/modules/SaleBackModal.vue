@@ -77,17 +77,13 @@
                 <a-button @click="stopScan" style="margin-right: 8px">收起扫码</a-button>
               </a-col>
             </a-row>
-            <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
-              <a-col :md="24" :sm="24">
-                <a-dropdown>
-                  <a-menu slot="overlay">
-                    <a-menu-item key="1" @click="handleBatchSetDepot"><a-icon type="setting"/>批量设置</a-menu-item>
-                    <a-menu-item v-if="isTenant" key="2" @click="addDepot"><a-icon type="plus"/>新增仓库</a-menu-item>
-                  </a-menu>
-                  <a-button>仓库操作 <a-icon type="down" /></a-button>
-                </a-dropdown>
-              </a-col>
-            </a-row>
+          </template>
+          <template #depotBatchSet>
+            <a-icon type="down" @click="handleBatchSetDepot" />
+          </template>
+          <template #depotAdd>
+            <a-divider v-if="isTenant" style="margin: 4px 0;" />
+            <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;" @click="addDepot"><a-icon type="plus" /> 新增仓库</div>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">
