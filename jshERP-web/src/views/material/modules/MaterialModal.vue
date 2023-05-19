@@ -116,6 +116,12 @@
                   </a-tooltip>
                 </a-form-item>
               </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓位货架" data-step="11" data-title="仓位货架"
+                  data-intro="仓位货架指的是仓库中的仓位和货架号，主要适用于仓库较大的场景，方便查找商品的准确位置">
+                  <a-input style="width: 100%" placeholder="请输入仓位货架" v-decorator.trim="[ 'position' ]" />
+                </a-form-item>
+              </a-col>
               <a-col :md="6" :sm="24" v-if="!model.id">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="11" data-title="多属性"
                   data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
@@ -461,7 +467,7 @@
         }
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
-            'categoryId','enableSerialNumber','enableBatchNumber','expiryNum','weight','remark','mfrs','otherField1','otherField2','otherField3'))
+            'categoryId','enableSerialNumber','enableBatchNumber','position','expiryNum','weight','remark','mfrs','otherField1','otherField2','otherField3'))
           autoJumpNextInput('materialHeadModal')
           autoJumpNextInput('materialDetailModal')
         });

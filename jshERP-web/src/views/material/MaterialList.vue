@@ -269,6 +269,7 @@
           {title: '零售价', dataIndex: 'commodityDecimal', width: 80},
           {title: '销售价', dataIndex: 'wholesaleDecimal', width: 80},
           {title: '最低售价', dataIndex: 'lowDecimal', width: 80},
+          {title: '仓位货架', dataIndex: 'position', width: 80},
           {title: '备注', dataIndex: 'remark', width: 80},
           {title: '状态', dataIndex: 'enabled', align: "center", width: 60,
             scopedSlots: { customRender: 'customRenderEnabled' }
