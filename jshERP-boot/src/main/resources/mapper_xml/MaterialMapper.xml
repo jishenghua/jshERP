@@ -21,6 +21,7 @@
     <result column="other_field3" jdbcType="VARCHAR" property="otherField3" />
     <result column="enable_serial_number" jdbcType="VARCHAR" property="enableSerialNumber" />
     <result column="enable_batch_number" jdbcType="VARCHAR" property="enableBatchNumber" />
+    <result column="position" jdbcType="VARCHAR" property="position" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -85,7 +86,7 @@
   <sql id="Base_Column_List">
     id, category_id, name, mfrs, model, standard, color, unit, remark, img_name, unit_id, 
     expiry_num, weight, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
-    enable_batch_number, tenant_id, delete_flag
+    enable_batch_number, position, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
     select
@@ -124,16 +125,16 @@
       img_name, unit_id, expiry_num, 
       weight, enabled, other_field1, 
       other_field2, other_field3, enable_serial_number, 
-      enable_batch_number, tenant_id, delete_flag
-      )
+      enable_batch_number, position, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
       #{mfrs,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, 
       #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{imgName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{expiryNum,jdbcType=INTEGER}, 
       #{weight,jdbcType=DECIMAL}, #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, 
       #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, #{enableSerialNumber,jdbcType=VARCHAR}, 
-      #{enableBatchNumber,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{enableBatchNumber,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Material">
     insert into jsh_material
@@ -194,6 +195,9 @@
       </if>
       <if test="enableBatchNumber != null">
         enable_batch_number,
+      </if>
+      <if test="position != null">
+        position,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -259,6 +263,9 @@
       </if>
       <if test="enableBatchNumber != null">
         #{enableBatchNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -334,6 +341,9 @@
       <if test="record.enableBatchNumber != null">
         enable_batch_number = #{record.enableBatchNumber,jdbcType=VARCHAR},
       </if>
+      <if test="record.position != null">
+        position = #{record.position,jdbcType=VARCHAR},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -366,6 +376,7 @@
       other_field3 = #{record.otherField3,jdbcType=VARCHAR},
       enable_serial_number = #{record.enableSerialNumber,jdbcType=VARCHAR},
       enable_batch_number = #{record.enableBatchNumber,jdbcType=VARCHAR},
+      position = #{record.position,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -429,6 +440,9 @@
       <if test="enableBatchNumber != null">
         enable_batch_number = #{enableBatchNumber,jdbcType=VARCHAR},
       </if>
+      <if test="position != null">
+        position = #{position,jdbcType=VARCHAR},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -458,6 +472,7 @@
       other_field3 = #{otherField3,jdbcType=VARCHAR},
       enable_serial_number = #{enableSerialNumber,jdbcType=VARCHAR},
       enable_batch_number = #{enableBatchNumber,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

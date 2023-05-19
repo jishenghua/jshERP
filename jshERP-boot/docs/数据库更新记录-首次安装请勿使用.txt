@@ -1481,3 +1481,10 @@ alter table jsh_system_config add update_unit_price_flag varchar(1) DEFAULT '1' 
 -- 给系统参数表增加超出关联单据启用标记
 -- --------------------------------------------------------
 alter table jsh_system_config add over_link_bill_flag varchar(1) DEFAULT '0' COMMENT '超出关联单据启用标记，0未启用，1启用' after update_unit_price_flag;
+
+-- --------------------------------------------------------
+-- 时间 2023年05月19日
+-- by jishenghua
+-- 给商品主表增加仓位货架
+-- --------------------------------------------------------
+alter table jsh_material add position varchar(100) DEFAULT NULL COMMENT '仓位货架' after enable_batch_number;

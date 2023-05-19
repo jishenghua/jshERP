@@ -41,6 +41,8 @@ public class Material {
 
     private String enableBatchNumber;
 
+    private String position;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -195,6 +197,14 @@ public class Material {
 
     public void setEnableBatchNumber(String enableBatchNumber) {
         this.enableBatchNumber = enableBatchNumber == null ? null : enableBatchNumber.trim();
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position == null ? null : position.trim();
     }
 
     public Long getTenantId() {
