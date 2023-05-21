@@ -7,6 +7,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
+import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
 import com.jsh.erp.datasource.vo.MaterialVoSearch;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
@@ -461,15 +462,15 @@ public class MaterialService {
         return result;
     }
 
-    public void exportExcel(String categoryId, String materialParam, String color, String weight,
+    public void exportExcel(String categoryId, String materialParam, String color, String materialOther, String weight,
                                              String expiryNum, String enabled, String enableSerialNumber, String enableBatchNumber,
-                                             String remark, String mpList, HttpServletResponse response)throws Exception {
+                                             String remark, HttpServletResponse response)throws Exception {
         List<Long> idList = new ArrayList<>();
         if(StringUtil.isNotEmpty(categoryId)){
             idList = getListByParentId(Long.parseLong(categoryId));
         }
         //查询商品主条码相关列表
-        List<MaterialVo4Unit> dataList = materialMapperEx.exportExcel(materialParam, color, weight, expiryNum, enabled, enableSerialNumber,
+        List<MaterialVo4Unit> dataList = materialMapperEx.exportExcel(materialParam, color, materialOther, weight, expiryNum, enabled, enableSerialNumber,
                 enableBatchNumber, remark, idList);
         //查询商品副条码相关列表
         Map<Long, MaterialExtend> otherMaterialMap = new HashMap<>();
@@ -477,7 +478,8 @@ public class MaterialService {
         for(MaterialExtend me: otherDataList) {
             otherMaterialMap.put(me.getMaterialId(), me);
         }
-        String nameStr = "名称*,规格,型号,颜色,类别,基础重量(kg),保质期(天),基本单位*,副单位,基本条码*,副条码,比例,采购价,零售价,销售价,最低售价,状态*,序列号,批号,备注";
+        String nameStr = "名称*,规格,型号,颜色,类别,基础重量(kg),保质期(天),基本单位*,副单位,基本条码*,副条码,比例,多属性," +
+                "采购价,零售价,销售价,最低售价,状态*,序列号,批号,仓位货架,制造商,自定义1,自定义2,自定义3,备注";
         List<String> nameList = StringUtil.strToStringList(nameStr);
         //仓库列表
         List<Depot> depotList = depotService.getAllList();
@@ -512,16 +514,22 @@ public class MaterialService {
                 objs[9] = m.getmBarCode();
                 objs[10] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getBarCode();
                 objs[11] = m.getRatio() == null ? "" : m.getRatio().toString();
-                objs[12] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[13] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[14] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[15] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[16] = m.getEnabled() ? "1" : "0";
-                objs[17] = m.getEnableSerialNumber();
-                objs[18] = m.getEnableBatchNumber();
-                objs[19] = m.getRemark();
+                objs[12] = m.getSku();
+                objs[13] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[14] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[15] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[16] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[17] = m.getEnabled() ? "1" : "0";
+                objs[18] = m.getEnableSerialNumber();
+                objs[19] = m.getEnableBatchNumber();
+                objs[20] = m.getPosition();
+                objs[21] = m.getMfrs();
+                objs[22] = m.getOtherField1();
+                objs[23] = m.getOtherField2();
+                objs[24] = m.getOtherField3();
+                objs[25] = m.getRemark();
                 //仓库期初库存
-                int i = 20;
+                int i = 26;
                 for(Depot depot: depotList) {
                     BigDecimal number = misMap.get(m.getId() + "_" + depot.getId());
                     objs[i] = number == null ? "0" : number.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
@@ -596,8 +604,6 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_UNIT_EMPTY_MSG, i+1));
                 }
-                // 批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位
-                batchCheckExistMaterialListByParam(mList, name, standard, model, color, unit);
                 MaterialWithInitStock m = new MaterialWithInitStock();
                 m.setName(name);
                 m.setStandard(standard);
@@ -627,14 +633,25 @@ public class MaterialService {
                 String barCode = ExcelUtils.getContent(src, i, 9); //基础条码
                 String manyBarCode = ExcelUtils.getContent(src, i, 10); //副条码
                 String ratio = ExcelUtils.getContent(src, i, 11); //比例
-                String purchaseDecimal = ExcelUtils.getContent(src, i, 12); //采购价
-                String commodityDecimal = ExcelUtils.getContent(src, i, 13); //零售价
-                String wholesaleDecimal = ExcelUtils.getContent(src, i, 14); //销售价
-                String lowDecimal = ExcelUtils.getContent(src, i, 15); //最低售价
-                String enabled = ExcelUtils.getContent(src, i, 16); //状态
-                String enableSerialNumber = ExcelUtils.getContent(src, i, 17); //序列号
-                String enableBatchNumber = ExcelUtils.getContent(src, i, 18); //批号
-                String remark = ExcelUtils.getContent(src, i, 19); //备注
+                String sku = ExcelUtils.getContent(src, i, 12); //多属性
+                String purchaseDecimal = ExcelUtils.getContent(src, i, 13); //采购价
+                String commodityDecimal = ExcelUtils.getContent(src, i, 14); //零售价
+                String wholesaleDecimal = ExcelUtils.getContent(src, i, 15); //销售价
+                String lowDecimal = ExcelUtils.getContent(src, i, 16); //最低售价
+                String enabled = ExcelUtils.getContent(src, i, 17); //状态
+                String enableSerialNumber = ExcelUtils.getContent(src, i, 18); //序列号
+                String enableBatchNumber = ExcelUtils.getContent(src, i, 19); //批号
+                String position = ExcelUtils.getContent(src, i, 20); //仓位货架
+                String mfrs = ExcelUtils.getContent(src, i, 21); //制造商
+                String otherField1 = ExcelUtils.getContent(src, i, 22); //自定义1
+                String otherField2 = ExcelUtils.getContent(src, i, 23); //自定义2
+                String otherField3 = ExcelUtils.getContent(src, i, 24); //自定义3
+                String remark = ExcelUtils.getContent(src, i, 25); //备注
+                m.setPosition(StringUtil.isNotEmpty(position)?position:null);
+                m.setMfrs(StringUtil.isNotEmpty(mfrs)?mfrs:null);
+                m.setOtherField1(StringUtil.isNotEmpty(otherField1)?otherField1:null);
+                m.setOtherField2(StringUtil.isNotEmpty(otherField2)?otherField2:null);
+                m.setOtherField3(StringUtil.isNotEmpty(otherField3)?otherField3:null);
                 m.setRemark(remark);
                 //状态格式错误
                 if(!"1".equals(enabled) && !"0".equals(enabled)) {
@@ -651,12 +668,15 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_CODE,
                             String.format(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_MSG, manyBarCode));
                 }
+                // 批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位、多属性
+                batchCheckExistMaterialListByParam(mList, name, standard, model, color, unit, sku);
                 //批量校验excel中有无重复条码
                 batchCheckExistBarCodeByParam(mList, barCode, manyBarCode);
                 JSONObject materialExObj = new JSONObject();
                 JSONObject basicObj = new JSONObject();
                 basicObj.put("barCode", barCode);
                 basicObj.put("commodityUnit", unit);
+                basicObj.put("sku", sku);
                 basicObj.put("purchaseDecimal", purchaseDecimal);
                 basicObj.put("commodityDecimal", commodityDecimal);
                 basicObj.put("wholesaleDecimal", wholesaleDecimal);
@@ -816,7 +836,7 @@ public class MaterialService {
     private Map<Long, BigDecimal> getStockMapCache(Sheet src, int depotCount, Map<String, Long> depotMap, int i) throws Exception {
         Map<Long, BigDecimal> stockMap = new HashMap<>();
         for(int j = 1; j<= depotCount; j++) {
-            int col = 19 + j;
+            int col = 25 + j;
             if(col < src.getColumns()){
                 String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                 if(StringUtil.isNotEmpty(depotName)) {
@@ -838,14 +858,23 @@ public class MaterialService {
      * @param mList
      */
     public void batchCheckExistMaterialListByParam(List<MaterialWithInitStock> mList, String name, String standard,
-                                                   String model, String color, String unit) {
+                                                   String model, String color, String unit, String sku) {
         for(MaterialWithInitStock material: mList){
+            String materialSku = "";
+            JSONObject materialExObj = material.getMaterialExObj();
+            if(materialExObj!=null && materialExObj.get("basic")!=null) {
+                JSONObject basicObj = materialExObj.getJSONObject("basic");
+                if(basicObj!=null && materialExObj.get("sku")!=null) {
+                    materialSku = basicObj.getString("sku");
+                }
+            }
             if(name.equals(material.getName()) &&
                     standard.equals(material.getStandard()) &&
                     model.equals(material.getModel()) &&
                     color.equals(material.getColor()) &&
-                    unit.equals(material.getUnit())){
-                String info = name + "-" + standard + "-" + model + "-" + color + "-" + unit;
+                    unit.equals(material.getUnit()) &&
+                    sku.equals(materialSku)) {
+                String info = name + "-" + standard + "-" + model + "-" + color + "-" + unit + "-" + sku;
                 throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_CODE,
                         String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_EXIST_MSG, info));
             }
@@ -892,7 +921,7 @@ public class MaterialService {
      * @param user
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void insertOrUpdateMaterialExtend(JSONObject materialExObj, String type, String defaultFlag, Long mId, User user) {
+    public void insertOrUpdateMaterialExtend(JSONObject materialExObj, String type, String defaultFlag, Long mId, User user) throws Exception {
         if(StringUtil.isExist(materialExObj.get(type))){
             String basicStr = materialExObj.getString(type);
             MaterialExtend materialExtend = JSONObject.parseObject(basicStr, MaterialExtend.class);
@@ -902,7 +931,19 @@ public class MaterialService {
             materialExtend.setUpdateTime(System.currentTimeMillis());
             materialExtend.setCreateSerial(user.getLoginName());
             materialExtend.setUpdateSerial(user.getLoginName());
-            Long meId = materialExtendService.selectIdByMaterialIdAndDefaultFlag(mId, defaultFlag);
+            Long meId = 0L;
+            if(StringUtil.isNotEmpty(materialExtend.getSku())){
+                //含sku的商品，特殊逻辑
+                meId = materialExtendService.selectIdByMaterialIdAndBarCode(mId, materialExtend.getBarCode());
+                List<MaterialExtend> meList = materialExtendService.getListByMaterialIdAndDefaultFlagAndBarCode(mId, "1", materialExtend.getBarCode());
+                if(meList.size() == 0) {
+                    materialExtend.setDefaultFlag("1");
+                } else {
+                    materialExtend.setDefaultFlag("0");
+                }
+            } else {
+                meId = materialExtendService.selectIdByMaterialIdAndDefaultFlag(mId, defaultFlag);
+            }
             if(meId==0L){
                 materialExtendMapper.insertSelective(materialExtend);
             } else {

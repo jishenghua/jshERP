@@ -354,6 +354,27 @@ public class MaterialExtendService {
         return id;
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public Long selectIdByMaterialIdAndBarCode(Long materialId, String barCode) {
+        Long id = 0L;
+        MaterialExtendExample example = new MaterialExtendExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andBarCodeEqualTo(barCode)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialExtend> list = materialExtendMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            id = list.get(0).getId();
+        }
+        return id;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public List<MaterialExtend> getListByMaterialIdAndDefaultFlagAndBarCode(Long materialId, String defaultFlag, String barCode) {
+        MaterialExtendExample example = new MaterialExtendExample();
+        example.createCriteria().andMaterialIdEqualTo(materialId).andDefaultFlagEqualTo(defaultFlag).andBarCodeNotEqualTo(barCode)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        return materialExtendMapper.selectByExample(example);
+    }
+
     public MaterialExtend getInfoByBarCode(String barCode)throws Exception {
         MaterialExtend materialExtend = new MaterialExtend();
         MaterialExtendExample example = new MaterialExtendExample();

@@ -339,6 +339,7 @@ public class MaterialController {
     public void exportExcel(@RequestParam(value = "categoryId", required = false) String categoryId,
                             @RequestParam(value = "materialParam", required = false) String materialParam,
                             @RequestParam(value = "color", required = false) String color,
+                            @RequestParam(value = "materialOther", required = false) String materialOther,
                             @RequestParam(value = "weight", required = false) String weight,
                             @RequestParam(value = "expiryNum", required = false) String expiryNum,
                             @RequestParam(value = "enabled", required = false) String enabled,
@@ -348,9 +349,10 @@ public class MaterialController {
                             @RequestParam(value = "mpList", required = false) String mpList,
                             HttpServletRequest request, HttpServletResponse response) {
         try {
-            materialService.exportExcel(StringUtil.toNull(categoryId), StringUtil.toNull(materialParam), StringUtil.toNull(color), StringUtil.toNull(weight),
+            materialService.exportExcel(StringUtil.toNull(categoryId), StringUtil.toNull(materialParam), StringUtil.toNull(color),
+                    StringUtil.toNull(materialOther), StringUtil.toNull(weight),
                     StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
-                    StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), mpList, response);
+                    StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), response);
         } catch (Exception e) {
             e.printStackTrace();
         }

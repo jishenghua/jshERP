@@ -368,13 +368,13 @@
 
     <select id="exportExcel" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
         select m.*,u.name unitName, u.ratio, mc.name categoryName,me.bar_code,me.commodity_unit,me.purchase_decimal, me.commodity_decimal,
-        me.wholesale_decimal, me.low_decimal
-        FROM jsh_material m
+        me.wholesale_decimal, me.low_decimal, me.sku
+        from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
-        and me.default_flag=1
+        and (me.default_flag=1 or m.unit_id is null)
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
@@ -382,6 +382,11 @@
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
+        </if>
+        <if test="materialOther != null and materialOther !=''">
+            <bind name="bindOther" value="'%'+materialOther+'%'"/>
+            and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
+            or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
