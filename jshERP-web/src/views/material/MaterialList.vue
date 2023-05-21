@@ -392,6 +392,7 @@
         }
       },
       handleImportXls() {
+        this.$message.warning('最近增加了多属性、仓位货架、制造商、自定义列，请下载最新的模板！');
         let importExcelUrl = this.url.importExcelUrl
         let templateUrl = '/doc/goods_template.xls'
         let templateName = '商品Excel模板[下载]'

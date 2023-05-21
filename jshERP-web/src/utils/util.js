@@ -502,10 +502,11 @@ export function getNowFormatDateTime() {
 }
 
 /**
- * js获取当前时间， 格式“MMddHHMMSS”
+ * js获取当前时间， 格式“yyyyMMddHHMMSS”
  */
 export function getNowFormatStr() {
   let date = new Date();
+  let year = date.getFullYear();
   let month = date.getMonth() + 1;
   let strDate = date.getDate();
   let strHours = date.getHours();
@@ -526,7 +527,7 @@ export function getNowFormatStr() {
   if (strSeconds >= 0 && strSeconds <= 9) {
     strSeconds = "0" + strSeconds;
   }
-  return month +''+ strDate +''+ strHours +''+ strMinutes +''+ strSeconds;
+  return year +''+ month +''+ strDate +''+ strHours +''+ strMinutes +''+ strSeconds;
 }
 
 /**
