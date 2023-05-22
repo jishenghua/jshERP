@@ -236,7 +236,7 @@
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
-                return text.replace(",","，");
+                return text.replaceAll(",","，");
               }
             }
           },
