@@ -61,6 +61,11 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="仓位货架" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input style="width: 100%" placeholder="请输入仓位货架查询" v-model="queryParam.position"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="扩展信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input style="width: 100%" placeholder="请输入扩展信息查询" v-model="queryParam.materialOther"></a-input>
                   </a-form-item>
@@ -221,6 +226,7 @@
           enabled: '',
           enableSerialNumber:'',
           enableBatchNumber:'',
+          position: '',
           remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
