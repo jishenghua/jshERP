@@ -729,6 +729,9 @@ public class MaterialService {
             List<Long> deleteCurrentStockMaterialIdList = new ArrayList<>();
             List<MaterialInitialStock> insertInitialStockMaterialList = new ArrayList<>();
             List<MaterialCurrentStock> insertCurrentStockMaterialList = new ArrayList<>();
+            //防止初始库存和当前库存出现重复
+            Map<String, String> materialDepotInitialMap = new HashMap<>();
+            Map<String, String> materialDepotCurrentMap = new HashMap<>();
             for(MaterialWithInitStock m: mList) {
                 Long mId = 0L;
                 //判断该商品是否存在，如果不存在就新增，如果存在就更新
@@ -752,26 +755,33 @@ public class MaterialService {
                 Map<Long, BigDecimal> stockMap = m.getStockMap();
                 for(Depot depot: depotList){
                     Long depotId = depot.getId();
+                    String materialDepotKey = mId + "_" + depotId;
                     BigDecimal stock = stockMap.get(depot.getId());
                     //新增初始库存
                     if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
-                        MaterialInitialStock materialInitialStock = new MaterialInitialStock();
-                        materialInitialStock.setMaterialId(mId);
-                        materialInitialStock.setDepotId(depotId);
-                        materialInitialStock.setNumber(stock);
-                        insertInitialStockMaterialList.add(materialInitialStock);
-                        deleteInitialStockMaterialIdList.add(mId);
+                        if(materialDepotInitialMap.get(materialDepotKey)==null) {
+                            MaterialInitialStock materialInitialStock = new MaterialInitialStock();
+                            materialInitialStock.setMaterialId(mId);
+                            materialInitialStock.setDepotId(depotId);
+                            materialInitialStock.setNumber(stock);
+                            insertInitialStockMaterialList.add(materialInitialStock);
+                            deleteInitialStockMaterialIdList.add(mId);
+                            materialDepotInitialMap.put(materialDepotKey, materialDepotKey);
+                        }
                     }
                     //新增或更新当前库存
                     Long billCount = depotItemService.getCountByMaterialAndDepot(mId, depotId);
                     if(billCount == 0) {
                         if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
-                            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-                            materialCurrentStock.setMaterialId(mId);
-                            materialCurrentStock.setDepotId(depotId);
-                            materialCurrentStock.setCurrentNumber(stock);
-                            insertCurrentStockMaterialList.add(materialCurrentStock);
-                            deleteCurrentStockMaterialIdList.add(mId);
+                            if(materialDepotCurrentMap.get(materialDepotKey)==null) {
+                                MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+                                materialCurrentStock.setMaterialId(mId);
+                                materialCurrentStock.setDepotId(depotId);
+                                materialCurrentStock.setCurrentNumber(stock);
+                                insertCurrentStockMaterialList.add(materialCurrentStock);
+                                deleteCurrentStockMaterialIdList.add(mId);
+                                materialDepotCurrentMap.put(materialDepotKey, materialDepotKey);
+                            }
                         }
                     } else {
                         BigDecimal initStock = getInitStock(mId, depotId);
@@ -780,12 +790,15 @@ public class MaterialService {
                         if(currentNumber!=null && initStock!=null && stock!=null) {
                             currentNumber = currentNumber.subtract(initStock).add(stock);
                         }
-                        MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-                        materialCurrentStock.setMaterialId(mId);
-                        materialCurrentStock.setDepotId(depotId);
-                        materialCurrentStock.setCurrentNumber(currentNumber);
-                        insertCurrentStockMaterialList.add(materialCurrentStock);
-                        deleteCurrentStockMaterialIdList.add(mId);
+                        if(materialDepotCurrentMap.get(materialDepotKey)==null) {
+                            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+                            materialCurrentStock.setMaterialId(mId);
+                            materialCurrentStock.setDepotId(depotId);
+                            materialCurrentStock.setCurrentNumber(currentNumber);
+                            insertCurrentStockMaterialList.add(materialCurrentStock);
+                            deleteCurrentStockMaterialIdList.add(mId);
+                            materialDepotCurrentMap.put(materialDepotKey, materialDepotKey);
+                        }
                     }
                 }
             }
