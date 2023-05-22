@@ -114,7 +114,7 @@ public class MaterialService {
     }
 
     public List<MaterialVo4Unit> select(String materialParam, String color, String materialOther, String weight, String expiryNum,
-                                        String enableSerialNumber, String enableBatchNumber, String enabled,
+                                        String enableSerialNumber, String enableBatchNumber, String position, String enabled,
                                         String remark, String categoryId, String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = new String[]{};
@@ -129,7 +129,7 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             list= materialMapperEx.selectByConditionMaterial(materialParam, color, materialOther, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, enabled, remark, idList, mpList, offset, rows);
+                    enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList, offset, rows);
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
@@ -146,7 +146,7 @@ public class MaterialService {
     }
 
     public Long countMaterial(String materialParam, String color, String materialOther, String weight, String expiryNum,
-                              String enableSerialNumber, String enableBatchNumber, String enabled,
+                              String enableSerialNumber, String enableBatchNumber, String position, String enabled,
                               String remark, String categoryId,String mpList)throws Exception {
         Long result =null;
         try{
@@ -155,7 +155,7 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             result= materialMapperEx.countsByMaterial(materialParam, color, materialOther, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, enabled, remark, idList, mpList);
+                    enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

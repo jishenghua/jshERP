@@ -70,6 +70,10 @@
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
         </if>
+        <if test="position != null and position !=''">
+            <bind name="bindPosition" value="'%'+position+'%'"/>
+            and m.position like #{bindPosition}
+        </if>
         <if test="enabled != null and enabled !=''">
             and m.enabled = #{enabled}
         </if>
@@ -124,6 +128,10 @@
         </if>
         <if test="enableBatchNumber != null and enableBatchNumber !=''">
             and m.enable_batch_number = #{enableBatchNumber}
+        </if>
+        <if test="position != null and position !=''">
+            <bind name="bindPosition" value="'%'+position+'%'"/>
+            and m.position like #{bindPosition}
         </if>
         <if test="enabled != null and enabled !=''">
             and m.enabled = #{enabled}
