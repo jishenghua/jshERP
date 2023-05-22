@@ -132,6 +132,13 @@ public interface DepotItemMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("forceFlag") Boolean forceFlag);
 
+    BigDecimal getSkuStockCheckSumByDepotList(
+            @Param("depotList") List<Long> depotList,
+            @Param("meId") Long meId,
+            @Param("forceFlag") Boolean forceFlag,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime);
+
     BigDecimal getStockCheckSumByDepotList(
             @Param("depotList") List<Long> depotList,
             @Param("mId") Long mId,

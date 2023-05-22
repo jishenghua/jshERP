@@ -883,6 +883,8 @@ public class DepotItemService {
     public BigDecimal getSkuStockByParam(Long depotId, Long meId, String beginTime, String endTime) throws Exception {
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         List<Long> depotList = depotService.parseDepotList(depotId);
+        //盘点复盘后数量的变动
+        BigDecimal stockCheckSum = depotItemMapperEx.getSkuStockCheckSumByDepotList(depotList, meId, forceFlag, beginTime, endTime);
         DepotItemVo4Stock stockObj = depotItemMapperEx.getSkuStockByParamWithDepotList(depotList, meId, forceFlag, beginTime, endTime);
         BigDecimal stockSum = BigDecimal.ZERO;
         if(stockObj!=null) {
@@ -897,7 +899,7 @@ public class DepotItemService {
             stockSum = inTotal.add(transfInTotal).add(assemInTotal).add(disAssemInTotal)
                     .subtract(outTotal).subtract(transfOutTotal).subtract(assemOutTotal).subtract(disAssemOutTotal);
         }
-        return stockSum;
+        return stockCheckSum.add(stockSum);
     }
 
     /**

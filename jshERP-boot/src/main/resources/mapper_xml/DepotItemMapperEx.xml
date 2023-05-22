@@ -606,6 +606,33 @@
         and ifnull(di.delete_flag, '0') != '1') tb
     </select>
 
+    <select id="getSkuStockCheckSumByDepotList"  resultType="java.math.BigDecimal">
+        select ifnull(sum(di.basic_number),0) stockCheckSum from jsh_depot_head dh
+        left JOIN jsh_depot_item di on dh.id=di.header_id
+        where 1=1
+        <if test="meId != null">
+            and di.material_extend_id=#{meId}
+        </if>
+        and dh.sub_type='盘点复盘'
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+        and ifnull(di.delete_flag,'0') !='1'
+    </select>
+
     <select id="getStockCheckSumByDepotList"  resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) stockCheckSum from jsh_depot_head dh
         left JOIN jsh_depot_item di on dh.id=di.header_id
