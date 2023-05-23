@@ -816,6 +816,7 @@ export const BillModalMixin = {
         let discountLastMoney = 0
         for (let i = 0; i < data.length; i++) {
           discountLastMoney += data[i].taxLastMoney
+          this.changeColumnShow(data[i])
         }
         this.form.setFieldsValue({'discountLastMoney':discountLastMoney})
       });
