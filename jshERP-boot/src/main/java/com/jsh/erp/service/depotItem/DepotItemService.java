@@ -1116,7 +1116,7 @@ public class DepotItemService {
         return depotItemMapperEx.getCountByMaterialAndDepot(mId, depotId);
     }
 
-    public JSONObject parseMapByExcelData(String barCodes, List<Map<String, String>> detailList, String prefixNo) {
+    public JSONObject parseMapByExcelData(String barCodes, List<Map<String, String>> detailList, String prefixNo) throws Exception {
         JSONObject map = new JSONObject();
         JSONArray arr = new JSONArray();
         List<MaterialVo4Unit> list = depotItemMapperEx.getBillItemByParam(barCodes);
@@ -1142,7 +1142,12 @@ public class DepotItemService {
                     if(StringUtil.isNotEmpty(m.getSku())) {
                         item.put("sku", m.getSku());
                     }
-                    BigDecimal stock = depotItemMapperEx.getCurrentStockByParam(null, m.getId());
+                    BigDecimal stock = BigDecimal.ZERO;
+                    if(StringUtil.isNotEmpty(m.getSku())){
+                        stock = getSkuStockByParam(null, m.getMeId(),null,null);
+                    } else {
+                        stock = depotItemMapperEx.getCurrentStockByParam(null, m.getId());
+                    }
                     item.put("stock", stock);
                     item.put("unit", m.getCommodityUnit());
                     BigDecimal operNumber = BigDecimal.ZERO;
