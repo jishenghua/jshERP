@@ -15,6 +15,7 @@ import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,6 +63,9 @@ public class DepotItemController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private UserService userService;
 
     @Resource
     private SystemConfigService systemConfigService;
@@ -186,7 +190,10 @@ public class DepotItemController {
                               HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            List<DepotItemVo4WithInfoEx> dataList = new ArrayList<DepotItemVo4WithInfoEx>();
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
+            List<DepotItemVo4WithInfoEx> dataList = new ArrayList<>();
+            String billCategory = depotHeadService.getBillCategory(depotHeadService.getDepotHead(headerId).getSubType());
             if(headerId != 0) {
                 dataList = depotItemService.getDetailList(headerId);
             }
@@ -234,15 +241,15 @@ public class DepotItemController {
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
                     item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
-                    item.put("purchaseDecimal", diEx.getPurchaseDecimal());  //采购价
+                    item.put("purchaseDecimal", roleService.parseBillPriceByLimit(diEx.getPurchaseDecimal(), billCategory, priceLimit, request));  //采购价
                     if("basic".equals(linkType)) {
                         //正常情况显示金额，而以销定购的情况不能显示金额
-                        item.put("unitPrice", diEx.getUnitPrice());
-                        item.put("taxUnitPrice", diEx.getTaxUnitPrice());
-                        item.put("allPrice", diEx.getAllPrice());
-                        item.put("taxRate", diEx.getTaxRate());
-                        item.put("taxMoney", diEx.getTaxMoney());
-                        item.put("taxLastMoney", diEx.getTaxLastMoney());
+                        item.put("unitPrice", roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request));
+                        item.put("taxUnitPrice", roleService.parseBillPriceByLimit(diEx.getTaxUnitPrice(), billCategory, priceLimit, request));
+                        item.put("allPrice", roleService.parseBillPriceByLimit(diEx.getAllPrice(), billCategory, priceLimit, request));
+                        item.put("taxRate", roleService.parseBillPriceByLimit(diEx.getTaxRate(), billCategory, priceLimit, request));
+                        item.put("taxMoney", roleService.parseBillPriceByLimit(diEx.getTaxMoney(), billCategory, priceLimit, request));
+                        item.put("taxLastMoney", roleService.parseBillPriceByLimit(diEx.getTaxLastMoney(), billCategory, priceLimit, request));
                     }
                     BigDecimal allWeight = diEx.getBasicNumber()==null||diEx.getWeight()==null?BigDecimal.ZERO:diEx.getBasicNumber().multiply(diEx.getWeight());
                     item.put("weight", allWeight);
@@ -265,9 +272,9 @@ public class DepotItemController {
                 if(StringUtil.isNotEmpty(isReadOnly) && "1".equals(isReadOnly)) {
                     JSONObject footItem = new JSONObject();
                     footItem.put("operNumber", totalOperNumber);
-                    footItem.put("allPrice", totalAllPrice);
-                    footItem.put("taxMoney", totalTaxMoney);
-                    footItem.put("taxLastMoney", totalTaxLastMoney);
+                    footItem.put("allPrice", roleService.parseBillPriceByLimit(totalAllPrice, billCategory, priceLimit, request));
+                    footItem.put("taxMoney", roleService.parseBillPriceByLimit(totalTaxMoney, billCategory, priceLimit, request));
+                    footItem.put("taxLastMoney", roleService.parseBillPriceByLimit(totalTaxLastMoney, billCategory, priceLimit, request));
                     footItem.put("weight", totalWeight);
                     dataArray.add(footItem);
                 }

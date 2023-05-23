@@ -107,6 +107,10 @@ public class DepotHeadService {
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
+            String billCategory = getBillCategory(subType);
             String [] depotArray = getDepotArray(subType);
             String [] creatorArray = getCreatorArray(roleType);
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
@@ -145,26 +149,33 @@ public class DepotHeadService {
                         dh.setAccountMoneyList(accountmoneylistStr);
                     }
                     if(dh.getChangeAmount() != null) {
-                        dh.setChangeAmount(dh.getChangeAmount().abs());
+                        dh.setChangeAmount(roleService.parseBillPriceByLimit(dh.getChangeAmount().abs(), billCategory, priceLimit, request));
                     } else {
                         dh.setChangeAmount(BigDecimal.ZERO);
                     }
                     if(dh.getTotalPrice() != null) {
-                        dh.setTotalPrice(dh.getTotalPrice().abs());
+                        dh.setTotalPrice(roleService.parseBillPriceByLimit(dh.getTotalPrice().abs(), billCategory, priceLimit, request));
                     }
+                    BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
+                    dh.setDiscountLastMoney(roleService.parseBillPriceByLimit(discountLastMoney, billCategory, priceLimit, request));
+                    BigDecimal backAmount = dh.getBackAmount()!=null?dh.getBackAmount():BigDecimal.ZERO;
+                    dh.setBackAmount(roleService.parseBillPriceByLimit(backAmount, billCategory, priceLimit, request));
                     if(dh.getDeposit() == null) {
                         dh.setDeposit(BigDecimal.ZERO);
+                    } else {
+                        dh.setDeposit(roleService.parseBillPriceByLimit(dh.getDeposit(), billCategory, priceLimit, request));
                     }
                     //已经完成的欠款
                     if(finishDepositMap!=null) {
-                        dh.setFinishDeposit(finishDepositMap.get(dh.getNumber()) != null ? finishDepositMap.get(dh.getNumber()) : BigDecimal.ZERO);
+                        BigDecimal finishDeposit = finishDepositMap.get(dh.getNumber()) != null ? finishDepositMap.get(dh.getNumber()) : BigDecimal.ZERO;
+                        dh.setFinishDeposit(roleService.parseBillPriceByLimit(finishDeposit, billCategory, priceLimit, request));
                     }
                     //欠款计算
-                    BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
                     BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
                     BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
-                    dh.setDebt(discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount))));
+                    BigDecimal debt = discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount)));
+                    dh.setDebt(roleService.parseBillPriceByLimit(debt, billCategory, priceLimit, request));
                     //是否有付款单或收款单
                     if(financialBillNoMap!=null) {
                         Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
@@ -725,9 +736,11 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> getDetailByNumber(String number)throws Exception {
-        List<DepotHeadVo4List> resList = new ArrayList<DepotHeadVo4List>();
+    public List<DepotHeadVo4List> getDetailByNumber(String number, HttpServletRequest request)throws Exception {
+        List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
             List<DepotHeadVo4List> list = depotHeadMapperEx.getDetailByNumber(number);
@@ -743,6 +756,7 @@ public class DepotHeadService {
                 Map<String,Integer> billSizeMap = getBillSizeMapByLinkNumberList(numberList);
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
                 DepotHeadVo4List dh = list.get(0);
+                String billCategory = getBillCategory(dh.getSubType());
                 if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
                     String accountStr = accountService.getAccountStrByIdAndMoney(accountMap, dh.getAccountIdList(), dh.getAccountMoneyList());
                     dh.setAccountName(accountStr);
@@ -756,17 +770,28 @@ public class DepotHeadService {
                     dh.setAccountMoneyList(accountmoneylistStr);
                 }
                 if(dh.getChangeAmount() != null) {
-                    dh.setChangeAmount(dh.getChangeAmount().abs());
+                    dh.setChangeAmount(roleService.parseBillPriceByLimit(dh.getChangeAmount().abs(), billCategory, priceLimit, request));
+                } else {
+                    dh.setChangeAmount(BigDecimal.ZERO);
                 }
                 if(dh.getTotalPrice() != null) {
-                    dh.setTotalPrice(dh.getTotalPrice().abs());
+                    dh.setTotalPrice(roleService.parseBillPriceByLimit(dh.getTotalPrice().abs(), billCategory, priceLimit, request));
+                }
+                BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
+                dh.setDiscountLastMoney(roleService.parseBillPriceByLimit(discountLastMoney, billCategory, priceLimit, request));
+                BigDecimal backAmount = dh.getBackAmount()!=null?dh.getBackAmount():BigDecimal.ZERO;
+                dh.setBackAmount(roleService.parseBillPriceByLimit(backAmount, billCategory, priceLimit, request));
+                if(dh.getDeposit() == null) {
+                    dh.setDeposit(BigDecimal.ZERO);
+                } else {
+                    dh.setDeposit(roleService.parseBillPriceByLimit(dh.getDeposit(), billCategory, priceLimit, request));
                 }
                 //欠款计算
-                BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                 BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
                 BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
                 BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
-                dh.setDebt(discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount))));
+                BigDecimal debt = discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount)));
+                dh.setDebt(roleService.parseBillPriceByLimit(debt, billCategory, priceLimit, request));
                 //是否有付款单或收款单
                 if(financialBillNoMap!=null) {
                     Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
@@ -1233,6 +1258,15 @@ public class DepotHeadService {
             JshException.readFail(logger, e);
         }
         return total;
+    }
 
+    public String getBillCategory(String subType) {
+        if(subType.equals("零售") || subType.equals("零售退货")) {
+            return "retail";
+        } else if(subType.equals("销售订单") || subType.equals("销售") || subType.equals("销售退货")) {
+            return "sale";
+        } else {
+            return "buy";
+        }
     }
 }

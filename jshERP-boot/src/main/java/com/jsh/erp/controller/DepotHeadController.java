@@ -383,7 +383,7 @@ public class DepotHeadController {
         BaseResponseInfo res = new BaseResponseInfo();
         DepotHeadVo4List dhl = new DepotHeadVo4List();
         try {
-            List<DepotHeadVo4List> list = depotHeadService.getDetailByNumber(number);
+            List<DepotHeadVo4List> list = depotHeadService.getDetailByNumber(number, request);
             if(list.size()>0) {
                 dhl = list.get(0);
             }

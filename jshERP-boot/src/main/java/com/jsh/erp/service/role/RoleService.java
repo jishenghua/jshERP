@@ -241,6 +241,30 @@ public class RoleService {
         return price;
     }
 
+    /**
+     * 根据权限进行屏蔽价格-单据
+     * @param price
+     * @param billCategory
+     * @param priceLimit
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public BigDecimal parseBillPriceByLimit(BigDecimal price, String billCategory, String priceLimit, HttpServletRequest request) throws Exception {
+        if(StringUtil.isNotEmpty(priceLimit)) {
+            if("buy".equals(billCategory) && priceLimit.contains("1")) {
+                return BigDecimal.ZERO;
+            }
+            if("retail".equals(billCategory) && priceLimit.contains("2")) {
+                return BigDecimal.ZERO;
+            }
+            if("sale".equals(billCategory) && priceLimit.contains("3")) {
+                return BigDecimal.ZERO;
+            }
+        }
+        return price;
+    }
+
     public String getCurrentPriceLimit(HttpServletRequest request) throws Exception {
         Long userId = userService.getUserId(request);
         return userService.getRoleTypeByUserId(userId).getPriceLimit();
