@@ -1127,62 +1127,64 @@ public class DepotItemService {
         for (Map<String, String> detailMap: detailList) {
             JSONObject item = new JSONObject();
             String barCode = detailMap.get("barCode");
-            MaterialVo4Unit m = materialMap.get(barCode);
-            if(m!=null) {
-                item.put("barCode", barCode);
-                item.put("name", m.getName());
-                item.put("standard", m.getStandard());
-                if(StringUtil.isNotEmpty(m.getModel())) {
-                    item.put("model", m.getModel());
-                }
-                if(StringUtil.isNotEmpty(m.getColor())) {
-                    item.put("color", m.getColor());
-                }
-                if(StringUtil.isNotEmpty(m.getSku())) {
-                    item.put("sku", m.getSku());
-                }
-                BigDecimal stock = depotItemMapperEx.getCurrentStockByParam(null, m.getId());
-                item.put("stock", stock);
-                item.put("unit", m.getCommodityUnit());
-                BigDecimal operNumber = BigDecimal.ZERO;
-                BigDecimal unitPrice = BigDecimal.ZERO;
-                BigDecimal taxRate = BigDecimal.ZERO;
-                if(StringUtil.isNotEmpty(detailMap.get("num"))) {
-                    operNumber = new BigDecimal(detailMap.get("num"));
-                }
-                if(StringUtil.isNotEmpty(detailMap.get("unitPrice"))) {
-                    unitPrice = new BigDecimal(detailMap.get("unitPrice"));
-                } else {
-                    if("CGDD".equals(prefixNo)) {
-                        unitPrice = m.getPurchaseDecimal();
-                    } else if("XSDD".equals(prefixNo)) {
-                        unitPrice = m.getWholesaleDecimal();
+            if(StringUtil.isNotEmpty(barCode)) {
+                MaterialVo4Unit m = materialMap.get(barCode);
+                if(m!=null) {
+                    item.put("barCode", barCode);
+                    item.put("name", m.getName());
+                    item.put("standard", m.getStandard());
+                    if(StringUtil.isNotEmpty(m.getModel())) {
+                        item.put("model", m.getModel());
                     }
+                    if(StringUtil.isNotEmpty(m.getColor())) {
+                        item.put("color", m.getColor());
+                    }
+                    if(StringUtil.isNotEmpty(m.getSku())) {
+                        item.put("sku", m.getSku());
+                    }
+                    BigDecimal stock = depotItemMapperEx.getCurrentStockByParam(null, m.getId());
+                    item.put("stock", stock);
+                    item.put("unit", m.getCommodityUnit());
+                    BigDecimal operNumber = BigDecimal.ZERO;
+                    BigDecimal unitPrice = BigDecimal.ZERO;
+                    BigDecimal taxRate = BigDecimal.ZERO;
+                    if(StringUtil.isNotEmpty(detailMap.get("num"))) {
+                        operNumber = new BigDecimal(detailMap.get("num"));
+                    }
+                    if(StringUtil.isNotEmpty(detailMap.get("unitPrice"))) {
+                        unitPrice = new BigDecimal(detailMap.get("unitPrice"));
+                    } else {
+                        if("CGDD".equals(prefixNo)) {
+                            unitPrice = m.getPurchaseDecimal();
+                        } else if("XSDD".equals(prefixNo)) {
+                            unitPrice = m.getWholesaleDecimal();
+                        }
+                    }
+                    if(StringUtil.isNotEmpty(detailMap.get("taxRate"))) {
+                        taxRate = new BigDecimal(detailMap.get("taxRate"));
+                    }
+                    String remark = detailMap.get("remark");
+                    item.put("operNumber", operNumber);
+                    item.put("unitPrice", unitPrice);
+                    BigDecimal allPrice = BigDecimal.ZERO;
+                    if(unitPrice!=null && unitPrice.compareTo(BigDecimal.ZERO)!=0) {
+                        allPrice = unitPrice.multiply(operNumber);
+                    }
+                    BigDecimal taxMoney = BigDecimal.ZERO;
+                    if(taxRate.compareTo(BigDecimal.ZERO) != 0) {
+                        taxMoney = taxRate.multiply(allPrice).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                    }
+                    BigDecimal taxLastMoney = allPrice.add(taxMoney);
+                    item.put("allPrice", allPrice);
+                    item.put("taxRate", taxRate);
+                    item.put("taxMoney", taxMoney);
+                    item.put("taxLastMoney", taxLastMoney);
+                    item.put("remark", remark);
+                    arr.add(item);
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_BARCODE_IS_NOT_EXIST_CODE,
+                            String.format(ExceptionConstants.DEPOT_ITEM_BARCODE_IS_NOT_EXIST_MSG, barCode));
                 }
-                if(StringUtil.isNotEmpty(detailMap.get("taxRate"))) {
-                    taxRate = new BigDecimal(detailMap.get("taxRate"));
-                }
-                String remark = detailMap.get("remark");
-                item.put("operNumber", operNumber);
-                item.put("unitPrice", unitPrice);
-                BigDecimal allPrice = BigDecimal.ZERO;
-                if(unitPrice!=null && unitPrice.compareTo(BigDecimal.ZERO)!=0) {
-                    allPrice = unitPrice.multiply(operNumber);
-                }
-                BigDecimal taxMoney = BigDecimal.ZERO;
-                if(taxRate.compareTo(BigDecimal.ZERO) != 0) {
-                    taxMoney = taxRate.multiply(allPrice).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
-                }
-                BigDecimal taxLastMoney = allPrice.add(taxMoney);
-                item.put("allPrice", allPrice);
-                item.put("taxRate", taxRate);
-                item.put("taxMoney", taxMoney);
-                item.put("taxLastMoney", taxLastMoney);
-                item.put("remark", remark);
-                arr.add(item);
-            } else {
-                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_BARCODE_IS_NOT_EXIST_CODE,
-                        String.format(ExceptionConstants.DEPOT_ITEM_BARCODE_IS_NOT_EXIST_MSG, barCode));
             }
         }
         map.put("rows", arr);
