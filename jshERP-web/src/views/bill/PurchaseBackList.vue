@@ -231,7 +231,7 @@
           { title: '待退金额', dataIndex: 'needBackMoney',width:80,
             customRender:function (text,record,index) {
               let needBackMoney = record.discountLastMoney + record.otherMoney
-              return needBackMoney? needBackMoney.toFixed(2):''
+              return needBackMoney? needBackMoney.toFixed(2):0
             }
           },
           { title: '退款', dataIndex: 'changeAmount',width:50},

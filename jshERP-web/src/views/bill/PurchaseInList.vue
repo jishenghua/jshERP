@@ -252,7 +252,7 @@
           { title: '待付金额', dataIndex: 'needInMoney',width:80,
             customRender:function (text,record,index) {
               let needInMoney = record.discountLastMoney + record.otherMoney - record.deposit
-              return needInMoney? needInMoney.toFixed(2):''
+              return needInMoney? needInMoney.toFixed(2):0
             }
           },
           { title: '付款', dataIndex: 'changeAmount',width:60},
