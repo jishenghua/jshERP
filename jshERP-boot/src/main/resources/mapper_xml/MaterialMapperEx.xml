@@ -621,6 +621,10 @@
                 #{item}
             </foreach>
         </if>
+        <if test="position != null and position !=''">
+            <bind name="bindPosition" value="'%'+position+'%'"/>
+            and m.position like #{bindPosition}
+        </if>
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam} or m.color like #{bindParam})
@@ -662,6 +666,10 @@
                 #{item}
             </foreach>
         </if>
+        <if test="position != null and position !=''">
+            <bind name="bindPosition" value="'%'+position+'%'"/>
+            and m.position like #{bindPosition}
+        </if>
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam} or m.color like #{bindParam})
@@ -697,6 +705,10 @@
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
+        </if>
+        <if test="position != null and position !=''">
+            <bind name="bindPosition" value="'%'+position+'%'"/>
+            and m.position like #{bindPosition}
         </if>
         <if test="materialParam != null">
             <bind name="bindParam" value="'%'+materialParam+'%'"/>

@@ -558,6 +558,7 @@ public class MaterialController {
                                              @RequestParam("pageSize") Integer pageSize,
                                              @RequestParam(value = "depotIds", required = false) String depotIds,
                                              @RequestParam(value = "categoryId", required = false) Long categoryId,
+                                             @RequestParam(value = "position", required = false) String position,
                                              @RequestParam("materialParam") String materialParam,
                                              @RequestParam("zeroStock") Integer zeroStock,
                                              @RequestParam("mpList") String mpList,
@@ -582,10 +583,10 @@ public class MaterialController {
                     depotList.add(object.getLong("id"));
                 }
             }
-            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(materialParam), zeroStock,
-                    StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
-            int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(materialParam), zeroStock);
-            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(materialParam));
+            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam),
+                    zeroStock, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
+            int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam), zeroStock);
+            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam));
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock()!=null?materialVo4Unit.getCurrentStock():BigDecimal.ZERO);
             map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice()!=null?materialVo4Unit.getCurrentStockPrice():BigDecimal.ZERO);

@@ -1260,14 +1260,14 @@ public class MaterialService {
         return materialMapperEx.getInitialStockWithMaterial(depotList);
     }
 
-    public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String materialParam, Integer zeroStock,
+    public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String position, String materialParam, Integer zeroStock,
                                                   String column, String order, Integer offset, Integer rows) throws Exception {
         Map<Long, BigDecimal> initialStockMap = new HashMap<>();
         List<MaterialInitialStockWithMaterial> initialStockList = getInitialStockWithMaterial(depotList);
         for (MaterialInitialStockWithMaterial mism: initialStockList) {
             initialStockMap.put(mism.getMaterialId(), mism.getNumber());
         }
-        List<MaterialVo4Unit> dataList = materialMapperEx.getListWithStock(depotList, idList, materialParam, zeroStock, column, order, offset, rows);
+        List<MaterialVo4Unit> dataList = materialMapperEx.getListWithStock(depotList, idList, position, materialParam, zeroStock, column, order, offset, rows);
         for(MaterialVo4Unit item: dataList) {
             item.setUnitName(null!=item.getUnitId()?item.getUnitName() + "[多单位]":item.getUnitName());
             item.setInitialStock(null!=initialStockMap.get(item.getId())?initialStockMap.get(item.getId()):BigDecimal.ZERO);
@@ -1276,12 +1276,12 @@ public class MaterialService {
         return dataList;
     }
 
-    public int getListWithStockCount(List<Long> depotList, List<Long> idList, String materialParam, Integer zeroStock) {
-        return materialMapperEx.getListWithStockCount(depotList, idList, materialParam, zeroStock);
+    public int getListWithStockCount(List<Long> depotList, List<Long> idList, String position, String materialParam, Integer zeroStock) {
+        return materialMapperEx.getListWithStockCount(depotList, idList, position, materialParam, zeroStock);
     }
 
-    public MaterialVo4Unit getTotalStockAndPrice(List<Long> depotList, List<Long> idList, String materialParam) {
-        return materialMapperEx.getTotalStockAndPrice(depotList, idList, materialParam);
+    public MaterialVo4Unit getTotalStockAndPrice(List<Long> depotList, List<Long> idList, String position, String materialParam) {
+        return materialMapperEx.getTotalStockAndPrice(depotList, idList, position, materialParam);
     }
 
     /**
