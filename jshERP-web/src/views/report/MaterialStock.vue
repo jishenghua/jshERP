@@ -51,6 +51,11 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="5" :sm="24">
+                  <a-form-item label="仓位货架" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input style="width: 100%" placeholder="请输入仓位货架查询" v-model="queryParam.position"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="零库存" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select v-model="queryParam.zeroStock">
                       <a-select-option value="0">隐藏</a-select-option>
@@ -138,6 +143,7 @@
         queryParam: {
           categoryId:'',
           materialParam:'',
+          position:'',
           zeroStock: '0',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
