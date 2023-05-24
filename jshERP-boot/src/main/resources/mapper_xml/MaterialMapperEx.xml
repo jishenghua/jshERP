@@ -422,7 +422,7 @@
             </foreach>
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        order by m.id desc
+        order by m.id desc, me.default_flag desc, me.id asc
     </select>
 
     <select id="getOtherMaterialList" resultType="com.jsh.erp.datasource.entities.MaterialExtend">
