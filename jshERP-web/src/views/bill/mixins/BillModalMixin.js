@@ -736,12 +736,12 @@ export const BillModalMixin = {
               if(!hasFinished) {
                 //将扫码的条码对应的商品加入列表
                 let item = {}
-                item.barCode = this.scanBarCode
                 let mList = res.data
                 if(mList && mList.length>0) {
                   let mInfo = mList[0]
                   this.changeColumnShow(mInfo)
                   item.depotId = mInfo.depotId
+                  item.barCode = mInfo.mBarCode
                   item.name = mInfo.name
                   item.standard = mInfo.standard
                   item.model = mInfo.model
@@ -750,6 +750,12 @@ export const BillModalMixin = {
                   item.stock = mInfo.stock
                   item.unit = mInfo.commodityUnit
                   item.sku = mInfo.sku
+                  if(mInfo.mBarCode !== this.scanBarCode) {
+                    if(this.prefixNo ==='LSCK' || this.prefixNo ==='CGTH' || this.prefixNo ==='XSCK' || this.prefixNo ==='QTCK') {
+                      //此时给序列号赋值
+                      item.snList = this.scanBarCode
+                    }
+                  }
                   item.operNumber = 1
                   item.unitPrice = mInfo.billPrice
                   item.allPrice = mInfo.billPrice
