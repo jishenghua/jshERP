@@ -156,4 +156,6 @@ public interface MaterialMapperEx {
             @Param("unit") String unit,
             @Param("unitId") Long unitId);
 
+    MaterialExtend getMaterialExtendBySerialNumber(
+            @Param("serialNumber") String serialNumber);
 }

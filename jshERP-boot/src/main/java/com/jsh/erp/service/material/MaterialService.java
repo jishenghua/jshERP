@@ -1350,4 +1350,8 @@ public class MaterialService {
         example.createCriteria().andIdIn(idList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return materialMapper.updateByExampleSelective(material, example);
     }
+
+    public MaterialExtend getMaterialExtendBySerialNumber(String serialNumber) {
+        return materialMapperEx.getMaterialExtendBySerialNumber(serialNumber);
+    }
 }

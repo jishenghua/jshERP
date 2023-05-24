@@ -2,6 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.datasource.entities.MaterialExtend;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.entities.Unit;
 import com.jsh.erp.service.depot.DepotService;
@@ -463,6 +464,11 @@ public class MaterialController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             String[] mpArr = mpList.split(",");
+            //支持序列号查询，先根据序列号查询条码，如果查不到就直接查条码
+            MaterialExtend materialExtend = materialService.getMaterialExtendBySerialNumber(barCode);
+            if(materialExtend!=null && StringUtil.isNotEmpty(materialExtend.getBarCode())) {
+                barCode = materialExtend.getBarCode();
+            }
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 for(MaterialVo4Unit mvo: list) {
