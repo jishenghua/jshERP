@@ -806,6 +806,8 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
             List<String> list = Tools.getLastMonths(6);
             JSONArray buyPriceList = new JSONArray();
             for(String month: list) {
@@ -813,7 +815,7 @@ public class DepotItemController {
                 BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month, roleType);
                 BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month, roleType);
                 obj.put("x", month);
-                obj.put("y", roleService.parsePriceByLimit(outPrice.subtract(inPrice), "buy", "***", request));
+                obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "buy", priceLimit, "***", request));
                 buyPriceList.add(obj);
             }
             map.put("buyPriceList", buyPriceList);
@@ -823,7 +825,7 @@ public class DepotItemController {
                 BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month, roleType);
                 BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month, roleType);
                 obj.put("x", month);
-                obj.put("y", roleService.parsePriceByLimit(outPrice.subtract(inPrice), "sale", "***", request));
+                obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "sale", priceLimit, "***", request));
                 salePriceList.add(obj);
             }
             map.put("salePriceList", salePriceList);
@@ -833,7 +835,7 @@ public class DepotItemController {
                 BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month, roleType);
                 BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month, roleType);
                 obj.put("x", month);
-                obj.put("y", roleService.parsePriceByLimit(outPrice.subtract(inPrice), "retail", "***", request));
+                obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "retail", priceLimit, "***", request));
                 retailPriceList.add(obj);
             }
             map.put("retailPriceList", retailPriceList);

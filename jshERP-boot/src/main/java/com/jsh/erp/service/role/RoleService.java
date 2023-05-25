@@ -82,9 +82,13 @@ public class RoleService {
             for(RoleEx roleEx: list) {
                 String priceLimit = roleEx.getPriceLimit();
                 if(StringUtil.isNotEmpty(priceLimit)) {
-                    String priceLimitStr = priceLimit.replace("1", "屏蔽采购价")
-                            .replace("2", "屏蔽零售价")
-                            .replace("3", "屏蔽销售价");
+                    String priceLimitStr = priceLimit
+                        .replace("1", "屏蔽首页采购价")
+                        .replace("2", "屏蔽首页零售价")
+                        .replace("3", "屏蔽首页销售价")
+                        .replace("4", "屏蔽单据采购价")
+                        .replace("5", "屏蔽单据零售价")
+                        .replace("6", "屏蔽单据销售价");
                     roleEx.setPriceLimitStr(priceLimitStr);
                 }
             }
@@ -219,14 +223,12 @@ public class RoleService {
     }
 
     /**
-     * 根据权限进行屏蔽价格
+     * 根据权限进行屏蔽价格-首页
      * @param price
      * @param type
      * @return
      */
-    public Object parsePriceByLimit(BigDecimal price, String type, String emptyInfo, HttpServletRequest request) throws Exception {
-        Long userId = userService.getUserId(request);
-        String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
+    public Object parseHomePriceByLimit(BigDecimal price, String type, String priceLimit, String emptyInfo, HttpServletRequest request) throws Exception {
         if(StringUtil.isNotEmpty(priceLimit)) {
             if("buy".equals(type) && priceLimit.contains("1")) {
                 return emptyInfo;
@@ -252,14 +254,37 @@ public class RoleService {
      */
     public BigDecimal parseBillPriceByLimit(BigDecimal price, String billCategory, String priceLimit, HttpServletRequest request) throws Exception {
         if(StringUtil.isNotEmpty(priceLimit)) {
-            if("buy".equals(billCategory) && priceLimit.contains("1")) {
+            if("buy".equals(billCategory) && priceLimit.contains("4")) {
                 return BigDecimal.ZERO;
             }
-            if("retail".equals(billCategory) && priceLimit.contains("2")) {
+            if("retail".equals(billCategory) && priceLimit.contains("5")) {
                 return BigDecimal.ZERO;
             }
-            if("sale".equals(billCategory) && priceLimit.contains("3")) {
+            if("sale".equals(billCategory) && priceLimit.contains("6")) {
                 return BigDecimal.ZERO;
+            }
+        }
+        return price;
+    }
+
+    /**
+     * 根据权限进行屏蔽价格-物料
+     * @param price
+     * @param type
+     * @return
+     */
+    public Object parseMaterialPriceByLimit(BigDecimal price, String type, String emptyInfo, HttpServletRequest request) throws Exception {
+        Long userId = userService.getUserId(request);
+        String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
+        if(StringUtil.isNotEmpty(priceLimit)) {
+            if("buy".equals(type) && priceLimit.contains("4")) {
+                return emptyInfo;
+            }
+            if("retail".equals(type) && priceLimit.contains("5")) {
+                return emptyInfo;
+            }
+            if("sale".equals(type) && priceLimit.contains("6")) {
+                return emptyInfo;
             }
         }
         return price;
