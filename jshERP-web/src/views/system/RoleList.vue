@@ -74,7 +74,7 @@
             </span>
             <span slot="priceLimitTitle">
               价格屏蔽
-              <a-tooltip title="价格屏蔽支持多选，主要用于控制首页界面和物料的价格屏蔽">
+              <a-tooltip title="价格屏蔽支持多选，主要用于控制首页和单据的价格屏蔽">
                 <a-icon type="question-circle" />
               </a-tooltip>
             </span>
@@ -146,7 +146,7 @@
             title: '操作',
             dataIndex: 'action',
             align:"center",
-            width: 150,
+            width: 180,
             scopedSlots: { customRender: 'action' },
           },
           {
@@ -157,7 +157,7 @@
             slots: { title: 'typeTitle' }
           },
           {
-            align:"left", dataIndex: 'priceLimitStr', width: 100,
+            align:"left", dataIndex: 'priceLimitStr', width: 300,
             slots: { title: 'priceLimitTitle' }
           },
           {

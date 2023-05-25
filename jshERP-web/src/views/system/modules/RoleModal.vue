@@ -80,9 +80,12 @@
         },
         priceLimitList: {
           options: [
-            { 'value': '1', 'text': '屏蔽采购价'},
-            { 'value': '2', 'text': '屏蔽零售价'},
-            { 'value': '3', 'text': '屏蔽销售价'}
+            { 'value': '1', 'text': '屏蔽首页采购价'},
+            { 'value': '2', 'text': '屏蔽首页零售价'},
+            { 'value': '3', 'text': '屏蔽首页销售价'},
+            { 'value': '4', 'text': '屏蔽单据采购价'},
+            { 'value': '5', 'text': '屏蔽单据零售价'},
+            { 'value': '6', 'text': '屏蔽单据销售价'}
           ],
           value: ''
         },
