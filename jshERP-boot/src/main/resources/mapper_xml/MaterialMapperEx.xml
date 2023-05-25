@@ -209,6 +209,9 @@
             <if test="enableBatchNumber != null">
                 enable_batch_number,
             </if>
+            <if test="position != null">
+                position,
+            </if>
             <if test="tenantId != null">
                 tenant_id,
             </if>
@@ -273,6 +276,9 @@
             </if>
             <if test="enableBatchNumber != null">
                 #{enableBatchNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="position != null">
+                #{position,jdbcType=VARCHAR},
             </if>
             <if test="tenantId != null">
                 #{tenantId,jdbcType=BIGINT},
