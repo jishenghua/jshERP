@@ -20,7 +20,7 @@
           type="password"
           @mouseover="initWeixin"
           autocomplete="false"
-          placeholder="密码">
+          placeholder="请输入密码">
           <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
       </a-form-item>
@@ -120,6 +120,7 @@
       }
     },
     created () {
+      this.loadInfo()
       this.checkScreen()
       this.currdatetime = new Date().getTime();
       Vue.ls.remove(ACCESS_TOKEN)
@@ -129,6 +130,13 @@
     methods: {
       ...mapActions([ "Login", "Logout" ]),
       // handler
+      loadInfo() {
+        if(this.$route.params.loginName) {
+          this.$nextTick(() => {
+            this.form.setFieldsValue({'loginName':this.$route.params.loginName})
+          })
+        }
+      },
       handleLoginName (rule, value, callback) {
         const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
         if (regex.test(value)) {

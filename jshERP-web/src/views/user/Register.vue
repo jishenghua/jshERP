@@ -240,7 +240,10 @@
                   });
                   let that = this;
                   setTimeout(function () {
-                    that.form.resetFields();
+                    that.$router.push({ name: "login", params:{
+                        loginName: register.loginName
+                      }
+                    })
                   },2000);
                 } else {
                   this.$notification['error']({
