@@ -36,4 +36,12 @@ public interface UserMapperEx {
     List<User> getListByOrgaId(
             @Param("id") Long id,
             @Param("orgaId") Long orgaId);
+
+    User getUserByWeixinOpenId(
+            @Param("weixinOpenId") String weixinOpenId);
+
+    int updateUserWithWeixinOpenId(
+            @Param("loginName") String loginName,
+            @Param("password") String password,
+            @Param("weixinOpenId") String weixinOpenId);
 }

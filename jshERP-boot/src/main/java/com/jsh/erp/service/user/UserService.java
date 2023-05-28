@@ -3,8 +3,10 @@ package com.jsh.erp.service.user;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.functions.FunctionService;
+import com.jsh.erp.service.platformConfig.PlatformConfigService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
+import com.jsh.erp.utils.HttpClient;
 import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -58,6 +60,8 @@ public class UserService {
     private RoleService roleService;
     @Resource
     private FunctionService functionService;
+    @Resource
+    private PlatformConfigService platformConfigService;
     @Resource
     private RedisService redisService;
 
@@ -280,6 +284,87 @@ public class UserService {
                     ExceptionConstants.USER_DELETE_FAILED_MSG);
         }
         return result;
+    }
+
+    /**
+     * 用户登录
+     * @param userParam
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public Map<String, Object> login(User userParam, HttpServletRequest request) throws Exception {
+        Map<String, Object> data = new HashMap<>();
+        String msgTip = "";
+        User user=null;
+        String loginName = userParam.getLoginName().trim();
+        String password = userParam.getPassword().trim();
+        //判断用户是否已经登录过，登录过不再处理
+        Object userId = redisService.getObjectFromSessionByKey(request,"userId");
+        if (userId != null) {
+            logger.info("====用户已经登录过, login 方法调用结束====");
+            msgTip = "user already login";
+        }
+        //获取用户状态
+        int userStatus = -1;
+        try {
+            redisService.deleteObjectBySession(request,"userId");
+            userStatus = validateUser(loginName, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(">>>>>>>>>>>>>用户  " + loginName + " 登录 login 方法 访问服务层异常====", e);
+            msgTip = "access service exception";
+        }
+        String token = UUID.randomUUID().toString().replaceAll("-", "") + "";
+        switch (userStatus) {
+            case ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST:
+                msgTip = "user is not exist";
+                break;
+            case ExceptionCodeConstants.UserExceptionCode.USER_PASSWORD_ERROR:
+                msgTip = "user password error";
+                break;
+            case ExceptionCodeConstants.UserExceptionCode.BLACK_USER:
+                msgTip = "user is black";
+                break;
+            case ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION:
+                msgTip = "access service error";
+                break;
+            case ExceptionCodeConstants.UserExceptionCode.BLACK_TENANT:
+                msgTip = "tenant is black";
+                break;
+            case ExceptionCodeConstants.UserExceptionCode.EXPIRE_TENANT:
+                msgTip = "tenant is expire";
+                break;
+            case ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT:
+                msgTip = "user can login";
+                //验证通过 ，可以登录，放入session，记录登录日志
+                user = getUserByLoginName(loginName);
+                if(user.getTenantId()!=null) {
+                    token = token + "_" + user.getTenantId();
+                }
+                redisService.storageObjectBySession(token,"userId",user.getId());
+                break;
+            default:
+                break;
+        }
+        data.put("msgTip", msgTip);
+        if(user!=null){
+            String roleType = getRoleTypeByUserId(user.getId()).getType(); //角色类型
+            redisService.storageObjectBySession(token,"roleType",roleType);
+            redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
+            logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            JSONArray btnStrArr = getBtnStrArrById(user.getId());
+            data.put("token", token);
+            data.put("user", user);
+            //用户的按钮权限
+            if(!"admin".equals(user.getLoginName())){
+                data.put("userBtn", btnStrArr);
+            }
+            data.put("roleType", roleType);
+        }
+        return data;
     }
 
     public int validateUser(String loginName, String password) throws Exception {
@@ -802,5 +887,37 @@ public class UserService {
             result = 1;
         }
         return result;
+    }
+
+    public User getUserByWeixinCode(String weixinCode) throws Exception {
+        String weixinUrl = platformConfigService.getPlatformConfigByKey("weixinUrl").getPlatformValue();
+        String weixinAppid = platformConfigService.getPlatformConfigByKey("weixinAppid").getPlatformValue();
+        String weixinSecret = platformConfigService.getPlatformConfigByKey("weixinSecret").getPlatformValue();
+        String url = weixinUrl + "?appid=" + weixinAppid + "&secret=" + weixinSecret + "&js_code=" + weixinCode
+                + "&grant_type=authorization_code";
+        JSONObject jsonObject = HttpClient.httpGet(url);
+        if(jsonObject!=null) {
+            String weixinOpenId = jsonObject.getString("openid");
+            if(StringUtil.isNotEmpty(weixinOpenId)) {
+                return userMapperEx.getUserByWeixinOpenId(weixinOpenId);
+            }
+        }
+        return null;
+    }
+
+    public int weixinBind(String loginName, String password, String weixinCode) throws Exception {
+        String weixinUrl = platformConfigService.getPlatformConfigByKey("weixinUrl").getPlatformValue();
+        String weixinAppid = platformConfigService.getPlatformConfigByKey("weixinAppid").getPlatformValue();
+        String weixinSecret = platformConfigService.getPlatformConfigByKey("weixinSecret").getPlatformValue();
+        String url = weixinUrl + "?appid=" + weixinAppid + "&secret=" + weixinSecret + "&js_code=" + weixinCode
+                + "&grant_type=authorization_code";
+        JSONObject jsonObject = HttpClient.httpGet(url);
+        if(jsonObject!=null) {
+            String weixinOpenId = jsonObject.getString("openid");
+            if(StringUtil.isNotEmpty(weixinOpenId)) {
+                return userMapperEx.updateUserWithWeixinOpenId(loginName, password, weixinOpenId);
+            }
+        }
+        return 0;
     }
 }

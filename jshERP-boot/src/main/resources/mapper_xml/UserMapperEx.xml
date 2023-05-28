@@ -9,6 +9,7 @@
         <result column="roleId" jdbcType="VARCHAR" property="roleId" />
         <result column="roleName" jdbcType="VARCHAR" property="roleName" />
     </resultMap>
+
     <select id="selectByConditionUser" parameterType="com.jsh.erp.datasource.entities.UserExample" resultMap="ResultMapEx">
         select tb.*,
         (select r.id from jsh_user_business ub
@@ -144,4 +145,16 @@
             and u.id != #{id}
         </if>
     </select>
+
+    <select id="getUserByWeixinOpenId" resultType="com.jsh.erp.datasource.entities.User">
+        select u.* from jsh_user u
+        where u.weixin_open_id = #{weixinOpenId}
+        and ifnull(u.status,'0') not in('1','2')
+    </select>
+
+    <update id="updateUserWithWeixinOpenId">
+        update jsh_user u set u.weixin_open_id = #{weixinOpenId}
+        where u.login_name = #{loginName} and u.password = #{password}
+        and ifnull(u.status,'0') not in('1','2')
+    </update>
 </mapper>

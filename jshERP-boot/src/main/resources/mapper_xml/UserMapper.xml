@@ -16,6 +16,7 @@
     <result column="Status" jdbcType="TINYINT" property="status" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="weixin_open_id" jdbcType="VARCHAR" property="weixinOpenId" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -78,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, username, login_name, password, leader_flag, position, department, email, phonenum, 
-    ismanager, isystem, Status, description, remark, tenant_id
+    ismanager, isystem, Status, description, remark, weixin_open_id, tenant_id
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.UserExample" resultMap="BaseResultMap">
     select
@@ -115,14 +116,14 @@
       password, leader_flag, position, 
       department, email, phonenum, 
       ismanager, isystem, Status, 
-      description, remark, tenant_id
-      )
+      description, remark, weixin_open_id, 
+      tenant_id)
     values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{leaderFlag,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, 
       #{department,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phonenum,jdbcType=VARCHAR}, 
       #{ismanager,jdbcType=TINYINT}, #{isystem,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
-      #{description,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}
-      )
+      #{description,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{weixinOpenId,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.User">
     insert into jsh_user
@@ -168,6 +169,9 @@
       </if>
       <if test="remark != null">
         remark,
+      </if>
+      <if test="weixinOpenId != null">
+        weixin_open_id,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -215,6 +219,9 @@
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="weixinOpenId != null">
+        #{weixinOpenId,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -272,6 +279,9 @@
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
+      <if test="record.weixinOpenId != null">
+        weixin_open_id = #{record.weixinOpenId,jdbcType=VARCHAR},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -296,6 +306,7 @@
       Status = #{record.status,jdbcType=TINYINT},
       description = #{record.description,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
+      weixin_open_id = #{record.weixinOpenId,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -343,6 +354,9 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="weixinOpenId != null">
+        weixin_open_id = #{weixinOpenId,jdbcType=VARCHAR},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -364,6 +378,7 @@
       Status = #{status,jdbcType=TINYINT},
       description = #{description,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
+      weixin_open_id = #{weixinOpenId,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>

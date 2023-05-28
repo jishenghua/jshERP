@@ -1044,6 +1044,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andWeixinOpenIdIsNull() {
+            addCriterion("weixin_open_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdIsNotNull() {
+            addCriterion("weixin_open_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdEqualTo(String value) {
+            addCriterion("weixin_open_id =", value, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdNotEqualTo(String value) {
+            addCriterion("weixin_open_id <>", value, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdGreaterThan(String value) {
+            addCriterion("weixin_open_id >", value, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdGreaterThanOrEqualTo(String value) {
+            addCriterion("weixin_open_id >=", value, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdLessThan(String value) {
+            addCriterion("weixin_open_id <", value, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdLessThanOrEqualTo(String value) {
+            addCriterion("weixin_open_id <=", value, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdLike(String value) {
+            addCriterion("weixin_open_id like", value, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdNotLike(String value) {
+            addCriterion("weixin_open_id not like", value, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdIn(List<String> values) {
+            addCriterion("weixin_open_id in", values, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdNotIn(List<String> values) {
+            addCriterion("weixin_open_id not in", values, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdBetween(String value1, String value2) {
+            addCriterion("weixin_open_id between", value1, value2, "weixinOpenId");
+            return (Criteria) this;
+        }
+
+        public Criteria andWeixinOpenIdNotBetween(String value1, String value2) {
+            addCriterion("weixin_open_id not between", value1, value2, "weixinOpenId");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

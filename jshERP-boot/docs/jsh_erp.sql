@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2023-05-19 19:25:05
+Date: 2023-05-28 22:28:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -716,6 +716,9 @@ INSERT INTO `jsh_platform_config` VALUES ('6', 'pay_fee_url', '租户续费地�
 INSERT INTO `jsh_platform_config` VALUES ('7', 'register_flag', '注册启用标记', '1');
 INSERT INTO `jsh_platform_config` VALUES ('8', 'app_activation_code', '手机端激活码', '');
 INSERT INTO `jsh_platform_config` VALUES ('9', 'send_workflow_url', '发起流程地址', '');
+INSERT INTO `jsh_platform_config` VALUES ('10', 'weixinUrl', '微信url', '');
+INSERT INTO `jsh_platform_config` VALUES ('11', 'weixinAppid', '微信appid', '');
+INSERT INTO `jsh_platform_config` VALUES ('12', 'weixinSecret', '微信secret', '');
 
 -- ----------------------------
 -- Table structure for jsh_role
@@ -935,6 +938,7 @@ CREATE TABLE `jsh_user` (
   `Status` tinyint(4) DEFAULT '0' COMMENT '状态，0：正常，1：删除，2封禁',
   `description` varchar(500) DEFAULT NULL COMMENT '用户描述信息',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+  `weixin_open_id` varchar(100) DEFAULT NULL COMMENT '微信绑定',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8 COMMENT='用户表';
@@ -942,9 +946,9 @@ CREATE TABLE `jsh_user` (
 -- ----------------------------
 -- Records of jsh_user
 -- ----------------------------
-INSERT INTO `jsh_user` VALUES ('63', '测试用户', 'jsh', 'e10adc3949ba59abbe56e057f20f883e', '0', '主管', null, '666666@qq.com', '1123123123132', '1', '1', '0', '', null, '63');
-INSERT INTO `jsh_user` VALUES ('120', '管理员', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '0', null, null, null, null, '1', '0', '0', null, null, '0');
-INSERT INTO `jsh_user` VALUES ('131', 'test123', 'test123', 'e10adc3949ba59abbe56e057f20f883e', '0', '总监', null, '7777777@qq.com', '', '1', '0', '0', '', null, '63');
+INSERT INTO `jsh_user` VALUES ('63', '测试用户', 'jsh', 'e10adc3949ba59abbe56e057f20f883e', '0', '主管', null, '666666@qq.com', '1123123123132', '1', '1', '0', '', null, null, '63');
+INSERT INTO `jsh_user` VALUES ('120', '管理员', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '0', null, null, null, null, '1', '0', '0', null, null, null, '0');
+INSERT INTO `jsh_user` VALUES ('131', 'test123', 'test123', 'e10adc3949ba59abbe56e057f20f883e', '0', '总监', null, '7777777@qq.com', '', '1', '0', '0', '', null, null, '63');
 
 -- ----------------------------
 -- Table structure for jsh_user_business

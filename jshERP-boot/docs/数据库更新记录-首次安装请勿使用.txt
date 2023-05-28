@@ -1488,3 +1488,14 @@ alter table jsh_system_config add over_link_bill_flag varchar(1) DEFAULT '0' COM
 -- 给商品主表增加仓位货架
 -- --------------------------------------------------------
 alter table jsh_material add position varchar(100) DEFAULT NULL COMMENT '仓位货架' after enable_batch_number;
+
+-- --------------------------------------------------------
+-- 时间 2023年05月28日
+-- by jishenghua
+-- 给用户表增加微信绑定字段
+-- 给平台表增加微信登录的相关信息
+-- --------------------------------------------------------
+alter table jsh_user add weixin_open_id varchar(100) DEFAULT NULL COMMENT '微信绑定' after remark;
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('weixinUrl', '微信url', '');
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('weixinAppid', '微信appid', '');
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('weixinSecret', '微信secret', '');

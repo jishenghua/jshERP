@@ -29,6 +29,8 @@ public class User {
 
     private String remark;
 
+    private String weixinOpenId;
+
     private Long tenantId;
 
     public Long getId() {
@@ -141,6 +143,14 @@ public class User {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getWeixinOpenId() {
+        return weixinOpenId;
+    }
+
+    public void setWeixinOpenId(String weixinOpenId) {
+        this.weixinOpenId = weixinOpenId == null ? null : weixinOpenId.trim();
     }
 
     public Long getTenantId() {

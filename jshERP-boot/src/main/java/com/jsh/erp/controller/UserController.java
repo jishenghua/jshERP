@@ -64,94 +64,18 @@ public class UserController {
     @Resource
     private RedisService redisService;
 
-    private static final String TEST_USER = "jsh";
     private static String SUCCESS = "操作成功";
     private static String ERROR = "操作失败";
-    private static final String HTTP = "http://";
-    private static final String CODE_OK = "200";
-    private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
 
     @PostMapping(value = "/login")
     @ApiOperation(value = "登录")
     public BaseResponseInfo login(@RequestBody User userParam,
                         HttpServletRequest request)throws Exception {
-        logger.info("============用户登录 login 方法调用开始==============");
-        String msgTip = "";
-        User user=null;
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-
-            String loginName = userParam.getLoginName().trim();
-            String password = userParam.getPassword().trim();
-            //判断用户是否已经登录过，登录过不再处理
-            Object userId = redisService.getObjectFromSessionByKey(request,"userId");
-            if (userId != null) {
-                logger.info("====用户已经登录过, login 方法调用结束====");
-                msgTip = "user already login";
-            }
-            //获取用户状态
-            int userStatus = -1;
-            try {
-                redisService.deleteObjectBySession(request,"userId");
-                userStatus = userService.validateUser(loginName, password);
-            } catch (Exception e) {
-                e.printStackTrace();
-                logger.error(">>>>>>>>>>>>>用户  " + loginName + " 登录 login 方法 访问服务层异常====", e);
-                msgTip = "access service exception";
-            }
-            String token = UUID.randomUUID().toString().replaceAll("-", "") + "";
-            switch (userStatus) {
-                case ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST:
-                    msgTip = "user is not exist";
-                    break;
-                case ExceptionCodeConstants.UserExceptionCode.USER_PASSWORD_ERROR:
-                    msgTip = "user password error";
-                    break;
-                case ExceptionCodeConstants.UserExceptionCode.BLACK_USER:
-                    msgTip = "user is black";
-                    break;
-                case ExceptionCodeConstants.UserExceptionCode.USER_ACCESS_EXCEPTION:
-                    msgTip = "access service error";
-                    break;
-                case ExceptionCodeConstants.UserExceptionCode.BLACK_TENANT:
-                    msgTip = "tenant is black";
-                    break;
-                case ExceptionCodeConstants.UserExceptionCode.EXPIRE_TENANT:
-                    msgTip = "tenant is expire";
-                    break;
-                case ExceptionCodeConstants.UserExceptionCode.USER_CONDITION_FIT:
-                    msgTip = "user can login";
-                    //验证通过 ，可以登录，放入session，记录登录日志
-                    user = userService.getUserByLoginName(loginName);
-                    if(user.getTenantId()!=null) {
-                        token = token + "_" + user.getTenantId();
-                    }
-                    redisService.storageObjectBySession(token,"userId",user.getId());
-                    break;
-                default:
-                    break;
-            }
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("msgTip", msgTip);
-            if(user!=null){
-                String roleType = userService.getRoleTypeByUserId(user.getId()).getType(); //角色类型
-                redisService.storageObjectBySession(token,"roleType",roleType);
-                redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
-                logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
-                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),
-                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-                JSONArray btnStrArr = userService.getBtnStrArrById(user.getId());
-                data.put("token", token);
-                data.put("user", user);
-                //用户的按钮权限
-                if(!"admin".equals(user.getLoginName())){
-                    data.put("userBtn", btnStrArr);
-                }
-                data.put("roleType", roleType);
-            }
+            Map<String, Object> data = userService.login(userParam, request);
             res.code = 200;
             res.data = data;
-            logger.info("===============用户登录 login 方法调用结束===============");
         } catch(Exception e){
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -159,6 +83,47 @@ public class UserController {
             res.data = "用户登录失败";
         }
         return res;
+    }
+
+    @PostMapping(value = "/weixinLogin")
+    @ApiOperation(value = "微信登录")
+    public BaseResponseInfo weixinLogin(@RequestBody JSONObject jsonObject,
+                                  HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            String weixinCode = jsonObject.getString("weixinCode");
+            User user = userService.getUserByWeixinCode(weixinCode);
+            if(user == null) {
+                res.code = 501;
+                res.data = "微信未绑定";
+            } else {
+                Map<String, Object> data = userService.login(user, request);
+                res.code = 200;
+                res.data = data;
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            res.code = 500;
+            res.data = "用户登录失败";
+        }
+        return res;
+    }
+
+    @PostMapping(value = "/weixinBind")
+    @ApiOperation(value = "绑定微信")
+    public String weixinBind(@RequestBody JSONObject jsonObject,
+                             HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String loginName = jsonObject.getString("loginName");
+        String password = jsonObject.getString("password");
+        String weixinCode = jsonObject.getString("weixinCode");
+        int res = userService.weixinBind(loginName, password, weixinCode);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
     }
 
     @GetMapping(value = "/getUserSession")
