@@ -381,7 +381,7 @@ CREATE TABLE `jsh_log` (
   `client_ip` varchar(200) DEFAULT NULL COMMENT '客户端IP',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `status` tinyint(4) DEFAULT NULL COMMENT '操作状态 0==成功，1==失败',
-  `content` varchar(1000) DEFAULT NULL COMMENT '详情',
+  `content` varchar(5000) DEFAULT NULL COMMENT '详情',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   PRIMARY KEY (`id`),
   KEY `FKF2696AA13E226853` (`user_id`)
