@@ -207,6 +207,19 @@
         this.$nextTick(() => this.$refs.name.focus())
         this.loadData()
         this.form.resetFields()
+        //加载存在的序列号
+        if(this.rows) {
+          this.checkDataSource = []
+          let rowObj = JSON.parse(this.rows)
+          let snArr = rowObj.snList.split(',')
+          for (let i = 0; i < snArr.length; i++) {
+            let snObj = {
+              'id': snArr[i],
+              'serialNumber': snArr[i]
+            }
+            this.checkDataSource.push(snObj)
+          }
+        }
       },
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
