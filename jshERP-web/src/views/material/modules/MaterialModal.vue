@@ -457,6 +457,7 @@
         this.manySkuStatus = false
         this.maxBarCodeInfo = ''
         this.visible = true
+        this.meDeleteIdList = []
         this.modalStyle = 'top:20px;height: 95%;'
         if(JSON.stringify(record) === '{}') {
           this.fileList = []
