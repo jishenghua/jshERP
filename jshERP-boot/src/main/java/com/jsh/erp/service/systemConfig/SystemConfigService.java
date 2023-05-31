@@ -2,18 +2,14 @@ package com.jsh.erp.service.systemConfig;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.datasource.entities.SystemConfigExample;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.SystemConfigMapper;
 import com.jsh.erp.datasource.mappers.SystemConfigMapperEx;
-import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,8 +35,6 @@ public class SystemConfigService {
     private UserService userService;
     @Resource
     private LogService logService;
-
-    private static final String TEST_USER = "jsh";
 
     public SystemConfig getSystemConfig(long id)throws Exception {
         SystemConfig result=null;

@@ -332,6 +332,9 @@ public class ExceptionConstants {
     //型号长度超出
     public static final int MATERIAL_MODEL_OVER_CODE = 8000024;
     public static final String MATERIAL_MODEL_OVER_MSG = "第%s行型号长度超出100个字符";
+    //多属性商品不能输入库存，建议进行盘点录入
+    public static final int MATERIAL_SKU_BEGIN_STOCK_FAILED_CODE = 8000025;
+    public static final String MATERIAL_SKU_BEGIN_STOCK_FAILED_MSG = "多属性商品%s不能输入库存，建议进行盘点录入";
 
     /**
      *  单据信息

@@ -7,7 +7,6 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
-import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
 import com.jsh.erp.datasource.vo.MaterialVoSearch;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
@@ -25,7 +24,6 @@ import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -759,6 +757,12 @@ public class MaterialService {
                     BigDecimal stock = stockMap.get(depot.getId());
                     //新增初始库存
                     if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
+                        String basicStr = materialExObj.getString("basic");
+                        MaterialExtend materialExtend = JSONObject.parseObject(basicStr, MaterialExtend.class);
+                        if(StringUtil.isNotEmpty(materialExtend.getSku())) {
+                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SKU_BEGIN_STOCK_FAILED_CODE,
+                                    String.format(ExceptionConstants.MATERIAL_SKU_BEGIN_STOCK_FAILED_MSG, materialExtend.getBarCode()));
+                        }
                         if(materialDepotInitialMap.get(materialDepotKey)==null) {
                             MaterialInitialStock materialInitialStock = new MaterialInitialStock();
                             materialInitialStock.setMaterialId(mId);
