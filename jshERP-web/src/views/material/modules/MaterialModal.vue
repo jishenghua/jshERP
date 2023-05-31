@@ -638,6 +638,7 @@
                   return;
                 }
               }
+              let skuCount = 0
               for(let i=0; i<formData.meList.length; i++) {
                 let commodityUnit = formData.meList[i].commodityUnit;
                 if(formData.unit) {
@@ -660,10 +661,17 @@
                     return;
                   }
                 }
+                if(formData.sku) {
+                  skuCount++
+                }
               }
               //对最低和最高安全库存进行校验
               for (let i = 0; i < formData.stock.length; i++) {
                 let depotStockObj = formData.stock[i]
+                if(skuCount && depotStockObj.initStock && depotStockObj.initStock-0) {
+                  this.$message.warning('抱歉，多属性商品不能录入期初库存，建议进行盘点录入！')
+                  return
+                }
                 if(depotStockObj.lowSafeStock && depotStockObj.highSafeStock) {
                   if(depotStockObj.lowSafeStock-0 > depotStockObj.highSafeStock-0) {
                     this.$message.warning('抱歉，' + depotStockObj.name + '的最低安全库存大于最高安全库存！')
