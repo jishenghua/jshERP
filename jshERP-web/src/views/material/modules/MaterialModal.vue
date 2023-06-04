@@ -16,7 +16,7 @@
     </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-        <a-tabs default-active-key="1">
+        <a-tabs default-active-key="1" size="small">
           <a-tab-pane key="1" tab="基本信息" id="materialHeadModal" forceRender>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
@@ -150,6 +150,16 @@
                   <a-select mode="multiple" v-decorator="[ 'skuTwo' ]" showSearch optionFilterProp="children"
                             placeholder="请选择（可多选）" @select="onSkuChange" @deselect="onSkuTwoDeSelect">
                     <a-select-option v-for="(item,index) in skuTwoList" :key="index" :value="item.value">
+                      {{ item.name }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="12" :sm="24" v-if="manySkuSelected>=3">
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" :label="skuThreeTitle">
+                  <a-select mode="multiple" v-decorator="[ 'skuThree' ]" showSearch optionFilterProp="children"
+                            placeholder="请选择（可多选）" @select="onSkuChange" @deselect="onSkuThreeDeSelect">
+                    <a-select-option v-for="(item,index) in skuThreeList" :key="index" :value="item.value">
                       {{ item.name }}
                     </a-select-option>
                   </a-select>
@@ -314,8 +324,10 @@
         materialAttributeList: [],
         skuOneTitle: '属性1',
         skuTwoTitle: '属性2',
+        skuThreeTitle: '属性3',
         skuOneList: [],
         skuTwoList: [],
+        skuThreeList: [],
         manySkuSelected: 0,
         model: {},
         showOkFlag: true,
@@ -759,7 +771,7 @@
       onManySkuChange(value) {
         this.manySkuSelected = value.length
         //控制多属性下拉框中选择项的状态
-        if(value.length < 2){
+        if(value.length < 3){
           this.materialAttributeList.forEach((item,index,array)=>{
             (array.indexOf(item.value) === -1)?Vue.set(array[index], 'disabled', false):''
           })
@@ -768,16 +780,20 @@
             (value.indexOf(item.value) === -1)?Vue.set(array[index], 'disabled', true):''
           })
         }
-        //更新属性1和属性2的下拉框
-        if(value.length <= 2) {
+        //更新属性1和属性2和属性3的下拉框
+        if(value.length <= 3) {
           let skuOneId = value[0]
           let skuTwoId = value[1]
+          let skuThreeId = value[2]
           this.materialAttributeList.forEach(item => {
             if(item.value === skuOneId) {
               this.skuOneTitle = item.name
             }
             if(item.value === skuTwoId) {
               this.skuTwoTitle = item.name
+            }
+            if(item.value === skuThreeId) {
+              this.skuThreeTitle = item.name
             }
           })
           getMaterialAttributeValueListById({'id': skuOneId}).then((res)=>{
@@ -788,6 +804,11 @@
           getMaterialAttributeValueListById({'id': skuTwoId}).then((res)=>{
             if(res) {
               this.skuTwoList = res
+            }
+          })
+          getMaterialAttributeValueListById({'id': skuThreeId}).then((res)=>{
+            if(res) {
+              this.skuThreeList = res
             }
           })
         }
@@ -803,25 +824,48 @@
       onSkuChange() {
         let skuOneData = this.form.getFieldValue('skuOne')
         let skuTwoData = this.form.getFieldValue('skuTwo')
-        this.autoSkuList(skuOneData, skuTwoData)
+        let skuThreeData = this.form.getFieldValue('skuThree')
+        this.autoSkuList(skuOneData, skuTwoData, skuThreeData)
       },
       onSkuOneDeSelect(value) {
         let skuOneData = this.form.getFieldValue('skuOne')
         let skuTwoData = this.form.getFieldValue('skuTwo')
+        let skuThreeData = this.form.getFieldValue('skuThree')
         removeByVal(skuOneData, value)
-        this.autoSkuList(skuOneData, skuTwoData)
+        this.autoSkuList(skuOneData, skuTwoData, skuThreeData)
       },
       onSkuTwoDeSelect(value) {
         let skuOneData = this.form.getFieldValue('skuOne')
         let skuTwoData = this.form.getFieldValue('skuTwo')
+        let skuThreeData = this.form.getFieldValue('skuThree')
         removeByVal(skuTwoData, value)
-        this.autoSkuList(skuOneData, skuTwoData)
+        this.autoSkuList(skuOneData, skuTwoData, skuThreeData)
       },
-      autoSkuList(skuOneData, skuTwoData) {
+      onSkuThreeDeSelect(value) {
+        let skuOneData = this.form.getFieldValue('skuOne')
+        let skuTwoData = this.form.getFieldValue('skuTwo')
+        let skuThreeData = this.form.getFieldValue('skuThree')
+        removeByVal(skuThreeData, value)
+        this.autoSkuList(skuOneData, skuTwoData, skuThreeData)
+      },
+      autoSkuList(skuOneData, skuTwoData, skuThreeData) {
         let unit = this.form.getFieldValue('unit')
         if(unit) {
           //计算多属性已经选择了几个
-          let count = this.getNumByField('skuOne') + this.getNumByField('skuTwo')
+          let skuArr = []
+          if(this.getNumByField('skuOne')) {
+            skuArr.push(skuOneData)
+          }
+          if(this.getNumByField('skuTwo')) {
+            skuArr.push(skuTwoData)
+          }
+          if(this.getNumByField('skuThree')) {
+            skuArr.push(skuThreeData)
+          }
+          let skuArrOne = skuArr[0]
+          let skuArrTwo = skuArr[1]
+          let skuArrThree = skuArr[2]
+          let count = this.getNumByField('skuOne') + this.getNumByField('skuTwo') + this.getNumByField('skuThree')
           let barCodeSku = []
           if(count === 1) {
             let skuArrOnly = []
@@ -829,23 +873,24 @@
               skuArrOnly = skuOneData
             } else if(this.getNumByField('skuTwo')) {
               skuArrOnly = skuTwoData
+            } else if(this.getNumByField('skuThree')) {
+              skuArrOnly = skuThreeData
             }
             for (let i = 0; i < skuArrOnly.length; i++) {
               barCodeSku.push(skuArrOnly[i])
             }
           } else if(count === 2) {
-            let skuArr = []
-            if(this.getNumByField('skuOne')) {
-              skuArr.push(skuOneData)
-            }
-            if(this.getNumByField('skuTwo')) {
-              skuArr.push(skuTwoData)
-            }
-            let skuArrOne = skuArr[0]
-            let skuArrTwo = skuArr[1]
             for (let i = 0; i < skuArrOne.length; i++) {
               for (let j = 0; j < skuArrTwo.length; j++) {
-                barCodeSku.push(skuArrOne[i] + ',' + skuArrTwo[j])
+                barCodeSku.push(skuArrOne[i] + '/' + skuArrTwo[j])
+              }
+            }
+          } else if(count === 3) {
+            for (let i = 0; i < skuArrOne.length; i++) {
+              for (let j = 0; j < skuArrTwo.length; j++) {
+                for (let k = 0; k < skuArrThree.length; k++) {
+                  barCodeSku.push(skuArrOne[i] + '/' + skuArrTwo[j] + '/' + skuArrThree[k])
+                }
               }
             }
           }
