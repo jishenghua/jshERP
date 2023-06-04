@@ -17,7 +17,8 @@
                 <a-row :gutter="24">
                   <a-col :md="24" :sm="24">
                     <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
-                      <a-input ref="name" style="width:400px;" placeholder="请输入序列号并回车" v-model="queryParam.name"></a-input>
+                      <a-input ref="name" style="width:400px;" placeholder="请输入序列号并回车（只能输入数字或字母）"
+                               oninput="value=value.replace(/[\W]/g,'')" v-model="queryParam.name"></a-input>
                       <div style="float:left;">
                         <a-button type="primary" @click="onAdd">添加</a-button>
                         <a-button style="margin-left: 8px" @click="clearAllSn">清空</a-button>
