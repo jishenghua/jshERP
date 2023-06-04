@@ -7,15 +7,12 @@
     v-bind:prefixNo="prefixNo"
     switchHelp
     switchFullscreen
-    @ok="handleOk"
     @cancel="handleCancel"
-    cancelText="关闭"
     :id="prefixNo"
     :style="modalStyle">
     <template slot="footer">
-      <a-button key="back" v-if="isReadOnly" @click="handleCancel">
-        关闭
-      </a-button>
+      <a-button key="back" @click="handleCancel">关闭</a-button>
+      <a-button type="primary" v-if="showOkFlag" :loading="confirmLoading" @click="handleOk">确定</a-button>
     </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
@@ -321,7 +318,7 @@
         skuTwoList: [],
         manySkuSelected: 0,
         model: {},
-        isReadOnly: false,
+        showOkFlag: true,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
