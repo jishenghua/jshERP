@@ -719,6 +719,12 @@ INSERT INTO `jsh_platform_config` VALUES ('9', 'send_workflow_url', '发起流�
 INSERT INTO `jsh_platform_config` VALUES ('10', 'weixinUrl', '微信url', '');
 INSERT INTO `jsh_platform_config` VALUES ('11', 'weixinAppid', '微信appid', '');
 INSERT INTO `jsh_platform_config` VALUES ('12', 'weixinSecret', '微信secret', '');
+INSERT INTO `jsh_platform_config` VALUES ('13', 'aliOss_endpoint', '阿里OSS-endpoint', '');
+INSERT INTO `jsh_platform_config` VALUES ('14', 'aliOss_accessKeyId', '阿里OSS-accessKeyId', '');
+INSERT INTO `jsh_platform_config` VALUES ('15', 'aliOss_accessKeySecret', '阿里OSS-accessKeySecret', '');
+INSERT INTO `jsh_platform_config` VALUES ('16', 'aliOss_bucketName', '阿里OSS-bucketName', '');
+INSERT INTO `jsh_platform_config` VALUES ('17', 'aliOss_linkUrl', '阿里OSS-linkUrl', '');
+
 
 -- ----------------------------
 -- Table structure for jsh_role

@@ -1499,3 +1499,14 @@ alter table jsh_user add weixin_open_id varchar(100) DEFAULT NULL COMMENT '微�
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('weixinUrl', '微信url', '');
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('weixinAppid', '微信appid', '');
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('weixinSecret', '微信secret', '');
+
+-- --------------------------------------------------------
+-- 时间 2023年06月05日
+-- by jishenghua
+-- 给平台表增加阿里云OSS的相关信息
+-- --------------------------------------------------------
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('aliOss_endpoint', '阿里OSS-endpoint', '');
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('aliOss_accessKeyId', '阿里OSS-accessKeyId', '');
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('aliOss_accessKeySecret', '阿里OSS-accessKeySecret', '');
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('aliOss_bucketName', '阿里OSS-bucketName', '');
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('aliOss_linkUrl', '阿里OSS-linkUrl', '');

@@ -28,6 +28,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -52,6 +54,9 @@ public class SystemConfigController {
 
     @Resource
     private SystemConfigService systemConfigService;
+
+    @Value(value="${file.uploadType}")
+    private Long fileUploadType;
 
     @Value(value="${file.path}")
     private String filePath;
@@ -128,13 +133,11 @@ public class SystemConfigController {
             String name = request.getParameter("name");
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             MultipartFile file = multipartRequest.getFile("file");// 获取上传文件对象
-            if(StringUtil.isEmpty(bizPath)){
-                bizPath = "";
+            if(fileUploadType == 1) {
+                savePath = systemConfigService.uploadLocal(file, bizPath, name, request);
+            } else if(fileUploadType == 2) {
+                savePath = systemConfigService.uploadAliOss(file, bizPath, name, request);
             }
-            String token = request.getHeader("X-Access-Token");
-            Long tenantId = Tools.getTenantIdByToken(token);
-            bizPath = bizPath + File.separator + tenantId;
-            savePath = this.uploadLocal(file, bizPath, name);
             if(StringUtil.isNotEmpty(savePath)){
                 res.code = 200;
                 res.data = savePath;
@@ -148,50 +151,6 @@ public class SystemConfigController {
             res.data = "上传失败！";
         }
         return res;
-    }
-
-    /**
-     * 本地文件上传
-     * @param mf 文件
-     * @param bizPath  自定义路径
-     * @return
-     */
-    private String uploadLocal(MultipartFile mf,String bizPath,String name){
-        try {
-            String ctxPath = filePath;
-            String fileName = null;
-            File file = new File(ctxPath + File.separator + bizPath + File.separator );
-            if (!file.exists()) {
-                file.mkdirs();// 创建文件根目录
-            }
-            String orgName = mf.getOriginalFilename();// 获取文件名
-            orgName = FileUtils.getFileName(orgName);
-            if(orgName.indexOf(".")!=-1){
-                if(StringUtil.isNotEmpty(name)) {
-                    fileName = name.substring(0, name.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
-                } else {
-                    fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
-                }
-            }else{
-                fileName = orgName+ "_" + System.currentTimeMillis();
-            }
-            String savePath = file.getPath() + File.separator + fileName;
-            File savefile = new File(savePath);
-            FileCopyUtils.copy(mf.getBytes(), savefile);
-            String dbpath = null;
-            if(StringUtil.isNotEmpty(bizPath)){
-                dbpath = bizPath + File.separator + fileName;
-            }else{
-                dbpath = fileName;
-            }
-            if (dbpath.contains("\\")) {
-                dbpath = dbpath.replace("\\", "/");
-            }
-            return dbpath;
-        } catch (IOException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return "";
     }
 
     /**
@@ -217,15 +176,25 @@ public class SystemConfigController {
             if (imgPath.endsWith(",")) {
                 imgPath = imgPath.substring(0, imgPath.length() - 1);
             }
-            String fileUrl = filePath + File.separator + imgPath;
-            File file = new File(fileUrl);
-            if(!file.exists()){
-                response.setStatus(404);
-                throw new RuntimeException("文件不存在..");
+            String fileUrl = "";
+            if(fileUploadType == 1) {
+                fileUrl = systemConfigService.getFileUrlLocal(imgPath);
+                File file = new File(fileUrl);
+                if(!file.exists()){
+                    response.setStatus(404);
+                    throw new RuntimeException("文件不存在..");
+                }
+                response.setContentType("application/force-download");// 设置强制下载不打开
+                response.addHeader("Content-Disposition", "attachment;fileName=" + new String(file.getName().getBytes("UTF-8"),"iso-8859-1"));
+                inputStream = new BufferedInputStream(new FileInputStream(fileUrl));
+            } else if(fileUploadType == 2) {
+                fileUrl = systemConfigService.getFileUrlAliOss(imgPath);
+                URL url = new URL(fileUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5 * 1000);
+                inputStream = conn.getInputStream();// 通过输入流获取图片数据
             }
-            response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition", "attachment;fileName=" + new String(file.getName().getBytes("UTF-8"),"iso-8859-1"));
-            inputStream = new BufferedInputStream(new FileInputStream(fileUrl));
             outputStream = response.getOutputStream();
             byte[] buf = new byte[1024];
             int len;
@@ -235,6 +204,9 @@ public class SystemConfigController {
             response.flushBuffer();
         } catch (IOException e) {
             logger.error("预览文件失败" + e.getMessage());
+            response.setStatus(404);
+            e.printStackTrace();
+        } catch (Exception e) {
             response.setStatus(404);
             e.printStackTrace();
         } finally {

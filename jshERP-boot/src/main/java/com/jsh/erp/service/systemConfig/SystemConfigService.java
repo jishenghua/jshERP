@@ -1,6 +1,12 @@
 package com.jsh.erp.service.systemConfig;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.oss.ClientException;
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.oss.OSSException;
+import com.aliyun.oss.model.PutObjectRequest;
+import com.aliyun.oss.model.PutObjectResult;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.datasource.entities.SystemConfigExample;
@@ -9,16 +15,24 @@ import com.jsh.erp.datasource.mappers.SystemConfigMapper;
 import com.jsh.erp.datasource.mappers.SystemConfigMapperEx;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.platformConfig.PlatformConfigService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.FileUtils;
+import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 
@@ -28,13 +42,17 @@ public class SystemConfigService {
 
     @Resource
     private SystemConfigMapper systemConfigMapper;
-
     @Resource
     private SystemConfigMapperEx systemConfigMapperEx;
+    @Resource
+    private PlatformConfigService platformConfigService;
     @Resource
     private UserService userService;
     @Resource
     private LogService logService;
+
+    @Value(value="${file.path}")
+    private String filePath;
 
     public SystemConfig getSystemConfig(long id)throws Exception {
         SystemConfig result=null;
@@ -141,6 +159,132 @@ public class SystemConfigService {
             JshException.readFail(logger, e);
         }
         return list==null?0:list.size();
+    }
+
+    /**
+     * 本地文件上传
+     * @param mf 文件
+     * @param bizPath  自定义路径
+     * @param name  自定义文件名
+     * @return
+     */
+    public String uploadLocal(MultipartFile mf, String bizPath, String name, HttpServletRequest request) {
+        try {
+            if(StringUtil.isEmpty(bizPath)){
+                bizPath = "";
+            }
+            String token = request.getHeader("X-Access-Token");
+            Long tenantId = Tools.getTenantIdByToken(token);
+            bizPath = bizPath + File.separator + tenantId;
+            String ctxPath = filePath;
+            String fileName = null;
+            File file = new File(ctxPath + File.separator + bizPath + File.separator );
+            if (!file.exists()) {
+                file.mkdirs();// 创建文件根目录
+            }
+            String orgName = mf.getOriginalFilename();// 获取文件名
+            orgName = FileUtils.getFileName(orgName);
+            if(orgName.contains(".")){
+                if(StringUtil.isNotEmpty(name)) {
+                    fileName = name.substring(0, name.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+                } else {
+                    fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+                }
+            }else{
+                fileName = orgName+ "_" + System.currentTimeMillis();
+            }
+            String savePath = file.getPath() + File.separator + fileName;
+            File savefile = new File(savePath);
+            FileCopyUtils.copy(mf.getBytes(), savefile);
+            String dbpath = null;
+            if(StringUtil.isNotEmpty(bizPath)){
+                dbpath = bizPath + File.separator + fileName;
+            }else{
+                dbpath = fileName;
+            }
+            if (dbpath.contains("\\")) {
+                dbpath = dbpath.replace("\\", "/");
+            }
+            return dbpath;
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return "";
+    }
+
+    /**
+     * 阿里Oss文件上传
+     * @param mf 文件
+     * @param bizPath  自定义路径
+     * @param name  自定义文件名
+     * @return
+     */
+    public String uploadAliOss(MultipartFile mf, String bizPath, String name, HttpServletRequest request) throws Exception {
+        if(StringUtil.isEmpty(bizPath)){
+            bizPath = "";
+        }
+        String token = request.getHeader("X-Access-Token");
+        Long tenantId = Tools.getTenantIdByToken(token);
+        bizPath = bizPath + "/" + tenantId;
+        String endpoint = platformConfigService.getPlatformConfigByKey("aliOss_endpoint").getPlatformValue();
+        String accessKeyId = platformConfigService.getPlatformConfigByKey("aliOss_accessKeyId").getPlatformValue();
+        String accessKeySecret = platformConfigService.getPlatformConfigByKey("aliOss_accessKeySecret").getPlatformValue();
+        String bucketName = platformConfigService.getPlatformConfigByKey("aliOss_bucketName").getPlatformValue();
+        // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt。
+        String fileName = "";
+        String orgName = mf.getOriginalFilename();// 获取文件名
+        orgName = FileUtils.getFileName(orgName);
+        if(orgName.contains(".")){
+            if(StringUtil.isNotEmpty(name)) {
+                fileName = name.substring(0, name.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+            } else {
+                fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+            }
+        }else{
+            fileName = orgName+ "_" + System.currentTimeMillis();
+        }
+        String filePathStr = StringUtil.isNotEmpty(filePath)? filePath.substring(1):"";
+        String objectName = filePathStr + "/" + bizPath + "/" + fileName;
+        // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
+        byte [] byteArr = mf.getBytes();
+
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+
+        try {
+            InputStream inputStream = new ByteArrayInputStream(byteArr);
+            // 创建PutObjectRequest对象。
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, objectName, inputStream);
+            // 创建PutObject请求。
+            PutObjectResult result = ossClient.putObject(putObjectRequest);
+            return bizPath + "/" + fileName;
+        } catch (OSSException oe) {
+            logger.error("Caught an OSSException, which means your request made it to OSS, "
+                    + "but was rejected with an error response for some reason.");
+            logger.error("Error Message:" + oe.getErrorMessage());
+            logger.error("Error Code:" + oe.getErrorCode());
+            logger.error("Request ID:" + oe.getRequestId());
+            logger.error("Host ID:" + oe.getHostId());
+        } catch (ClientException ce) {
+            logger.error("Caught an ClientException, which means the client encountered "
+                    + "a serious internal problem while trying to communicate with OSS, "
+                    + "such as not being able to access the network.");
+            System.out.println("Error Message:" + ce.getMessage());
+        } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+        return "";
+    }
+
+    public String getFileUrlLocal(String imgPath) {
+        return filePath + File.separator + imgPath;
+    }
+
+    public String getFileUrlAliOss(String imgPath) throws Exception {
+        String linkUrl = platformConfigService.getPlatformConfigByKey("aliOss_linkUrl").getPlatformValue();
+        return linkUrl + filePath + "/" + imgPath;
     }
 
     /**

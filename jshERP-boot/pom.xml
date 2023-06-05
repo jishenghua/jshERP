@@ -103,6 +103,11 @@
 			<artifactId>swagger-bootstrap-ui</artifactId>
 			<version>1.6</version>
 		</dependency>
+		<dependency>
+			<groupId>com.aliyun.oss</groupId>
+			<artifactId>aliyun-sdk-oss</artifactId>
+			<version>3.10.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
