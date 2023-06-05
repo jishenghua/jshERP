@@ -34,7 +34,9 @@ public class PlatformConfigService {
     public PlatformConfig getPlatformConfig(long id)throws Exception {
         PlatformConfig result=null;
         try{
-            result=platformConfigMapper.selectByPrimaryKey(id);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                result = platformConfigMapper.selectByPrimaryKey(id);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -46,7 +48,9 @@ public class PlatformConfigService {
         example.createCriteria();
         List<PlatformConfig> list=null;
         try{
-            list=platformConfigMapper.selectByExample(example);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                list = platformConfigMapper.selectByExample(example);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -153,11 +157,15 @@ public class PlatformConfigService {
     public PlatformConfig getPlatformConfigByKey(String platformKey)throws Exception {
         PlatformConfig platformConfig = new PlatformConfig();
         try{
-            PlatformConfigExample example = new PlatformConfigExample();
-            example.createCriteria().andPlatformKeyEqualTo(platformKey);
-            List<PlatformConfig> list=platformConfigMapper.selectByExample(example);
-            if(list!=null && list.size()>0){
-                platformConfig = list.get(0);
+            if(platformKey.contains("aliOss") || platformKey.contains("weixin")) {
+                platformConfig = null;
+            } else {
+                PlatformConfigExample example = new PlatformConfigExample();
+                example.createCriteria().andPlatformKeyEqualTo(platformKey);
+                List<PlatformConfig> list=platformConfigMapper.selectByExample(example);
+                if(list!=null && list.size()>0){
+                    platformConfig = list.get(0);
+                }
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
