@@ -44,7 +44,7 @@ public class PlatformConfigController {
         String res;
         try {
             String platformKey = "platform_name";
-            PlatformConfig platformConfig = platformConfigService.getPlatformConfigByKey(platformKey);
+            PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
             res = platformConfig.getPlatformValue();
         } catch(Exception e){
             e.printStackTrace();
@@ -64,7 +64,27 @@ public class PlatformConfigController {
         String res;
         try {
             String platformKey = "platform_url";
-            PlatformConfig platformConfig = platformConfigService.getPlatformConfigByKey(platformKey);
+            PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
+            res = platformConfig.getPlatformValue();
+        } catch(Exception e){
+            e.printStackTrace();
+            res = "#";
+        }
+        return res;
+    }
+
+    /**
+     * 获取是否开启注册
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getPlatform/registerFlag")
+    @ApiOperation(value = "获取是否开启注册")
+    public String getPlatformRegisterFlag(HttpServletRequest request)throws Exception {
+        String res;
+        try {
+            String platformKey = "register_flag";
+            PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
             res = platformConfig.getPlatformValue();
         } catch(Exception e){
             e.printStackTrace();
@@ -100,13 +120,13 @@ public class PlatformConfigController {
      * @param request
      * @return
      */
-    @GetMapping(value = "/getPlatformConfigByKey")
+    @GetMapping(value = "/getInfoByKey")
     @ApiOperation(value = "根据platformKey查询信息")
-    public BaseResponseInfo getPlatformConfigByKey(@RequestParam("platformKey") String platformKey,
+    public BaseResponseInfo getInfoByKey(@RequestParam("platformKey") String platformKey,
                                             HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            PlatformConfig platformConfig = platformConfigService.getPlatformConfigByKey(platformKey);
+            PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
             res.code = 200;
             res.data = platformConfig;
         } catch(Exception e){

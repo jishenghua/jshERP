@@ -154,7 +154,7 @@ public class PlatformConfigService {
         return result;
     }
 
-    public PlatformConfig getPlatformConfigByKey(String platformKey)throws Exception {
+    public PlatformConfig getInfoByKey(String platformKey)throws Exception {
         PlatformConfig platformConfig = new PlatformConfig();
         try{
             if(platformKey.contains("aliOss") || platformKey.contains("weixin")) {
@@ -166,6 +166,27 @@ public class PlatformConfigService {
                 if(list!=null && list.size()>0){
                     platformConfig = list.get(0);
                 }
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return platformConfig;
+    }
+
+    /**
+     * 根据key查询平台信息-内部专用方法
+     * @param platformKey
+     * @return
+     * @throws Exception
+     */
+    public PlatformConfig getPlatformConfigByKey(String platformKey)throws Exception {
+        PlatformConfig platformConfig = new PlatformConfig();
+        try{
+            PlatformConfigExample example = new PlatformConfigExample();
+            example.createCriteria().andPlatformKeyEqualTo(platformKey);
+            List<PlatformConfig> list=platformConfigMapper.selectByExample(example);
+            if(list!=null && list.size()>0){
+                platformConfig = list.get(0);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
