@@ -1109,7 +1109,7 @@ INSERT INTO `jsh_function` (`number`, `name`, `parent_number`, `url`, `component
 alter table jsh_account_item add bill_id bigint(20) DEFAULT NULL COMMENT '进销存单据id' after in_out_item_id;
 alter table jsh_account_item add need_debt decimal(24,6) DEFAULT NULL COMMENT '应收欠款' after bill_id;
 alter table jsh_account_item add finish_debt decimal(24,6) DEFAULT NULL COMMENT '已收欠款' after need_debt;
-alter table jsh_depot_head add file_name varchar(500) DEFAULT NULL COMMENT '附件名称' after remark;
+alter table jsh_depot_head add file_name varchar(1000) DEFAULT NULL COMMENT '附件名称' after remark;
 alter table jsh_account_head add file_name varchar(500) DEFAULT NULL COMMENT '附件名称' after remark;
 alter table jsh_account_head add discount_money decimal(24,6) DEFAULT NULL COMMENT '优惠金额' after change_amount;
 
@@ -1118,7 +1118,7 @@ alter table jsh_account_head add discount_money decimal(24,6) DEFAULT NULL COMME
 -- by jishenghua
 -- 给商品表增加附件名称字段
 -- --------------------------------------------------------
-alter table jsh_material add img_name varchar(500) DEFAULT NULL COMMENT '图片名称' after remark;
+alter table jsh_material add img_name varchar(1000) DEFAULT NULL COMMENT '图片名称' after remark;
 
 -- --------------------------------------------------------
 -- 时间 2021年7月6日
