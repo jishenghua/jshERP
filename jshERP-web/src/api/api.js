@@ -84,7 +84,7 @@ const fileSizeLimit = (params)=>getAction("/systemConfig/fileSizeLimit",params);
 //平台参数
 const addPlatformConfig = (params)=>postAction("/platformConfig/add",params);
 const editPlatformConfig = (params)=>putAction("/platformConfig/update",params);
-const getPlatformConfigByKey = (params)=>getAction("/platformConfig/getPlatformConfigByKey",params);
+const getPlatformConfigByKey = (params)=>getAction("/platformConfig/getInfoByKey",params);
 //用户|角色|模块关系
 const addUserBusiness = (params)=>postAction("/userBusiness/add",params);
 const editUserBusiness = (params)=>putAction("/userBusiness/update",params);

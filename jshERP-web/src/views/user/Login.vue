@@ -69,7 +69,6 @@
   import { mapActions } from "vuex"
   import { timeFix } from "@/utils/util"
   import Vue from 'vue'
-  import {getPlatformConfigByKey } from '@/api/api'
   import { ACCESS_TOKEN ,ENCRYPTED_STRING} from "@/store/mutation-types"
   import { putAction,postAction,getAction } from '@/api/manage'
   import { encryption , getEncryptedString } from '@/utils/encryption/aesEncrypt'
@@ -270,10 +269,8 @@
         })
       },
       getRegisterFlag(){
-        getPlatformConfigByKey( {"platformKey": "register_flag"}).then((res)=>{
-          if(res && res.code == 200) {
-            this.registerFlag = res.data.platformValue
-          }
+        getAction('/platformConfig/getPlatform/registerFlag').then((res) => {
+          this.registerFlag = res + ''
         })
       },
       //获取密码加密规则
