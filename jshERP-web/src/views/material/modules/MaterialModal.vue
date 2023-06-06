@@ -360,7 +360,7 @@
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             {
-              title: '多属性', key: 'sku', width: '20%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '请输入${title}'
+              title: '多属性', key: 'sku', width: '25%', type: FormTypes.input, defaultValue: '', readonly:true, placeholder: '请输入${title}'
             },
             {
               title: '采购价', key: 'purchaseDecimal', width: '9%', type: FormTypes.inputNumber, defaultValue: '', placeholder: '请输入${title}'
