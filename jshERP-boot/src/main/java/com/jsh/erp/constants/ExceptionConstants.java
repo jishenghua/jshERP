@@ -406,6 +406,9 @@ public class ExceptionConstants {
     //单据删除-单据中的序列号已经出库，不能删除
     public static final int DEPOT_HEAD_SERIAL_IS_SELL_CODE = 8500024;
     public static final String DEPOT_HEAD_SERIAL_IS_SELL_MSG = "抱歉，单据%s的序列号已经出库，不能删除";
+    //单据录入-单据附件不能超过规定数量
+    public static final int DEPOT_HEAD_FILE_NUM_LIMIT_CODE = 8500025;
+    public static final String DEPOT_HEAD_FILE_NUM_LIMIT_MSG = "抱歉，单据附件不能超过%s份";
 
     /**
      *  单据明细信息

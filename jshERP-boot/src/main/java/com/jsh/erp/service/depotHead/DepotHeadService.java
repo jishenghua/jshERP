@@ -936,6 +936,14 @@ public class DepotHeadService {
                 }
             }
         }
+        //校验附件的数量
+        if(StringUtil.isNotEmpty(depotHead.getFileName())) {
+            String[] fileArr = depotHead.getFileName().split(",");
+            if(fileArr.length>4) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_FILE_NUM_LIMIT_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_FILE_NUM_LIMIT_MSG, 4));
+            }
+        }
         try{
             depotHeadMapper.insertSelective(depotHead);
         }catch(Exception e){
@@ -1023,6 +1031,14 @@ public class DepotHeadService {
                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_CODE,
                             String.format(ExceptionConstants.DEPOT_HEAD_DEPOSIT_OVER_PRE_MSG));
                 }
+            }
+        }
+        //校验附件的数量
+        if(StringUtil.isNotEmpty(depotHead.getFileName())) {
+            String[] fileArr = depotHead.getFileName().split(",");
+            if(fileArr.length>4) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_FILE_NUM_LIMIT_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_FILE_NUM_LIMIT_MSG, 4));
             }
         }
         try{
