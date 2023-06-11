@@ -1,9 +1,19 @@
 import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
-import {findBySelectSup,findBySelectCus,findBySelectRetail,getMaterialByBarCode,findStockByDepotAndBarCode,getAccount,
-  getPersonByNumType, getBatchNumberList, getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
-import { getAction,putAction } from '@/api/manage'
-import { getMpListShort, getNowFormatDateTime, getCheckFlag } from "@/utils/util"
-import { USER_INFO } from "@/store/mutation-types"
+import {
+  findBySelectCus,
+  findBySelectRetail,
+  findBySelectSup,
+  findStockByDepotAndBarCode,
+  getAccount,
+  getBatchNumberList,
+  getCurrentSystemConfig,
+  getMaterialByBarCode,
+  getPersonByNumType,
+  getPlatformConfigByKey
+} from '@/api/api'
+import { getAction } from '@/api/manage'
+import { getCheckFlag, getMpListShort, getNowFormatDateTime } from '@/utils/util'
+import { USER_INFO } from '@/store/mutation-types'
 import Vue from 'vue'
 
 export const BillModalMixin = {
@@ -692,6 +702,74 @@ export const BillModalMixin = {
       this.$nextTick(() => {
         this.form.setFieldsValue({'debt':debtNew})
       });
+    },
+    //切换客户信息改变商品单价
+    handleOrganChange(value) {
+      let organId = value
+      this.getAllTable().then(tables => {
+        return getListData(this.form, tables)
+      }).then(allValues => {
+        let detailArr = allValues.tablesValue[0].values
+        let barCodeStr = ''
+        for(let detail of detailArr){
+          if(detail.barCode) {
+            barCodeStr += detail.barCode + ','
+          }
+        }
+        let param = {
+          barCode: barCodeStr,
+          organId: organId,
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+          prefixNo: this.prefixNo
+        }
+        getMaterialByBarCode(param).then((res) => {
+          if (res && res.code === 200) {
+            let allLastMoney = 0
+            let allTaxLastMoney = 0
+            //获取单据明细列表信息
+            let detailArr = allValues.tablesValue[0].values
+            //构造新的列表数组，用于存放单据明细信息
+            let newDetailArr = []
+            for(let detail of detailArr){
+              if(detail.barCode) {
+                //如果条码重复，就在给原来的数量加1
+                let mList = res.data
+                for (let i = 0; i < mList.length; i++) {
+                  if(detail.barCode === mList[i].mBarCode) {
+                    //由于改变了商品单价，需要同时更新相关金额和价税合计
+                    let taxRate = detail.taxRate-0 //税率
+                    detail.unitPrice = mList[i].billPrice-0 //单价
+                    detail.allPrice = (detail.unitPrice*detail.operNumber).toFixed(2)-0
+                    detail.taxMoney = ((taxRate*0.01)*detail.allPrice).toFixed(2)-0
+                    detail.taxLastMoney = (detail.allPrice + detail.taxMoney).toFixed(2)-0
+                  }
+                }
+                newDetailArr.push(detail)
+              }
+            }
+            this.materialTable.dataSource = newDetailArr
+            //更新优惠后金额、本次付款等信息
+            for(let newDetail of newDetailArr){
+              allLastMoney = allLastMoney + (newDetail.allPrice-0)
+              allTaxLastMoney = allTaxLastMoney + (newDetail.taxLastMoney-0)
+            }
+            let discount = this.form.getFieldValue('discount')-0
+            let otherMoney = this.form.getFieldValue('otherMoney')?this.form.getFieldValue('otherMoney')-0:0
+            let deposit = this.form.getFieldValue('deposit')
+            let discountMoney = (discount*0.01*allTaxLastMoney).toFixed(2)-0
+            let discountLastMoney = (allTaxLastMoney-discountMoney).toFixed(2)-0
+            let changeAmountNew = (discountLastMoney + otherMoney).toFixed(2)-0
+            if(deposit) {
+              changeAmountNew = (changeAmountNew - deposit).toFixed(2)-0
+            }
+            this.$nextTick(() => {
+              changeAmountNew = this.prefixNo === 'XSDD'?0:changeAmountNew
+              this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
+                'changeAmount':changeAmountNew,'debt':0})
+            });
+          }
+        })
+      })
     },
     scanEnter() {
       this.scanStatus = false
