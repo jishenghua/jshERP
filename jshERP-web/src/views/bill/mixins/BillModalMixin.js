@@ -373,6 +373,7 @@ export const BillModalMixin = {
         case "barCode":
           param = {
             barCode: value,
+            organId: this.form.getFieldValue('organId'),
             mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
             prefixNo: this.prefixNo
           }
@@ -705,6 +706,7 @@ export const BillModalMixin = {
         }).then(allValues => {
           let param = {
             barCode: this.scanBarCode,
+            organId: this.form.getFieldValue('organId'),
             mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
             prefixNo: this.prefixNo
           }
