@@ -488,7 +488,8 @@ public class MaterialController {
                             mvo.setBillPrice(mvo.getWholesaleDecimal());
                         } else {
                             //查询最后一单的销售价,实现不同的客户不同的销售价
-                            mvo.setBillPrice(depotItemService.getLastUnitPriceByParam(organId, mvo.getMeId(), prefixNo));
+                            BigDecimal lastUnitPrice = depotItemService.getLastUnitPriceByParam(organId, mvo.getMeId(), prefixNo);
+                            mvo.setBillPrice(lastUnitPrice!=null? lastUnitPrice : mvo.getWholesaleDecimal());
                         }
                     }
                     //仓库id
