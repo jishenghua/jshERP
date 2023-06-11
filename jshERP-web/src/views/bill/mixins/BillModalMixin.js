@@ -297,6 +297,7 @@ export const BillModalMixin = {
         }
         let param = {
           barCode: barCodes,
+          organId: this.form.getFieldValue('organId'),
           depotId: depotId,
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
           prefixNo: this.prefixNo
