@@ -989,4 +989,15 @@
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>
+
+    <select id="getLastUnitPriceByParam" resultType="java.math.BigDecimal">
+        select di.unit_price from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where dh.organ_id = #{organId}
+        and di.material_extend_id = #{meId}
+        and dh.type = #{type} and dh.sub_type = #{subType}
+        and ifnull(dh.delete_flag,'0') !='1'
+        order by dh.id desc, di.id desc
+        limit 0,1
+    </select>
 </mapper>

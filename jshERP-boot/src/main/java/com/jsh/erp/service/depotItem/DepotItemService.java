@@ -1195,4 +1195,23 @@ public class DepotItemService {
         map.put("rows", arr);
         return map;
     }
+
+    public BigDecimal getLastUnitPriceByParam(Long organId, Long meId, String prefixNo) {
+        String type = "";
+        String subType = "";
+        if("XSDD".equals(prefixNo)) {
+            type = "其它";
+            subType = "销售订单";
+        } else if("XSCK".equals(prefixNo)) {
+            type = "出库";
+            subType = "销售";
+        } else if("XSTH".equals(prefixNo)) {
+            type = "入库";
+            subType = "销售退货";
+        } else if("QTCK".equals(prefixNo)) {
+            type = "出库";
+            subType = "其它";
+        }
+        return depotItemMapperEx.getLastUnitPriceByParam(organId, meId, type, subType);
+    }
 }

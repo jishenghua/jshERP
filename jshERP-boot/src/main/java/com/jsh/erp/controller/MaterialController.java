@@ -457,6 +457,7 @@ public class MaterialController {
     @GetMapping(value = "/getMaterialByBarCode")
     @ApiOperation(value = "根据条码查询商品信息")
     public BaseResponseInfo getMaterialByBarCode(@RequestParam("barCode") String barCode,
+                                          @RequestParam(value = "organId", required = false) Long organId,
                                           @RequestParam(value = "depotId", required = false) Long depotId,
                                           @RequestParam("mpList") String mpList,
                                           @RequestParam(required = false, value = "prefixNo") String prefixNo,
@@ -483,7 +484,12 @@ public class MaterialController {
                         mvo.setBillPrice(mvo.getPurchaseDecimal());
                     } else if ("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
                         //销售价
-                        mvo.setBillPrice(mvo.getWholesaleDecimal());
+                        if(organId == null) {
+                            mvo.setBillPrice(mvo.getWholesaleDecimal());
+                        } else {
+                            //查询最后一单的销售价,实现不同的客户不同的销售价
+                            mvo.setBillPrice(depotItemService.getLastUnitPriceByParam(organId, mvo.getMeId(), prefixNo));
+                        }
                     }
                     //仓库id
                     if (depotId == null) {

@@ -233,4 +233,10 @@ public interface DepotItemMapperEx {
     BigDecimal getCurrentStockByParam(
             @Param("depotId") Long depotId,
             @Param("mId") Long mId);
+
+    BigDecimal getLastUnitPriceByParam(
+            @Param("organId") Long organId,
+            @Param("meId") Long meId,
+            @Param("type") String type,
+            @Param("subType") String subType);
 }
