@@ -6,6 +6,7 @@
     FROM jsh_platform_config
     where 1=1
     and platform_key!='activation_code'
+    and platform_key!='app_activation_code'
     <if test="platformKey != null and platformKey != ''">
       <bind name="bindKey" value="'%'+platformKey+'%'"/>
       and platform_key like #{bindKey}
@@ -20,6 +21,7 @@
     FROM jsh_platform_config
     WHERE 1=1
     and platform_key!='activation_code'
+    and platform_key!='app_activation_code'
     <if test="platformKey != null and platformKey != ''">
       <bind name="bindKey" value="'%'+platformKey+'%'"/>
       and platform_key like #{bindKey}
