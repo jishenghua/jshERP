@@ -89,6 +89,7 @@
   import ImportFileModal from '@/components/tools/ImportFileModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JDate from '@/components/jeecg/JDate'
+  import Vue from 'vue'
   export default {
     name: "MemberList",
     mixins:[JeecgListMixin],
@@ -111,7 +112,8 @@
           supplier:'',
           type:'会员',
           telephone:'',
-          phonenum:''
+          phonenum:'',
+          roleType: Vue.ls.get('roleType')
         },
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']
