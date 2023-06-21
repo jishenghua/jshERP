@@ -1510,3 +1510,11 @@ INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platfor
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('aliOss_accessKeySecret', '阿里OSS-accessKeySecret', '');
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('aliOss_bucketName', '阿里OSS-bucketName', '');
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('aliOss_linkUrl', '阿里OSS-linkUrl', '');
+
+-- --------------------------------------------------------
+-- 时间 2023年06月21日
+-- by jishenghua
+-- 给商家表增加操作员字段,并给该字段赋默认值
+-- --------------------------------------------------------
+alter table jsh_supplier add creator bigint(20) DEFAULT NULL COMMENT '操作员' after sort;
+update jsh_supplier set creator=tenant_id;

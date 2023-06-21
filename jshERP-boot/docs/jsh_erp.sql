@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2023-05-28 22:28:31
+Date: 2023-06-21 19:00:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -702,7 +702,7 @@ CREATE TABLE `jsh_platform_config` (
   `platform_key_info` varchar(100) DEFAULT NULL COMMENT '关键词名称',
   `platform_value` varchar(200) DEFAULT NULL COMMENT '值',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='平台参数';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='平台参数';
 
 -- ----------------------------
 -- Records of jsh_platform_config
@@ -724,7 +724,6 @@ INSERT INTO `jsh_platform_config` VALUES ('14', 'aliOss_accessKeyId', '阿里OSS
 INSERT INTO `jsh_platform_config` VALUES ('15', 'aliOss_accessKeySecret', '阿里OSS-accessKeySecret', '');
 INSERT INTO `jsh_platform_config` VALUES ('16', 'aliOss_bucketName', '阿里OSS-bucketName', '');
 INSERT INTO `jsh_platform_config` VALUES ('17', 'aliOss_linkUrl', '阿里OSS-linkUrl', '');
-
 
 -- ----------------------------
 -- Table structure for jsh_role
@@ -827,6 +826,7 @@ CREATE TABLE `jsh_supplier` (
   `account_number` varchar(50) DEFAULT NULL COMMENT '账号',
   `tax_rate` decimal(24,6) DEFAULT NULL COMMENT '税率',
   `sort` varchar(10) DEFAULT NULL COMMENT '排序',
+  `creator` bigint(20) DEFAULT NULL COMMENT '操作员',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -835,13 +835,13 @@ CREATE TABLE `jsh_supplier` (
 -- ----------------------------
 -- Records of jsh_supplier
 -- ----------------------------
-INSERT INTO `jsh_supplier` VALUES ('57', '供应商1', '小军', '12345678', '', '', null, '供应商', '', '0.000000', '0.000000', '0.000000', '0.000000', '4.000000', '', '15000000000', '地址1', '', '', '', '12.000000', null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('58', '客户1', '小李', '12345678', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '-100.000000', null, '', '', '', '', '', '', '12.000000', null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('59', '客户2', '小陈', '', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '0.000000', null, '', '', '', '', '', '', null, null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('60', '12312666', '小曹', '', '', '', null, '会员', '', '970.000000', '0.000000', '0.000000', null, null, '', '13000000000', '', '', '', '', null, null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('68', '供应商3', '晓丽', '12345678', '', 'fasdfadf', null, '供应商', '', '0.000000', '0.000000', '0.000000', '0.000000', '-35.000000', '', '13000000000', 'aaaa', '1341324', '', '', '13.000000', null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('71', '客户3', '小周', '', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '0.000000', null, '', '', '', '', '', '', null, null, '63', '0');
-INSERT INTO `jsh_supplier` VALUES ('74', '供应商5', '小季', '77779999', '', '', null, '供应商', '', '0.000000', '0.000000', '5.000000', '0.000000', '5.000000', '', '15806283912', '', '', '', '', '3.000000', null, '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('57', '供应商1', '小军', '12345678', '', '', null, '供应商', '', '0.000000', '0.000000', '0.000000', '0.000000', '4.000000', '', '15000000000', '地址1', '', '', '', '12.000000', null, '63', '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('58', '客户1', '小李', '12345678', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '-100.000000', null, '', '', '', '', '', '', '12.000000', null, '63', '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('59', '客户2', '小陈', '', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '0.000000', null, '', '', '', '', '', '', null, null, '63', '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('60', '12312666', '小曹', '', '', '', null, '会员', '', '970.000000', '0.000000', '0.000000', null, null, '', '13000000000', '', '', '', '', null, null, '63', '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('68', '供应商3', '晓丽', '12345678', '', 'fasdfadf', null, '供应商', '', '0.000000', '0.000000', '0.000000', '0.000000', '-35.000000', '', '13000000000', 'aaaa', '1341324', '', '', '13.000000', null, '63', '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('71', '客户3', '小周', '', '', '', null, '客户', '', '0.000000', '0.000000', '0.000000', '0.000000', null, '', '', '', '', '', '', null, null, '63', '63', '0');
+INSERT INTO `jsh_supplier` VALUES ('74', '供应商5', '小季', '77779999', '', '', null, '供应商', '', '0.000000', '0.000000', '5.000000', '0.000000', '5.000000', '', '15806283912', '', '', '', '', '3.000000', null, '63', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_system_config

@@ -24,6 +24,7 @@
     <result column="account_number" jdbcType="VARCHAR" property="accountNumber" />
     <result column="tax_rate" jdbcType="DECIMAL" property="taxRate" />
     <result column="sort" jdbcType="VARCHAR" property="sort" />
+    <result column="creator" jdbcType="BIGINT" property="creator" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -88,7 +89,7 @@
   <sql id="Base_Column_List">
     id, supplier, contacts, phone_num, email, description, isystem, type, enabled, advance_in, 
     begin_need_get, begin_need_pay, all_need_get, all_need_pay, fax, telephone, address, 
-    tax_num, bank_name, account_number, tax_rate, sort, tenant_id, delete_flag
+    tax_num, bank_name, account_number, tax_rate, sort, creator, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="BaseResultMap">
     select
@@ -128,8 +129,8 @@
       all_need_get, all_need_pay, fax, 
       telephone, address, tax_num, 
       bank_name, account_number, tax_rate, 
-      sort, tenant_id, delete_flag
-      )
+      sort, creator, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{supplier,jdbcType=VARCHAR}, #{contacts,jdbcType=VARCHAR}, 
       #{phoneNum,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{isystem,jdbcType=TINYINT}, #{type,jdbcType=VARCHAR}, #{enabled,jdbcType=BIT}, 
@@ -137,8 +138,8 @@
       #{allNeedGet,jdbcType=DECIMAL}, #{allNeedPay,jdbcType=DECIMAL}, #{fax,jdbcType=VARCHAR}, 
       #{telephone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{taxNum,jdbcType=VARCHAR}, 
       #{bankName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, #{taxRate,jdbcType=DECIMAL}, 
-      #{sort,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{sort,jdbcType=VARCHAR}, #{creator,jdbcType=BIGINT}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Supplier">
     insert into jsh_supplier
@@ -208,6 +209,9 @@
       </if>
       <if test="sort != null">
         sort,
+      </if>
+      <if test="creator != null">
+        creator,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -282,6 +286,9 @@
       </if>
       <if test="sort != null">
         #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=BIGINT},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -366,6 +373,9 @@
       <if test="record.sort != null">
         sort = #{record.sort,jdbcType=VARCHAR},
       </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=BIGINT},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -401,6 +411,7 @@
       account_number = #{record.accountNumber,jdbcType=VARCHAR},
       tax_rate = #{record.taxRate,jdbcType=DECIMAL},
       sort = #{record.sort,jdbcType=VARCHAR},
+      creator = #{record.creator,jdbcType=BIGINT},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -473,6 +484,9 @@
       <if test="sort != null">
         sort = #{sort,jdbcType=VARCHAR},
       </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=BIGINT},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -505,6 +519,7 @@
       account_number = #{accountNumber,jdbcType=VARCHAR},
       tax_rate = #{taxRate,jdbcType=DECIMAL},
       sort = #{sort,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=BIGINT},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

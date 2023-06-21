@@ -98,10 +98,11 @@ public class SupplierService {
         return list;
     }
 
-    public List<Supplier> select(String supplier, String type, String phonenum, String telephone, int offset, int rows) throws Exception{
+    public List<Supplier> select(String supplier, String type, String phonenum, String telephone, String roleType, int offset, int rows) throws Exception{
         List<Supplier> resList = new ArrayList<Supplier>();
         try{
-            List<Supplier> list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, offset, rows);
+            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            List<Supplier> list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, creatorArray, offset, rows);
             for(Supplier s : list) {
                 Integer supplierId = s.getId().intValue();
                 String beginTime = Tools.getYearBegin();
@@ -153,10 +154,11 @@ public class SupplierService {
         return resList;
     }
 
-    public Long countSupplier(String supplier, String type, String phonenum, String telephone) throws Exception{
+    public Long countSupplier(String supplier, String type, String phonenum, String telephone, String roleType) throws Exception{
         Long result=null;
         try{
-            result=supplierMapperEx.countsBySupplier(supplier, type, phonenum, telephone);
+            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            result=supplierMapperEx.countsBySupplier(supplier, type, phonenum, telephone, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -169,6 +171,8 @@ public class SupplierService {
         int result=0;
         try{
             supplier.setEnabled(true);
+            User userInfo=userService.getCurrentUser();
+            supplier.setCreator(userInfo==null?null:userInfo.getId());
             result=supplierMapper.insertSelective(supplier);
             //新增客户时给当前用户自动授权
             if("客户".equals(supplier.getType())) {
