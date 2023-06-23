@@ -108,7 +108,7 @@ public class DepotHeadController {
                                         @RequestParam("endTime") String endTime,
                                         @RequestParam(value = "roleType", required = false) String roleType,
                                         @RequestParam("type") String type,
-                                        @RequestParam("creator") Long creator,
+                                        @RequestParam(value = "creator", required = false) Long creator,
                                         @RequestParam("remark") String remark,
                                         HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
