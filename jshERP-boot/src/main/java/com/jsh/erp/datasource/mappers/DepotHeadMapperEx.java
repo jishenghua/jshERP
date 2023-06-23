@@ -74,6 +74,7 @@ public interface DepotHeadMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
             @Param("number") String number,
+            @Param("creator") Long creator,
             @Param("remark") String remark,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
@@ -89,6 +90,7 @@ public interface DepotHeadMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("oId") Integer oId,
             @Param("number") String number,
+            @Param("creator") Long creator,
             @Param("remark") String remark);
 
     List<DepotHeadVo4InOutMCount> findInOutMaterialCount(

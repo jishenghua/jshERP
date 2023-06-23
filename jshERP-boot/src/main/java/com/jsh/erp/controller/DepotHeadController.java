@@ -108,6 +108,7 @@ public class DepotHeadController {
                                         @RequestParam("endTime") String endTime,
                                         @RequestParam(value = "roleType", required = false) String roleType,
                                         @RequestParam("type") String type,
+                                        @RequestParam("creator") Long creator,
                                         @RequestParam("remark") String remark,
                                         HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -132,9 +133,9 @@ public class DepotHeadController {
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag,
-                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark, (currentPage-1)*pageSize, pageSize);
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag,
-                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), remark);
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark);
             map.put("total", total);
             //存放数据json数组
             if (null != list) {

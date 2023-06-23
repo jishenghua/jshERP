@@ -624,10 +624,11 @@ public class DepotHeadService {
 
     public List<DepotHeadVo4InDetail> findInOutDetail(String beginTime, String endTime, String type, String [] creatorArray,
                                                 String [] organArray, Boolean forceFlag, String materialParam, List<Long> depotList, Integer oId, String number,
-                                                String remark, Integer offset, Integer rows) throws Exception{
+                                                Long creator, String remark, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag, materialParam, depotList, oId, number, remark, offset, rows);
+            list =depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag,
+                    materialParam, depotList, oId, number, creator, remark, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -636,10 +637,11 @@ public class DepotHeadService {
 
     public int findInOutDetailCount(String beginTime, String endTime, String type, String [] creatorArray,
                               String [] organArray, Boolean forceFlag, String materialParam, List<Long> depotList, Integer oId, String number,
-                              String remark) throws Exception{
+                              Long creator, String remark) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag, materialParam, depotList, oId, number, remark);
+            result =depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag,
+                    materialParam, depotList, oId, number, creator, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
