@@ -66,6 +66,15 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                      <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
+                        {{ item.userName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入备注" v-model="queryParam.remark"></a-input>
                   </a-form-item>
@@ -122,7 +131,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectOrgan, findBillDetailByNumber} from '@/api/api'
+  import {findBySelectOrgan, findBillDetailByNumber, getUserList} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -152,6 +161,7 @@
           endTime: moment().format('YYYY-MM-DD'),
           roleType: Vue.ls.get('roleType'),
           type: "入库",
+          creator: "",
           remark: '',
         },
         ipagination:{
@@ -163,6 +173,7 @@
         defaultTimeStr: '',
         organList: [],
         depotList: [],
+        userList: [],
         tabKey: "1",
         // 表头
         columns: [
@@ -199,6 +210,7 @@
     created () {
       this.getDepotData()
       this.initSupplier()
+      this.initUser()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
@@ -234,6 +246,13 @@
             this.$message.info(res.data);
           }
         })
+      },
+      initUser() {
+        getUserList({}).then((res)=>{
+          if(res) {
+            this.userList = res;
+          }
+        });
       },
       myHandleDetail(record) {
         findBillDetailByNumber({ number: record.number }).then((res) => {
