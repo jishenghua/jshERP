@@ -289,7 +289,7 @@
       },
       showWeixinSpan() {
         let host = window.location.host
-        if(host === 'cloud.huaxiaerp.vip') {
+        if(host === 'cloud.huaxiaerp.vip' || host === 'cloud.huaxiaerp.com') {
           return true
         } else {
           return false
