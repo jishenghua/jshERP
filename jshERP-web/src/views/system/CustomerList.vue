@@ -166,6 +166,9 @@
         return `${window._CONFIG['domianURL']}${this.url.importExcelUrl}`;
       }
     },
+    created() {
+      this.$message.warning('最近对客户的查询进行了权限控制，如果列表不展示，请与客服联系，谢谢！');
+    },
     methods: {
       searchReset() {
         this.queryParam = {
