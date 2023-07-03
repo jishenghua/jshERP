@@ -372,7 +372,7 @@ public class UserService {
         List<User> list = null;
         try {
             UserExample example = new UserExample();
-            example.createCriteria().andLoginNameEqualTo(loginName);
+            example.createCriteria().andLoginNameEqualTo(loginName).andStatusNotEqualTo(BusinessConstants.USER_STATUS_DELETE);
             list = userMapper.selectByExample(example);
             if (null != list && list.size() == 0) {
                 return ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST;
