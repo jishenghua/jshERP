@@ -166,7 +166,6 @@
       }
     },
     created() {
-      this.$message.warning('最近对供应商的查询进行了权限控制，如果列表不展示，请与客服联系，谢谢！');
     },
     methods: {
       searchReset() {
