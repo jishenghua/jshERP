@@ -26,6 +26,7 @@
         <result column="MStandard" jdbcType="VARCHAR" property="MStandard" />
         <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
         <result column="weight" jdbcType="VARCHAR" property="weight" />
+        <result column="img_name" jdbcType="VARCHAR" property="imgName" />
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
         <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
@@ -301,7 +302,7 @@
     </select>
 
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.standard MStandard,m.mfrs MMfrs,m.weight,
+        select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.standard MStandard,m.mfrs MMfrs,m.weight, m.img_name,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,m.enable_serial_number, m.enable_batch_number,
         dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
         from jsh_depot_item di

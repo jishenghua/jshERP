@@ -254,6 +254,7 @@ public class DepotItemController {
                     BigDecimal allWeight = diEx.getBasicNumber()==null||diEx.getWeight()==null?BigDecimal.ZERO:diEx.getBasicNumber().multiply(diEx.getWeight());
                     item.put("weight", allWeight);
                     item.put("remark", diEx.getRemark());
+                    item.put("imgName", diEx.getImgName());
                     item.put("linkId", diEx.getLinkId());
                     item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
                     item.put("depotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());

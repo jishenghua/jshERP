@@ -31,7 +31,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
@@ -285,6 +288,28 @@ public class SystemConfigService {
     public String getFileUrlAliOss(String imgPath) throws Exception {
         String linkUrl = platformConfigService.getPlatformConfigByKey("aliOss_linkUrl").getPlatformValue();
         return linkUrl + filePath + "/" + imgPath;
+    }
+
+    public BufferedImage getImageMini(String fileUrl, int w) throws Exception {
+        BufferedImage img = ImageIO.read(new File(fileUrl));
+        //获取图片的长和宽
+        int width = img.getWidth();
+        int height = img.getHeight();
+        int tempw = 0;
+        int temph = 0;
+        if(width>height){
+            tempw = w;
+            temph = height* w/width;
+        }else{
+            tempw = w*width/height;
+            temph = w;
+        }
+        Image _img = img.getScaledInstance(tempw, temph, Image.SCALE_DEFAULT);
+        BufferedImage image = new BufferedImage(tempw, temph, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = image.createGraphics();
+        graphics.drawImage(_img, 0, 0, null);
+        graphics.dispose();
+        return image;
     }
 
     /**

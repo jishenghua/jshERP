@@ -50,6 +50,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private BigDecimal weight;
 
+    private String imgName;
+
     public Long getMId() {
         return MId;
     }
@@ -232,5 +234,13 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setWeight(BigDecimal weight) {
         this.weight = weight;
+    }
+
+    public String getImgName() {
+        return imgName;
+    }
+
+    public void setImgName(String imgName) {
+        this.imgName = imgName;
     }
 }
