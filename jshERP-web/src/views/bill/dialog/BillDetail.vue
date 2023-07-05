@@ -77,6 +77,9 @@
                   :pagination="false"
                   :columns="columns"
                   :dataSource="dataSource">
+                  <template slot="customBarCode" slot-scope="text, record">
+                    {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                  </template>
                 </a-table>
               </div>
             </a-col>
@@ -158,6 +161,9 @@
                   :pagination="false"
                   :columns="columns"
                   :dataSource="dataSource">
+                  <template slot="customBarCode" slot-scope="text, record">
+                    {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                  </template>
                 </a-table>
               </div>
             </a-col>
@@ -230,6 +236,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -308,6 +317,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -414,6 +426,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -501,6 +516,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -579,6 +597,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -690,6 +711,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -780,6 +804,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -826,6 +853,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -863,6 +893,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -900,6 +933,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -937,6 +973,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -978,6 +1017,9 @@
               :pagination="false"
               :columns="columns"
               :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                {{record.barCode}} <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+              </template>
             </a-table>
           </div>
           <a-row class="form-row" :gutter="24">
@@ -1007,7 +1049,7 @@
 
 <script>
   import pick from 'lodash.pick'
-  import { getAction, postAction } from '@/api/manage'
+  import { getAction, postAction, getFileAccessHttpUrl } from '@/api/manage'
   import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
   import { getMpListShort, getCheckFlag, openDownloadDialog, sheet2blob } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
@@ -1411,9 +1453,11 @@
             let info = {}
             info.title = this.defColumns[i].title
             info.dataIndex = this.defColumns[i].dataIndex
-            info.width = this.defColumns[i].width
             if(this.defColumns[i].dataIndex === 'finishNumber') {
               info.title = '已采购'
+            }
+            if(this.defColumns[i].dataIndex === 'barCode') {
+              info.scopedSlots = { customRender: 'customBarCode' }
             }
             currentCol.push(info)
           }
@@ -1427,7 +1471,9 @@
               let info = {}
               info.title = this.defColumns[i].title
               info.dataIndex = this.defColumns[i].dataIndex
-              info.width = this.defColumns[i].width
+              if(this.defColumns[i].dataIndex === 'barCode') {
+                info.scopedSlots = { customRender: 'customBarCode' }
+              }
               currentCol.push(info)
             }
             //添加有数据的列
@@ -1435,7 +1481,6 @@
               let info = {}
               info.title = this.defColumns[i].title
               info.dataIndex = this.defColumns[i].dataIndex
-              info.width = this.defColumns[i].width
               currentCol.push(info)
             }
           }
@@ -1580,6 +1625,14 @@
           }
         })
       },
+      getImgUrl(imgName, type) {
+        if(imgName && imgName.split(',')) {
+          type = type? type + '/':''
+          return getFileAccessHttpUrl('systemConfig/static/' + type + imgName.split(',')[0])
+        } else {
+          return ''
+        }
+      },
       //三联打印预览
       handlePrint() {
         getPlatformConfigByKey({"platformKey": "bill_print_url"}).then((res)=> {
@@ -1715,5 +1768,8 @@
 </script>
 
 <style scoped>
-
+ .material-img{
+   max-width:36px;
+   max-height:27px;
+ }
 </style>

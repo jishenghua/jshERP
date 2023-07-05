@@ -147,14 +147,16 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
-            <template slot="customBarCode" slot-scope="text, record">
-              {{record.mBarCode}}
+            <template slot="customPic" slot-scope="text, record">
               <a-popover placement="right" trigger="click">
                 <template slot="content">
-                  <img :src='getImgUrl(record.imgName)' width="500px" />
+                  <img :src="getImgUrl(record.imgName, '')" width="500px" />
                 </template>
-                <a-icon v-if="record.imgName" style="font-size: 18px" theme="twoTone" type="file-image" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" style="cursor:pointer; max-width:36px; max-height:27px;" title="查看大图" />
               </a-popover>
+            </template>
+            <template slot="customBarCode" slot-scope="text, record">
+              {{record.mBarCode}}
             </template>
             <template slot="customName" slot-scope="text, record">
               {{record.name}}
@@ -247,7 +249,8 @@
             width: 100,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 160, scopedSlots: { customRender: 'customBarCode' }},
+          {title: '图片', dataIndex: 'pic', width: 45, scopedSlots: { customRender: 'customPic' }},
+          {title: '条码', dataIndex: 'mBarCode', width: 120},
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '规格', dataIndex: 'standard', width: 120},
           {title: '型号', dataIndex: 'model', width: 120},
@@ -390,9 +393,10 @@
           this.$refs.modalForm.showOkFlag = false
         }
       },
-      getImgUrl(imgName) {
+      getImgUrl(imgName, type) {
         if(imgName && imgName.split(',')) {
-          return getFileAccessHttpUrl('systemConfig/static/' + imgName.split(',')[0])
+          type = type? type + '/':''
+          return getFileAccessHttpUrl('systemConfig/static/' + type + imgName.split(',')[0])
         } else {
           return ''
         }

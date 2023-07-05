@@ -87,9 +87,9 @@
               {{record.mBarCode}}
               <a-popover placement="right" trigger="click">
                 <template slot="content">
-                  <img :src='getImgUrl(record.imgName)' width="500px" />
+                  <img :src="getImgUrl(record.imgName, '')" width="500px" />
                 </template>
-                <a-icon v-if="record.imgName" style="font-size: 18px" theme="twoTone" type="file-image" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" style="cursor:pointer; max-width:36px; max-height:27px;" title="查看大图" />
               </a-popover>
             </template>
             <template slot="customName" slot-scope="text, record">
@@ -303,6 +303,13 @@
       getImgUrl(imgName) {
         if(imgName && imgName.split(',')) {
           return getFileAccessHttpUrl('systemConfig/static/' + imgName.split(',')[0])
+        } else {
+          return ''
+        }
+      },
+      getImgMiniUrl(imgName) {
+        if(imgName && imgName.split(',')) {
+          return getFileAccessHttpUrl('systemConfig/static/mini/' + imgName.split(',')[0])
         } else {
           return ''
         }
