@@ -300,16 +300,10 @@
         this.$refs.modalForm.add()
         this.$refs.modalForm.title = '新增商品'
       },
-      getImgUrl(imgName) {
+      getImgUrl(imgName, type) {
         if(imgName && imgName.split(',')) {
-          return getFileAccessHttpUrl('systemConfig/static/' + imgName.split(',')[0])
-        } else {
-          return ''
-        }
-      },
-      getImgMiniUrl(imgName) {
-        if(imgName && imgName.split(',')) {
-          return getFileAccessHttpUrl('systemConfig/static/mini/' + imgName.split(',')[0])
+          type = type? type + '/':''
+          return getFileAccessHttpUrl('systemConfig/static/' + type + imgName.split(',')[0])
         } else {
           return ''
         }
