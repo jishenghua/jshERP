@@ -1,9 +1,6 @@
 package com.jsh.erp.utils;
 
-import org.springframework.util.StringUtils;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -352,27 +349,5 @@ public class FileUtils {
 		//替换上传文件名字的特殊字符
 		fileName = fileName.replace("=","").replace(",","").replace("&","");
 		return fileName;
-	}
-
-	//将Url转换为File
-	public static File UrltoFile(String url) throws Exception {
-		HttpURLConnection httpUrl = (HttpURLConnection) new URL(url).openConnection();
-		httpUrl.connect();
-		InputStream ins=httpUrl.getInputStream();
-		File file = new File(System.getProperty("java.io.tmpdir") + File.separator + "xie");//System.getProperty("java.io.tmpdir")缓存
-		if (file.exists()) {
-			file.delete();//如果缓存中存在该文件就删除
-		}
-		OutputStream os = new FileOutputStream(file);
-		int bytesRead;
-		int len = 8192;
-		byte[] buffer = new byte[len];
-		while ((bytesRead = ins.read(buffer, 0, len)) != -1) {
-			os.write(buffer, 0, bytesRead);
-		}
-		os.close();
-		ins.close();
-		return file;
-
 	}
 }

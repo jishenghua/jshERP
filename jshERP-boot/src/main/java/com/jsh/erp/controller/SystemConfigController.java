@@ -179,13 +179,6 @@ public class SystemConfigController {
             String fileUrl = "";
             if(fileUploadType == 1) {
                 fileUrl = systemConfigService.getFileUrlLocal(imgPath);
-                File file = new File(fileUrl);
-                if(!file.exists()){
-                    response.setStatus(404);
-                    throw new RuntimeException("文件不存在..");
-                }
-                response.setContentType("application/force-download");// 设置强制下载不打开
-                response.addHeader("Content-Disposition", "attachment;fileName=" + new String(file.getName().getBytes("UTF-8"),"iso-8859-1"));
                 inputStream = new BufferedInputStream(new FileInputStream(fileUrl));
             } else if(fileUploadType == 2) {
                 fileUrl = systemConfigService.getFileUrlAliOss(imgPath);
@@ -240,6 +233,7 @@ public class SystemConfigController {
         if(StringUtil.isEmpty(imgPath) || imgPath=="null"){
             return;
         }
+        InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
             imgPath = imgPath.replace("..", "");
@@ -247,17 +241,20 @@ public class SystemConfigController {
                 imgPath = imgPath.substring(0, imgPath.length() - 1);
             }
             String fileUrl = "";
-            File file = null;
             if(fileUploadType == 1) {
                 fileUrl = systemConfigService.getFileUrlLocal(imgPath);
-                file = new File(fileUrl);
+                inputStream = new BufferedInputStream(new FileInputStream(fileUrl));
             } else if(fileUploadType == 2) {
                 fileUrl = systemConfigService.getFileUrlAliOss(imgPath);
-                file = FileUtils.UrltoFile(fileUrl);
+                URL url = new URL(fileUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5 * 1000);
+                inputStream = conn.getInputStream();// 通过输入流获取图片数据
             }
             int index = fileUrl.lastIndexOf(".");
             String ext = fileUrl.substring(index + 1);
-            BufferedImage image = systemConfigService.getImageMini(file, 40);
+            BufferedImage image = systemConfigService.getImageMini(inputStream, 40);
             outputStream = response.getOutputStream();
             ImageIO.write(image, ext, outputStream);
             response.flushBuffer();

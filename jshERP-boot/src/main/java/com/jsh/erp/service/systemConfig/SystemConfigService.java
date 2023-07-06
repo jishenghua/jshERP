@@ -293,8 +293,8 @@ public class SystemConfigService {
         return linkUrl + filePath + "/" + imgPath;
     }
 
-    public BufferedImage getImageMini(File file, int w) throws Exception {
-        BufferedImage img = ImageIO.read(file);
+    public BufferedImage getImageMini(InputStream inputStream, int w) throws Exception {
+        BufferedImage img = ImageIO.read(inputStream);
         //获取图片的长和宽
         int width = img.getWidth();
         int height = img.getHeight();
