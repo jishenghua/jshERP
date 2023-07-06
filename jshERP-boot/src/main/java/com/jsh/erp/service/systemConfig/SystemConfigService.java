@@ -35,7 +35,10 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -290,8 +293,8 @@ public class SystemConfigService {
         return linkUrl + filePath + "/" + imgPath;
     }
 
-    public BufferedImage getImageMini(String fileUrl, int w) throws Exception {
-        BufferedImage img = ImageIO.read(new File(fileUrl));
+    public BufferedImage getImageMini(File file, int w) throws Exception {
+        BufferedImage img = ImageIO.read(file);
         //获取图片的长和宽
         int width = img.getWidth();
         int height = img.getHeight();

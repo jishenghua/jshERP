@@ -6,6 +6,7 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.FileUtils;
 import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -246,14 +247,17 @@ public class SystemConfigController {
                 imgPath = imgPath.substring(0, imgPath.length() - 1);
             }
             String fileUrl = "";
+            File file = null;
             if(fileUploadType == 1) {
                 fileUrl = systemConfigService.getFileUrlLocal(imgPath);
+                file = new File(fileUrl);
             } else if(fileUploadType == 2) {
                 fileUrl = systemConfigService.getFileUrlAliOss(imgPath);
+                file = FileUtils.UrltoFile(fileUrl);
             }
             int index = fileUrl.lastIndexOf(".");
             String ext = fileUrl.substring(index + 1);
-            BufferedImage image = systemConfigService.getImageMini(fileUrl, 40);
+            BufferedImage image = systemConfigService.getImageMini(file, 40);
             outputStream = response.getOutputStream();
             ImageIO.write(image, ext, outputStream);
             response.flushBuffer();
