@@ -254,7 +254,7 @@ public class SystemConfigController {
             }
             int index = fileUrl.lastIndexOf(".");
             String ext = fileUrl.substring(index + 1);
-            BufferedImage image = systemConfigService.getImageMini(inputStream, 40);
+            BufferedImage image = systemConfigService.getImageMini(inputStream, 80);
             outputStream = response.getOutputStream();
             ImageIO.write(image, ext, outputStream);
             response.flushBuffer();
