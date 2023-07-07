@@ -7,7 +7,7 @@
     @ok="handleSubmit"
     @cancel="close"
     cancelText="关闭(ESC)"
-    style="top:5%;height: 90%;overflow-y: hidden"
+    style="top:20px;height: 95%;"
   >
     <a-row :gutter="10" style="padding: 10px; margin: -10px">
       <a-col :md="24" :sm="24">
@@ -89,7 +89,7 @@
                 <template slot="content">
                   <img :src="getImgUrl(record.imgName, '')" width="500px" />
                 </template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" style="cursor:pointer; max-width:36px; max-height:27px;" title="查看大图" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" style="cursor:pointer; max-width:40px; max-height:30px;" title="查看大图" />
               </a-popover>
             </template>
             <template slot="customName" slot-scope="text, record">

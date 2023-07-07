@@ -152,7 +152,9 @@
                 <template slot="content">
                   <img :src="getImgUrl(record.imgName, '')" width="500px" />
                 </template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" style="cursor:pointer; max-width:36px; max-height:27px;" title="查看大图" />
+                <div style="width:52px;height:52px;" v-if="record.imgName">
+                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="item-img" title="查看大图" />
+                </div>
               </a-popover>
             </template>
             <template slot="customBarCode" slot-scope="text, record">
@@ -249,7 +251,7 @@
             width: 100,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '图片', dataIndex: 'pic', width: 45, scopedSlots: { customRender: 'customPic' }},
+          {title: '图片', dataIndex: 'pic', width: 65, scopedSlots: { customRender: 'customPic' }},
           {title: '条码', dataIndex: 'mBarCode', width: 120},
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '规格', dataIndex: 'standard', width: 120},
@@ -419,4 +421,14 @@
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+</style>
+<style>
+  .item-img {
+    cursor:pointer;
+    position: static;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 </style>
