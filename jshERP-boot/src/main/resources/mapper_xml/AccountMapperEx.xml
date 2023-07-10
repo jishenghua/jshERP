@@ -96,7 +96,7 @@
         UNION ALL
         select ah.bill_no,ah.type as newType, 'financial' as fromType, s.supplier,ai.each_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id
-        inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
+        left join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type in ('收款','付款','收预付款')
         <if test="accountId != null">
             and ai.account_id=#{accountId}
@@ -105,7 +105,7 @@
         <!--主表中转出的账户 -->
         UNION ALL
         select ah.bill_no,ah.type as newType, 'financial' as fromType, '' as sName,ah.change_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
-        from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
+        from jsh_account_head ah left join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type='转账'
         <if test="accountId != null">
             and ah.account_id=#{accountId}
@@ -114,7 +114,7 @@
         <!--明细中被转入的账户 -->
         UNION ALL
         select ah.bill_no,ah.type as newType, 'financial' as fromType, '' as sName,ai.each_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
-        from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
+        from jsh_account_head ah left join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type='转账'
         <if test="accountId != null">
             and ai.account_id=#{accountId}
@@ -161,7 +161,7 @@
             UNION ALL
             select count(1) a
             from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id
-            inner join jsh_account_item ai on ai.header_id=ah.Id and ifnull(ai.delete_flag,'0') !='1'
+            left join jsh_account_item ai on ai.header_id=ah.Id and ifnull(ai.delete_flag,'0') !='1'
             where ah.Type in ('收款','付款','收预付款')
             <if test="accountId != null">
                 and ai.account_id=#{accountId}
@@ -170,7 +170,7 @@
             <!--主表中转出的账户 -->
             UNION ALL
             select count(1) a
-            from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
+            from jsh_account_head ah left join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
             where ah.type='转账'
             <if test="accountId != null">
                 and ah.account_id=#{accountId}
@@ -179,7 +179,7 @@
             <!--明细中被转入的账户 -->
             UNION ALL
             select count(1) a
-            from jsh_account_head ah inner join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
+            from jsh_account_head ah left join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
             where ah.type='转账'
             <if test="accountId != null">
                 and ai.account_id=#{accountId}
