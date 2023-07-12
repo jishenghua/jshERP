@@ -35,7 +35,7 @@
       </a-form-item>
 
       <a-row :gutter="0">
-        <a-col :span="16">
+        <a-col :span="14">
           <a-form-item fieldDecoratorId="inputCode">
             <!--20200510 cfm: 为方便测试，不输入验证码可： default-value="xxxx"-->
             <a-input
@@ -48,7 +48,7 @@
             </a-input>
           </a-form-item>
         </a-col>
-        <a-col :span="8" style="text-align: right">
+        <a-col :span="10" style="text-align: right">
           <img v-if="requestCodeSuccess" style="margin-top: 2px;" :src="randCodeImage" @click="handleChangeCheckCode"/>
           <img v-else style="margin-top: 2px;" src="../../assets/checkcode.png" @click="handleChangeCheckCode"/>
         </a-col>
@@ -68,10 +68,10 @@
         <router-link class="login" :to="{ name: 'login' }">使用已有租户登录</router-link>
       </a-form-item>
 
-      <div class="login-copyright">
+      <div class="login-copyright" v-if="device === 'mobile'">
         <a-row>
           <a-col>
-            © 2015-2030 {{systemTitle}} - Powered By
+            © 2015-2030 Powered By
             <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
           </a-col>
         </a-row>

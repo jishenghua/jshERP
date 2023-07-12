@@ -41,14 +41,14 @@
           :loading="loginBtn"
           @mouseover="initWeixin"
           @click.stop.prevent="handleSubmit"
-          :disabled="loginBtn">确定
+          :disabled="loginBtn">登 录
         </a-button>
       </a-form-item>
 
-      <div class="login-copyright">
+      <div class="login-copyright" v-if="device === 'mobile'">
         <a-row>
           <a-col>
-            © 2015-2030 {{systemTitle}} - Powered By
+            © 2015-2030 Powered By
             <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
           </a-col>
         </a-row>
@@ -63,23 +63,21 @@
 </template>
 <!-- BY cao_yu_li -->
 <script>
-  import md5 from "md5"
-  import api from '@/api'
+  import md5 from 'md5'
   import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
-  import { mapActions } from "vuex"
-  import { timeFix } from "@/utils/util"
+  import { mapActions } from 'vuex'
+  import { timeFix } from '@/utils/util'
   import Vue from 'vue'
-  import { ACCESS_TOKEN ,ENCRYPTED_STRING} from "@/store/mutation-types"
-  import { putAction,postAction,getAction } from '@/api/manage'
-  import { encryption , getEncryptedString } from '@/utils/encryption/aesEncrypt'
-  import store from '@/store/'
-  import { USER_INFO } from "@/store/mutation-types"
-  import pick from 'lodash.pick'
+  import { ACCESS_TOKEN, ENCRYPTED_STRING } from '@/store/mutation-types'
+  import { getAction } from '@/api/manage'
+  import { getEncryptedString } from '@/utils/encryption/aesEncrypt'
+  import { mixinDevice } from '@/utils/mixin.js'
 
   export default {
     components: {
       TwoStepCaptcha
     },
+    mixins: [mixinDevice],
     data () {
       return {
         customActiveKey: "tab1",
