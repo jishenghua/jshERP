@@ -7,7 +7,6 @@
           size="large"
           v-decorator="['loginName',{initialValue:'', rules: validatorRules.loginName.rules}]"
           type="text"
-          @mouseover="initWeixin"
           placeholder="请输入用户名">
           <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         </a-input>
@@ -18,7 +17,6 @@
           v-decorator="['password',{initialValue:'', rules: validatorRules.password.rules}]"
           size="large"
           type="password"
-          @mouseover="initWeixin"
           autocomplete="false"
           placeholder="请输入密码">
           <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
@@ -39,7 +37,6 @@
           htmlType="submit"
           class="login-button"
           :loading="loginBtn"
-          @mouseover="initWeixin"
           @click.stop.prevent="handleSubmit"
           :disabled="loginBtn">登 录
         </a-button>
@@ -52,11 +49,6 @@
             <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
           </a-col>
         </a-row>
-      </div>
-
-      <div v-if="showWeixinFlag" style="text-align: center; padding-top: 20px;">
-        <img src="/static/weixin.jpg" style="width:160px" />
-        <div style="font-size:16px;padding-top:10px;font-weight:bold">欢迎【扫一扫】<br/>{{systemTitle}}微信小程序</div>
       </div>
     </a-form>
   </div>
@@ -112,8 +104,7 @@
         currdatetime:'',
         randCodeImage:'',
         registerFlag:'',
-        requestCodeSuccess:false,
-        showWeixinFlag:false,
+        requestCodeSuccess:false
       }
     },
     created () {
@@ -292,32 +283,6 @@
             }
           }
         })
-      },
-      initWeixin() {
-        if(this.showWeixinSpan()) {
-          let that = this
-          setTimeout(function() {
-            that.showWeixin()
-          },1000)
-        }
-      },
-      showWeixinSpan() {
-        let host = window.location.host
-        if(host === 'cloud.huaxiaerp.vip' || host === 'cloud.huaxiaerp.com') {
-          return true
-        } else {
-          return false
-        }
-      },
-      showWeixin() {
-        this.showWeixinFlag = true
-      },
-      changeWeixinStatus() {
-        if(this.showWeixinFlag) {
-          this.showWeixinFlag = false
-        } else {
-          this.showWeixinFlag = true
-        }
       },
       checkScreen() {
         let percentage = '100%'

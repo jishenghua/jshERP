@@ -5,7 +5,7 @@
       <a-form-item
         fieldDecoratorId="username"
         :fieldDecoratorOptions="{rules: [{ required: true, message: '用户名不能为空'}, { validator: this.handleUserName}], validateTrigger: ['change', 'blur'], validateFirst: true}">
-        <a-input size="large" type="text" @focus="initWeixin" @mouseover="initWeixin" autocomplete="false"
+        <a-input size="large" type="text" autocomplete="false"
                  placeholder="请输入用户名"></a-input>
       </a-form-item>
 
@@ -22,8 +22,7 @@
         <a-form-item
           fieldDecoratorId="password"
           :fieldDecoratorOptions="{rules: [{ required: false}, { validator: this.handlePasswordLevel }], validateTrigger: ['change', 'blur'], validateFirst: true}">
-          <a-input size="large" type="password" @click="handlePasswordInputClick" @mouseover="initWeixin"
-                   autocomplete="false" placeholder="至少6位密码，区分大小写"></a-input>
+          <a-input size="large" type="password" @click="handlePasswordInputClick" autocomplete="false" placeholder="至少6位密码，区分大小写"></a-input>
         </a-form-item>
       </a-popover>
 
@@ -42,7 +41,6 @@
               size="large"
               type="text"
               default-value=""
-              @mouseover="initWeixin"
               placeholder="请输入验证码">
               <a-icon slot="prefix" type="smile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
@@ -61,7 +59,6 @@
           htmlType="submit"
           class="register-button"
           :loading="registerBtn"
-          @mouseover="initWeixin"
           @click.stop.prevent="handleSubmit"
           :disabled="registerBtn">注册租户
         </a-button>
@@ -75,11 +72,6 @@
             <a style="color:#00458a;" :href="systemUrl" target="_blank">官方网站</a>
           </a-col>
         </a-row>
-      </div>
-
-      <div v-if="showWeixinFlag" style="text-align: center; padding-top: 20px;">
-        <img src="/static/weixin.jpg" style="width:160px" />
-        <div style="font-size:16px;padding-top:10px;font-weight:bold">欢迎【扫一扫】<br/>{{systemTitle}}微信小程序</div>
       </div>
     </a-form>
   </div>
@@ -129,7 +121,6 @@
           progressColor: '#FF0000'
         },
         registerBtn: false,
-        showWeixinFlag:false,
       }
     },
     computed: {
@@ -278,33 +269,7 @@
           duration: 4,
         });
         this.registerBtn = false;
-      },
-      initWeixin() {
-        if(this.showWeixinSpan()) {
-          let that = this
-          setTimeout(function() {
-            that.showWeixin()
-          },1000)
-        }
-      },
-      showWeixinSpan() {
-        let host = window.location.host
-        if(host === 'cloud.huaxiaerp.vip' || host === 'cloud.huaxiaerp.com') {
-          return true
-        } else {
-          return false
-        }
-      },
-      showWeixin() {
-        this.showWeixinFlag = true
-      },
-      changeWeixinStatus() {
-        if(this.showWeixinFlag) {
-          this.showWeixinFlag = false
-        } else {
-          this.showWeixinFlag = true
-        }
-      },
+      }
     },
     watch: {
       'state.passwordLevel'(val) {
