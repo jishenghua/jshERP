@@ -319,12 +319,14 @@ public class DepotHeadService {
     }
 
     public Map<String, BigDecimal> getFinishDepositMapByNumberList(List<String> numberList) {
-        List<FinishDepositVo> list = depotHeadMapperEx.getFinishDepositByNumberList(numberList);
         Map<String,BigDecimal> finishDepositMap = new HashMap<>();
-        if(list!=null && list.size()>0) {
-            for (FinishDepositVo finishDepositVo : list) {
-                if(finishDepositVo!=null) {
-                    finishDepositMap.put(finishDepositVo.getNumber(), finishDepositVo.getFinishDeposit());
+        if(numberList.size()>0) {
+            List<FinishDepositVo> list = depotHeadMapperEx.getFinishDepositByNumberList(numberList);
+            if(list!=null && list.size()>0) {
+                for (FinishDepositVo finishDepositVo : list) {
+                    if(finishDepositVo!=null) {
+                        finishDepositMap.put(finishDepositVo.getNumber(), finishDepositVo.getFinishDeposit());
+                    }
                 }
             }
         }
@@ -332,12 +334,14 @@ public class DepotHeadService {
     }
 
     public Map<String, Integer> getBillSizeMapByLinkNumberList(List<String> numberList) throws Exception {
-        List<DepotHead> list = getBillListByLinkNumberList(numberList);
         Map<String, Integer> billListMap = new HashMap<>();
-        if(list!=null && list.size()>0) {
-            for (DepotHead depotHead : list) {
-                if(depotHead!=null) {
-                    billListMap.put(depotHead.getLinkNumber(), list.size());
+        if(numberList.size()>0) {
+            List<DepotHead> list = getBillListByLinkNumberList(numberList);
+            if(list!=null && list.size()>0) {
+                for (DepotHead depotHead : list) {
+                    if(depotHead!=null) {
+                        billListMap.put(depotHead.getLinkNumber(), list.size());
+                    }
                 }
             }
         }
@@ -345,12 +349,14 @@ public class DepotHeadService {
     }
 
     public Map<Long,Integer> getFinancialBillNoMapByBillIdList(List<Long> idList) {
-        List<AccountItem> list = accountHeadService.getFinancialBillNoByBillIdList(idList);
         Map<Long, Integer> billListMap = new HashMap<>();
-        if(list!=null && list.size()>0) {
-            for (AccountItem accountItem : list) {
-                if(accountItem!=null) {
-                    billListMap.put(accountItem.getBillId(), list.size());
+        if(idList.size()>0) {
+            List<AccountItem> list = accountHeadService.getFinancialBillNoByBillIdList(idList);
+            if(list!=null && list.size()>0) {
+                for (AccountItem accountItem : list) {
+                    if(accountItem!=null) {
+                        billListMap.put(accountItem.getBillId(), list.size());
+                    }
                 }
             }
         }
@@ -605,19 +611,23 @@ public class DepotHeadService {
     }
 
     public Map<Long,String> findMaterialsListMapByHeaderIdList(List<Long> idList)throws Exception {
-        List<MaterialsListVo> list = depotHeadMapperEx.findMaterialsListMapByHeaderIdList(idList);
         Map<Long,String> materialsListMap = new HashMap<>();
-        for(MaterialsListVo materialsListVo : list){
-            materialsListMap.put(materialsListVo.getHeaderId(), materialsListVo.getMaterialsList());
+        if(idList.size()>0) {
+            List<MaterialsListVo> list = depotHeadMapperEx.findMaterialsListMapByHeaderIdList(idList);
+            for (MaterialsListVo materialsListVo : list) {
+                materialsListMap.put(materialsListVo.getHeaderId(), materialsListVo.getMaterialsList());
+            }
         }
         return materialsListMap;
     }
 
     public Map<Long,BigDecimal> getMaterialCountListMapByHeaderIdList(List<Long> idList)throws Exception {
-        List<MaterialCountVo> list = depotHeadMapperEx.getMaterialCountListByHeaderIdList(idList);
         Map<Long,BigDecimal> materialCountListMap = new HashMap<>();
-        for(MaterialCountVo materialCountVo : list){
-            materialCountListMap.put(materialCountVo.getHeaderId(), materialCountVo.getMaterialCount());
+        if(idList.size()>0) {
+            List<MaterialCountVo> list = depotHeadMapperEx.getMaterialCountListByHeaderIdList(idList);
+            for(MaterialCountVo materialCountVo : list){
+                materialCountListMap.put(materialCountVo.getHeaderId(), materialCountVo.getMaterialCount());
+            }
         }
         return materialCountListMap;
     }
