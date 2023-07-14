@@ -190,8 +190,8 @@
         top: 0;
         padding: 30px 30px 0 30px;
         margin-top: 30px;
-        -webkit-box-shadow: 0 2px 6px 0 rgb(0 0 0 / 10%);
-        box-shadow: 0 2px 6px 0 rgb(0 0 0 / 10%);
+        -webkit-box-shadow: 0 2px 6px 0 rgb(200 200 200);
+        box-shadow: 0 2px 6px 0 rgb(200 200 200);
         overflow: hidden;
 
         a {
