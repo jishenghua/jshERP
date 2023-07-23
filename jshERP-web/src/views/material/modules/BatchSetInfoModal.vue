@@ -124,31 +124,36 @@
         // 触发表单验证
         this.form.validateFields((err, values) => {
           if (!err) {
-            that.confirmLoading = true
             let formData = Object.assign(this.model, values)
             if(JSON.stringify(formData) === '{}') {
               that.$message.warning('抱歉，请输入要批量编辑的内容！')
-              that.confirmLoading = false
               return
             }
             if(formData.enableSerialNumber === '1' && formData.enableBatchNumber === '1' ) {
               that.$message.warning('抱歉，序列号和批号只能选择一项！')
-              that.confirmLoading = false
               return
             }
-            let paramObj = {
-              ids: this.materialIds,
-              material: JSON.stringify(formData)
-            }
-            batchUpdateMaterial(paramObj).then((res)=>{
-              if(res.code === 200){
-                that.$emit('ok')
-              }else{
-                that.$message.warning(res.data.message)
+            let idList = that.materialIds?that.materialIds.split(','):[]
+            that.$confirm({
+              title: "确认操作",
+              content: "是否操作选中的" + idList.length + "条数据?",
+              onOk: function () {
+                that.confirmLoading = true
+                let paramObj = {
+                  ids: that.materialIds,
+                  material: JSON.stringify(formData)
+                }
+                batchUpdateMaterial(paramObj).then((res)=>{
+                  if(res.code === 200){
+                    that.$emit('ok')
+                  }else{
+                    that.$message.warning(res.data.message)
+                  }
+                }).finally(() => {
+                  that.confirmLoading = false
+                  that.close()
+                })
               }
-            }).finally(() => {
-              that.confirmLoading = false
-              that.close()
             })
           }
         })

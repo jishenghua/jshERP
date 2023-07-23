@@ -381,7 +381,11 @@
         } else {
           let ids = "";
           for (let a = 0; a < this.selectedRowKeys.length; a++) {
-            ids += this.selectedRowKeys[a] + ",";
+            if(a === this.selectedRowKeys.length-1) {
+              ids += this.selectedRowKeys[a]
+            } else {
+              ids += this.selectedRowKeys[a] + ','
+            }
           }
           this.$refs.batchSetInfoModalForm.edit(ids);
           this.$refs.batchSetInfoModalForm.title = "批量编辑";
