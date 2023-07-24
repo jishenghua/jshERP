@@ -136,7 +136,8 @@ public class MaterialService {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
                     if(fileUploadType == 2) {
-                        m.setImgType("small");
+                        m.setImgSmall("small");
+                        m.setImgLarge("large");
                     }
                     m.setMaterialOther(getMaterialOtherByParam(mpArr, m));
                     m.setStock(currentStockMap.get(m.getId())!=null? currentStockMap.get(m.getId()): BigDecimal.ZERO);

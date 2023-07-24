@@ -268,9 +268,11 @@ public class MaterialController {
                     item.put("expand", materialService.getMaterialOtherByParam(mpArr, material));
                     item.put("imgName", material.getImgName());
                     if(fileUploadType == 2) {
-                        item.put("imgType", "small");
+                        item.put("imgSmall", "small");
+                        item.put("imgLarge", "large");
                     } else {
-                        item.put("imgType", "");
+                        item.put("imgSmall", "");
+                        item.put("imgLarge", "");
                     }
                     dataArray.add(item);
                 }

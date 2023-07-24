@@ -260,9 +260,11 @@ public class DepotItemController {
                     item.put("remark", diEx.getRemark());
                     item.put("imgName", diEx.getImgName());
                     if(fileUploadType == 2) {
-                        item.put("imgType", "small");
+                        item.put("imgSmall", "small");
+                        item.put("imgLarge", "large");
                     } else {
-                        item.put("imgType", "");
+                        item.put("imgSmall", "");
+                        item.put("imgLarge", "");
                     }
                     item.put("linkId", diEx.getLinkId());
                     item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
