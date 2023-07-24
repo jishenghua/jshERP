@@ -87,9 +87,9 @@
               {{record.mBarCode}}
               <a-popover placement="right" trigger="click">
                 <template slot="content">
-                  <img :src="getImgUrl(record.imgName, '')" width="500px" />
+                  <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
                 </template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" style="cursor:pointer; max-width:40px; max-height:30px;" title="查看大图" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" style="cursor:pointer; max-width:40px; max-height:30px;" title="查看大图" />
               </a-popover>
             </template>
             <template slot="customName" slot-scope="text, record">

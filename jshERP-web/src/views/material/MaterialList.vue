@@ -150,10 +150,10 @@
             <template slot="customPic" slot-scope="text, record">
               <a-popover placement="right" trigger="click">
                 <template slot="content">
-                  <img :src="getImgUrl(record.imgName, '')" width="500px" />
+                  <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
                 </template>
                 <div style="width:52px;height:52px;" v-if="record.imgName">
-                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="item-img" title="查看大图" />
+                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" />
                 </div>
               </a-popover>
             </template>
