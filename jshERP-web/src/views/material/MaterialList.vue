@@ -153,7 +153,7 @@
                   <img :src="getImgUrl(record.imgName, '')" width="500px" />
                 </template>
                 <div style="width:52px;height:52px;" v-if="record.imgName">
-                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="item-img" title="查看大图" />
+                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="item-img" title="查看大图" />
                 </div>
               </a-popover>
             </template>

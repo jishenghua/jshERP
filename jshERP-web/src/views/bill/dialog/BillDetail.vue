@@ -80,7 +80,7 @@
                   <template slot="customBarCode" slot-scope="text, record">
                     {{record.barCode}} <a-popover placement="right" trigger="click">
                       <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                      <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                      <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
                     </a-popover>
                   </template>
                 </a-table>
@@ -167,7 +167,7 @@
                   <template slot="customBarCode" slot-scope="text, record">
                     {{record.barCode}} <a-popover placement="right" trigger="click">
                     <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                    <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                    <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
                   </a-popover>
                   </template>
                 </a-table>
@@ -245,7 +245,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                   <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
                 </a-popover>
               </template>
             </a-table>
@@ -329,7 +329,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                   <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
                 </a-popover>
               </template>
             </a-table>
@@ -441,7 +441,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -534,7 +534,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -618,7 +618,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -735,7 +735,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -831,7 +831,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -883,7 +883,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -926,7 +926,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -969,7 +969,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -1012,7 +1012,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>
@@ -1059,7 +1059,7 @@
               <template slot="customBarCode" slot-scope="text, record">
                 {{record.barCode}} <a-popover placement="right" trigger="click">
                 <template slot="content"><img :src="getImgUrl(record.imgName, '')" width="500px" /></template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" class="material-img" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" class="material-img" />
               </a-popover>
               </template>
             </a-table>

@@ -89,7 +89,7 @@
                 <template slot="content">
                   <img :src="getImgUrl(record.imgName, '')" width="500px" />
                 </template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, 'mini')" style="cursor:pointer; max-width:40px; max-height:30px;" title="查看大图" />
+                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgType)" style="cursor:pointer; max-width:40px; max-height:30px;" title="查看大图" />
               </a-popover>
             </template>
             <template slot="customName" slot-scope="text, record">
