@@ -23,6 +23,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,6 +70,9 @@ public class DepotItemController {
 
     @Resource
     private SystemConfigService systemConfigService;
+
+    @Value(value="${file.uploadType}")
+    private Long fileUploadType;
 
     /**
      * 根据仓库和商品查询单据列表
@@ -255,6 +259,11 @@ public class DepotItemController {
                     item.put("weight", allWeight);
                     item.put("remark", diEx.getRemark());
                     item.put("imgName", diEx.getImgName());
+                    if(fileUploadType == 2) {
+                        item.put("imgType", "small");
+                    } else {
+                        item.put("imgType", "");
+                    }
                     item.put("linkId", diEx.getLinkId());
                     item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
                     item.put("depotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());

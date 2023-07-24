@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +51,9 @@ public class MaterialController {
 
     @Resource
     private DepotService depotService;
+
+    @Value(value="${file.uploadType}")
+    private Long fileUploadType;
 
     /**
      * 检查商品是否存在
@@ -263,6 +267,11 @@ public class MaterialController {
                     item.put("stock", stock);
                     item.put("expand", materialService.getMaterialOtherByParam(mpArr, material));
                     item.put("imgName", material.getImgName());
+                    if(fileUploadType == 2) {
+                        item.put("imgType", "small");
+                    } else {
+                        item.put("imgType", "");
+                    }
                     dataArray.add(item);
                 }
             }

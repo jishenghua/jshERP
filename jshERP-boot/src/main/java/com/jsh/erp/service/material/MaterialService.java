@@ -24,6 +24,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -75,6 +76,9 @@ public class MaterialService {
     private DepotService depotService;
     @Resource
     private MaterialExtendService materialExtendService;
+
+    @Value(value="${file.uploadType}")
+    private Long fileUploadType;
 
     public Material getMaterial(long id)throws Exception {
         Material result=null;
@@ -131,6 +135,9 @@ public class MaterialService {
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
+                    if(fileUploadType == 2) {
+                        m.setImgType("small");
+                    }
                     m.setMaterialOther(getMaterialOtherByParam(mpArr, m));
                     m.setStock(currentStockMap.get(m.getId())!=null? currentStockMap.get(m.getId()): BigDecimal.ZERO);
                     m.setBigUnitStock(getBigUnitStock(m.getStock(), m.getUnitId()));

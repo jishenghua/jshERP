@@ -47,6 +47,8 @@ public class MaterialVo4Unit extends Material{
      */
     private String bigUnitStock;
 
+    private String imgType;
+
     public String getUnitName() {
         return unitName;
     }
@@ -205,5 +207,13 @@ public class MaterialVo4Unit extends Material{
 
     public void setBigUnitStock(String bigUnitStock) {
         this.bigUnitStock = bigUnitStock;
+    }
+
+    public String getImgType() {
+        return imgType;
+    }
+
+    public void setImgType(String imgType) {
+        this.imgType = imgType;
     }
 }

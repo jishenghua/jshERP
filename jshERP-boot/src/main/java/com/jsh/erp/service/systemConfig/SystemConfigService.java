@@ -32,13 +32,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -174,7 +174,7 @@ public class SystemConfigService {
      * @param name  自定义文件名
      * @return
      */
-    public String uploadLocal(MultipartFile mf, String bizPath, String name, HttpServletRequest request) {
+    public String uploadLocal(MultipartFile mf, String bizPath, String name, HttpServletRequest request) throws Exception {
         try {
             if(StringUtil.isEmpty(bizPath)){
                 bizPath = "";
@@ -202,6 +202,17 @@ public class SystemConfigService {
             String savePath = file.getPath() + File.separator + fileName;
             File savefile = new File(savePath);
             FileCopyUtils.copy(mf.getBytes(), savefile);
+            // 保存缩略图
+            // String fileUrl = getFileUrlLocal(bizPath + File.separator + fileName);
+            // InputStream imgInputStream = new BufferedInputStream(new FileInputStream(fileUrl));
+            // BufferedImage smallImage = getImageMini(imgInputStream, 80);
+            // int index = fileName.lastIndexOf(".");
+            // String ext = fileName.substring(index + 1);
+            // String smallUrl = filePath + "-small" + File.separator + bizPath + File.separator + fileName;
+            // FileUtils.createFile(smallUrl);
+            // File saveSmallFile = new File(smallUrl);
+            // ImageIO.write(smallImage, ext, saveSmallFile);
+            // 返回路径
             String dbpath = null;
             if(StringUtil.isNotEmpty(bizPath)){
                 dbpath = bizPath + File.separator + fileName;
@@ -251,6 +262,7 @@ public class SystemConfigService {
         }
         String filePathStr = StringUtil.isNotEmpty(filePath)? filePath.substring(1):"";
         String objectName = filePathStr + "/" + bizPath + "/" + fileName;
+        String smallObjectName = filePathStr + "-small/" + bizPath + "/" + fileName;
         // 如果未指定本地路径，则默认从示例程序所属项目对应本地路径中上传文件流。
         byte [] byteArr = mf.getBytes();
 
@@ -258,11 +270,30 @@ public class SystemConfigService {
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
 
         try {
+            // 保存原文件
             InputStream inputStream = new ByteArrayInputStream(byteArr);
-            // 创建PutObjectRequest对象。
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, objectName, inputStream);
-            // 创建PutObject请求。
-            PutObjectResult result = ossClient.putObject(putObjectRequest);
+            ossClient.putObject(putObjectRequest);
+            // 如果是图片-保存缩略图
+            int index = fileName.lastIndexOf(".");
+            String ext = fileName.substring(index + 1);
+            if(ext.contains("gif") || ext.contains("jpg") || ext.contains("jpeg") || ext.contains("png")
+                    || ext.contains("GIF") || ext.contains("JPG") || ext.contains("JPEG") || ext.contains("PNG")) {
+                String fileUrl = getFileUrlAliOss(bizPath + "/" + fileName);
+                URL url = new URL(fileUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5 * 1000);
+                InputStream imgInputStream = conn.getInputStream();// 通过输入流获取图片数据
+                BufferedImage smallImage = getImageMini(imgInputStream, 80);
+                ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                ImageOutputStream imOut = ImageIO.createImageOutputStream(bs);
+                ImageIO.write(smallImage, ext, imOut);
+                InputStream isImg = new ByteArrayInputStream(bs.toByteArray());
+                PutObjectRequest putSmallObjectRequest = new PutObjectRequest(bucketName, smallObjectName, isImg);
+                ossClient.putObject(putSmallObjectRequest);
+            }
+            // 返回路径
             return bizPath + "/" + fileName;
         } catch (OSSException oe) {
             logger.error("Caught an OSSException, which means your request made it to OSS, "
