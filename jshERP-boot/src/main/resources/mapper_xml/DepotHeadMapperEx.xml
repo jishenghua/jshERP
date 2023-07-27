@@ -53,12 +53,10 @@
     </resultMap>
 
     <select id="selectByConditionDepotHead" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
-        select distinct dh.*, s.supplier OrganName, u.username userName, a.name AccountName
+        select jdh.*, s.supplier OrganName, u.username userName, a.name AccountName
+        from (select distinct dh.id
         from jsh_depot_head dh
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
-        left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
-        left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
         where 1=1
@@ -98,9 +96,10 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
-                or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
-                or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like
+            #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="organId != null">
             and dh.organ_id=#{organId}
@@ -137,10 +136,12 @@
             and (dh.account_id=#{accountId} or dh.account_id_list like #{bindAccountId})
         </if>
         <if test="hasDebt != null and hasDebt ==1">
-            and (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))>0)
+            and
+            (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))>0)
         </if>
         <if test="hasDebt != null and hasDebt ==0">
-            and (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))=0)
+            and
+            (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))=0)
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -150,12 +151,17 @@
         order by dh.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
-        </if>
+        </if>) tb
+        left join jsh_depot_head jdh on jdh.id=tb.id and ifnull(jdh.delete_flag,'0') !='1'
+        left join jsh_supplier s on jdh.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
+        left join jsh_user u on jdh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_account a on jdh.account_id=a.id and ifnull(a.delete_flag,'0') !='1'
     </select>
+
     <select id="countsByDepotHead" resultType="java.lang.Long">
-        SELECT
-        COUNT(1) from
-        (select distinct dh.* FROM jsh_depot_head dh
+        select
+        count(1) from
+        (select distinct dh.id from jsh_depot_head dh
         left join jsh_depot_item di on dh.Id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.Id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
