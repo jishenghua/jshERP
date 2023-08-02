@@ -33,7 +33,7 @@
             <j-date style="width:100%" placeholder="请选择到期时间" v-decorator.trim="[ 'expireTime' ]" :show-time="true"/>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-            <a-textarea :rows="2" placeholder="请输入备注" v-decorator.trim="[ 'remark' ]" />
+            <a-textarea :rows="2" placeholder="请输入备注（微信号）" v-decorator.trim="[ 'remark' ]" />
           </a-form-item>
         </a-form>
       </a-spin>
