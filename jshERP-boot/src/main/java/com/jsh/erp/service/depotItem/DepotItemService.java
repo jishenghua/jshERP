@@ -611,7 +611,7 @@ public class DepotItemService {
                 }
                 //出库时判断库存是否充足
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
-                    BigDecimal stock = getStockByParam(depotItem.getDepotId(),depotItem.getMaterialId(),null,null);
+                    BigDecimal stock = getCurrentStockByParam(depotItem.getDepotId(),depotItem.getMaterialId());
                     if(StringUtil.isNotEmpty(depotItem.getSku())) {
                         //对于sku商品要换个方式计算库存
                         stock = getSkuStockByParam(depotItem.getDepotId(),depotItem.getMaterialExtendId(),null,null);
@@ -1146,7 +1146,7 @@ public class DepotItemService {
                     if(StringUtil.isNotEmpty(m.getSku())){
                         stock = getSkuStockByParam(null, m.getMeId(),null,null);
                     } else {
-                        stock = depotItemMapperEx.getCurrentStockByParam(null, m.getId());
+                        stock = getCurrentStockByParam(null, m.getId());
                     }
                     item.put("stock", stock);
                     item.put("unit", m.getCommodityUnit());
@@ -1214,4 +1214,9 @@ public class DepotItemService {
         }
         return depotItemMapperEx.getLastUnitPriceByParam(organId, meId, type, subType);
     }
+
+    public BigDecimal getCurrentStockByParam(Long depotId, Long mId) {
+        return depotItemMapperEx.getCurrentStockByParam(depotId, mId);
+    }
+
 }
