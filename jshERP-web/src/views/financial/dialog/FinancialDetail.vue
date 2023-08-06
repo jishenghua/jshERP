@@ -54,6 +54,7 @@
             bordered
             rowKey="id"
             :pagination="false"
+            :loading="loading"
             :columns="advanceInColumns"
             :dataSource="dataSource">
           </a-table>
@@ -109,6 +110,7 @@
             bordered
             rowKey="id"
             :pagination="false"
+            :loading="loading"
             :columns="giroColumns"
             :dataSource="dataSource">
           </a-table>
@@ -167,6 +169,7 @@
             bordered
             rowKey="id"
             :pagination="false"
+            :loading="loading"
             :columns="itemInColumns"
             :dataSource="dataSource">
           </a-table>
@@ -225,6 +228,7 @@
             bordered
             rowKey="id"
             :pagination="false"
+            :loading="loading"
             :columns="itemOutColumns"
             :dataSource="dataSource">
           </a-table>
@@ -283,6 +287,7 @@
             bordered
             rowKey="id"
             :pagination="false"
+            :loading="loading"
             :columns="moneyInColumns"
             :dataSource="dataSource">
           </a-table>
@@ -349,6 +354,7 @@
             bordered
             rowKey="id"
             :pagination="false"
+            :loading="loading"
             :columns="moneyOutColumns"
             :dataSource="dataSource">
           </a-table>

@@ -75,6 +75,7 @@
                   bordered
                   rowKey="id"
                   :pagination="false"
+                  :loading="loading"
                   :columns="columns"
                   :dataSource="dataSource">
                   <template slot="customBarCode" slot-scope="text, record">
@@ -162,6 +163,7 @@
                   bordered
                   rowKey="id"
                   :pagination="false"
+                  :loading="loading"
                   :columns="columns"
                   :dataSource="dataSource">
                   <template slot="customBarCode" slot-scope="text, record">
@@ -240,6 +242,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -324,6 +327,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -436,6 +440,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -529,6 +534,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -613,6 +619,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -730,6 +737,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -826,6 +834,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -878,6 +887,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -921,6 +931,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -964,6 +975,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -1007,6 +1019,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
@@ -1054,6 +1067,7 @@
               bordered
               rowKey="id"
               :pagination="false"
+              :loading="loading"
               :columns="columns"
               :dataSource="dataSource">
               <template slot="customBarCode" slot-scope="text, record">
