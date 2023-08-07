@@ -165,5 +165,30 @@ export const BillListMixin = {
         }
       })
     },
+    //加载初始化列
+    initColumnsSetting(){
+      let columnsStr = Vue.ls.get(this.prefixNo)
+      if(columnsStr && columnsStr.indexOf(',')>-1) {
+        this.settingDataIndex = columnsStr.split(',')
+      } else {
+        this.settingDataIndex = this.defDataIndex
+      }
+      this.columns = this.defColumns.filter(item => {
+        return this.settingDataIndex.includes(item.dataIndex)
+      })
+    },
+    //列设置更改事件
+    onColChange (checkedValues) {
+      this.columns = this.defColumns.filter(item => {
+        return checkedValues.includes(item.dataIndex)
+      })
+      let columnsStr = checkedValues.join()
+      Vue.ls.set(this.prefixNo, columnsStr)
+    },
+    //恢复默认
+    handleRestDefault() {
+      Vue.ls.remove(this.prefixNo)
+      this.initColumnsSetting()
+    }
   }
 }
