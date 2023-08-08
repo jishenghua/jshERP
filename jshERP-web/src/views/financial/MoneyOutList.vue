@@ -204,6 +204,7 @@
           { title: '单据日期 ', dataIndex: 'billTimeStr',width:160},
           { title: '操作员', dataIndex: 'userName',width:100, ellipsis:true},
           { title: '财务人员', dataIndex: 'handsPersonName',width:100},
+          { title: '付款账户', dataIndex: 'accountName',width:100, ellipsis:true},
           { title: '合计付款', dataIndex: 'totalPrice',width:80},
           { title: '优惠金额', dataIndex: 'discountMoney',width:80},
           { title: '实际付款', dataIndex: 'changeAmount',width:80},
