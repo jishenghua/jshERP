@@ -112,6 +112,29 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-popover trigger="click" placement="right">
+            <template slot="content">
+              <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
+                <a-row style="width: 500px">
+                  <template v-for="(item,index) in defColumns">
+                    <template>
+                      <a-col :span="8">
+                        <a-checkbox :value="item.dataIndex">
+                          <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                        </a-checkbox>
+                      </a-col>
+                    </template>
+                  </template>
+                </a-row>
+                <a-row style="padding-top: 10px;">
+                  <a-col>
+                    恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                  </a-col>
+                </a-row>
+              </a-checkbox-group>
+            </template>
+            <a-button icon="setting">列设置</a-button>
+          </a-popover>
           <a-tooltip placement="left" title="用于销售出库单据的退货。销售退货单可以由销售出库单转过来，也可以单独创建。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
@@ -162,6 +185,7 @@
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
+  import JEllipsis from '@/components/jeecg/JEllipsis'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
@@ -170,6 +194,7 @@
     components: {
       SaleBackModal,
       BillDetail,
+      JEllipsis,
       JDate
     },
     data () {
@@ -197,12 +222,15 @@
           span: 18,
           offset: 1
         },
-        // 表头
-        columns: [
+        // 默认索引
+        defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalPrice','totalTaxLastMoney','needBackMoney',
+          'changeAmount','debt','status'],
+        // 默认列
+        defColumns: [
           {
             title: '操作',
             dataIndex: 'action',
-            align:"center", width: 160,
+            align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
@@ -212,6 +240,7 @@
               return text
             }
           },
+          { title: '关联单据', dataIndex: 'linkNumber',width:140},
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
             customRender:function (text,record,index) {
               if(text) {
@@ -228,14 +257,24 @@
               return (record.discountMoney + record.discountLastMoney).toFixed(2);
             }
           },
+          { title: '优惠率', dataIndex: 'discount',width:60,
+            customRender:function (text,record,index) {
+              return text? text + '%':''
+            }
+          },
+          { title: '退款优惠', dataIndex: 'discountMoney',width:80},
+          { title: '其它费用', dataIndex: 'otherMoney',width:80},
           { title: '待退金额', dataIndex: 'needBackMoney',width:80,
             customRender:function (text,record,index) {
               let needBackMoney = record.discountLastMoney + record.otherMoney
               return needBackMoney? needBackMoney.toFixed(2):0
             }
           },
-          { title: '退款', dataIndex: 'changeAmount',width:50},
-          { title: '欠款', dataIndex: 'debt',width:60},
+          { title: '结算账户', dataIndex: 'accountName',width:80},
+          { title: '本次退款', dataIndex: 'changeAmount',width:80},
+          { title: '本次欠款', dataIndex: 'debt',width:80},
+          { title: '销售人员', dataIndex: 'salesManStr',width:120},
+          { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

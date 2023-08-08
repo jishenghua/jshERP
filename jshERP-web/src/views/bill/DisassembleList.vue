@@ -88,6 +88,29 @@
               批量操作 <a-icon type="down" />
             </a-button>
           </a-dropdown>
+          <a-popover trigger="click" placement="right">
+            <template slot="content">
+              <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
+                <a-row style="width: 500px">
+                  <template v-for="(item,index) in defColumns">
+                    <template>
+                      <a-col :span="8">
+                        <a-checkbox :value="item.dataIndex">
+                          <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                        </a-checkbox>
+                      </a-col>
+                    </template>
+                  </template>
+                </a-row>
+                <a-row style="padding-top: 10px;">
+                  <a-col>
+                    恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                  </a-col>
+                </a-row>
+              </a-checkbox-group>
+            </template>
+            <a-button icon="setting">列设置</a-button>
+          </a-popover>
           <a-tooltip placement="left" title="用于将一个商品拆分成多种商品，被拆分的商品库存增加，拆分后的商品库存减少。" slot="action">
             <a-icon v-if="btnEnableList.indexOf(1)>-1" type="question-circle" style="font-size:20px;float:right;" />
           </a-tooltip>
@@ -139,6 +162,7 @@
   import BillDetail from './dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
+  import JEllipsis from '@/components/jeecg/JEllipsis'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
   export default {
@@ -147,6 +171,7 @@
     components: {
       DisassembleModal,
       BillDetail,
+      JEllipsis,
       JDate
     },
     data () {
@@ -171,8 +196,10 @@
           span: 18,
           offset: 1
         },
-        // 表头
-        columns: [
+        // 默认索引
+        defDataIndex:['action','number','materialsList','operTimeStr','userName','materialCount','totalPrice','status'],
+        // 默认列
+        defColumns: [
           {
             title: '操作',
             dataIndex: 'action',
@@ -191,6 +218,7 @@
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
           { title: '数量', dataIndex: 'materialCount',width:60},
           { title: '金额合计', dataIndex: 'totalPrice',width:80},
+          { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

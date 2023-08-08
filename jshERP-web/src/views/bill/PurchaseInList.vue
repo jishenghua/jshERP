@@ -242,13 +242,9 @@
           span: 18,
           offset: 1
         },
-        // 实际索引
-        settingDataIndex:[],
         // 默认索引
         defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalPrice','totalTaxLastMoney',
           'needInMoney','changeAmount','debt','status'],
-        // 实际列
-        columns:[],
         // 默认列
         defColumns: [
           {
@@ -317,7 +313,6 @@
     computed: {
     },
     created () {
-      this.initColumnsSetting()
       this.initSystemConfig()
       this.initSupplier()
       this.getDepotData()

@@ -16,6 +16,10 @@ export const BillListMixin = {
       retailList: [],
       userList: [],
       accountList: [],
+      // 实际索引
+      settingDataIndex:[],
+      // 实际列
+      columns:[],
     }
   },
   computed: {
@@ -33,6 +37,7 @@ export const BillListMixin = {
     }
   },
   created() {
+    this.initColumnsSetting()
   },
   methods: {
     myHandleAdd() {
