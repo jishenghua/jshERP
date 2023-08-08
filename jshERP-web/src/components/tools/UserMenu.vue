@@ -151,7 +151,7 @@
 
         this.$confirm({
           title: '提示',
-          content: '真的要注销登录吗 ?',
+          content: '真的要退出登录吗 ?',
           onOk() {
             return that.Logout({}).then(() => {
                 window.location.href="/";
