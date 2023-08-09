@@ -1284,6 +1284,10 @@ public class MaterialService {
             item.setUnitName(null!=item.getUnitId()?item.getUnitName() + "[多单位]":item.getUnitName());
             item.setInitialStock(null!=initialStockMap.get(item.getId())?initialStockMap.get(item.getId()):BigDecimal.ZERO);
             item.setBigUnitStock(getBigUnitStock(item.getCurrentStock(), item.getUnitId()));
+            if(fileUploadType == 2) {
+                item.setImgSmall("small");
+                item.setImgLarge("large");
+            }
         }
         return dataList;
     }
