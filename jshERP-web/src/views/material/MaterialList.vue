@@ -108,7 +108,7 @@
           </a-dropdown>
           <a-popover trigger="click" placement="right">
             <template slot="content">
-              <a-checkbox-group @change="onColChange" v-model="settingColumns" :defaultValue="settingColumns">
+              <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
                 <a-row style="width: 500px">
                   <template v-for="(item,index) in defColumns">
                     <template>
@@ -119,6 +119,11 @@
                       </a-col>
                     </template>
                   </template>
+                </a-row>
+                <a-row style="padding-top: 10px;">
+                  <a-col>
+                    恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                  </a-col>
                 </a-row>
               </a-checkbox-group>
             </template>
@@ -237,12 +242,14 @@
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '50', '100', '200']
         },
-        // 实际表头
+        // 实际索引
+        settingDataIndex:[],
+        // 实际列
         columns:[],
-        // 初始化设置的表头
-        settingColumns:['mBarCode','name','standard','model','color','categoryName','materialOther','unit', 'stock',
-          'purchaseDecimal','commodityDecimal','wholesaleDecimal','lowDecimal','enabled','enableSerialNumber','enableBatchNumber','action'],
-        // 默认的列
+        // 默认索引
+        defDataIndex:['action','mBarCode','name','standard','model','color','categoryName','materialOther','unit', 'stock',
+          'purchaseDecimal','commodityDecimal','wholesaleDecimal','lowDecimal','enabled','enableSerialNumber','enableBatchNumber'],
+        // 默认列
         defColumns: [
           {
             title: '操作',
@@ -312,25 +319,26 @@
       initColumnsSetting(){
         let columnsStr = Vue.ls.get('materialColumns')
         if(columnsStr && columnsStr.indexOf(',')>-1) {
-          this.settingColumns = columnsStr.split(',')
+          this.settingDataIndex = columnsStr.split(',')
+        } else {
+          this.settingDataIndex = this.defDataIndex
         }
         this.columns = this.defColumns.filter(item => {
-          if (this.settingColumns.includes(item.dataIndex)) {
-            return true
-          }
-          return false
+          return this.settingDataIndex.includes(item.dataIndex)
         })
       },
       //列设置更改事件
       onColChange (checkedValues) {
         this.columns = this.defColumns.filter(item => {
-          if (checkedValues.includes(item.dataIndex)) {
-            return true
-          }
-          return false
+          return checkedValues.includes(item.dataIndex)
         })
         let columnsStr = checkedValues.join()
         Vue.ls.set('materialColumns', columnsStr)
+      },
+      //恢复默认
+      handleRestDefault() {
+        Vue.ls.remove('materialColumns')
+        this.initColumnsSetting()
       },
       loadTreeData(){
         let that = this;
