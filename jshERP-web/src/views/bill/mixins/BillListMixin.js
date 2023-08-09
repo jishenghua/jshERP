@@ -10,7 +10,6 @@ export const BillListMixin = {
     return {
       /* 原始审核是否开启 */
       checkFlag: true,
-      prefixNo: '',
       supList: [],
       cusList: [],
       retailList: [],
