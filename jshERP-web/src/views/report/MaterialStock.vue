@@ -84,6 +84,17 @@
               <span slot="action" slot-scope="text, record">
                 <a @click="showMaterialInOutList(record)">{{record.id?'流水':''}}</a>
               </span>
+              <template slot="customBarCode" slot-scope="text, record">
+                <div :style="record.imgName?'float:left;line-height:30px':'float:left;'">{{record.mBarCode}}</div>
+                <a-popover placement="right" trigger="click">
+                  <template slot="content">
+                    <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
+                  </template>
+                  <div class="item-info" v-if="record.imgName">
+                    <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" />
+                  </div>
+                </a-popover>
+              </template>
               <template slot="customRenderStock" slot-scope="text, record">
                 <a-tooltip :title="record.bigUnitStock">
                   {{text}}
@@ -117,7 +128,7 @@
 <script>
   import MaterialInOutList from './modules/MaterialInOutList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getAction } from '@/api/manage'
+  import { getAction, getFileAccessHttpUrl } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
   import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -167,7 +178,9 @@
           {title: '库存流水', dataIndex: 'action', align:"center", width: 60,
             scopedSlots: { customRender: 'action' }
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 80},
+          {title: '条码', dataIndex: 'mBarCode', width: 100,
+            scopedSlots: { customRender: 'customBarCode' }
+          },
           {title: '名称', dataIndex: 'name', width: 140, ellipsis:true},
           {title: '规格', dataIndex: 'standard', width: 100, ellipsis:true},
           {title: '型号', dataIndex: 'model', width: 100, ellipsis:true},
@@ -215,6 +228,14 @@
             this.$message.info(res.data);
           }
         })
+      },
+      getImgUrl(imgName, type) {
+        if(imgName && imgName.split(',')) {
+          type = type? type + '/':''
+          return getFileAccessHttpUrl('systemConfig/static/' + type + imgName.split(',')[0])
+        } else {
+          return ''
+        }
       },
       loadTreeData(){
         let that = this;
@@ -277,6 +298,23 @@
     }
   }
 </script>
+
 <style scoped>
   @import '~@assets/less/common.less'
+</style>
+<style scoped>
+  .item-info {
+    float:left;
+    width:30px;
+    height:30px;
+    margin-left:8px
+  }
+  .item-img {
+    cursor:pointer;
+    position: static;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 </style>

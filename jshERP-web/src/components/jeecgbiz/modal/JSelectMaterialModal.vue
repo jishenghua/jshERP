@@ -84,12 +84,14 @@
             :customRow="rowAction"
             @change="handleTableChange">
             <template slot="customBarCode" slot-scope="text, record">
-              {{record.mBarCode}}
+              <div :style="record.imgName?'float:left;line-height:30px':'float:left;'">{{record.mBarCode}}</div>
               <a-popover placement="right" trigger="click">
                 <template slot="content">
                   <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
                 </template>
-                <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" style="cursor:pointer; max-width:40px; max-height:30px;" title="查看大图" />
+                <div class="item-info" v-if="record.imgName">
+                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" />
+                </div>
               </a-popover>
             </template>
             <template slot="customName" slot-scope="text, record">
@@ -416,5 +418,20 @@
     padding: 0 24px;
     cursor: pointer;
     transition: color .3s;
+  }
+
+  .item-info {
+    float:left;
+    width:30px;
+    height:30px;
+    margin-left:8px
+  }
+  .item-img {
+    cursor:pointer;
+    position: static;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 </style>
