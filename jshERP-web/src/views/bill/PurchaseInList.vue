@@ -293,8 +293,8 @@
           },
           { title: '结算账户', dataIndex: 'accountName',width:80},
           { title: '扣除订金', dataIndex: 'deposit',width:80},
-          { title: '付款', dataIndex: 'changeAmount',width:60},
-          { title: '欠款', dataIndex: 'debt',width:60,
+          { title: '本次付款', dataIndex: 'changeAmount',width:60},
+          { title: '本次欠款', dataIndex: 'debt',width:60,
             scopedSlots: { customRender: 'customRenderDebt' }
           },
           { title: '备注', dataIndex: 'remark',width:200},
