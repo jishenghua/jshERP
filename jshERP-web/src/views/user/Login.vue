@@ -24,7 +24,7 @@
       </a-form-item>
 
       <a-form-item>
-        <a-checkbox v-decorator="['rememberMe', {initialValue: true, valuePropName: 'checked'}]" >记住密码</a-checkbox>
+        <a-checkbox :checked="checked" @change="handleChange">记住密码</a-checkbox>
         <router-link v-if="registerFlag==='1'" :to="{ name: 'register'}" class="forge-password" style="float: right;margin-right: 10px;" >
           注册租户
         </router-link>
@@ -104,7 +104,8 @@
         currdatetime:'',
         randCodeImage:'',
         registerFlag:'',
-        requestCodeSuccess:false
+        requestCodeSuccess:false,
+        checked: false
       }
     },
     created () {
@@ -119,9 +120,23 @@
       ...mapActions([ "Login", "Logout" ]),
       // handler
       loadInfo() {
+        //从缓存中获取登录名和密码
+        this.$nextTick(() => {
+          if(Vue.ls.get('cache_loginName') && Vue.ls.get('cache_password')) {
+            this.form.setFieldsValue({'loginName': Vue.ls.get('cache_loginName')})
+            this.form.setFieldsValue({'password': Vue.ls.get('cache_password')})
+            this.checked = true
+          }
+        })
+        //从注册页面跳转过来，给登录名进行赋值
         if(this.$route.params.loginName) {
           this.$nextTick(() => {
+            //先清空缓存
+            Vue.ls.remove('cache_loginName')
+            Vue.ls.remove('cache_password')
             this.form.setFieldsValue({'loginName':this.$route.params.loginName})
+            this.form.setFieldsValue({'password': ''})
+            this.checked = false
           })
         }
       },
@@ -134,18 +149,29 @@
         }
         callback()
       },
+      //切换勾选
+      handleChange(e) {
+        this.checked = e.target.checked
+      },
       handleSubmit () {
         let that = this
         let loginParams = {};
         that.loginBtn = true;
         // 使用账户密码登陆
         if (that.customActiveKey === 'tab1') {
-          that.form.validateFields([ 'loginName', 'password', 'rememberMe' ], { force: true }, (err, values) => {
+          that.form.validateFields([ 'loginName', 'password' ], { force: true }, (err, values) => {
             if (!err) {
               loginParams.loginName = values.loginName
               loginParams.password = md5(values.password)
-              //loginParams.remember_me = values.rememberMe
-              //console.log("登录参数",loginParams)
+              if(that.checked) {
+                //勾选的时候进行缓存
+                Vue.ls.set('cache_loginName', values.loginName)
+                Vue.ls.set('cache_password', values.password)
+              } else {
+                //没勾选的时候清缓存
+                Vue.ls.remove('cache_loginName')
+                Vue.ls.remove('cache_password')
+              }
               that.Login(loginParams).then((res) => {
                 this.departConfirm(res, loginParams.loginName)
               }).catch((err) => {
