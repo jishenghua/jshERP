@@ -1216,7 +1216,8 @@ public class DepotItemService {
     }
 
     public BigDecimal getCurrentStockByParam(Long depotId, Long mId) {
-        return depotItemMapperEx.getCurrentStockByParam(depotId, mId);
+        BigDecimal stock = depotItemMapperEx.getCurrentStockByParam(depotId, mId);
+        return stock!=null? stock: BigDecimal.ZERO;
     }
 
 }
