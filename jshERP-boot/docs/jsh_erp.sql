@@ -724,6 +724,7 @@ INSERT INTO `jsh_platform_config` VALUES ('14', 'aliOss_accessKeyId', '阿里OSS
 INSERT INTO `jsh_platform_config` VALUES ('15', 'aliOss_accessKeySecret', '阿里OSS-accessKeySecret', '');
 INSERT INTO `jsh_platform_config` VALUES ('16', 'aliOss_bucketName', '阿里OSS-bucketName', '');
 INSERT INTO `jsh_platform_config` VALUES ('17', 'aliOss_linkUrl', '阿里OSS-linkUrl', '');
+INSERT INTO `jsh_platform_config` VALUES ('18', 'bill_excel_url', '单据Excel地址', '');
 
 -- ----------------------------
 -- Table structure for jsh_role

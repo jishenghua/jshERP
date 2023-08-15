@@ -1518,3 +1518,10 @@ INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platfor
 -- --------------------------------------------------------
 alter table jsh_supplier add creator bigint(20) DEFAULT NULL COMMENT '操作员' after sort;
 update jsh_supplier set creator=tenant_id;
+
+-- --------------------------------------------------------
+-- 时间 2023年08月15日
+-- by jishenghua
+-- 给平台配置表增加单据Excel地址
+-- --------------------------------------------------------
+INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('bill_excel_url', '单据Excel地址', '');
