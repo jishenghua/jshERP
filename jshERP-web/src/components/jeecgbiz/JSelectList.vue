@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-input-group v-if="kind === 'material'" compact style="width:100%">
+    <a-input-group v-if="kind === 'material'" compact style="width:100%;top:0px">
       <a-select placeholder="输入条码或名称" :dropdownMatchSelectWidth="false" showSearch :showArrow="false"
                 v-model="names" optionFilterProp="children" :style="searchWidth" notFoundContent="需在商品管理先新增才能使用"
                 @search="handleSearch" @change="handleChange">
