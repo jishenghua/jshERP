@@ -929,12 +929,12 @@
           getMaxBarCode({}).then((res)=> {
             if (res && res.code === 200) {
               this.maxBarCodeInfo = res.data.barCode - 0
-              this.maxBarCodeInfo = this.maxBarCodeInfo + 1
+              this.maxBarCodeInfo = this.maxBarCodeInfo
               target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
             }
           })
         } else {
-          this.maxBarCodeInfo = this.maxBarCodeInfo + 1
+          this.maxBarCodeInfo = this.maxBarCodeInfo
           target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
         }
       },

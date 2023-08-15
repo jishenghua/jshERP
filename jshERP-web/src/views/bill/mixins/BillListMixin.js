@@ -2,7 +2,7 @@ import Vue from 'vue'
 import {getAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
 import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount,
-  getCurrentSystemConfig} from '@/api/api'
+  getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
 import { getCheckFlag } from "@/utils/util"
 
 export const BillListMixin = {
@@ -10,6 +10,9 @@ export const BillListMixin = {
     return {
       /* 原始审核是否开启 */
       checkFlag: true,
+      /* 单据Excel是否开启 */
+      isShowExcel: false,
+      billExcelUrl: '',
       supList: [],
       cusList: [],
       retailList: [],
@@ -120,6 +123,14 @@ export const BillListMixin = {
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
         }
       })
+      getPlatformConfigByKey({ "platformKey": "bill_excel_url" }).then((res) => {
+        if (res && res.code === 200) {
+          if(res.data.platformValue) {
+            this.isShowExcel = true
+            this.billExcelUrl = res.data.platformValue + '?no='
+          }
+        }
+      })
     },
     initSupplier() {
       let that = this;
@@ -193,6 +204,11 @@ export const BillListMixin = {
     handleRestDefault() {
       Vue.ls.remove(this.prefixNo)
       this.initColumnsSetting()
+    },
+    //导出单据
+    handleExport() {
+      this.$refs.billExcelIframe.show(this.model, this.billExcelUrl, 150)
+      this.$refs.billExcelIframe.title = "确认导出"
     }
   }
 }
