@@ -62,7 +62,7 @@
       <template slot="footer">
         <a-button key="back" @click="handleMiniProgramCancel">取消</a-button>
       </template>
-      <div class="platform-modal"><img src="/static/weixin-code.jpg" style="width:200px;" /></div>
+      <div class="platform-modal"><img src="/static/weixin-code.png" style="width:200px;" /></div>
     </a-modal>
   </div>
 </template>
