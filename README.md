@@ -2,9 +2,15 @@
 * 很多人说华夏ERP（英文名：jshERP）是目前人气领先的国产ERP系统
 * 虽然目前只有进销存+财务+生产的功能，但后面将会推出ERP的全部功能，有兴趣请帮点一下 **Star** 哦
 * **官网地址：http://www.huaxiaerp.com  商务或技术交流，请联系QQ：752718920 微信：shenhua861584**
+* 欢迎加入华夏ERP交流QQ群(入群帮安装)，群3：805736336(满)、群4：146571538
+
+# 网络版介绍
 * 推荐使用网络版（100元1年）淘宝链接：https://item.taobao.com/item.htm?id=674169489573
 * 平台地址：http://cloud.huaxiaerp.com 欢迎大家注册租户进行使用
-* 欢迎加入华夏ERP交流QQ群(入群帮安装)，群3：805736336(满)、群4：146571538
+
+![输入图片说明](https://cloud.huaxiaerp.com/static/android-code.png)
+![输入图片说明](https://cloud.huaxiaerp.com/static/iphone-code.png)
+![输入图片说明](https://cloud.huaxiaerp.com/static/weixin-code.png)
 
 # 定制和插件
 * 如有ERP私人定制需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
