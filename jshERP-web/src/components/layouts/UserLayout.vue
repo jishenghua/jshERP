@@ -46,17 +46,23 @@
         <span v-if="this.isShowRight"><a href="http://beian.miit.gov.cn/" target="_blank">苏ICP备2021042833号</a></span>
       </p>
     </div>
-    <a-modal v-model="isAndroidShow" title="微信扫一扫下载安卓手机版" width="200" centered>
+    <a-modal v-model="isAndroidShow" title="微信扫一扫下载安卓版" width="200" centered>
       <template slot="footer">
         <a-button key="back" @click="handleAndroidCancel">取消</a-button>
       </template>
       <div class="platform-modal"><img src="/static/android-code.png" style="width:200px" /></div>
     </a-modal>
+    <a-modal v-model="isIphoneShow" title="微信扫一扫下载iPhone版" width="200" centered>
+      <template slot="footer">
+        <a-button key="back" @click="handleIphoneCancel">取消</a-button>
+      </template>
+      <div class="platform-modal"><img src="/static/iphone-code.png" style="width:200px" /></div>
+    </a-modal>
     <a-modal v-model="isMiniProgramShow" title="微信扫一扫使用小程序版" width="200" centered>
       <template slot="footer">
         <a-button key="back" @click="handleMiniProgramCancel">取消</a-button>
       </template>
-      <div class="platform-modal"><img src="/static/weixin.jpg" style="width:200px;" /></div>
+      <div class="platform-modal"><img src="/static/weixin-code.jpg" style="width:200px;" /></div>
     </a-modal>
   </div>
 </template>
@@ -75,6 +81,7 @@
         systemUrl: window.SYS_URL,
         isShowRight: false,
         isAndroidShow: false,
+        isIphoneShow: false,
         isMiniProgramShow: false,
       }
     },
@@ -96,6 +103,9 @@
       handleAndroidCancel() {
         this.isAndroidShow = false
       },
+      handleIphoneCancel() {
+        this.isIphoneShow = false
+      },
       handleMiniProgramCancel() {
         this.isMiniProgramShow = false
       },
@@ -103,7 +113,7 @@
         this.isAndroidShow = true
       },
       openIPhone() {
-        this.$message.warning('敬请期待！');
+        this.isIphoneShow = true
       },
       openMiniProgram() {
         this.isMiniProgramShow = true
