@@ -127,7 +127,7 @@ export const BillListMixin = {
         if (res && res.code === 200) {
           if(res.data.platformValue) {
             this.isShowExcel = true
-            this.billExcelUrl = res.data.platformValue + '?no='
+            this.billExcelUrl = res.data.platformValue
           }
         }
       })
@@ -207,7 +207,8 @@ export const BillListMixin = {
     },
     //导出单据
     handleExport() {
-      this.$refs.billExcelIframe.show(this.model, this.billExcelUrl, 150)
+      let search = this.getQueryParams().search
+      this.$refs.billExcelIframe.show(this.model, this.billExcelUrl + '?search=' + search, 150)
       this.$refs.billExcelIframe.title = "确认导出"
     }
   }
