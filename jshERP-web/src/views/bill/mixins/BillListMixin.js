@@ -116,6 +116,7 @@ export const BillListMixin = {
       console.log(value);
     },
     initSystemConfig() {
+      this.isShowExcel = Vue.ls.get('isShowExcel');
       getCurrentSystemConfig().then((res) => {
         if(res.code === 200 && res.data){
           let multiBillType = res.data.multiBillType
@@ -126,7 +127,6 @@ export const BillListMixin = {
       getPlatformConfigByKey({ "platformKey": "bill_excel_url" }).then((res) => {
         if (res && res.code === 200) {
           if(res.data.platformValue) {
-            this.isShowExcel = true
             this.billExcelUrl = res.data.platformValue
           }
         }

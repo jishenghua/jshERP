@@ -60,6 +60,7 @@
   import { mapActions } from 'vuex'
   import { timeFix } from '@/utils/util'
   import Vue from 'vue'
+  import { getPlatformConfigByKey} from '@/api/api'
   import { ACCESS_TOKEN, ENCRYPTED_STRING } from '@/store/mutation-types'
   import { getAction } from '@/api/manage'
   import { getEncryptedString } from '@/utils/encryption/aesEncrypt'
@@ -194,6 +195,15 @@
             let desc = 'admin只是平台运维用户，真正的管理员是租户(测试账号为jsh），admin不能编辑任何业务数据，只能配置平台菜单和创建租户'
             this.$message.info(desc,30)
           } else {
+            getPlatformConfigByKey({ "platformKey": "bill_excel_url" }).then((res) => {
+              if (res && res.code === 200) {
+                if(res.data.platformValue) {
+                  Vue.ls.set('isShowExcel', true);
+                } else {
+                  Vue.ls.set('isShowExcel', false);
+                }
+              }
+            })
             getAction("/user/infoWithTenant",{}).then(res=>{
               if(res && res.code === 200) {
                 let currentTime = new Date(); //新建一个日期对象，默认现在的时间
