@@ -1,5 +1,5 @@
 import {findFinancialDetailByNumber, findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail,
-  getUserList, getPersonByType, getAccount, getCurrentSystemConfig} from '@/api/api'
+  getUserList, getPersonByType, getAccount, getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
 import { getCheckFlag } from "@/utils/util"
 import Vue from 'vue'
 
@@ -8,6 +8,9 @@ export const FinancialListMixin = {
     return {
       /* 原始审核是否开启 */
       checkFlag: true,
+      /* 单据Excel是否开启 */
+      isShowExcel: false,
+      billExcelUrl: '',
       prefixNo: '',
       supList: [],
       cusList: [],
@@ -33,6 +36,7 @@ export const FinancialListMixin = {
     }
   },
   created() {
+    this.isShowExcel = Vue.ls.get('isShowExcel');
   },
   methods: {
     myHandleAdd() {
@@ -90,6 +94,13 @@ export const FinancialListMixin = {
           let multiBillType = res.data.multiBillType
           let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
+        }
+      })
+      getPlatformConfigByKey({ "platformKey": "bill_excel_url" }).then((res) => {
+        if (res && res.code === 200) {
+          if(res.data.platformValue) {
+            this.billExcelUrl = res.data.platformValue
+          }
         }
       })
     },
@@ -154,6 +165,12 @@ export const FinancialListMixin = {
     },
     onDateOk(value) {
       console.log(value);
+    },
+    //导出单据
+    handleExport() {
+      let search = this.getQueryParams().search
+      this.$refs.billExcelIframe.show(this.model, this.billExcelUrl + '?search=' + search + '&type=2', 150)
+      this.$refs.billExcelIframe.title = "确认导出"
     }
   }
 }

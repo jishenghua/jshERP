@@ -40,6 +40,7 @@ export const BillListMixin = {
   },
   created() {
     this.initColumnsSetting()
+    this.isShowExcel = Vue.ls.get('isShowExcel');
   },
   methods: {
     myHandleAdd() {
@@ -116,7 +117,6 @@ export const BillListMixin = {
       console.log(value);
     },
     initSystemConfig() {
-      this.isShowExcel = Vue.ls.get('isShowExcel');
       getCurrentSystemConfig().then((res) => {
         if(res.code === 200 && res.data){
           let multiBillType = res.data.multiBillType
@@ -208,7 +208,7 @@ export const BillListMixin = {
     //导出单据
     handleExport() {
       let search = this.getQueryParams().search
-      this.$refs.billExcelIframe.show(this.model, this.billExcelUrl + '?search=' + search, 150)
+      this.$refs.billExcelIframe.show(this.model, this.billExcelUrl + '?search=' + search + '&type=1', 150)
       this.$refs.billExcelIframe.title = "确认导出"
     }
   }
