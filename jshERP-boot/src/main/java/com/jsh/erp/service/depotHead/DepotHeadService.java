@@ -615,7 +615,11 @@ public class DepotHeadService {
         if(idList.size()>0) {
             List<MaterialsListVo> list = depotHeadMapperEx.findMaterialsListMapByHeaderIdList(idList);
             for (MaterialsListVo materialsListVo : list) {
-                materialsListMap.put(materialsListVo.getHeaderId(), materialsListVo.getMaterialsList());
+                String materialsList = materialsListVo.getMaterialsList();
+                if(StringUtil.isNotEmpty(materialsList)) {
+                    materialsList = materialsList.replace(",","，");
+                }
+                materialsListMap.put(materialsListVo.getHeaderId(), materialsList);
             }
         }
         return materialsListMap;
