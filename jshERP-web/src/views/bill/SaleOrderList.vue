@@ -241,7 +241,7 @@
               return text? text + '%':''
             }
           },
-          { title: '付款优惠', dataIndex: 'discountMoney',width:80},
+          { title: '收款优惠', dataIndex: 'discountMoney',width:80},
           { title: '优惠后金额', dataIndex: 'discountLastMoney',width:100},
           { title: '结算账户', dataIndex: 'accountName',width:80},
           { title: '收取订金', dataIndex: 'changeAmount',width:80},
