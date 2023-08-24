@@ -30,7 +30,7 @@
         </router-link>
       </a-form-item>
 
-      <a-form-item style="margin-top:24px">
+      <a-form-item style="margin-top:30px">
         <a-button
           size="large"
           type="primary"
@@ -373,6 +373,10 @@
   .user-layout-login {
     label {
       font-size: 14px;
+    }
+
+    .ant-form-item {
+      margin-bottom: 30px;
     }
 
     .getCaptcha {

@@ -162,7 +162,7 @@
   #userLayout.user-layout-wrapper {
     position: fixed;
     left: 50%;
-    top: 16%;
+    top: 12%;
     margin-left: -543px;
     height: 100%;
 
@@ -193,13 +193,13 @@
         background-size: 100%;
         position: relative;
         width: 340px;
-        height: 520px;
+        height: 460px;
         background: rgba(255, 255, 255, 1);
         border-radius: 8px;
         right: 0;
         top: 0;
-        padding: 30px 30px 0 30px;
-        margin-top: 30px;
+        padding: 10px 30px 0 30px;
+        margin-top: 50px;
         -webkit-box-shadow: 0 2px 6px 0 rgb(200 200 200);
         box-shadow: 0 2px 6px 0 rgb(200 200 200);
         overflow: hidden;
@@ -214,8 +214,8 @@
           .header {
             height: 44px;
             line-height: 44px;
-            margin-top: 45px;
-            margin-bottom: 45px;
+            margin-top: 35px;
+            margin-bottom: 35px;
             .title {
               font-size: 35px;
               color: #666;
@@ -243,13 +243,13 @@
     }
   }
   .footer {
-    position: fixed;
-    left: 0;
+    position: absolute;
     bottom: 0;
-    width: 100%;
     padding: 0 16px;
     margin: 48px 0 12px;
     text-align: center;
+    left: 33%;
+    right: 33%;
 
     .links {
       margin-bottom: 8px;

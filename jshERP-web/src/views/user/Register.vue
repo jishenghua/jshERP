@@ -305,6 +305,10 @@
 <style lang="less" scoped>
   .user-layout-register {
 
+    .ant-form-item {
+      margin-bottom: 18px;
+    }
+
     & > h3 {
       font-size: 16px;
       margin-bottom: 20px;
