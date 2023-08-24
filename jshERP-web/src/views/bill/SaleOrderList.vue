@@ -221,13 +221,7 @@
           },
           { title: '客户', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:140},
-          { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true,
-            customRender:function (text,record,index) {
-              if(text) {
-                return text.replaceAll(",","，");
-              }
-            }
-          },
+          { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true},
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '销售人员', dataIndex: 'salesManStr',width:120},
           { title: '操作员', dataIndex: 'userName',width:80, ellipsis:true},
