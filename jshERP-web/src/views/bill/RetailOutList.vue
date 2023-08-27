@@ -96,6 +96,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
+          <a-button v-if="isShowExcel" type="primary" icon="download" @click="handleExport">导出</a-button>
           <a-dropdown>
             <a-menu slot="overlay">
               <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
@@ -170,6 +171,7 @@
         <!-- 表单区域 -->
         <retail-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></retail-out-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
+        <bill-excel-iframe ref="billExcelIframe" @ok="modalFormOk" @close="modalFormClose"></bill-excel-iframe>
       </a-card>
     </a-col>
   </a-row>
@@ -178,6 +180,7 @@
 <script>
   import RetailOutModal from './modules/RetailOutModal'
   import BillDetail from './dialog/BillDetail'
+  import BillExcelIframe from '@/components/tools/BillExcelIframe'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -189,6 +192,7 @@
     components: {
       RetailOutModal,
       BillDetail,
+      BillExcelIframe,
       JEllipsis,
       JDate
     },
