@@ -420,6 +420,10 @@ public class DepotItemService {
                 depotItem.setHeaderId(headerId);
                 String barCode = rowObj.getString("barCode");
                 MaterialExtend materialExtend = materialExtendService.getInfoByBarCode(barCode);
+                if(materialExtend == null) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_IS_NOT_EXIST_CODE,
+                            String.format(ExceptionConstants.MATERIAL_BARCODE_IS_NOT_EXIST_MSG, barCode));
+                }
                 depotItem.setMaterialId(materialExtend.getMaterialId());
                 depotItem.setMaterialExtendId(materialExtend.getId());
                 depotItem.setMaterialUnit(rowObj.getString("unit"));

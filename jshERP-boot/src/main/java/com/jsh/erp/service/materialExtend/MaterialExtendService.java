@@ -382,9 +382,10 @@ public class MaterialExtendService {
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<MaterialExtend> list = materialExtendMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
-            materialExtend = list.get(0);
+            return list.get(0);
+        } else {
+            return null;
         }
-        return materialExtend;
     }
 
     /**

@@ -335,6 +335,9 @@ public class ExceptionConstants {
     //多属性商品不能输入库存，建议进行盘点录入
     public static final int MATERIAL_SKU_BEGIN_STOCK_FAILED_CODE = 8000025;
     public static final String MATERIAL_SKU_BEGIN_STOCK_FAILED_MSG = "多属性商品%s不能输入库存，建议进行盘点录入";
+    //商品条码不存在，请重新选择
+    public static final int MATERIAL_BARCODE_IS_NOT_EXIST_CODE = 8000026;
+    public static final String MATERIAL_BARCODE_IS_NOT_EXIST_MSG = "商品条码%s不存在，请重新选择";
 
     /**
      *  单据信息
