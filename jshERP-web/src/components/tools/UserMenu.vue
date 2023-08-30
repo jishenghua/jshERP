@@ -3,7 +3,7 @@
     <span class="action" v-if="showAd">
       <a v-if="theme==='light'" class="ad_title" target="_blank" :href="payFeeUrl">
         <a-icon type="cloud" theme="filled" style="color: yellow; font-size: 16px; line-height: 16px;" />
-        <span> 华夏ERP网络版100元1年</span>
+        <span>华夏ERP网络版129元1年</span>
       </a>
     </span>
     <!-- update_begin author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
