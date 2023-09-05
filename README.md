@@ -61,25 +61,25 @@
 
 # 系统美图
 * 首页
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235430_ff5f9618_852955.png "首页.png")
+![输入图片说明](jshERP-web/public/static/screenshot/1.jpg)
 * 零售管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235442_214b9fc0_852955.png "零售管理.png")
+![输入图片说明](jshERP-web/public/static/screenshot/2.jpg)
 * 采购管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235643_c87b3d02_852955.png "采购管理.png")
+![输入图片说明](jshERP-web/public/static/screenshot/3.jpg)
 * 销售管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235631_01a92e1f_852955.png "销售管理.png")
+![输入图片说明](jshERP-web/public/static/screenshot/4.jpg)
 * 仓库管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235657_99057159_852955.png "仓库管理.png")
+![输入图片说明](jshERP-web/public/static/screenshot/5.jpg)
 * 财务管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235708_086379f8_852955.png "财务管理.png")
+![输入图片说明](jshERP-web/public/static/screenshot/6.jpg)
 * 报表查询
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235722_a26af3e8_852955.png "报表查询.png")
+![输入图片说明](jshERP-web/public/static/screenshot/7.jpg)
 * 商品管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235905_5ec11112_852955.png "商品管理.png")
+![输入图片说明](jshERP-web/public/static/screenshot/8.jpg)
 * 基本资料
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235919_92d78bc3_852955.png "基本资料.png")
+![输入图片说明](jshERP-web/public/static/screenshot/9.jpg)
 * 系统管理
-![输入图片说明](https://images.gitee.com/uploads/images/2022/0520/235815_b139e426_852955.png "系统管理.png")
+![输入图片说明](jshERP-web/public/static/screenshot/10.jpg)
 
 # 如何支持
 * 开源不易，坚持更难！如果您觉得华夏ERP不错，不用请作者喝咖啡。
