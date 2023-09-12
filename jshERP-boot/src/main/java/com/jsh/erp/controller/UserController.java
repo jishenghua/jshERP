@@ -450,6 +450,12 @@ public class UserController {
             //获取当前用户数
             int userCurrentNum = userService.getUser().size();
             Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
+            if(tenant.getExpireTime()!=null && tenant.getExpireTime().getTime()<System.currentTimeMillis()){
+                //租户已经过期，移除token
+                redisService.deleteObjectBySession(request,"userId");
+                redisService.deleteObjectBySession(request,"roleType");
+                redisService.deleteObjectBySession(request,"clientIp");
+            }
             data.put("type", tenant.getType()); //租户类型，0免费租户，1付费租户
             data.put("expireTime", Tools.parseDateToStr(tenant.getExpireTime()));
             data.put("userCurrentNum", userCurrentNum);
