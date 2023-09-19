@@ -664,7 +664,7 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ENABLED_ERROR_CODE,
                             String.format(ExceptionConstants.MATERIAL_ENABLED_ERROR_MSG, i+1));
                 }
-                //校验基本条码长度为空
+                //基本条码为空
                 if(StringUtil.isEmpty(barCode)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EMPTY_CODE,
                             String.format(ExceptionConstants.MATERIAL_BARCODE_EMPTY_MSG, i+1));
@@ -679,7 +679,7 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_CODE,
                             String.format(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_MSG, manyBarCode));
                 }
-                // 批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位、多属性
+                //批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位、多属性
                 batchCheckExistMaterialListByParam(mList, name, standard, model, color, unit, sku);
                 //批量校验excel中有无重复条码
                 batchCheckExistBarCodeByParam(mList, barCode, manyBarCode);
