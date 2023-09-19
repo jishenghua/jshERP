@@ -338,6 +338,9 @@ public class ExceptionConstants {
     //商品条码不存在，请重新选择
     public static final int MATERIAL_BARCODE_IS_NOT_EXIST_CODE = 8000026;
     public static final String MATERIAL_BARCODE_IS_NOT_EXIST_MSG = "商品条码%s不存在，请重新选择";
+    //基本条码为空
+    public static final int MATERIAL_BARCODE_EMPTY_CODE = 8000027;
+    public static final String MATERIAL_BARCODE_EMPTY_MSG = "第%s行基本条码为空";
 
     /**
      *  单据信息

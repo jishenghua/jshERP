@@ -664,7 +664,12 @@ public class MaterialService {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_ENABLED_ERROR_CODE,
                             String.format(ExceptionConstants.MATERIAL_ENABLED_ERROR_MSG, i+1));
                 }
-                //校验基础条码长度为4到40位
+                //校验基本条码长度为空
+                if(StringUtil.isEmpty(barCode)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_EMPTY_CODE,
+                            String.format(ExceptionConstants.MATERIAL_BARCODE_EMPTY_MSG, i+1));
+                }
+                //校验基本条码长度为4到40位
                 if(!StringUtil.checkBarCodeLength(barCode)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_CODE,
                             String.format(ExceptionConstants.MATERIAL_BARCODE_LENGTH_ERROR_MSG, barCode));
