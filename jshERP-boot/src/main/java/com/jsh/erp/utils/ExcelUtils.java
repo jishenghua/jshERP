@@ -46,7 +46,7 @@ public class ExcelUtils {
 	public static File exportObjectsWithoutTitle(String fileName, String tip,
 			String[] names, String title, List<String[]> objects)
 			throws Exception {
-		File excelFile = new File(fileName);
+		File excelFile = new File("/opt/"+ fileName);
 		WritableWorkbook wtwb = Workbook.createWorkbook(excelFile);
 		WritableSheet sheet = wtwb.createSheet(title, 0);
 		sheet.getSettings().setDefaultColumnWidth(12);
