@@ -197,7 +197,7 @@
           },
           saleAgreement:{
             rules: [
-              { min: 2, max: 200, message: '长度在 2 到 200 个字符', trigger: 'blur' }
+              { min: 2, max: 400, message: '长度在 2 到 400 个字符', trigger: 'blur' }
             ]
           }
         }
