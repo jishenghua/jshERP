@@ -28,17 +28,9 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator" style="border-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown>
-            <a-menu slot="overlay">
-              <a-menu-item key="1" v-if="btnEnableList.indexOf(1)>-1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-              <a-menu-item key="2" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(0)"><a-icon type="check-square"/>启用</a-menu-item>
-              <a-menu-item key="3" v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(2)"><a-icon type="close-square"/>禁用</a-menu-item>
-            </a-menu>
-            <a-button>
-              批量操作
-              <a-icon type="down"/>
-            </a-button>
-          </a-dropdown>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchDel" icon="delete">删除</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(0)" icon="check-square">启用</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(2)" icon="close-square">禁用</a-button>
         </div>
         <!-- table区域-begin -->
         <div>

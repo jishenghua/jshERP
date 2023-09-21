@@ -25,14 +25,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-          <a-dropdown>
-            <a-menu slot="overlay">
-              <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
-            </a-menu>
-            <a-button>
-              批量操作 <a-icon type="down" />
-            </a-button>
-          </a-dropdown>
+          <a-button @click="batchDel" icon="delete">删除</a-button>
         </div>
         <!-- table区域-begin -->
         <div>
