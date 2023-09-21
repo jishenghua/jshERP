@@ -57,11 +57,9 @@ public class SupplierService {
     @Resource
     private DepotHeadService depotHeadService;
     @Resource
-    private AccountHeadService accountHeadService;
-    @Resource
-    private SystemConfigService systemConfigService;
-    @Resource
     private UserBusinessService userBusinessService;
+    @Resource
+    private UserBusinessMapper userBusinessMapper;
 
     public Supplier getSupplier(long id)throws Exception {
         Supplier result=null;
@@ -175,27 +173,7 @@ public class SupplierService {
             supplier.setCreator(userInfo==null?null:userInfo.getId());
             result=supplierMapper.insertSelective(supplier);
             //新增客户时给当前用户自动授权
-            if("客户".equals(supplier.getType())) {
-                Long userId = userService.getUserId(request);
-                Supplier sInfo = supplierMapperEx.getSupplierByNameAndType(supplier.getSupplier(), supplier.getType());
-                String ubKey = "[" + sInfo.getId() + "]";
-                List<UserBusiness> ubList = userBusinessService.getBasicData(userId.toString(), "UserCustomer");
-                if(ubList ==null || ubList.size() == 0) {
-                    JSONObject ubObj = new JSONObject();
-                    ubObj.put("type", "UserCustomer");
-                    ubObj.put("keyId", userId);
-                    ubObj.put("value", ubKey);
-                    userBusinessService.insertUserBusiness(ubObj, request);
-                } else {
-                    UserBusiness ubInfo = ubList.get(0);
-                    JSONObject ubObj = new JSONObject();
-                    ubObj.put("id", ubInfo.getId());
-                    ubObj.put("type", ubInfo.getType());
-                    ubObj.put("keyId", ubInfo.getKeyId());
-                    ubObj.put("value", ubInfo.getValue() + ubKey);
-                    userBusinessService.updateUserBusiness(ubObj, request);
-                }
-            }
+            setUserCustomerPermission(request, supplier);
             logService.insertLog("商家",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(supplier.getSupplier()).toString(),request);
         }catch(Exception e){
@@ -450,8 +428,10 @@ public class SupplierService {
         return map;
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void importVendor(MultipartFile file, HttpServletRequest request) throws Exception{
         String type = "供应商";
+        User userInfo = userService.getCurrentUser();
         Workbook workbook = Workbook.getWorkbook(file.getInputStream());
         Sheet src = workbook.getSheet(0);
         //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应付', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '排序', '状态'
@@ -476,15 +456,18 @@ public class SupplierService {
                 s.setAddress(ExcelUtils.getContent(src, i, 11));
                 s.setDescription(ExcelUtils.getContent(src, i, 12));
                 s.setSort(ExcelUtils.getContent(src, i, 13));
+                s.setCreator(userInfo==null?null:userInfo.getId());
                 s.setEnabled("1".equals(enabled));
                 sList.add(s);
             }
         }
-        importExcel(sList, type);
+        importExcel(sList, type, request);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void importCustomer(MultipartFile file, HttpServletRequest request) throws Exception{
         String type = "客户";
+        User userInfo = userService.getCurrentUser();
         Workbook workbook = Workbook.getWorkbook(file.getInputStream());
         Sheet src = workbook.getSheet(0);
         //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '传真', '期初应收', '纳税人识别号', '税率(%)', '开户行', '账号', '地址', '备注', '排序', '状态'
@@ -509,15 +492,18 @@ public class SupplierService {
                 s.setAddress(ExcelUtils.getContent(src, i, 11));
                 s.setDescription(ExcelUtils.getContent(src, i, 12));
                 s.setSort(ExcelUtils.getContent(src, i, 13));
+                s.setCreator(userInfo==null?null:userInfo.getId());
                 s.setEnabled("1".equals(enabled));
                 sList.add(s);
             }
         }
-        importExcel(sList, type);
+        importExcel(sList, type, request);
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void importMember(MultipartFile file, HttpServletRequest request) throws Exception{
         String type = "会员";
+        User userInfo = userService.getCurrentUser();
         Workbook workbook = Workbook.getWorkbook(file.getInputStream());
         Sheet src = workbook.getSheet(0);
         //'名称', '联系人', '手机号码', '联系电话', '电子邮箱', '备注', '排序', '状态'
@@ -535,31 +521,34 @@ public class SupplierService {
                 s.setEmail(ExcelUtils.getContent(src, i, 4));
                 s.setDescription(ExcelUtils.getContent(src, i, 5));
                 s.setSort(ExcelUtils.getContent(src, i, 6));
+                s.setCreator(userInfo==null?null:userInfo.getId());
                 s.setEnabled("1".equals(enabled));
                 sList.add(s);
             }
         }
-        importExcel(sList, type);
+        importExcel(sList, type, request);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BaseResponseInfo importExcel(List<Supplier> mList, String type) throws Exception {
+    public BaseResponseInfo importExcel(List<Supplier> mList, String type, HttpServletRequest request) throws Exception {
         logService.insertLog(type,
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_IMPORT).append(mList.size()).append(BusinessConstants.LOG_DATA_UNIT).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         BaseResponseInfo info = new BaseResponseInfo();
         Map<String, Object> data = new HashMap<>();
         try {
-            for(Supplier s: mList) {
+            for(Supplier supplier: mList) {
                 SupplierExample example = new SupplierExample();
-                example.createCriteria().andSupplierEqualTo(s.getSupplier()).andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                example.createCriteria().andSupplierEqualTo(supplier.getSupplier()).andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 List<Supplier> list= supplierMapper.selectByExample(example);
                 if(list.size() <= 0) {
-                    supplierMapper.insertSelective(s);
+                    supplierMapper.insertSelective(supplier);
+                    //新增客户时给当前用户自动授权
+                    setUserCustomerPermission(request, supplier);
                 } else {
                     Long id = list.get(0).getId();
-                    s.setId(id);
-                    supplierMapper.updateByPrimaryKeySelective(s);
+                    supplier.setId(id);
+                    supplierMapper.updateByPrimaryKeySelective(supplier);
                 }
             }
             info.code = 200;
@@ -646,5 +635,42 @@ public class SupplierService {
             }
         }
         return ExcelUtils.exportObjectsWithoutTitle(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
+    }
+
+    /**
+     * 新增客户时给当前用户自动授权
+     * @param request
+     * @param supplier
+     * @throws Exception
+     */
+    private void setUserCustomerPermission(HttpServletRequest request, Supplier supplier) throws Exception {
+        if("客户".equals(supplier.getType())) {
+            Long userId = userService.getUserId(request);
+            Supplier sInfo = supplierMapperEx.getSupplierByNameAndType(supplier.getSupplier(), supplier.getType());
+            String ubKey = "[" + sInfo.getId() + "]";
+            List<UserBusiness> ubList = userBusinessService.getBasicData(userId.toString(), "UserCustomer");
+            if(ubList ==null || ubList.size() == 0) {
+                JSONObject ubObj = new JSONObject();
+                ubObj.put("type", "UserCustomer");
+                ubObj.put("keyId", userId);
+                ubObj.put("value", ubKey);
+                UserBusiness userBusiness = JSONObject.parseObject(ubObj.toJSONString(), UserBusiness.class);
+                String token = request.getHeader("X-Access-Token");
+                Long tenantId = Tools.getTenantIdByToken(token);
+                if(tenantId!=0L) {
+                    userBusiness.setTenantId(tenantId);
+                }
+                userBusinessMapper.insertSelective(userBusiness);
+            } else {
+                UserBusiness ubInfo = ubList.get(0);
+                JSONObject ubObj = new JSONObject();
+                ubObj.put("id", ubInfo.getId());
+                ubObj.put("type", ubInfo.getType());
+                ubObj.put("keyId", ubInfo.getKeyId());
+                ubObj.put("value", ubInfo.getValue() + ubKey);
+                UserBusiness userBusiness = JSONObject.parseObject(ubObj.toJSONString(), UserBusiness.class);
+                userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+            }
+        }
     }
 }
