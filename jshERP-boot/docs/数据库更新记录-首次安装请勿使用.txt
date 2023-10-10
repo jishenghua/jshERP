@@ -1525,3 +1525,11 @@ update jsh_supplier set creator=tenant_id;
 -- 给平台配置表增加单据Excel地址
 -- --------------------------------------------------------
 INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platform_value`) VALUES ('bill_excel_url', '单据Excel地址', '');
+
+-- --------------------------------------------------------
+-- 时间 2023年10月10日
+-- by jishenghua
+-- 更新功能菜单里面的按钮参数
+-- --------------------------------------------------------
+update jsh_function set push_btn='1,2,3,7' where push_btn='1,2,7';
+update jsh_function set push_btn='1,3' where number in ('01020101','01020102','01020103');
