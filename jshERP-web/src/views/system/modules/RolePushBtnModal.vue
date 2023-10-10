@@ -33,6 +33,9 @@
                   <a-button @click="unAuditToggleChecked" style="margin-left: 8px">
                     {{ !unAuditChecked ? '全选-反审核' : '全取消-反审核' }}
                   </a-button>
+                  <a-button @click="exportToggleChecked" style="margin-left: 8px">
+                    {{ !exportChecked ? '全选-导出' : '全取消-导出' }}
+                  </a-button>
                 </a-col>
               </span>
             </a-row>
@@ -53,7 +56,7 @@
               <a-checkbox v-if="record.pushBtn.indexOf(1)>-1" value="1" :checked="record.btnStr?record.btnStr.indexOf(1)>-1:false" @change="onChange(record,'1')">编辑</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(2)>-1" value="2" :checked="record.btnStr?record.btnStr.indexOf(2)>-1:false" @change="onChange(record,'2')">审核</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(7)>-1" value="7" :checked="record.btnStr?record.btnStr.indexOf(7)>-1:false" @change="onChange(record,'7')">反审核</a-checkbox>
-              <a-checkbox v-if="record.pushBtn.indexOf(3)>-1" value="3" :checked="record.btnStr?record.btnStr.indexOf(3)>-1:false" @change="onChange(record,'3')">导入导出</a-checkbox>
+              <a-checkbox v-if="record.pushBtn.indexOf(3)>-1" value="3" :checked="record.btnStr?record.btnStr.indexOf(3)>-1:false" @change="onChange(record,'3')">导出</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(4)>-1" value="4" :checked="record.btnStr?record.btnStr.indexOf(4)>-1:false" @change="onChange(record,'4')">启用禁用</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(5)>-1" value="5" :checked="record.btnStr?record.btnStr.indexOf(5)>-1:false" @change="onChange(record,'5')">打印</a-checkbox>
               <a-checkbox v-if="record.pushBtn.indexOf(6)>-1" value="6" :checked="record.btnStr?record.btnStr.indexOf(6)>-1:false" @change="onChange(record,'6')">作废</a-checkbox>
@@ -84,6 +87,7 @@
         editChecked: false,
         auditChecked: false,
         unAuditChecked: false,
+        exportChecked: false,
         disableMixinCreated: true,
         confirmLoading: false,
         form: this.$form.createForm(this),
@@ -232,6 +236,19 @@
         } else {
           for(let item of funArray){
             item.btnStr = this.parseArrByParam(7, item.btnStr, 0)
+          }
+        }
+      },
+      exportToggleChecked() {
+        this.exportChecked = !this.exportChecked;
+        let funArray = this.dataSource
+        if(this.exportChecked) {
+          for(let item of funArray){
+            item.btnStr = this.parseArrByParam(3, item.btnStr, 1)
+          }
+        } else {
+          for(let item of funArray){
+            item.btnStr = this.parseArrByParam(3, item.btnStr, 0)
           }
         }
       },

@@ -84,7 +84,7 @@
             { text: '编辑', value: '1' },
             { text: '审核', value: '2' },
             { text: '反审核', value: '7' },
-            { text: '导入导出', value: '3' },
+            { text: '导出', value: '3' },
             { text: '启用禁用', value: '4' },
             { text: '打印', value: '5' },
             { text: '作废', value: '6' }
