@@ -1529,7 +1529,7 @@ INSERT INTO `jsh_platform_config` (`platform_key`, `platform_key_info`, `platfor
 -- --------------------------------------------------------
 -- 时间 2023年10月10日
 -- by jishenghua
--- 更新功能菜单里面的按钮参数
+-- 更新功能菜单里面的按钮参数(执行完之后记得要给'租户'角色重新勾选按钮)
 -- --------------------------------------------------------
 update jsh_function set push_btn='1,2,3,7' where push_btn='1,2,7';
 update jsh_function set push_btn='1,3' where number in ('01020101','01020102','01020103');
