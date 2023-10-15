@@ -1224,4 +1224,27 @@ public class DepotItemService {
         return stock!=null? stock: BigDecimal.ZERO;
     }
 
+    /**
+     * 获取扩展信息
+     *
+     * @return
+     */
+    public String getOtherInfo(String[] mpArr, DepotItemVo4WithInfoEx diEx)throws Exception {
+        String materialOther = "";
+        for (int i = 0; i < mpArr.length; i++) {
+            if (mpArr[i].equals("制造商")) {
+                materialOther = materialOther + ((diEx.getMMfrs() == null || diEx.getMMfrs().equals("")) ? "" : "(" + diEx.getMMfrs() + ")");
+            }
+            if (mpArr[i].equals("自定义1")) {
+                materialOther = materialOther + ((diEx.getMOtherField1() == null || diEx.getMOtherField1().equals("")) ? "" : "(" + diEx.getMOtherField1() + ")");
+            }
+            if (mpArr[i].equals("自定义2")) {
+                materialOther = materialOther + ((diEx.getMOtherField2() == null || diEx.getMOtherField2().equals("")) ? "" : "(" + diEx.getMOtherField2() + ")");
+            }
+            if (mpArr[i].equals("自定义3")) {
+                materialOther = materialOther + ((diEx.getMOtherField3() == null || diEx.getMOtherField3().equals("")) ? "" : "(" + diEx.getMOtherField3() + ")");
+            }
+        }
+        return materialOther;
+    }
 }

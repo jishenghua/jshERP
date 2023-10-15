@@ -34,6 +34,73 @@ public class ExcelUtils {
 	}
 
 	/**
+	 * 导出excel，带多sheet
+	 *
+	 * @param wtwb
+	 * @param tip
+	 * @param names
+	 * @param title
+	 * @param index
+	 * @param objects
+	 * @return
+	 * @throws Exception
+	 */
+	public static void exportObjectsWithTitle(WritableWorkbook wtwb, String tip,
+											  String[] names, String title, int index, List<String[]> objects)
+			throws Exception {
+		WritableSheet sheet = wtwb.createSheet(title, index);
+		sheet.getSettings().setDefaultColumnWidth(12);
+
+		// 标题的格式-红色
+		WritableFont redWF = new WritableFont(WritableFont.ARIAL, 12,
+				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
+				Colour.RED);
+		WritableCellFormat redWFFC = new WritableCellFormat(redWF);
+		redWFFC.setVerticalAlignment(VerticalAlignment.CENTRE);
+		redWFFC.setBorder(Border.ALL, BorderLineStyle.THIN);
+
+		// 标题的格式-黑色
+		WritableFont blackWF = new WritableFont(WritableFont.ARIAL, 12,
+				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
+				Colour.BLACK);
+		WritableCellFormat blackWFFC = new WritableCellFormat(blackWF);
+		blackWFFC.setVerticalAlignment(VerticalAlignment.CENTRE);
+		blackWFFC.setBorder(Border.ALL, BorderLineStyle.THIN);
+
+		// 设置字体以及单元格格式
+		WritableFont wfont = new WritableFont(WritableFont.createFont("楷书"), 12);
+		WritableCellFormat format = new WritableCellFormat(wfont);
+		format.setAlignment(Alignment.LEFT);
+		format.setVerticalAlignment(VerticalAlignment.TOP);
+
+		// 第一行写入提示
+		if(com.jsh.erp.utils.StringUtil.isNotEmpty(tip) && tip.contains("*")) {
+			sheet.addCell(new Label(0, 0, tip, redWFFC));
+		} else {
+			sheet.addCell(new Label(0, 0, tip, blackWFFC));
+		}
+
+		// 第二行写入标题
+		for (int i = 0; i < names.length; i++) {
+			if(StringUtil.isNotEmpty(names[i]) && names[i].contains("*")) {
+				sheet.addCell(new Label(i, 1, names[i], redWFFC));
+			} else {
+				sheet.addCell(new Label(i, 1, names[i], blackWFFC));
+			}
+		}
+
+		// 其余行依次写入数据
+		int rowNum = 2;
+		for (int j = 0; j < objects.size(); j++) {
+			String[] obj = objects.get(j);
+			for (int h = 0; h < obj.length; h++) {
+				sheet.addCell(new Label(h, rowNum, obj[h], format));
+			}
+			rowNum = rowNum + 1;
+		}
+	}
+
+	/**
 	 * 导出excel，不需要第一行的title
 	 *
 	 * @param fileName

@@ -221,7 +221,7 @@ public class DepotItemController {
                     item.put("standard", diEx.getMStandard());
                     item.put("model", diEx.getMModel());
                     item.put("color", diEx.getMColor());
-                    item.put("materialOther", getOtherInfo(mpArr, diEx));
+                    item.put("materialOther", depotItemService.getOtherInfo(mpArr, diEx));
                     BigDecimal stock;
                     Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
                     String materialUnit = diEx.getMaterialUnit();
@@ -303,30 +303,6 @@ public class DepotItemController {
     }
 
     /**
-     * 获取扩展信息
-     *
-     * @return
-     */
-    public String getOtherInfo(String[] mpArr, DepotItemVo4WithInfoEx diEx)throws Exception {
-        String materialOther = "";
-        for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("制造商")) {
-                materialOther = materialOther + ((diEx.getMMfrs() == null || diEx.getMMfrs().equals("")) ? "" : "(" + diEx.getMMfrs() + ")");
-            }
-            if (mpArr[i].equals("自定义1")) {
-                materialOther = materialOther + ((diEx.getMOtherField1() == null || diEx.getMOtherField1().equals("")) ? "" : "(" + diEx.getMOtherField1() + ")");
-            }
-            if (mpArr[i].equals("自定义2")) {
-                materialOther = materialOther + ((diEx.getMOtherField2() == null || diEx.getMOtherField2().equals("")) ? "" : "(" + diEx.getMOtherField2() + ")");
-            }
-            if (mpArr[i].equals("自定义3")) {
-                materialOther = materialOther + ((diEx.getMOtherField3() == null || diEx.getMOtherField3().equals("")) ? "" : "(" + diEx.getMOtherField3() + ")");
-            }
-        }
-        return materialOther;
-    }
-
-    /**
      * 进销存统计
      * @param currentPage
      * @param pageSize
@@ -374,7 +350,7 @@ public class DepotItemController {
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
                     //扩展信息
-                    String materialOther = getOtherInfo(mpArr, diEx);
+                    String materialOther = depotItemService.getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
                     item.put("unitId", diEx.getUnitId());
@@ -537,7 +513,7 @@ public class DepotItemController {
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
                     //扩展信息
-                    String materialOther = getOtherInfo(mpArr, diEx);
+                    String materialOther = depotItemService.getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
                     item.put("materialUnit", diEx.getMaterialUnit());
@@ -618,7 +594,7 @@ public class DepotItemController {
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
                     //扩展信息
-                    String materialOther = getOtherInfo(mpArr, diEx);
+                    String materialOther = depotItemService.getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
                     item.put("materialUnit", diEx.getMaterialUnit());
@@ -700,7 +676,7 @@ public class DepotItemController {
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
                     //扩展信息
-                    String materialOther = getOtherInfo(mpArr, diEx);
+                    String materialOther = depotItemService.getOtherInfo(mpArr, diEx);
                     item.put("materialOther", materialOther);
                     item.put("materialColor", diEx.getMColor());
                     item.put("materialUnit", diEx.getMaterialUnit());
@@ -781,7 +757,7 @@ public class DepotItemController {
                     diEx.setMOtherField1(disw.getMOtherField1());
                     diEx.setMOtherField2(disw.getMOtherField2());
                     diEx.setMOtherField3(disw.getMOtherField3());
-                    disw.setMaterialOther(getOtherInfo(mpArr, diEx));
+                    disw.setMaterialOther(depotItemService.getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
                     if(null!=disw.getLowSafeStock() && disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {
                         disw.setLowCritical(disw.getLowSafeStock().subtract(disw.getCurrentNumber()));

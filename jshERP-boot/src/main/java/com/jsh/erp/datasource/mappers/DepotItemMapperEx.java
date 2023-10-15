@@ -54,6 +54,9 @@ public interface DepotItemMapperEx {
     List<DepotItemVo4WithInfoEx> getDetailList(
             @Param("headerId") Long headerId);
 
+    List<DepotItemVo4WithInfoEx> getBillDetailListByIds(
+            @Param("idList") List<Long> idList);
+
     List<DepotItemVo4WithInfoEx> findByAll(
             @Param("materialParam") String materialParam,
             @Param("categoryIdList") List<Long> categoryIdList,

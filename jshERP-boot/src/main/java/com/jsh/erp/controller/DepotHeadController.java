@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.DecimalFormat;
@@ -545,6 +546,43 @@ public class DepotHeadController {
             objectMap.put("rows", new ArrayList<>());
             objectMap.put("total", 0);
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
+    }
+
+    /**
+     * 导出存在欠款的单据
+     * @param organId
+     * @param materialParam
+     * @param number
+     * @param type
+     * @param subType
+     * @param beginTime
+     * @param endTime
+     * @param roleType
+     * @param status
+     * @param mpList
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @GetMapping(value = "/debtExport")
+    @ApiOperation(value = "导出存在欠款的单据")
+    public void debtExport(@RequestParam(value = "organId", required = false) Long organId,
+                           @RequestParam(value = "materialParam", required = false) String materialParam,
+                           @RequestParam(value = "number", required = false) String number,
+                           @RequestParam(value = "type", required = false) String type,
+                           @RequestParam(value = "subType", required = false) String subType,
+                           @RequestParam(value = "beginTime", required = false) String beginTime,
+                           @RequestParam(value = "endTime", required = false) String endTime,
+                           @RequestParam(value = "roleType", required = false) String roleType,
+                           @RequestParam(value = "status", required = false) String status,
+                           @RequestParam(value = "mpList", required = false) String mpList,
+                           HttpServletRequest request, HttpServletResponse response)throws Exception {
+        try {
+            depotHeadService.debtExport(organId, materialParam, number, type, subType, beginTime, endTime, roleType,
+                    status, mpList, request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

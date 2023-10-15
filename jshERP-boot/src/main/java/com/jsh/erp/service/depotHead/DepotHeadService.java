@@ -1,5 +1,6 @@
 package com.jsh.erp.service.depotHead;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
@@ -24,8 +25,11 @@ import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
+import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
+import jxl.Workbook;
+import jxl.write.WritableWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
@@ -1229,47 +1235,7 @@ public class DepotHeadService {
             List<DepotHeadVo4List> list=depotHeadMapperEx.debtList(organId, creatorArray, status, number,
                     beginTime, endTime, materialParam, depotArray, offset, rows);
             if (null != list) {
-                List<Long> idList = new ArrayList<>();
-                for (DepotHeadVo4List dh : list) {
-                    idList.add(dh.getId());
-                }
-                //通过批量查询去构造map
-                Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
-                for (DepotHeadVo4List dh : list) {
-                    if(dh.getChangeAmount() != null) {
-                        dh.setChangeAmount(dh.getChangeAmount().abs());
-                    }
-                    if(dh.getTotalPrice() != null) {
-                        dh.setTotalPrice(dh.getTotalPrice().abs());
-                    }
-                    if(dh.getDeposit() == null) {
-                        dh.setDeposit(BigDecimal.ZERO);
-                    }
-                    if(dh.getOperTime() != null) {
-                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
-                    }
-                    BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
-                    BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
-                    BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
-                    BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount().abs():BigDecimal.ZERO;
-                    //本单欠款(如果退货则为负数)
-                    dh.setNeedDebt(discountLastMoney.add(otherMoney).subtract(deposit.add(changeAmount)));
-                    if(BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(dh.getSubType()) || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(dh.getSubType())) {
-                        dh.setNeedDebt(BigDecimal.ZERO.subtract(dh.getNeedDebt()));
-                    }
-                    BigDecimal needDebt = dh.getNeedDebt()!=null?dh.getNeedDebt():BigDecimal.ZERO;
-                    BigDecimal finishDebt = accountItemService.getEachAmountByBillId(dh.getId());
-                    finishDebt = finishDebt!=null?finishDebt:BigDecimal.ZERO;
-                    //已收欠款
-                    dh.setFinishDebt(finishDebt);
-                    //待收欠款
-                    dh.setDebt(needDebt.subtract(finishDebt));
-                    //商品信息简述
-                    if(materialsListMap!=null) {
-                        dh.setMaterialsList(materialsListMap.get(dh.getId()));
-                    }
-                    resList.add(dh);
-                }
+                resList = parseDebtBillList(list);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -1294,6 +1260,175 @@ public class DepotHeadService {
         return total;
     }
 
+    public void debtExport(Long organId, String materialParam, String number, String type, String subType,
+                           String beginTime, String endTime, String roleType, String status, String mpList,
+                           HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
+            String billCategory = getBillCategory(subType);
+            String depotIds = depotService.findDepotStrByCurrentUser();
+            String[] depotArray = depotIds.split(",");
+            String[] creatorArray = getCreatorArray(roleType);
+            status = StringUtil.isNotEmpty(status) ? status : null;
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime, BusinessConstants.DAY_LAST_TIME);
+            List<DepotHeadVo4List> dhList = new ArrayList<>();
+            List<DepotHeadVo4List> list = depotHeadMapperEx.debtList(organId, creatorArray, status, number,
+                    beginTime, endTime, materialParam, depotArray, null, null);
+            if (null != list) {
+                dhList = parseDebtBillList(list);
+            }
+            //生成Excel文件
+            String fileName = "单据信息";
+            File file = new File("/opt/"+ fileName);
+            WritableWorkbook wtwb = Workbook.createWorkbook(file);
+            String oneTip = "";
+            String sheetOneStr = "";
+            if("采购".equals(subType)) {
+                oneTip = "供应商对账列表";
+                sheetOneStr = "供应商,单据编号,关联单据,商品信息,单据日期,操作员,单据金额,本单欠款,已付欠款,待付欠款,备注";
+            } else if("出库".equals(type) && "销售".equals(subType)) {
+                oneTip = "客户对账列表";
+                sheetOneStr = "客户,单据编号,关联单据,商品信息,单据日期,操作员,单据金额,本单欠款,已收欠款,待收欠款,备注";
+            }
+            if(StringUtil.isNotEmpty(beginTime) && StringUtil.isNotEmpty(endTime)) {
+                oneTip = oneTip + "（" + beginTime + "至" + endTime + "）";
+            }
+            List<String> sheetOneList = StringUtil.strToStringList(sheetOneStr);
+            String[] sheetOneArr = StringUtil.listToStringArray(sheetOneList);
+            List<Long> idList = new ArrayList<>();
+            List<String[]> billList = new ArrayList<>();
+            Map<Long, BillListCacheVo> billListCacheVoMap = new HashMap<>();
+            for (DepotHeadVo4List dh : dhList) {
+                idList.add(dh.getId());
+                BillListCacheVo billListCacheVo = new BillListCacheVo();
+                billListCacheVo.setNumber(dh.getNumber());
+                billListCacheVo.setOrganName(dh.getOrganName());
+                billListCacheVo.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                billListCacheVoMap.put(dh.getId(), billListCacheVo);
+                String[] objs = new String[100];
+                objs[0] = dh.getOrganName();
+                objs[1] = dh.getNumber();
+                objs[2] = dh.getLinkNumber();
+                objs[3] = dh.getMaterialsList();
+                objs[4] = dh.getOperTimeStr();
+                objs[5] = dh.getUserName();
+                BigDecimal discountLastMoney = dh.getDiscountLastMoney() == null ? BigDecimal.ZERO : dh.getDiscountLastMoney();
+                BigDecimal otherMoney = dh.getOtherMoney() == null ? BigDecimal.ZERO : dh.getOtherMoney();
+                BigDecimal deposit = dh.getDeposit() == null ? BigDecimal.ZERO : dh.getDeposit();
+                objs[6] = parseDecimalToStr(discountLastMoney.add(otherMoney).subtract(deposit), 2);
+                objs[7] = parseDecimalToStr(dh.getNeedDebt(), 2);
+                objs[8] = parseDecimalToStr(dh.getFinishDebt(), 2);
+                objs[9] = parseDecimalToStr(dh.getDebt(), 2);
+                objs[10] = dh.getRemark();
+                billList.add(objs);
+            }
+            ExcelUtils.exportObjectsWithTitle(wtwb, oneTip, sheetOneArr, "单据列表", 0, billList);
+            //导出明细数据
+            if(idList.size()>0) {
+                List<DepotItemVo4WithInfoEx> dataList = depotItemMapperEx.getBillDetailListByIds(idList);
+                String[] mpArr = mpList.split(",");
+                String twoTip = "";
+                String sheetTwoStr = "";
+                if ("采购".equals(subType)) {
+                    twoTip = "供应商单据明细";
+                    sheetTwoStr = "供应商,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
+                } else if ("销售".equals(subType)) {
+                    twoTip = "客户单据明细";
+                    sheetTwoStr = "客户,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
+                }
+                if (StringUtil.isNotEmpty(beginTime) && StringUtil.isNotEmpty(endTime)) {
+                    twoTip = twoTip + "（" + beginTime + "至" + endTime + "）";
+                }
+                List<String> sheetTwoList = StringUtil.strToStringList(sheetTwoStr);
+                String[] sheetTwoArr = StringUtil.listToStringArray(sheetTwoList);
+                List<String[]> billDetail = new ArrayList<>();
+                for (DepotItemVo4WithInfoEx diEx : dataList) {
+                    String[] objs = new String[100];
+                    BillListCacheVo billListCacheVo = billListCacheVoMap.get(diEx.getHeaderId());
+                    objs[0] = billListCacheVo != null ? billListCacheVo.getOrganName() : "";
+                    objs[1] = billListCacheVo != null ? billListCacheVo.getNumber() : "";
+                    objs[2] = billListCacheVo != null ? billListCacheVo.getOperTimeStr() : "";
+                    objs[3] = diEx.getDepotId() == null ? "" : diEx.getDepotName();
+                    objs[4] = diEx.getBarCode();
+                    objs[5] = diEx.getMName();
+                    objs[6] = diEx.getMStandard();
+                    objs[7] = diEx.getMModel();
+                    objs[8] = diEx.getMColor();
+                    objs[9] = depotItemService.getOtherInfo(mpArr, diEx);
+                    objs[10] = diEx.getMaterialUnit();
+                    objs[11] = diEx.getSnList();
+                    objs[12] = diEx.getBatchNumber();
+                    objs[13] = Tools.parseDateToStr(diEx.getExpirationDate());
+                    objs[14] = diEx.getSku();
+                    objs[15] = parseDecimalToStr(diEx.getOperNumber(), 2);
+                    objs[16] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request), 2);
+                    objs[17] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getAllPrice(), billCategory, priceLimit, request), 2);
+                    objs[18] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxRate(), billCategory, priceLimit, request), 2);
+                    objs[19] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxMoney(), billCategory, priceLimit, request), 2);
+                    objs[20] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxLastMoney(), billCategory, priceLimit, request), 2);
+                    BigDecimal allWeight = diEx.getBasicNumber() == null || diEx.getWeight() == null ? BigDecimal.ZERO : diEx.getBasicNumber().multiply(diEx.getWeight());
+                    objs[21] = parseDecimalToStr(allWeight, 2);
+                    objs[22] = diEx.getRemark();
+                    billDetail.add(objs);
+                }
+                ExcelUtils.exportObjectsWithTitle(wtwb, twoTip, sheetTwoArr, "单据明细", 1, billDetail);
+            }
+            wtwb.write();
+            wtwb.close();
+            ExcelUtils.downloadExcel(file, file.getName(), response);
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+    }
+
+    public List<DepotHeadVo4List> parseDebtBillList(List<DepotHeadVo4List> list) throws Exception {
+        List<Long> idList = new ArrayList<>();
+        List<DepotHeadVo4List> dhList = new ArrayList<>();
+        for (DepotHeadVo4List dh : list) {
+            idList.add(dh.getId());
+        }
+        //通过批量查询去构造map
+        Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
+        for (DepotHeadVo4List dh : list) {
+            if(dh.getChangeAmount() != null) {
+                dh.setChangeAmount(dh.getChangeAmount().abs());
+            }
+            if(dh.getTotalPrice() != null) {
+                dh.setTotalPrice(dh.getTotalPrice().abs());
+            }
+            if(dh.getDeposit() == null) {
+                dh.setDeposit(BigDecimal.ZERO);
+            }
+            if(dh.getOperTime() != null) {
+                dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+            }
+            BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
+            BigDecimal otherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
+            BigDecimal deposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
+            BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount().abs():BigDecimal.ZERO;
+            //本单欠款(如果退货则为负数)
+            dh.setNeedDebt(discountLastMoney.add(otherMoney).subtract(deposit.add(changeAmount)));
+            if(BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(dh.getSubType()) || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(dh.getSubType())) {
+                dh.setNeedDebt(BigDecimal.ZERO.subtract(dh.getNeedDebt()));
+            }
+            BigDecimal needDebt = dh.getNeedDebt()!=null?dh.getNeedDebt():BigDecimal.ZERO;
+            BigDecimal finishDebt = accountItemService.getEachAmountByBillId(dh.getId());
+            finishDebt = finishDebt!=null?finishDebt:BigDecimal.ZERO;
+            //已收欠款
+            dh.setFinishDebt(finishDebt);
+            //待收欠款
+            dh.setDebt(needDebt.subtract(finishDebt));
+            //商品信息简述
+            if(materialsListMap!=null) {
+                dh.setMaterialsList(materialsListMap.get(dh.getId()));
+            }
+            dhList.add(dh);
+        }
+        return dhList;
+    }
+
     public String getBillCategory(String subType) {
         if(subType.equals("零售") || subType.equals("零售退货")) {
             return "retail";
@@ -1302,5 +1437,44 @@ public class DepotHeadService {
         } else {
             return "buy";
         }
+    }
+
+    /**
+     * 格式化金额样式
+     * @param decimal
+     * @param num
+     * @return
+     */
+    private String parseDecimalToStr(BigDecimal decimal, Integer num) {
+        return decimal == null ? "" : decimal.setScale(num, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    private String parseStatusToStr(String status, String type) {
+        if(StringUtil.isNotEmpty(status)) {
+            if("purchase".equals(type)) {
+                switch (status) {
+                    case "2":
+                        return "完成采购";
+                    case "3":
+                        return "部分采购";
+                }
+            } else if("sale".equals(type)) {
+                switch (status) {
+                    case "2":
+                        return "完成销售";
+                    case "3":
+                        return "部分销售";
+                }
+            }
+            switch (status) {
+                case "0":
+                    return "未审核";
+                case "1":
+                    return "已审核";
+                case "9":
+                    return "审核中";
+            }
+        }
+        return "";
     }
 }

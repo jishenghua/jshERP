@@ -315,6 +315,23 @@
         order by di.id asc
     </select>
 
+    <select id="getBillDetailListByIds" resultType="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
+        select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.standard MStandard,m.mfrs MMfrs,m.weight, m.img_name,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,m.enable_serial_number, m.enable_batch_number,
+        dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
+        from jsh_depot_item di
+        left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_depot dp1 on di.depot_id=dp1.id and ifnull(dp1.delete_Flag,'0') !='1'
+        left join jsh_depot dp2 on di.another_depot_id=dp2.id and ifnull(dp2.delete_Flag,'0') !='1'
+        where ifnull(di.delete_flag,'0') !='1'
+        and di.header_id in
+        <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        order by di.header_id desc, di.id asc
+    </select>
+
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
