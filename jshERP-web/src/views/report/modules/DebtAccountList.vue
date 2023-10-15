@@ -34,7 +34,7 @@
               <a-col :md="12" :sm="24">
                 <a-button type="primary" @click="searchQuery">查询</a-button>
                 <a-button style="margin-left: 8px" v-print="'#debtAccountPrint'" icon="printer">打印</a-button>
-                <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                <a-button style="margin-left: 8px" @click="handleExportXls('欠款详情')" icon="download">导出</a-button>
                 <a-button style="margin-left: 8px" @click="handleHistoryFinancial" icon="history">{{historyText}}</a-button>
               </a-col>
             </span>
@@ -70,7 +70,7 @@
   import BillDetail from '../../bill/dialog/BillDetail'
   import HistoryFinancialList from './HistoryFinancialList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getMpListShort } from "@/utils/util"
   import {mixinDevice} from '@/utils/mixin'
   import { findBillDetailByNumber } from '@/api/api'
   import Vue from 'vue'
@@ -93,7 +93,8 @@
           type: "",
           subType: "",
           roleType: Vue.ls.get('roleType'),
-          status: ""
+          status: "",
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         historyText: '',
         financialType: '',
@@ -135,7 +136,8 @@
           { title: '待收欠款', dataIndex: 'debt',width:70}
         ],
         url: {
-          list: "/depotHead/debtList"
+          list: "/depotHead/debtList",
+          exportXlsUrl: "/depotHead/debtExport"
         }
       }
     },
@@ -189,15 +191,6 @@
       },
       onDateOk(value) {
         console.log(value);
-      },
-      exportExcel() {
-        let aoa = [['单据编号', this.columns[2].title, '商品信息', '单据日期', '操作员', '本单欠款', '已收欠款', '待收欠款']]
-        for (let i = 0; i < this.dataSource.length; i++) {
-          let ds = this.dataSource[i]
-          let item = [ds.number, ds.organName, ds.materialsList, ds.operTimeStr, ds.userName, ds.needDebt, ds.finishDebt, ds.debt]
-          aoa.push(item)
-        }
-        openDownloadDialog(sheet2blob(aoa), '欠款详情')
       },
       handleHistoryFinancial() {
         this.$refs.historyFinancial.visible = true
