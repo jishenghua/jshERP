@@ -13,7 +13,7 @@
       @ok="handleOk"
       @cancel="handleCancel"
       cancelText="关闭"
-      style="top:15%;height: 65%;">
+      style="top:15%;height: 55%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           关闭
@@ -29,9 +29,6 @@
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="期初金额">
             <a-input placeholder="请输入期初金额" v-decorator.trim="[ 'initialAmount' ]" />
-          </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="当前余额">
-            <a-input placeholder="请输入当前余额" :read-only="true" v-decorator.trim="[ 'currentAmount' ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
             <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort' ]" />
@@ -90,7 +87,7 @@
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'name', 'serialNo', 'initialAmount', 'currentAmount', 'sort', 'remark'))
+          this.form.setFieldsValue(pick(this.model,'name', 'serialNo', 'initialAmount', 'sort', 'remark'))
           autoJumpNextInput('accountModal')
         });
       },

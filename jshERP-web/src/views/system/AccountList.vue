@@ -128,8 +128,7 @@
           { title: '名称', dataIndex: 'name', width: 100, align: "left"},
           { title: '编号', dataIndex: 'serialNo', width: 150, align: "left"},
           { title: '期初金额', dataIndex: 'initialAmount', width: 100, align: "left"},
-          { title: '当前余额', dataIndex: 'currentAmount', width: 100, align: "left"},
-          { title: '备注', dataIndex: 'remark', width: 100, align: "left"},
+          { title: '备注', dataIndex: 'remark', width: 200, align: "left"},
           { title: '排序', dataIndex: 'sort', width: 60, align: "left"},
           { title: '状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderEnabledFlag' }
