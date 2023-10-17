@@ -100,38 +100,37 @@ public class AccountService {
     }
 
     public List<AccountVo4List> select(String name, String serialNo, String remark, int offset, int rows) throws Exception{
-        List<AccountVo4List> resList = new ArrayList<AccountVo4List>();
-        List<AccountVo4List> list=null;
+        List<AccountVo4List> resList = new ArrayList<>();
         try{
-            list = accountMapperEx.selectByConditionAccount(name, serialNo, remark, offset, rows);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        String timeStr = Tools.getCurrentMonth();
-        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-        if (null != list && null !=timeStr) {
-            for (AccountVo4List al : list) {
-                DecimalFormat df = new DecimalFormat(".##");
-                BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month", forceFlag).add(getAccountSumByHead(al.getId(), timeStr, "month", forceFlag))
-                        .add(getAccountSumByDetail(al.getId(), timeStr, "month", forceFlag)).add(getManyAccountSum(al.getId(), timeStr, "month", forceFlag));
-                String thisMonthAmountFmt = "0";
-                if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
-                    thisMonthAmountFmt = df.format(thisMonthAmount);
+            List<AccountVo4List> list = accountMapperEx.selectByConditionAccount(name, serialNo, remark, offset, rows);
+            String timeStr = Tools.getCurrentMonth();
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+            if (null != list) {
+                for (AccountVo4List al : list) {
+                    DecimalFormat df = new DecimalFormat(".##");
+                    BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month", forceFlag).add(getAccountSumByHead(al.getId(), timeStr, "month", forceFlag))
+                            .add(getAccountSumByDetail(al.getId(), timeStr, "month", forceFlag)).add(getManyAccountSum(al.getId(), timeStr, "month", forceFlag));
+                    String thisMonthAmountFmt = "0";
+                    if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
+                        thisMonthAmountFmt = df.format(thisMonthAmount);
+                    }
+                    al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
+                    BigDecimal currentAmount = getAccountSum(al.getId(), "", "month", forceFlag).add(getAccountSumByHead(al.getId(), "", "month", forceFlag))
+                            .add(getAccountSumByDetail(al.getId(), "", "month", forceFlag)).add(getManyAccountSum(al.getId(), "", "month", forceFlag)) .add(al.getInitialAmount()) ;
+                    al.setCurrentAmount(currentAmount);
+                    resList.add(al);
                 }
-                al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
-                BigDecimal currentAmount = getAccountSum(al.getId(), "", "month", forceFlag).add(getAccountSumByHead(al.getId(), "", "month", forceFlag))
-                        .add(getAccountSumByDetail(al.getId(), "", "month", forceFlag)).add(getManyAccountSum(al.getId(), "", "month", forceFlag)) .add(al.getInitialAmount()) ;
-                al.setCurrentAmount(currentAmount);
-                resList.add(al);
             }
+        } catch(Exception e){
+            JshException.readFail(logger, e);
         }
         return resList;
     }
 
     public Long countAccount(String name, String serialNo, String remark)throws Exception {
-        Long result=null;
+        Long result = null;
         try{
-            result=accountMapperEx.countsByAccount(name, serialNo, remark);
+            result = accountMapperEx.countsByAccount(name, serialNo, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -561,6 +560,44 @@ public class AccountService {
             sb.append(accountMap.get(id) + "(" + money + "元) ");
         }
         return sb.toString();
+    }
+
+    public List<AccountVo4List> listWithBalance(String name, String serialNo, Integer offset, Integer rows) throws Exception {
+        List<AccountVo4List> resList = new ArrayList<>();
+        try{
+            List<AccountVo4List> list = accountMapperEx.selectByConditionAccount(name, serialNo, null, offset, rows);
+            String timeStr = Tools.getCurrentMonth();
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+            if (null != list) {
+                for (AccountVo4List al : list) {
+                    DecimalFormat df = new DecimalFormat(".##");
+                    BigDecimal thisMonthAmount = getAccountSum(al.getId(), timeStr, "month", forceFlag).add(getAccountSumByHead(al.getId(), timeStr, "month", forceFlag))
+                            .add(getAccountSumByDetail(al.getId(), timeStr, "month", forceFlag)).add(getManyAccountSum(al.getId(), timeStr, "month", forceFlag));
+                    String thisMonthAmountFmt = "0";
+                    if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
+                        thisMonthAmountFmt = df.format(thisMonthAmount);
+                    }
+                    al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
+                    BigDecimal currentAmount = getAccountSum(al.getId(), "", "month", forceFlag).add(getAccountSumByHead(al.getId(), "", "month", forceFlag))
+                            .add(getAccountSumByDetail(al.getId(), "", "month", forceFlag)).add(getManyAccountSum(al.getId(), "", "month", forceFlag)) .add(al.getInitialAmount()) ;
+                    al.setCurrentAmount(currentAmount);
+                    resList.add(al);
+                }
+            }
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return resList;
+    }
+
+    public Long listWithBalanceCount(String name, String serialNo) {
+        Long result = null;
+        try{
+            result = accountMapperEx.countsByAccount(name, serialNo, null);
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
     }
 
     public Map<String, Object> getStatistics(String name, String serialNo) {

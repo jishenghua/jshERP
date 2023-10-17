@@ -166,6 +166,35 @@ public class AccountController {
     }
 
     /**
+     * 获取带余额的报表
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/listWithBalance")
+    @ApiOperation(value = "获取带余额的报表")
+    public BaseResponseInfo listWithBalance(@RequestParam("name") String name,
+                                            @RequestParam("serialNo") String serialNo,
+                                            @RequestParam("currentPage") Integer currentPage,
+                                            @RequestParam("pageSize") Integer pageSize,
+                                            HttpServletRequest request) throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> map = new HashMap<>();
+            List<AccountVo4List> list = accountService.listWithBalance(name, serialNo, (currentPage-1)*pageSize, pageSize);
+            Long count = accountService.listWithBalanceCount(name, serialNo);
+            map.put("rows", list);
+            map.put("total", count);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
      * 结算账户的统计
      * @param request
      * @return
