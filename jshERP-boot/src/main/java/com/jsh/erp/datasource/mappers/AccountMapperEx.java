@@ -6,6 +6,7 @@ import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,18 @@ public interface AccountMapperEx {
             @Param("serialNo") String serialNo,
             @Param("remark") String remark);
 
+    BigDecimal getAccountSum(
+            @Param("accountId") Long accountId,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag);
+
+    BigDecimal getAccountSumByHead(
+            @Param("accountId") Long accountId,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag);
+
     List<AccountVo4InOutList> findAccountInOutList(
             @Param("accountId") Long accountId,
             @Param("offset") Integer offset,
@@ -36,5 +49,4 @@ public interface AccountMapperEx {
             @Param("accountId") Long accountId);
 
     int batchDeleteAccountByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
-
 }

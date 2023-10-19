@@ -12,6 +12,8 @@ import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.Tools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,8 +129,11 @@ public class AccountController {
                     String type = aEx.getType().replace("其它", "");
                     aEx.setType(type);
                     String timeStr = aEx.getOperTime().toString();
-                    BigDecimal balance = accountService.getAccountSum(accountId, timeStr, "date", forceFlag).add(accountService.getAccountSumByHead(accountId, timeStr, "date", forceFlag))
-                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date", forceFlag)).add(accountService.getManyAccountSum(accountId, timeStr, "date", forceFlag)).add(initialAmount);
+                    String endTime = timeStr;
+                    BigDecimal balance = accountService.getAccountSum(accountId, null, endTime, forceFlag)
+                            .add(accountService.getAccountSumByHead(accountId, null, endTime, forceFlag))
+                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date", forceFlag))
+                            .add(accountService.getManyAccountSum(accountId, timeStr, "date", forceFlag)).add(initialAmount);
                     aEx.setBalance(balance);
                     aEx.setAccountId(accountId);
                     dataArray.add(aEx);
