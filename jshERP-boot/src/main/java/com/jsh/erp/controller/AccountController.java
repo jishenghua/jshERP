@@ -2,29 +2,22 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
-import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Description;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,12 +121,11 @@ public class AccountController {
                 for (AccountVo4InOutList aEx : dataList) {
                     String type = aEx.getType().replace("其它", "");
                     aEx.setType(type);
-                    String timeStr = aEx.getOperTime().toString();
-                    String endTime = timeStr;
+                    String endTime = aEx.getOperTime();
                     BigDecimal balance = accountService.getAccountSum(accountId, null, endTime, forceFlag)
                             .add(accountService.getAccountSumByHead(accountId, null, endTime, forceFlag))
-                            .add(accountService.getAccountSumByDetail(accountId, timeStr, "date", forceFlag))
-                            .add(accountService.getManyAccountSum(accountId, timeStr, "date", forceFlag)).add(initialAmount);
+                            .add(accountService.getAccountSumByDetail(accountId, null, endTime, forceFlag))
+                            .add(accountService.getManyAccountSum(accountId, null, endTime, forceFlag)).add(initialAmount);
                     aEx.setBalance(balance);
                     aEx.setAccountId(accountId);
                     dataArray.add(aEx);

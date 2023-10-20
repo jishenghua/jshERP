@@ -110,6 +110,44 @@
         and ifnull(ah.delete_flag,'0') !='1'
     </select>
 
+    <select id="getAccountSumByDetail" resultType="java.math.BigDecimal">
+        select ifnull(sum(ai.each_amount),0) from jsh_account_head ah
+        left join jsh_account_item ai on ah.id = ai.header_id and ifnull(ai.delete_flag,'0') !='1'
+        where 1=1
+        <if test="accountId != null">
+            and ai.account_id = #{accountId}
+        </if>
+        <if test="beginTime != null">
+            and ah.bill_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and ah.bill_time &lt;= #{endTime}
+        </if>
+        <if test="forceFlag">
+            and ah.status = '1'
+        </if>
+        and ifnull(ah.delete_flag,'0') !='1'
+    </select>
+
+    <select id="getManyAccountSum" resultType="com.jsh.erp.datasource.entities.DepotHead">
+        select dh.account_id_list accountIdList, dh.account_money_list accountMoneyList from jsh_depot_head dh
+        where 1=1
+        <if test="accountId != null">
+            <bind name="bindAccountId" value="'%'+accountId+'%'"/>
+            and dh.account_id_list like #{bindAccountId}
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
     <select id="findAccountInOutList" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultInOutList">
         <!--主表出入库涉及的账户 -->
         select dh.number,concat(dh.sub_type,dh.type) as newType, 'bill' as fromType, s.supplier,dh.change_amount,date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList

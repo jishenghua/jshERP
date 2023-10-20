@@ -16,7 +16,6 @@ import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -112,8 +111,8 @@ public class AccountService {
                     DecimalFormat df = new DecimalFormat(".##");
                     BigDecimal thisMonthAmount = getAccountSum(al.getId(), bTime, eTime, forceFlag)
                             .add(getAccountSumByHead(al.getId(), bTime, eTime, forceFlag))
-                            .add(getAccountSumByDetail(al.getId(), timeStr, "month", forceFlag))
-                            .add(getManyAccountSum(al.getId(), timeStr, "month", forceFlag));
+                            .add(getAccountSumByDetail(al.getId(), bTime, eTime, forceFlag))
+                            .add(getManyAccountSum(al.getId(), bTime, eTime, forceFlag));
                     String thisMonthAmountFmt = "0";
                     if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
                         thisMonthAmountFmt = df.format(thisMonthAmount);
@@ -121,8 +120,8 @@ public class AccountService {
                     al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
                     BigDecimal currentAmount = getAccountSum(al.getId(), null, null, forceFlag)
                             .add(getAccountSumByHead(al.getId(), null, null, forceFlag))
-                            .add(getAccountSumByDetail(al.getId(), "", "month", forceFlag))
-                            .add(getManyAccountSum(al.getId(), "", "month", forceFlag)) .add(al.getInitialAmount()) ;
+                            .add(getAccountSumByDetail(al.getId(), null, null, forceFlag))
+                            .add(getManyAccountSum(al.getId(), null, null, forceFlag)).add(al.getInitialAmount()) ;
                     al.setCurrentAmount(currentAmount);
                     resList.add(al);
                 }
@@ -282,7 +281,7 @@ public class AccountService {
      * 单个账户的金额求和-入库和出库
      * @return
      */
-    public BigDecimal getAccountSum(Long accountId, String beginTime, String endTime, Boolean forceFlag) throws Exception{
+    public BigDecimal getAccountSum(Long accountId, String beginTime, String endTime, Boolean forceFlag) {
         return accountMapperEx.getAccountSum(accountId, beginTime, endTime, forceFlag);
     }
 
@@ -290,129 +289,41 @@ public class AccountService {
      * 单个账户的金额求和-收入、支出、转账的单据表头的合计
      * @return
      */
-    public BigDecimal getAccountSumByHead(Long accountId, String beginTime, String endTime, Boolean forceFlag) throws Exception{
+    public BigDecimal getAccountSumByHead(Long accountId, String beginTime, String endTime, Boolean forceFlag) {
         return accountMapperEx.getAccountSumByHead(accountId, beginTime, endTime, forceFlag);
     }
 
     /**
      * 单个账户的金额求和-收款、付款、转账、收预付款的单据明细的合计
-     *
-     * @param id
      * @return
      */
-    public BigDecimal getAccountSumByDetail(Long id, String timeStr, String type, Boolean forceFlag)throws Exception {
-        BigDecimal accountSum =BigDecimal.ZERO ;
-        try {
-            AccountHeadExample example = new AccountHeadExample();
-            AccountHeadExample.Criteria criteria = example.createCriteria();
-            if (!timeStr.equals("")) {
-                if (type.equals("month")) {
-                    Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
-                    Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
-                    criteria.andBillTimeGreaterThanOrEqualTo(bTime).andBillTimeLessThanOrEqualTo(eTime)
-                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                } else if (type.equals("date")) {
-                    Date mTime = StringUtil.getDateByString(timeStr, null);
-                    criteria.andBillTimeLessThanOrEqualTo(mTime)
-                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                }
-            }
-            List<AccountHead> dataList=null;
-            try{
-                if(forceFlag) {
-                    criteria.andStatusEqualTo("1");
-                }
-                dataList = accountHeadMapper.selectByExample(example);
-            }catch(Exception e){
-                JshException.readFail(logger, e);
-            }
-            if (dataList != null) {
-                String ids = "";
-                for (AccountHead accountHead : dataList) {
-                    ids = ids + accountHead.getId() + ",";
-                }
-                if (!ids.equals("")) {
-                    ids = ids.substring(0, ids.length() - 1);
-                }
-                AccountItemExample exampleAi = new AccountItemExample();
-                if (!ids.equals("")) {
-                    List<Long> idList = StringUtil.strToLongList(ids);
-                    exampleAi.createCriteria().andAccountIdEqualTo(id).andHeaderIdIn(idList)
-                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                    List<AccountItem> dataListOne = accountItemMapper.selectByExample(exampleAi);
-                    if (dataListOne != null) {
-                        for (AccountItem accountItem : dataListOne) {
-                            if(accountItem.getEachAmount()!=null) {
-                                accountSum = accountSum.add(accountItem.getEachAmount());
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (DataAccessException e) {
-            logger.error(">>>>>>>>>查找进销存信息异常", e);
-        } catch (Exception e) {
-            logger.error(">>>>>>>>>异常信息：", e);
-        }
-        return accountSum;
+    public BigDecimal getAccountSumByDetail(Long accountId, String beginTime, String endTime, Boolean forceFlag) {
+        return accountMapperEx.getAccountSumByDetail(accountId, beginTime, endTime, forceFlag);
     }
 
     /**
      * 单个账户的金额求和-多账户的明细合计
-     *
-     * @param id
      * @return
      */
-    public BigDecimal getManyAccountSum(Long id, String timeStr, String type, Boolean forceFlag)throws Exception {
+    public BigDecimal getManyAccountSum(Long accountId, String beginTime, String endTime, Boolean forceFlag) {
         BigDecimal accountSum = BigDecimal.ZERO;
-        try {
-            DepotHeadExample example = new DepotHeadExample();
-            DepotHeadExample.Criteria criteria = example.createCriteria();
-            if (!timeStr.equals("")) {
-                if (type.equals("month")) {
-                    Date bTime = StringUtil.getDateByString(Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME, null);
-                    Date eTime = StringUtil.getDateByString(Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME, null);
-                    criteria.andAccountIdListLike("%" +id.toString() + "%")
-                            .andOperTimeGreaterThanOrEqualTo(bTime).andOperTimeLessThanOrEqualTo(eTime)
-                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                } else if (type.equals("date")) {
-                    Date mTime = StringUtil.getDateByString(timeStr, null);
-                    criteria.andAccountIdListLike("%" +id.toString() + "%")
-                            .andOperTimeLessThanOrEqualTo(mTime)
-                            .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-                }
-            } else {
-                example.createCriteria().andAccountIdListLike("%" +id.toString() + "%")
-                        .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-            }
-            List<DepotHead> dataList=null;
-            try{
-                if(forceFlag) {
-                    criteria.andStatusEqualTo("1");
-                }
-                dataList = depotHeadMapper.selectByExample(example);
-            }catch(Exception e){
-                JshException.readFail(logger, e);
-            }
-            if (dataList != null) {
-                for (DepotHead depotHead : dataList) {
-                    String accountIdList = depotHead.getAccountIdList();
-                    String accountMoneyList = depotHead.getAccountMoneyList();
-                    if(StringUtil.isNotEmpty(accountIdList) && StringUtil.isNotEmpty(accountMoneyList)) {
-                        String[] aList = accountIdList.split(",");
-                        String[] amList = accountMoneyList.split(",");
-                        for (int i = 0; i < aList.length; i++) {
-                            if (aList[i].toString().equals(id.toString())) {
-                                if(amList!=null && amList.length>0) {
-                                    accountSum = accountSum.add(new BigDecimal(amList[i]));
-                                }
+        List<DepotHead> dataList = accountMapperEx.getManyAccountSum(accountId, beginTime, endTime, forceFlag);
+        if (dataList != null) {
+            for (DepotHead depotHead : dataList) {
+                String accountIdList = depotHead.getAccountIdList();
+                String accountMoneyList = depotHead.getAccountMoneyList();
+                if(StringUtil.isNotEmpty(accountIdList) && StringUtil.isNotEmpty(accountMoneyList)) {
+                    String[] aList = accountIdList.split(",");
+                    String[] amList = accountMoneyList.split(",");
+                    for (int i = 0; i < aList.length; i++) {
+                        if (aList[i].equals(accountId.toString())) {
+                            if(amList.length>0) {
+                                accountSum = accountSum.add(new BigDecimal(amList[i]));
                             }
                         }
                     }
                 }
             }
-        } catch (DataAccessException e) {
-            logger.error(">>>>>>>>>查找信息异常", e);
         }
         return accountSum;
     }
@@ -496,8 +407,8 @@ public class AccountService {
                     DecimalFormat df = new DecimalFormat(".##");
                     BigDecimal thisMonthAmount = getAccountSum(al.getId(), bTime, eTime, forceFlag)
                             .add(getAccountSumByHead(al.getId(), bTime, eTime, forceFlag))
-                            .add(getAccountSumByDetail(al.getId(), timeStr, "month", forceFlag))
-                            .add(getManyAccountSum(al.getId(), timeStr, "month", forceFlag));
+                            .add(getAccountSumByDetail(al.getId(), bTime, eTime, forceFlag))
+                            .add(getManyAccountSum(al.getId(), bTime, eTime, forceFlag));
                     String thisMonthAmountFmt = "0";
                     if ((thisMonthAmount.compareTo(BigDecimal.ZERO))!=0) {
                         thisMonthAmountFmt = df.format(thisMonthAmount);
@@ -505,8 +416,8 @@ public class AccountService {
                     al.setThisMonthAmount(thisMonthAmountFmt);  //本月发生额
                     BigDecimal currentAmount = getAccountSum(al.getId(), null, null, forceFlag)
                             .add(getAccountSumByHead(al.getId(), null, null, forceFlag))
-                            .add(getAccountSumByDetail(al.getId(), "", "month", forceFlag))
-                            .add(getManyAccountSum(al.getId(), "", "month", forceFlag)) .add(al.getInitialAmount()) ;
+                            .add(getAccountSumByDetail(al.getId(), null, null, forceFlag))
+                            .add(getManyAccountSum(al.getId(), null, null, forceFlag)).add(al.getInitialAmount()) ;
                     al.setCurrentAmount(currentAmount);
                     resList.add(al);
                 }
@@ -541,12 +452,12 @@ public class AccountService {
                 for (Account a : list) {
                     BigDecimal monthAmount = getAccountSum(a.getId(), bTime, eTime, forceFlag)
                             .add(getAccountSumByHead(a.getId(), bTime, eTime, forceFlag))
-                            .add(getAccountSumByDetail(a.getId(), timeStr, "month", forceFlag))
-                            .add(getManyAccountSum(a.getId(), timeStr, "month", forceFlag));
+                            .add(getAccountSumByDetail(a.getId(), bTime, eTime, forceFlag))
+                            .add(getManyAccountSum(a.getId(), bTime, eTime, forceFlag));
                     BigDecimal currentAmount = getAccountSum(a.getId(), null, null, forceFlag)
                             .add(getAccountSumByHead(a.getId(), null, null, forceFlag))
-                            .add(getAccountSumByDetail(a.getId(), "", "month", forceFlag))
-                            .add(getManyAccountSum(a.getId(), "", "month", forceFlag)).add(a.getInitialAmount());
+                            .add(getAccountSumByDetail(a.getId(), null, null, forceFlag))
+                            .add(getManyAccountSum(a.getId(), null, null, forceFlag)).add(a.getInitialAmount());
                     allMonthAmount = allMonthAmount.add(monthAmount);
                     allCurrentAmount = allCurrentAmount.add(currentAmount);
                 }

@@ -1,7 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.Account;
-import com.jsh.erp.datasource.entities.AccountExample;
+import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
 import org.apache.ibatis.annotations.Param;
@@ -35,6 +35,18 @@ public interface AccountMapperEx {
             @Param("forceFlag") Boolean forceFlag);
 
     BigDecimal getAccountSumByHead(
+            @Param("accountId") Long accountId,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag);
+
+    BigDecimal getAccountSumByDetail(
+            @Param("accountId") Long accountId,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag);
+
+    List<DepotHead> getManyAccountSum(
             @Param("accountId") Long accountId,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
