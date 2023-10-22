@@ -9,12 +9,12 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入名称" v-model="queryParam.search.name"></a-input>
+                  <a-input placeholder="请输入名称" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入编号" v-model="queryParam.search.serialNo"></a-input>
+                  <a-input placeholder="请输入编号" v-model="queryParam.serialNo"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="5" :sm="24">
@@ -98,10 +98,8 @@
         },
         // 查询条件
         queryParam: {
-          search: {
-            name:'',
-            serialNo:''
-          }
+          name:'',
+          serialNo:''
         },
         ipagination:{
           pageSize: 11,
@@ -128,7 +126,7 @@
           { title: '当前余额', dataIndex: 'currentAmount', sorter: (a, b) => a.currentAmount - b.currentAmount, width: 100}
         ],
         url: {
-          list: "/account/list",
+          list: "/account/listWithBalance",
           getStatistics: "/account/getStatistics"
         }
       }
@@ -145,7 +143,7 @@
         return param;
       },
       getAccountStatistics() {
-        getAction(this.url.getStatistics, this.queryParam.search).then((res)=>{
+        getAction(this.url.getStatistics, this.queryParam).then((res)=>{
           if(res && res.code === 200) {
             if(res.data){
               this.allMonthAmount = res.data.allMonthAmount
