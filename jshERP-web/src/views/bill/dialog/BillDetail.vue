@@ -1619,11 +1619,15 @@
             } else if (item.purchaseStatus === '3') {
               showType = 'purchase'
             }
+            let isReadOnly = '1'
+            if(item.subType === '组装单' || item.subType === '拆卸单') {
+              isReadOnly = '0'
+            }
             let params = {
               headerId: this.model.id,
               mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
               linkType: showType,
-              isReadOnly: '1'
+              isReadOnly: isReadOnly
             }
             let url = this.readOnly ? this.url.detailList : this.url.detailList;
             this.requestSubTableData(item, type, url, params);
