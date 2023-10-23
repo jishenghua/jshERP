@@ -8,7 +8,9 @@ import com.jsh.erp.datasource.entities.Unit;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
+import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.unit.UnitService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;
@@ -51,6 +53,12 @@ public class MaterialController {
 
     @Resource
     private DepotService depotService;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private UserService userService;
 
     @Value(value="${file.uploadType}")
     private Long fileUploadType;
@@ -475,6 +483,8 @@ public class MaterialController {
                                           HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
             String[] mpArr = mpList.split(",");
             //支持序列号查询，先根据序列号查询条码，如果查不到就直接查条码
             MaterialExtend materialExtend = materialService.getMaterialExtendBySerialNumber(barCode);
@@ -493,6 +503,10 @@ public class MaterialController {
                             || "PDLR".equals(prefixNo) || "PDFP".equals(prefixNo)) {
                         //采购价
                         mvo.setBillPrice(mvo.getPurchaseDecimal());
+                        //给录入界面按权限屏蔽价格
+                        if("QTRK".equals(prefixNo) || "DBCK".equals(prefixNo)) {
+                            mvo.setBillPrice(roleService.parseBillPriceByLimit(mvo.getPurchaseDecimal(), "buy", priceLimit, request));
+                        }
                     } else if ("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
                         //销售价
                         if(organId == null) {
@@ -501,6 +515,10 @@ public class MaterialController {
                             //查询最后一单的销售价,实现不同的客户不同的销售价
                             BigDecimal lastUnitPrice = depotItemService.getLastUnitPriceByParam(organId, mvo.getMeId(), prefixNo);
                             mvo.setBillPrice(lastUnitPrice!=null? lastUnitPrice : mvo.getWholesaleDecimal());
+                        }
+                        //给录入界面按权限屏蔽价格
+                        if("QTCK".equals(prefixNo)) {
+                            mvo.setBillPrice(roleService.parseBillPriceByLimit(mvo.getWholesaleDecimal(), "sale", priceLimit, request));
                         }
                     }
                     //仓库id
