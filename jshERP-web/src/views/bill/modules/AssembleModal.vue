@@ -151,11 +151,11 @@
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '多属性', key: 'sku', width: '4%', type: FormTypes.normal },
-            { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
+            { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
-            { title: '单价', key: 'unitPrice', width: '5%', type: FormTypes.inputNumber},
-            { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true },
+            { title: '单价', key: 'unitPrice', width: '5%', type: FormTypes.inputNumber },
+            { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber },
             { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
           ]
         },

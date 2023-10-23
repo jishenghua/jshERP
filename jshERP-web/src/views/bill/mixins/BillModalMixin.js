@@ -423,6 +423,8 @@ export const BillModalMixin = {
                     target.statisticsColumns.taxLastMoney = taxLastMoneyTotal
                   }
                   that.autoChangePrice(target)
+                  //强制渲染
+                  target.$forceUpdate()
                 })
               } else {
                 //单个条码
@@ -443,6 +445,8 @@ export const BillModalMixin = {
                     target.recalcAllStatisticsColumns()
                     that.autoChangePrice(target)
                     target.autoSelectBySpecialKey('operNumber', row.orderNum)
+                    //强制渲染
+                    target.$forceUpdate()
                   }
                 })
               }
