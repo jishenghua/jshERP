@@ -148,6 +148,80 @@
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
+    <select id="getAccountSumByParam" resultType="com.jsh.erp.datasource.entities.AccountVo4Sum">
+        select a.id,
+            (select ifnull(sum(dh.change_amount),0) from jsh_depot_head dh
+            where 1=1 and dh.pay_type != '预付款'
+            and dh.account_id = a.id
+            <if test="beginTime != null">
+                and dh.oper_time >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and dh.oper_time &lt;= #{endTime}
+            </if>
+            <if test="forceFlag">
+                and dh.status = '1'
+            </if>
+            and ifnull(dh.delete_flag,'0') !='1') accountSum,
+            (select ifnull(sum(ah.change_amount),0) from jsh_account_head ah
+            where 1=1 and ah.account_id = a.id
+            <if test="beginTime != null">
+                and ah.bill_time >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and ah.bill_time &lt;= #{endTime}
+            </if>
+            <if test="forceFlag">
+                and ah.status = '1'
+            </if>
+            and ifnull(ah.delete_flag,'0') !='1') accountSumByHead,
+            (select ifnull(sum(ai.each_amount),0) from jsh_account_head ah
+            left join jsh_account_item ai on ah.id = ai.header_id and ifnull(ai.delete_flag,'0') !='1'
+            where 1=1 and ai.account_id = a.id
+            <if test="beginTime != null">
+                and ah.bill_time >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and ah.bill_time &lt;= #{endTime}
+            </if>
+            <if test="forceFlag">
+                and ah.status = '1'
+            </if>
+            and ifnull(ah.delete_flag,'0') !='1') accountSumByDetail
+        from jsh_account a
+        where 1=1
+        <if test="name != null">
+            <bind name="bindName" value="'%'+name+'%'"/>
+            and a.name like #{bindName}
+        </if>
+        <if test="serialNo != null and serialNo !=''">
+            <bind name="bindSerialNo" value="'%'+serialNo+'%'"/>
+            and a.serial_no like #{bindSerialNo}
+        </if>
+        and ifnull(a.delete_flag,'0') !='1'
+        order by a.sort asc, a.id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>
+    </select>
+
+    <select id="getManyAccountSumByParam" resultType="com.jsh.erp.datasource.entities.DepotHead">
+        select dh.account_id_list accountIdList, dh.account_money_list accountMoneyList
+        from jsh_depot_head dh
+        where 1=1
+        and dh.account_id_list !=''
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
     <select id="findAccountInOutList" parameterType="com.jsh.erp.datasource.entities.AccountExample" resultMap="ResultInOutList">
         <!--主表出入库涉及的账户 -->
         select dh.number,concat(dh.sub_type,dh.type) as newType, 'bill' as fromType, s.supplier,dh.change_amount,date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList

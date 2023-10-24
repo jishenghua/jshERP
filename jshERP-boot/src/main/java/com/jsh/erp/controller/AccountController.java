@@ -9,6 +9,7 @@ import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -178,8 +179,8 @@ public class AccountController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             Map<String, Object> map = new HashMap<>();
-            List<AccountVo4List> list = accountService.listWithBalance(name, serialNo, (currentPage-1)*pageSize, pageSize);
-            Long count = accountService.listWithBalanceCount(name, serialNo);
+            List<AccountVo4List> list = accountService.listWithBalance(StringUtil.toNull(name), StringUtil.toNull(serialNo), (currentPage-1)*pageSize, pageSize);
+            Long count = accountService.listWithBalanceCount(StringUtil.toNull(name), StringUtil.toNull(serialNo));
             map.put("rows", list);
             map.put("total", count);
             res.code = 200;
@@ -204,7 +205,7 @@ public class AccountController {
                                           HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            Map<String, Object> map = accountService.getStatistics(name, serialNo);
+            Map<String, Object> map = accountService.getStatistics(StringUtil.toNull(name), StringUtil.toNull(serialNo));
             res.code = 200;
             res.data = map;
         } catch(Exception e){

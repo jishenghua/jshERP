@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.Account;
+import com.jsh.erp.datasource.entities.AccountVo4Sum;
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
@@ -52,6 +53,20 @@ public interface AccountMapperEx {
             @Param("endTime") String endTime,
             @Param("forceFlag") Boolean forceFlag);
 
+    List<AccountVo4Sum> getAccountSumByParam(
+            @Param("name") String name,
+            @Param("serialNo") String serialNo,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    List<DepotHead> getManyAccountSumByParam(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag);
+
     List<AccountVo4InOutList> findAccountInOutList(
             @Param("accountId") Long accountId,
             @Param("offset") Integer offset,
@@ -61,4 +76,5 @@ public interface AccountMapperEx {
             @Param("accountId") Long accountId);
 
     int batchDeleteAccountByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
 }
