@@ -108,20 +108,20 @@ public class PersonController {
     }
 
     /**
-     * 根据类型获取经手人信息 1-业务员，2-仓管员，3-财务员
+     * 根据类型获取经手人信息 1-销售员，2-仓管员，3-财务员
      * @param typeNum
      * @param request
      * @return
      */
     @GetMapping(value = "/getPersonByNumType")
-    @ApiOperation(value = "根据类型获取经手人信息1-业务员，2-仓管员，3-财务员")
+    @ApiOperation(value = "根据类型获取经手人信息1-销售员，2-仓管员，3-财务员")
     public JSONArray getPersonByNumType(@RequestParam("type") String typeNum,
                                         HttpServletRequest request)throws Exception {
         JSONArray dataArray = new JSONArray();
         try {
             String type = "";
             if (typeNum.equals("1")) {
-                type = "业务员";
+                type = "销售员";
             } else if (typeNum.equals("2")) {
                 type = "仓管员";
             } else if (typeNum.equals("3")) {

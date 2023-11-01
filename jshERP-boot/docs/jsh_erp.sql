@@ -160,7 +160,7 @@ CREATE TABLE `jsh_depot_head` (
   `bill_type` varchar(50) DEFAULT NULL COMMENT '单据类型',
   `remark` varchar(1000) DEFAULT NULL COMMENT '备注',
   `file_name` varchar(1000) DEFAULT NULL COMMENT '附件名称',
-  `sales_man` varchar(50) DEFAULT NULL COMMENT '业务员（可以多个）',
+  `sales_man` varchar(50) DEFAULT NULL COMMENT '销售员（可以多个）',
   `account_id_list` varchar(50) DEFAULT NULL COMMENT '多账户ID列表',
   `account_money_list` varchar(200) DEFAULT NULL COMMENT '多账户金额列表',
   `discount` decimal(24,6) DEFAULT NULL COMMENT '优惠率',
@@ -687,7 +687,7 @@ CREATE TABLE `jsh_person` (
 -- ----------------------------
 -- Records of jsh_person
 -- ----------------------------
-INSERT INTO `jsh_person` VALUES ('14', '业务员', '小李', '', null, '63', '0');
+INSERT INTO `jsh_person` VALUES ('14', '销售员', '小李', '', null, '63', '0');
 INSERT INTO `jsh_person` VALUES ('15', '仓管员', '小军', '', null, '63', '0');
 INSERT INTO `jsh_person` VALUES ('16', '财务员', '小夏', '', null, '63', '0');
 INSERT INTO `jsh_person` VALUES ('17', '财务员', '小曹', '', null, '63', '0');
