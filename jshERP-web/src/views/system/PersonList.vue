@@ -16,7 +16,7 @@
                 <a-form-item label="类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select v-model="queryParam.type" placeholder="请选择类型">
                     <a-select-option value="">请选择</a-select-option>
-                    <a-select-option value="业务员">业务员</a-select-option>
+                    <a-select-option value="销售员">销售员</a-select-option>
                     <a-select-option value="财务员">财务员</a-select-option>
                   </a-select>
                 </a-form-item>

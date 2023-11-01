@@ -173,7 +173,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售人员" data-step="11" data-title="销售人员"
-                         data-intro="销售人员的数据来自【经手人管理】菜单中的业务员">
+                         data-intro="销售人员的数据来自【经手人管理】菜单中的销售员">
               <j-select-multiple style="width:185px;" placeholder="请选择销售人员" v-model="personList.value" :options="personList.options"/>
             </a-form-item>
           </a-col>
