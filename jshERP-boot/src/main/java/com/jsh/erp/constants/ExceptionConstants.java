@@ -432,6 +432,9 @@ public class ExceptionConstants {
     //单据明细-明细中商品不存在
     public static final int DEPOT_ITEM_BARCODE_IS_NOT_EXIST_CODE = 9000003;
     public static final String DEPOT_ITEM_BARCODE_IS_NOT_EXIST_MSG = "抱歉，商品条码:%s在商品管理中不存在";
+    //单据明细-明细中仓库不存在
+    public static final int DEPOT_ITEM_DEPOTNAME_IS_NOT_EXIST_CODE = 9000004;
+    public static final String DEPOT_ITEM_DEPOTNAME_IS_NOT_EXIST_MSG = "抱歉，仓库:%s在基础资料-仓库信息中不存在";
 
     /**
      *  财务信息

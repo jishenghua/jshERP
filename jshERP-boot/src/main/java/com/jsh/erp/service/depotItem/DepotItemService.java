@@ -1125,8 +1125,16 @@ public class DepotItemService {
         JSONArray arr = new JSONArray();
         List<MaterialVo4Unit> list = depotItemMapperEx.getBillItemByParam(barCodes);
         Map<String, MaterialVo4Unit> materialMap = new HashMap<>();
+        Map<String, Long> depotMap = new HashMap<>();
         for (MaterialVo4Unit material: list) {
             materialMap.put(material.getmBarCode(), material);
+        }
+        JSONArray depotArr = depotService.findDepotByCurrentUser();
+        for (Object depotObj: depotArr) {
+            if(depotObj!=null) {
+                JSONObject depotObject = JSONObject.parseObject(depotObj.toString());
+                depotMap.put(depotObject.getString("depotName"), depotObject.getLong("id"));
+            }
         }
         for (Map<String, String> detailMap: detailList) {
             JSONObject item = new JSONObject();
@@ -1134,6 +1142,17 @@ public class DepotItemService {
             if(StringUtil.isNotEmpty(barCode)) {
                 MaterialVo4Unit m = materialMap.get(barCode);
                 if(m!=null) {
+                    //判断仓库是否存在
+                    String depotName = detailMap.get("depotName");
+                    if(StringUtil.isNotEmpty(depotName)) {
+                        if(depotMap.get(depotName)!=null) {
+                            item.put("depotName", depotName);
+                            item.put("depotId", depotMap.get(depotName));
+                        } else {
+                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_DEPOTNAME_IS_NOT_EXIST_CODE,
+                                    String.format(ExceptionConstants.DEPOT_ITEM_DEPOTNAME_IS_NOT_EXIST_MSG, depotName));
+                        }
+                    }
                     item.put("barCode", barCode);
                     item.put("name", m.getName());
                     item.put("standard", m.getStandard());

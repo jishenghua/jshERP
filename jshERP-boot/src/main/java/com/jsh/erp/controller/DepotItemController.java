@@ -906,12 +906,31 @@ public class DepotItemController {
             } else {
                 List<Map<String, String>> detailList = new ArrayList<>();
                 for (int i = 2; i < src.getRows(); i++) {
-                    String barCode = ExcelUtils.getContent(src, i, 0);
-                    String num = ExcelUtils.getContent(src, i, 2);
-                    String unitPrice = ExcelUtils.getContent(src, i, 3);
-                    String taxRate = ExcelUtils.getContent(src, i, 4);
-                    String remark = ExcelUtils.getContent(src, i, 5);
+                    String depotName = "", barCode = "", num = "", unitPrice = "", taxRate = "", remark = "";
+                    if("CGDD".equals(prefixNo) || "XSDD".equals(prefixNo)) {
+                        barCode = ExcelUtils.getContent(src, i, 0);
+                        num = ExcelUtils.getContent(src, i, 2);
+                        unitPrice = ExcelUtils.getContent(src, i, 3);
+                        taxRate = ExcelUtils.getContent(src, i, 4);
+                        remark = ExcelUtils.getContent(src, i, 5);
+                    }
+                    if("CGRK".equals(prefixNo) || "XSCK".equals(prefixNo)) {
+                        depotName = ExcelUtils.getContent(src, i, 0);
+                        barCode = ExcelUtils.getContent(src, i, 1);
+                        num = ExcelUtils.getContent(src, i, 3);
+                        unitPrice = ExcelUtils.getContent(src, i, 4);
+                        taxRate = ExcelUtils.getContent(src, i, 5);
+                        remark = ExcelUtils.getContent(src, i, 6);
+                    }
+                    if("QTRK".equals(prefixNo) || "QTCK".equals(prefixNo)) {
+                        depotName = ExcelUtils.getContent(src, i, 0);
+                        barCode = ExcelUtils.getContent(src, i, 1);
+                        num = ExcelUtils.getContent(src, i, 3);
+                        unitPrice = ExcelUtils.getContent(src, i, 4);
+                        remark = ExcelUtils.getContent(src, i, 5);
+                    }
                     Map<String, String> materialMap = new HashMap<>();
+                    materialMap.put("depotName", depotName);
                     materialMap.put("barCode", barCode);
                     materialMap.put("num", num);
                     materialMap.put("unitPrice", unitPrice);
