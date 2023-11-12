@@ -73,6 +73,9 @@
                 <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;padding-left:20px;">
+              <a-button icon="import" @click="onImport(prefixNo)">导入明细</a-button>
+            </a-row>
           </template>
           <template #depotBatchSet>
             <a-icon type="down" @click="handleBatchSetDepot" />
@@ -101,6 +104,7 @@
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
+    <import-item-modal ref="importItemModalForm" @ok="importItemModalFormOk"></import-item-modal>
     <workflow-iframe ref="modalWorkflow"></workflow-iframe>
   </j-modal>
 </template>
@@ -109,6 +113,7 @@
   import VendorModal from '../../system/modules/VendorModal'
   import DepotModal from '../../system/modules/DepotModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
+  import ImportItemModal from '../dialog/ImportItemModal'
   import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
@@ -124,6 +129,7 @@
       VendorModal,
       DepotModal,
       BatchSetDepot,
+      ImportItemModal,
       WorkflowIframe,
       JUpload,
       JDate,

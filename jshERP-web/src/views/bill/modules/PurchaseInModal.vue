@@ -75,19 +75,22 @@
           <template #buttonAfter>
             <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
-                <a-button @click="scanEnter" style="margin-right: 8px">扫码录入</a-button>
+                <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
               <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 8px 0 12px">
                 <a-input placeholder="请扫描商品条码并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
               <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px 24px 0 0">
-                <a-button @click="stopScan" style="margin-right: 8px">收起扫码</a-button>
+                <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
             <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
               <a-col :md="24" :sm="24">
-                <a-button @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
+                <a-button style="margin-left: 8px" @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
               </a-col>
+            </a-row>
+            <a-row :gutter="24" style="float:left;padding-bottom: 5px;padding-left:20px;">
+              <a-button icon="import" @click="onImport(prefixNo)">导入明细</a-button>
             </a-row>
           </template>
           <template #depotBatchSet>
@@ -180,6 +183,7 @@
       </a-form>
     </a-spin>
     <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
+    <import-item-modal ref="importItemModalForm" @ok="importItemModalFormOk"></import-item-modal>
     <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
     <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
@@ -193,6 +197,7 @@
 <script>
   import pick from 'lodash.pick'
   import ManyAccountModal from '../dialog/ManyAccountModal'
+  import ImportItemModal from '../dialog/ImportItemModal'
   import LinkBillList from '../dialog/LinkBillList'
   import VendorModal from '../../system/modules/VendorModal'
   import DepotModal from '../../system/modules/DepotModal'
@@ -213,6 +218,7 @@
     mixins: [JEditableTableMixin, BillModalMixin],
     components: {
       ManyAccountModal,
+      ImportItemModal,
       LinkBillList,
       VendorModal,
       DepotModal,

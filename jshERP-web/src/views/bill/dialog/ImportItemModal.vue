@@ -17,7 +17,7 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="模板">
-          <span><a href="/doc/bill_item_template.xls" target="_blank"><b>明细Excel模板[下载]</b></a></span>
+          <span><a :href="tmpUrl" target="_blank"><b>明细Excel模板[下载]</b></a></span>
         </a-form-item>
         <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="文件">
           <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader"
@@ -43,6 +43,7 @@
         title:"导入明细",
         visible: false,
         prefixNo: '',
+        tmpUrl: '',
         model: {},
         tokenHeader: {'X-Access-Token': Vue.ls.get(ACCESS_TOKEN)},
         labelCol: {
@@ -70,6 +71,13 @@
     methods: {
       add (prefixNo) {
         this.prefixNo = prefixNo
+        if(prefixNo === 'CGDD' || prefixNo === 'XSDD') {
+          this.tmpUrl = '/doc/bill_order_item_template.xls'
+        } else if(prefixNo === 'CGRK' || prefixNo === 'XSCK') {
+          this.tmpUrl = '/doc/bill_buy_sale_item_template.xls'
+        } else if(prefixNo === 'QTRK' || prefixNo === 'QTCK') {
+          this.tmpUrl = '/doc/bill_other_in_out_item_template.xls'
+        }
         this.form.resetFields()
         this.model = Object.assign({}, {})
         this.visible = true
