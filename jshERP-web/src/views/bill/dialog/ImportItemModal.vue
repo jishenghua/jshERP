@@ -72,11 +72,11 @@
       add (prefixNo) {
         this.prefixNo = prefixNo
         if(prefixNo === 'CGDD' || prefixNo === 'XSDD') {
-          this.tmpUrl = '/doc/bill_order_item_template.xls'
+          this.tmpUrl = '/doc/order_item_template.xls'
         } else if(prefixNo === 'CGRK' || prefixNo === 'XSCK') {
-          this.tmpUrl = '/doc/bill_buy_sale_item_template.xls'
+          this.tmpUrl = '/doc/buy_sale_item_template.xls'
         } else if(prefixNo === 'QTRK' || prefixNo === 'QTCK') {
-          this.tmpUrl = '/doc/bill_other_in_out_item_template.xls'
+          this.tmpUrl = '/doc/in_out_item_template.xls'
         }
         this.form.resetFields()
         this.model = Object.assign({}, {})
