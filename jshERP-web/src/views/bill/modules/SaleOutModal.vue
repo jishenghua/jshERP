@@ -81,8 +81,8 @@
               <a-col v-if="!scanStatus" :md="16" :sm="24" style="padding: 0 8px 0 12px">
                 <a-input placeholder="请扫条码或序列号并回车" v-model="scanBarCode" @pressEnter="scanPressEnter" ref="scanBarCode"/>
               </a-col>
-              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px 24px 0 0">
-                <a-button @click="stopScan" style="margin-right: 8px">收起扫码</a-button>
+              <a-col v-if="!scanStatus" :md="6" :sm="24" style="padding: 0px 12px 0 0">
+                <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
             <a-row :gutter="24" style="float:left;padding-bottom: 5px;">
