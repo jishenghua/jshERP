@@ -415,6 +415,12 @@ public class ExceptionConstants {
     //单据录入-单据附件不能超过规定数量
     public static final int DEPOT_HEAD_FILE_NUM_LIMIT_CODE = 8500025;
     public static final String DEPOT_HEAD_FILE_NUM_LIMIT_MSG = "抱歉，单据附件不能超过%s份";
+    //单据录入-完成采购的单据不能进行反审核
+    public static final int DEPOT_HEAD_PURCHASE_STATUS_TWO_CODE = 8500026;
+    public static final String DEPOT_HEAD_PURCHASE_STATUS_TWO_MSG = "抱歉，完成采购的单据不能进行反审核";
+    //单据录入-部分采购的单据不能进行反审核
+    public static final int DEPOT_HEAD_PURCHASE_STATUS_THREE_CODE = 8500027;
+    public static final String DEPOT_HEAD_PURCHASE_STATUS_THREE_MSG = "抱歉，部分采购的单据不能进行反审核";
 
     /**
      *  单据明细信息

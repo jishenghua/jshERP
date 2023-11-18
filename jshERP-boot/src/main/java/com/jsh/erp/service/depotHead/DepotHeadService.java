@@ -582,13 +582,21 @@ public class DepotHeadService {
         for(Long id: ids) {
             DepotHead depotHead = getDepotHead(id);
             if("0".equals(status)){
-                if("1".equals(depotHead.getStatus())) {
+                //进行反审核操作
+                if("1".equals(depotHead.getStatus()) && "0".equals(depotHead.getPurchaseStatus())) {
                     dhIds.add(id);
+                } else if("2".equals(depotHead.getPurchaseStatus())) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PURCHASE_STATUS_TWO_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_PURCHASE_STATUS_TWO_MSG));
+                } else if("3".equals(depotHead.getPurchaseStatus())) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PURCHASE_STATUS_THREE_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_PURCHASE_STATUS_THREE_MSG));
                 } else {
                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE,
                             String.format(ExceptionConstants.DEPOT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG));
                 }
             } else if("1".equals(status)){
+                //进行审核操作
                 if("0".equals(depotHead.getStatus())) {
                     dhIds.add(id);
                 } else {
