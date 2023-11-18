@@ -122,6 +122,8 @@ public class DepotHeadService {
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
             String [] organArray = getOrganArray(subType, purchaseStatus);
+            //以销定购，查看全部数据
+            creatorArray = StringUtil.isNotEmpty(purchaseStatus) ? null: creatorArray;
             Map<Long,String> personMap = personService.getPersonMap();
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
@@ -230,6 +232,8 @@ public class DepotHeadService {
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
             String [] organArray = getOrganArray(subType, purchaseStatus);
+            //以销定购，查看全部数据
+            creatorArray = StringUtil.isNotEmpty(purchaseStatus) ? null: creatorArray;
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
