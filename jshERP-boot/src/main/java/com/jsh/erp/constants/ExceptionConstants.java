@@ -373,9 +373,9 @@ public class ExceptionConstants {
     //单据录入-调入仓库与原仓库不能重复
     public static final int DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_CODE = 8500010;
     public static final String DEPOT_HEAD_ANOTHER_DEPOT_EQUAL_FAILED_MSG = "调入仓库与原仓库不能重复";
-    //单据删除-只有未审核的单据才能删除
+    //单据删除-只有未审核的单据才能删除，请先进行反审核
     public static final int DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_CODE = 8500011;
-    public static final String DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_MSG = "抱歉，只有未审核的单据才能删除";
+    public static final String DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_MSG = "抱歉，只有未审核的单据才能删除，请先进行反审核";
     //单据审核-只有未审核的单据才能审核
     public static final int DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_CODE = 8500012;
     public static final String DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_MSG = "抱歉，只有未审核的单据才能审核";
@@ -452,9 +452,9 @@ public class ExceptionConstants {
     //单据录入-明细不能为空
     public static final int ACCOUNT_HEAD_ROW_FAILED_CODE = 9500003;
     public static final String ACCOUNT_HEAD_ROW_FAILED_MSG = "单据明细不能为空";
-    //单据删除-只有未审核的单据才能删除
+    //单据删除-只有未审核的单据才能删除，请先进行反审核
     public static final int ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_CODE = 9500004;
-    public static final String ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG = "抱歉，只有未审核的单据才能删除";
+    public static final String ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG = "抱歉，只有未审核的单据才能删除，请先进行反审核";
     //财务信息录入-单据编号已经存在
     public static final int ACCOUNT_HEAD_BILL_NO_EXIST_CODE = 9500005;
     public static final String ACCOUNT_HEAD_BILL_NO_EXIST_MSG = "抱歉，单据编号已经存在";
