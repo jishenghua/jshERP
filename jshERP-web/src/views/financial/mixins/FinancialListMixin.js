@@ -60,14 +60,14 @@ export const FinancialListMixin = {
           }
         })
       } else {
-        this.$message.warning("抱歉，只有未审核的单据才能编辑！")
+        this.$message.warning("抱歉，只有未审核的单据才能编辑，请先进行反审核！")
       }
     },
     myHandleDelete(record) {
       if(record.status === '0') {
         this.handleDelete(record.id)
       } else {
-        this.$message.warning("抱歉，只有未审核的单据才能删除！")
+        this.$message.warning("抱歉，只有未审核的单据才能删除，请先进行反审核！")
       }
     },
     myHandleDetail(record, type, prefixNo) {
