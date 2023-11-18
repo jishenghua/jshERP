@@ -179,7 +179,6 @@
           materialParam: "",
           type: "其它",
           subType: "拆卸单",
-          roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",
           status: "",

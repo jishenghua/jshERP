@@ -179,7 +179,6 @@
           materialParam: "",
           type: "出库",
           subType: "调拨",
-          roleType: Vue.ls.get('roleType'),
           depotId: "",
           creator: "",
           status: "",

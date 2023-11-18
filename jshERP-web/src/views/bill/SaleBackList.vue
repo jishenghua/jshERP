@@ -202,7 +202,6 @@
           materialParam: "",
           type: "入库",
           subType: "销售退货",
-          roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",

@@ -160,7 +160,6 @@
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           subType: "调拨",
-          roleType: Vue.ls.get('roleType'),
           remark: ''
         },
         ipagination:{

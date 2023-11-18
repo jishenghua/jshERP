@@ -92,7 +92,6 @@
           number: "",
           type: "",
           subType: "",
-          roleType: Vue.ls.get('roleType'),
           status: "",
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },

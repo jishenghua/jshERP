@@ -117,7 +117,6 @@
           materialParam: "",
           type: "",
           subType: "",
-          roleType: Vue.ls.get('roleType'),
           status: ""
         },
         labelCol: {

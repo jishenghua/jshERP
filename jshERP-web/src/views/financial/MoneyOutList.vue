@@ -183,8 +183,7 @@
           accountId: "",
           status: "",
           remark: "",
-          number: "",
-          roleType: Vue.ls.get('roleType')
+          number: ""
         },
         prefixNo: 'FK',
         // 表头

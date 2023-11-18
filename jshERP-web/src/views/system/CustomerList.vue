@@ -106,8 +106,7 @@
           supplier:'',
           type:'客户',
           telephone:'',
-          phonenum:'',
-          roleType: Vue.ls.get('roleType')
+          phonenum:''
         },
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']

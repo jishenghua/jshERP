@@ -209,7 +209,6 @@
         this.showType = 'basic'
         this.queryParam.type = type
         this.queryParam.subType = subType
-        this.queryParam.roleType = Vue.ls.get('roleType')
         this.queryParam.status = status
         this.columns[0].title = organType
         this.model = Object.assign({}, {});
@@ -221,7 +220,6 @@
         this.showType = 'purchase'
         this.queryParam.type = type
         this.queryParam.subType = subType
-        this.queryParam.roleType = '全部数据'
         this.queryParam.status = status
         this.queryParam.purchaseStatus = purchaseStatus
         this.columns[0].title = organType

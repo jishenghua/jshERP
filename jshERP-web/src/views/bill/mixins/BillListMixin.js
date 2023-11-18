@@ -104,8 +104,7 @@ export const BillListMixin = {
     searchReset() {
       this.queryParam = {
         type: this.queryParam.type,
-        subType: this.queryParam.subType,
-        roleType: Vue.ls.get('roleType')
+        subType: this.queryParam.subType
       }
       this.loadData(1);
     },

@@ -132,7 +132,6 @@
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           type: "入库",
-          roleType: Vue.ls.get('roleType'),
         },
         ipagination:{
           pageSize: 11,

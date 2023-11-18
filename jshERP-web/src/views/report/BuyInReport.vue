@@ -136,8 +136,7 @@
           endTime: moment().format('YYYY-MM-DD'),
           organId: '',
           depotId: '',
-          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
-          roleType: Vue.ls.get('roleType'),
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList'))
         },
         ipagination:{
           pageSize: 11,

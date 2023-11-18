@@ -176,8 +176,7 @@
           handsPersonId: "",
           accountId: "",
           status: "",
-          remark: "",
-          roleType: Vue.ls.get('roleType')
+          remark: ""
         },
         prefixNo: 'SR',
         // 表头

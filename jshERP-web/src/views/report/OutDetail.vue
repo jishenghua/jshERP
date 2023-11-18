@@ -159,7 +159,6 @@
           depotId: '',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
-          roleType: Vue.ls.get('roleType'),
           type: "出库",
           creator: "",
           remark: ''

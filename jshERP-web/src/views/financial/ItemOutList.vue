@@ -176,8 +176,7 @@
           handsPersonId: "",
           accountId: "",
           status: "",
-          remark: "",
-          roleType: Vue.ls.get('roleType')
+          remark: ""
         },
         prefixNo: 'ZC',
         // 表头

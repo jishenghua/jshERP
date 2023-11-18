@@ -137,7 +137,6 @@
           organId: '',
           depotId: '',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
-          roleType: Vue.ls.get('roleType'),
         },
         ipagination:{
           pageSize: 11,

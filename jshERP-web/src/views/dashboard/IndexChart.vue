@@ -213,12 +213,12 @@
     },
     methods: {
       initInfo () {
-        getBuyAndSaleStatistics({"roleType": Vue.ls.get('roleType')}).then((res)=>{
+        getBuyAndSaleStatistics().then((res)=>{
           if(res.code === 200){
             this.statistics = res.data;
           }
         })
-        buyOrSalePrice({"roleType": Vue.ls.get('roleType')}).then(res=>{
+        buyOrSalePrice().then(res=>{
           if(res.code === 200){
             this.buyPriceData = res.data.buyPriceList;
             this.salePriceData = res.data.salePriceList;

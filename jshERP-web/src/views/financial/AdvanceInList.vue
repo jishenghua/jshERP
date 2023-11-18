@@ -166,8 +166,7 @@
           creator: "",
           handsPersonId: "",
           status: "",
-          remark: "",
-          roleType: Vue.ls.get('roleType')
+          remark: ""
         },
         prefixNo: 'SYF',
         // 表头

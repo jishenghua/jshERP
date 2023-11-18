@@ -221,7 +221,6 @@
           materialParam: "",
           type: "入库",
           subType: "采购",
-          roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",

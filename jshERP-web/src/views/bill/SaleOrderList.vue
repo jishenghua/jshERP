@@ -190,7 +190,6 @@
           materialParam: "",
           type: "其它",
           subType: "销售订单",
-          roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",

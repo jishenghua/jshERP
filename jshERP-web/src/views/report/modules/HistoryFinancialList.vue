@@ -151,8 +151,7 @@
           accountId: "",
           status: "",
           remark: "",
-          number: "",
-          roleType: Vue.ls.get('roleType')
+          number: ""
         },
         prefixNo: '',
         disableMixinCreated: true,
@@ -226,8 +225,7 @@
           organId: this.queryParam.organId,
           beginTime: this.queryParam.beginTime,
           endTime: this.queryParam.endTime,
-          type: this.queryParam.type,
-          roleType: Vue.ls.get('roleType')
+          type: this.queryParam.type
         }
         this.loadData(1);
       }

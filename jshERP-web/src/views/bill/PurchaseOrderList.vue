@@ -184,7 +184,6 @@
           materialParam: "",
           type: "其它",
           subType: "采购订单",
-          roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",

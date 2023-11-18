@@ -221,7 +221,6 @@
           materialParam: "",
           type: "出库",
           subType: "销售",
-          roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",

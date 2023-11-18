@@ -193,7 +193,6 @@
           materialParam: "",
           type: "出库",
           subType: "其它",
-          roleType: Vue.ls.get('roleType'),
           organId: "",
           depotId: "",
           creator: "",

@@ -83,8 +83,7 @@ export const FinancialListMixin = {
     },
     searchReset() {
       this.queryParam = {
-        type: this.queryParam.type,
-        roleType: Vue.ls.get('roleType')
+        type: this.queryParam.type
       }
       this.loadData(1);
     },
