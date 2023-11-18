@@ -107,7 +107,6 @@ public class DepotHeadController {
                                         @RequestParam(value = "depotId", required = false) Long depotId,
                                         @RequestParam("beginTime") String beginTime,
                                         @RequestParam("endTime") String endTime,
-                                        @RequestParam(value = "roleType", required = false) String roleType,
                                         @RequestParam("type") String type,
                                         @RequestParam(value = "creator", required = false) Long creator,
                                         @RequestParam("remark") String remark,
@@ -127,7 +126,7 @@ public class DepotHeadController {
                 }
             }
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
@@ -178,7 +177,6 @@ public class DepotHeadController {
                                          @RequestParam("beginTime") String beginTime,
                                          @RequestParam("endTime") String endTime,
                                          @RequestParam("type") String type,
-                                         @RequestParam(value = "roleType", required = false) String roleType,
                                          HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -198,9 +196,9 @@ public class DepotHeadController {
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, forceFlag, StringUtil.toNull(materialParam),
-                    depotList, oId, roleType, (currentPage-1)*pageSize, pageSize);
+                    depotList, oId, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, StringUtil.toNull(materialParam),
-                    depotList, oId, roleType);
+                    depotList, oId);
             map.put("total", total);
             map.put("rows", list);
             res.code = 200;
@@ -238,7 +236,6 @@ public class DepotHeadController {
                                                  @RequestParam("beginTime") String beginTime,
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam("subType") String subType,
-                                                 @RequestParam(value = "roleType", required = false) String roleType,
                                                  @RequestParam("remark") String remark,
                                                  HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -266,7 +263,7 @@ public class DepotHeadController {
                     depotFList.add(object.getLong("id"));
                 }
             }
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
@@ -464,8 +461,7 @@ public class DepotHeadController {
      */
     @GetMapping(value = "/getBuyAndSaleStatistics")
     @ApiOperation(value = "统计今日采购额、昨日采购额、本月采购额、今年采购额|销售额|零售额")
-    public BaseResponseInfo getBuyAndSaleStatistics(@RequestParam(value = "roleType", required = false) String roleType,
-                                                    HttpServletRequest request) {
+    public BaseResponseInfo getBuyAndSaleStatistics(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
@@ -475,7 +471,7 @@ public class DepotHeadController {
             String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
             String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
             Map<String, Object> map = depotHeadService.getBuyAndSaleStatistics(today, monthFirstDay,
-                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, roleType, request);
+                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, request);
             res.code = 200;
             res.data = map;
         } catch(Exception e){
@@ -494,15 +490,10 @@ public class DepotHeadController {
      */
     @GetMapping(value = "/getCreatorByCurrentUser")
     @ApiOperation(value = "根据当前用户获取操作员数组")
-    public BaseResponseInfo getCreatorByRoleType(HttpServletRequest request) {
+    public BaseResponseInfo getCreatorByCurrentUser(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<String, Object>();
         try {
-            String creator = "";
-            String roleType = redisService.getObjectFromSessionByKey(request,"roleType").toString();
-            if(StringUtil.isNotEmpty(roleType)) {
-                creator = depotHeadService.getCreatorByRoleType(roleType);
-            }
+            String creator = depotHeadService.getCreatorByCurrentUser();
             res.code = 200;
             res.data = creator;
         } catch (Exception e) {
@@ -533,11 +524,10 @@ public class DepotHeadController {
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
-        String roleType = StringUtil.getInfo(search, "roleType");
         String status = StringUtil.getInfo(search, "status");
-        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime, roleType,
+        List<DepotHeadVo4List> list = depotHeadService.debtList(organId, materialParam, number, beginTime, endTime,
                 status, (currentPage-1)*pageSize, pageSize);
-        int total = depotHeadService.debtListCount(organId, materialParam, number, beginTime, endTime, roleType, status);
+        int total = depotHeadService.debtListCount(organId, materialParam, number, beginTime, endTime, status);
         if (list != null) {
             objectMap.put("rows", list);
             objectMap.put("total", total);
@@ -558,7 +548,6 @@ public class DepotHeadController {
      * @param subType
      * @param beginTime
      * @param endTime
-     * @param roleType
      * @param status
      * @param mpList
      * @param request
@@ -574,12 +563,11 @@ public class DepotHeadController {
                            @RequestParam(value = "subType", required = false) String subType,
                            @RequestParam(value = "beginTime", required = false) String beginTime,
                            @RequestParam(value = "endTime", required = false) String endTime,
-                           @RequestParam(value = "roleType", required = false) String roleType,
                            @RequestParam(value = "status", required = false) String status,
                            @RequestParam(value = "mpList", required = false) String mpList,
                            HttpServletRequest request, HttpServletResponse response)throws Exception {
         try {
-            depotHeadService.debtExport(organId, materialParam, number, type, subType, beginTime, endTime, roleType,
+            depotHeadService.debtExport(organId, materialParam, number, type, subType, beginTime, endTime,
                     status, mpList, request, response);
         } catch (Exception e) {
             e.printStackTrace();

@@ -109,7 +109,7 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String roleType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
+    public List<DepotHeadVo4List> select(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
@@ -118,7 +118,7 @@ public class DepotHeadService {
             String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
             String billCategory = getBillCategory(subType);
             String [] depotArray = getDepotArray(subType);
-            String [] creatorArray = getCreatorArray(roleType);
+            String [] creatorArray = getCreatorArray();
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
             String [] organArray = getOrganArray(subType, purchaseStatus);
@@ -221,12 +221,12 @@ public class DepotHeadService {
         return resList;
     }
 
-    public Long countDepotHead(String type, String subType, String roleType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
+    public Long countDepotHead(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
         Long result=null;
         try{
             String [] depotArray = getDepotArray(subType);
-            String [] creatorArray = getCreatorArray(roleType);
+            String [] creatorArray = getCreatorArray();
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
             String [] organArray = getOrganArray(subType, purchaseStatus);
@@ -257,12 +257,11 @@ public class DepotHeadService {
 
     /**
      * 根据角色类型获取操作员数组
-     * @param roleType
      * @return
      * @throws Exception
      */
-    public String[] getCreatorArray(String roleType) throws Exception {
-        String creator = getCreatorByRoleType(roleType);
+    public String[] getCreatorArray() throws Exception {
+        String creator = getCreatorByCurrentUser();
         String [] creatorArray=null;
         if(StringUtil.isNotEmpty(creator)){
             creatorArray = creator.split(",");
@@ -305,17 +304,13 @@ public class DepotHeadService {
 
     /**
      * 根据角色类型获取操作员
-     * @param roleType
      * @return
      * @throws Exception
      */
-    public String getCreatorByRoleType(String roleType) throws Exception {
+    public String getCreatorByCurrentUser() throws Exception {
         String creator = "";
         User user = userService.getCurrentUser();
-        //再从后端获取一次角色类型，防止前端关闭了缓存功能
-        if(StringUtil.isEmpty(roleType)) {
-            roleType = userService.getRoleTypeByUserId(user.getId()).getType(); //角色类型
-        }
+        String roleType = userService.getRoleTypeByUserId(user.getId()).getType(); //角色类型
         if(BusinessConstants.ROLE_TYPE_PRIVATE.equals(roleType)) {
             creator = user.getId().toString();
         } else if(BusinessConstants.ROLE_TYPE_THIS_ORG.equals(roleType)) {
@@ -677,10 +672,10 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, Boolean forceFlag, String materialParam,
-                              List<Long> depotList, Integer oId, String roleType, Integer offset, Integer rows)throws Exception {
+                              List<Long> depotList, Integer oId, Integer offset, Integer rows)throws Exception {
         List<DepotHeadVo4InOutMCount> list = null;
         try{
-            String [] creatorArray = getCreatorArray(roleType);
+            String [] creatorArray = getCreatorArray();
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = getOrganArray(subType, "");
             list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, forceFlag, materialParam, depotList, oId,
@@ -692,10 +687,10 @@ public class DepotHeadService {
     }
 
     public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, Boolean forceFlag, String materialParam,
-                               List<Long> depotList, Integer oId, String roleType)throws Exception {
+                               List<Long> depotList, Integer oId)throws Exception {
         int result = 0;
         try{
-            String [] creatorArray = getCreatorArray(roleType);
+            String [] creatorArray = getCreatorArray();
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = getOrganArray(subType, "");
             result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, materialParam, depotList, oId,
@@ -1132,10 +1127,10 @@ public class DepotHeadService {
     }
 
     public Map<String, Object> getBuyAndSaleStatistics(String today, String monthFirstDay, String yesterdayBegin, String yesterdayEnd,
-                                                       String yearBegin, String yearEnd, String roleType, HttpServletRequest request) throws Exception {
+                                                       String yearBegin, String yearEnd, HttpServletRequest request) throws Exception {
         Long userId = userService.getUserId(request);
         String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
-        String [] creatorArray = getCreatorArray(roleType);
+        String [] creatorArray = getCreatorArray();
         Map<String, Object> map = new HashMap<>();
         //今日
         BigDecimal todayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
@@ -1232,12 +1227,12 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4List> debtList(Long organId, String materialParam, String number, String beginTime, String endTime,
-                                              String roleType, String status, Integer offset, Integer rows) {
+                                           String status, Integer offset, Integer rows) {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
             String depotIds = depotService.findDepotStrByCurrentUser();
             String [] depotArray=depotIds.split(",");
-            String [] creatorArray = getCreatorArray(roleType);
+            String [] creatorArray = getCreatorArray();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4List> list=depotHeadMapperEx.debtList(organId, creatorArray, status, number,
@@ -1252,12 +1247,12 @@ public class DepotHeadService {
     }
 
     public int debtListCount(Long organId, String materialParam, String number, String beginTime, String endTime,
-                                           String roleType, String status) {
+                             String status) {
         int total = 0;
         try {
             String depotIds = depotService.findDepotStrByCurrentUser();
             String[] depotArray = depotIds.split(",");
-            String[] creatorArray = getCreatorArray(roleType);
+            String[] creatorArray = getCreatorArray();
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime, BusinessConstants.DAY_LAST_TIME);
             total = depotHeadMapperEx.debtListCount(organId, creatorArray, status, number,
@@ -1269,7 +1264,7 @@ public class DepotHeadService {
     }
 
     public void debtExport(Long organId, String materialParam, String number, String type, String subType,
-                           String beginTime, String endTime, String roleType, String status, String mpList,
+                           String beginTime, String endTime, String status, String mpList,
                            HttpServletRequest request, HttpServletResponse response) {
         try {
             Long userId = userService.getUserId(request);
@@ -1277,7 +1272,7 @@ public class DepotHeadService {
             String billCategory = getBillCategory(subType);
             String depotIds = depotService.findDepotStrByCurrentUser();
             String[] depotArray = depotIds.split(",");
-            String[] creatorArray = getCreatorArray(roleType);
+            String[] creatorArray = getCreatorArray();
             status = StringUtil.isNotEmpty(status) ? status : null;
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime, BusinessConstants.DAY_LAST_TIME);

@@ -350,7 +350,6 @@ public class UserService {
         data.put("msgTip", msgTip);
         if(user!=null){
             String roleType = getRoleTypeByUserId(user.getId()).getType(); //角色类型
-            redisService.storageObjectBySession(token,"roleType",roleType);
             redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
             logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),

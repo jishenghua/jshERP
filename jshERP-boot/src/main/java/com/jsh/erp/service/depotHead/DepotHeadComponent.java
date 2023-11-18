@@ -33,7 +33,6 @@ public class DepotHeadComponent implements ICommonQuery {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
         String subType = StringUtil.getInfo(search, "subType");
-        String roleType = StringUtil.getInfo(search, "roleType");
         String hasDebt = StringUtil.getInfo(search, "hasDebt");
         String status = StringUtil.getInfo(search, "status");
         String purchaseStatus = StringUtil.getInfo(search, "purchaseStatus");
@@ -47,7 +46,7 @@ public class DepotHeadComponent implements ICommonQuery {
         Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
         Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
         String remark = StringUtil.getInfo(search, "remark");
-        return depotHeadService.select(type, subType, roleType, hasDebt, status, purchaseStatus, number, linkNumber,
+        return depotHeadService.select(type, subType, hasDebt, status, purchaseStatus, number, linkNumber,
                 beginTime, endTime, materialParam, organId, creator, depotId, accountId, remark, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -56,7 +55,6 @@ public class DepotHeadComponent implements ICommonQuery {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
         String subType = StringUtil.getInfo(search, "subType");
-        String roleType = StringUtil.getInfo(search, "roleType");
         String hasDebt = StringUtil.getInfo(search, "hasDebt");
         String status = StringUtil.getInfo(search, "status");
         String purchaseStatus = StringUtil.getInfo(search, "purchaseStatus");
@@ -70,7 +68,7 @@ public class DepotHeadComponent implements ICommonQuery {
         Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
         Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
         String remark = StringUtil.getInfo(search, "remark");
-        return depotHeadService.countDepotHead(type, subType, roleType, hasDebt, status, purchaseStatus, number, linkNumber,
+        return depotHeadService.countDepotHead(type, subType, hasDebt, status, purchaseStatus, number, linkNumber,
                 beginTime, endTime, materialParam, organId, creator, depotId, accountId, remark);
     }
 

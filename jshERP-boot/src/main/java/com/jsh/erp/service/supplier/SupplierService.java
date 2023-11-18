@@ -96,10 +96,10 @@ public class SupplierService {
         return list;
     }
 
-    public List<Supplier> select(String supplier, String type, String phonenum, String telephone, String roleType, int offset, int rows) throws Exception{
+    public List<Supplier> select(String supplier, String type, String phonenum, String telephone, int offset, int rows) throws Exception{
         List<Supplier> resList = new ArrayList<Supplier>();
         try{
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             List<Supplier> list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, creatorArray, offset, rows);
             for(Supplier s : list) {
                 Integer supplierId = s.getId().intValue();
@@ -152,10 +152,10 @@ public class SupplierService {
         return resList;
     }
 
-    public Long countSupplier(String supplier, String type, String phonenum, String telephone, String roleType) throws Exception{
+    public Long countSupplier(String supplier, String type, String phonenum, String telephone) throws Exception{
         Long result=null;
         try{
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             result=supplierMapperEx.countsBySupplier(supplier, type, phonenum, telephone, creatorArray);
         }catch(Exception e){
             JshException.readFail(logger, e);

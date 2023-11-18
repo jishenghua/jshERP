@@ -152,7 +152,6 @@ public class UserController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             redisService.deleteObjectBySession(request,"userId");
-            redisService.deleteObjectBySession(request,"roleType");
             redisService.deleteObjectBySession(request,"clientIp");
         } catch(Exception e){
             e.printStackTrace();
@@ -375,7 +374,8 @@ public class UserController {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             Map<String, Object> data = new HashMap<String, Object>();
-            String roleType = redisService.getObjectFromSessionByKey(request,"roleType").toString();
+            Long userId = userService.getUserId(request);
+            String roleType = userService.getRoleTypeByUserId(userId).getType(); //角色类型
             data.put("roleType", roleType);
             res.code = 200;
             res.data = data;
@@ -453,7 +453,6 @@ public class UserController {
             if(tenant.getExpireTime()!=null && tenant.getExpireTime().getTime()<System.currentTimeMillis()){
                 //租户已经过期，移除token
                 redisService.deleteObjectBySession(request,"userId");
-                redisService.deleteObjectBySession(request,"roleType");
                 redisService.deleteObjectBySession(request,"clientIp");
             }
             data.put("type", tenant.getType()); //租户类型，0免费租户，1付费租户

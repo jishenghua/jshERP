@@ -89,12 +89,12 @@ public class AccountHeadService {
         return list;
     }
 
-    public List<AccountHeadVo4ListEx> select(String type, String roleType, String billNo, String beginTime, String endTime,
+    public List<AccountHeadVo4ListEx> select(String type, String billNo, String beginTime, String endTime,
                                              Long organId, Long creator, Long handsPersonId, Long accountId, String status,
                                              String remark, String number, int offset, int rows) throws Exception{
         List<AccountHeadVo4ListEx> resList = new ArrayList<>();
         try{
-            String [] creatorArray = getCreatorArray(roleType);
+            String [] creatorArray = getCreatorArray();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
@@ -131,12 +131,12 @@ public class AccountHeadService {
         return resList;
     }
 
-    public Long countAccountHead(String type, String roleType, String billNo, String beginTime, String endTime,
+    public Long countAccountHead(String type, String billNo, String beginTime, String endTime,
                                  Long organId, Long creator, Long handsPersonId, Long accountId, String status,
                                  String remark, String number) throws Exception{
         Long result=null;
         try{
-            String [] creatorArray = getCreatorArray(roleType);
+            String [] creatorArray = getCreatorArray();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo,
@@ -149,17 +149,13 @@ public class AccountHeadService {
 
     /**
      * 根据角色类型获取操作员数组
-     * @param roleType
      * @return
      * @throws Exception
      */
-    private String[] getCreatorArray(String roleType) throws Exception {
+    private String[] getCreatorArray() throws Exception {
         String creator = "";
         User user = userService.getCurrentUser();
-        //再从后端获取一次角色类型，防止前端关闭了缓存功能
-        if(StringUtil.isEmpty(roleType)) {
-            roleType = userService.getRoleTypeByUserId(user.getId()).getType(); //角色类型
-        }
+        String roleType = userService.getRoleTypeByUserId(user.getId()).getType(); //角色类型
         if(BusinessConstants.ROLE_TYPE_PRIVATE.equals(roleType)) {
             creator = user.getId().toString();
         } else if(BusinessConstants.ROLE_TYPE_THIS_ORG.equals(roleType)) {

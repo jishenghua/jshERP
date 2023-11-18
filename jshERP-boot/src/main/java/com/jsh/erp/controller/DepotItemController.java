@@ -481,14 +481,13 @@ public class DepotItemController {
                                   @RequestParam(value = "depotId", required = false) Long depotId,
                                   @RequestParam("materialParam") String materialParam,
                                   @RequestParam("mpList") String mpList,
-                                  @RequestParam(value = "roleType", required = false) String roleType,
                                   HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
         endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
         try {
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             String [] organArray = null;
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
@@ -562,14 +561,13 @@ public class DepotItemController {
                                       @RequestParam(value = "depotId", required = false) Long depotId,
                                       @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
-                                      @RequestParam(value = "roleType", required = false) String roleType,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
         endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
         try {
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             String [] organArray = null;
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
@@ -644,14 +642,13 @@ public class DepotItemController {
                                     @RequestParam(value = "depotId", required = false) Long depotId,
                                     @RequestParam("materialParam") String materialParam,
                                     @RequestParam("mpList") String mpList,
-                                    @RequestParam(value = "roleType", required = false) String roleType,
                                     HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
         endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
         try {
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             String [] organArray = depotHeadService.getOrganArray("销售", "");
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
@@ -789,8 +786,8 @@ public class DepotItemController {
      */
     @GetMapping(value = "/buyOrSalePrice")
     @ApiOperation(value = "统计采购、销售、零售的总金额")
-    public BaseResponseInfo buyOrSalePrice(@RequestParam(value = "roleType", required = false) String roleType,
-                                           HttpServletRequest request, HttpServletResponse response)throws Exception {
+    public BaseResponseInfo buyOrSalePrice(HttpServletRequest request,
+                                           HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -800,8 +797,8 @@ public class DepotItemController {
             JSONArray buyPriceList = new JSONArray();
             for(String month: list) {
                 JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month, roleType);
-                BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month, roleType);
+                BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month);
+                BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month);
                 obj.put("x", month);
                 obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "buy", priceLimit, "***", request));
                 buyPriceList.add(obj);
@@ -810,8 +807,8 @@ public class DepotItemController {
             JSONArray salePriceList = new JSONArray();
             for(String month: list) {
                 JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month, roleType);
-                BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month, roleType);
+                BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month);
+                BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month);
                 obj.put("x", month);
                 obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "sale", priceLimit, "***", request));
                 salePriceList.add(obj);
@@ -820,8 +817,8 @@ public class DepotItemController {
             JSONArray retailPriceList = new JSONArray();
             for(String month: list) {
                 JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month, roleType);
-                BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month, roleType);
+                BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month);
+                BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month);
                 obj.put("x", month);
                 obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "retail", priceLimit, "***", request));
                 retailPriceList.add(obj);

@@ -365,10 +365,10 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public BigDecimal inOrOutPrice(String type, String subType, String month, String roleType) throws Exception{
+    public BigDecimal inOrOutPrice(String type, String subType, String month) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
             String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
@@ -387,10 +387,10 @@ public class DepotItemService {
      * @return
      * @throws Exception
      */
-    public BigDecimal inOrOutRetailPrice(String type, String subType, String month, String roleType) throws Exception{
+    public BigDecimal inOrOutRetailPrice(String type, String subType, String month) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            String [] creatorArray = depotHeadService.getCreatorArray(roleType);
+            String [] creatorArray = depotHeadService.getCreatorArray();
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
             String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;

@@ -32,7 +32,6 @@ public class AccountHeadComponent implements ICommonQuery {
     private List<?> getAccountHeadList(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
-        String roleType = StringUtil.getInfo(search, "roleType");
         String billNo = StringUtil.getInfo(search, "billNo");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
@@ -43,7 +42,7 @@ public class AccountHeadComponent implements ICommonQuery {
         String status = StringUtil.getInfo(search, "status");
         String remark = StringUtil.getInfo(search, "remark");
         String number = StringUtil.getInfo(search, "number");
-        return accountHeadService.select(type, roleType, billNo, beginTime, endTime, organId, creator, handsPersonId,
+        return accountHeadService.select(type, billNo, beginTime, endTime, organId, creator, handsPersonId,
                 accountId, status, remark, number, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -51,7 +50,6 @@ public class AccountHeadComponent implements ICommonQuery {
     public Long counts(Map<String, String> map)throws Exception {
         String search = map.get(Constants.SEARCH);
         String type = StringUtil.getInfo(search, "type");
-        String roleType = StringUtil.getInfo(search, "roleType");
         String billNo = StringUtil.getInfo(search, "billNo");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
@@ -62,7 +60,7 @@ public class AccountHeadComponent implements ICommonQuery {
         String status = StringUtil.getInfo(search, "status");
         String remark = StringUtil.getInfo(search, "remark");
         String number = StringUtil.getInfo(search, "number");
-        return accountHeadService.countAccountHead(type, roleType, billNo, beginTime, endTime, organId, creator, handsPersonId,
+        return accountHeadService.countAccountHead(type, billNo, beginTime, endTime, organId, creator, handsPersonId,
                 accountId, status, remark, number);
     }
 
