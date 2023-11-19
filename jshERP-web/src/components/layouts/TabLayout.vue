@@ -187,7 +187,7 @@
           }
         }
         return iframeArr.map((item) => {
-          const name = item.name || item.path.replace('/', '')
+          const name = item.path.replaceAll('/', '').replaceAll('.','')
           return {
             name: name,
             path: item.path,
