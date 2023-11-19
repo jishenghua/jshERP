@@ -16,6 +16,7 @@ const registerUser = (params)=>postAction("/user/registerUser",params);
 const addUser = (params)=>postAction("/user/addUser",params);
 const editUser = (params)=>putAction("/user/updateUser",params);
 const getUserList = (params)=>getAction("/user/getUserList",params);
+const getUserBtnByCurrentUser = (params)=>getAction("/user/getUserBtnByCurrentUser",params);
 const queryPermissionsByUser = (params)=>postAction("/function/findMenuByPNumber",params);
 //机构管理
 const queryOrganizationTreeList = (params)=>getAction("/organization/getOrganizationTree",params);
@@ -121,6 +122,7 @@ export {
   addUser,
   editUser,
   getUserList,
+  getUserBtnByCurrentUser,
   queryPermissionsByUser,
   queryOrganizationTreeList,
   queryOrganizationById,

@@ -45,9 +45,9 @@
   import UserMenu from '../tools/UserMenu'
   import SMenu from '../menu/'
   import Logo from '../tools/Logo'
-  import { getCurrentSystemConfig } from '@/api/api'
-
+  import { getCurrentSystemConfig, getUserBtnByCurrentUser } from '@/api/api'
   import { mixin } from '@/utils/mixin.js'
+  import Vue from 'vue'
 
   export default {
     name: 'GlobalHeader',
@@ -164,6 +164,11 @@
         getCurrentSystemConfig().then((res) => {
           if(res.code === 200 && res.data){
             this.companyName = res.data.companyName
+          }
+        })
+        getUserBtnByCurrentUser().then((res) => {
+          if(res.code === 200 && res.data){
+            Vue.ls.set('winBtnStrList', res.data.userBtn, 7 * 24 * 60 * 60 * 1000)
           }
         })
       },
