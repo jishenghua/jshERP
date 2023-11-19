@@ -388,6 +388,30 @@ public class UserController {
     }
 
     /**
+     * 获取当前用户的按钮权限
+     * @param request
+     * @return
+     */
+    @GetMapping("/getUserBtnByCurrentUser")
+    @ApiOperation(value = "获取当前用户的按钮权限")
+    public BaseResponseInfo getUserBtnByCurrentUser(HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> data = new HashMap<>();
+            Long userId = userService.getUserId(request);
+            JSONArray btnStrArr = userService.getBtnStrArrById(userId);
+            data.put("userBtn", btnStrArr);
+            res.code = 200;
+            res.data = data;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取失败";
+        }
+        return res;
+    }
+
+    /**
      * 获取随机校验码
      * @param response
      * @param key
