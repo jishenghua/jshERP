@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { login, logout } from "@/api/login"
 import { ACCESS_TOKEN, USER_NAME,USER_INFO,UI_CACHE_DB_DICT_DATA,USER_ID,USER_LOGIN_NAME,CACHE_INCLUDED_ROUTES } from "@/store/mutation-types"
 import { welcome } from "@/utils/util"
-import { queryPermissionsByUser } from '@/api/api'
+import { queryPermissionsByUser, getUserBtnByCurrentUser } from '@/api/api'
 import { getAction } from '@/api/manage'
 
 const user = {
@@ -97,6 +97,17 @@ const user = {
           } else {
             reject('getPermissionList: permissions must be a non-null array !')
           }
+          resolve(response)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    // 获取用户的按钮权限
+    GetUserBtnList({ commit }) {
+      return new Promise((resolve, reject) => {
+        getUserBtnByCurrentUser().then(response => {
           resolve(response)
         }).catch(error => {
           reject(error)

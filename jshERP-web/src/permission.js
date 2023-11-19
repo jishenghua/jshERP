@@ -3,7 +3,6 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import notification from 'ant-design-vue/es/notification'
 import { USER_ID,INDEX_MAIN_PAGE_PATH } from '@/store/mutation-types'
 import { generateIndexRouter } from "@/utils/util"
 
@@ -25,6 +24,10 @@ router.beforeEach((to, from, next) => {
           if (menuData === null || menuData === "" || menuData === undefined) {
             return;
           }
+          // 缓存用户的按钮权限
+          store.dispatch('GetUserBtnList').then(res => {
+            Vue.ls.set('winBtnStrList', res.data.userBtn, 7 * 24 * 60 * 60 * 1000)
+          })
           let constRoutes = [];
           constRoutes = generateIndexRouter(menuData);
           // 添加主界面路由
