@@ -11,8 +11,8 @@
     :id="prefixNo"
     :style="modalStyle">
     <template slot="footer">
-      <a-button key="back" @click="handleCancel">关闭</a-button>
-      <a-button type="primary" v-if="showOkFlag" :loading="confirmLoading" @click="handleOk">确定</a-button>
+      <a-button key="back" @click="handleCancel">取消</a-button>
+      <a-button type="primary" v-if="showOkFlag" :loading="confirmLoading" @click="handleOk">保存</a-button>
     </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">

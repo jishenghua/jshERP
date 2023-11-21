@@ -12,7 +12,7 @@
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
-      cancelText="关闭"
+      cancelText="取消"
       style="top:10%;height: 70%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">

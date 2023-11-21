@@ -12,11 +12,12 @@
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
-      cancelText="关闭"
+      cancelText="取消"
+      okText="保存"
       style="top:15%;height: 55%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
-          关闭
+          取消
         </a-button>
       </template>
       <a-spin :spinning="confirmLoading">

@@ -15,7 +15,8 @@
       @ok="handleOk"
       @cancel="handleCancel"
       style="top:100px;height: 50%;"
-      cancelText="关闭">
+      cancelText="取消"
+      okText="保存">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">

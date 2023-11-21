@@ -11,11 +11,12 @@
       :mask="isDesktop()"
       :maskClosable="false"
       @cancel="handleCancel"
-      cancelText="关闭"
+      cancelText="取消"
+      okText="保存"
       style="top:5%;height: 90%;">
       <template slot="footer">
         <a-button key="back" @click="handleCancel">
-          关闭
+          取消
         </a-button>
       </template>
       <a-spin :spinning="confirmLoading">

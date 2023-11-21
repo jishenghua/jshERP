@@ -12,7 +12,8 @@
       :maskClosable="false"
       @ok="handleOk"
       @cancel="handleCancel"
-      cancelText="关闭"
+      cancelText="取消"
+      okText="保存"
       style="top:25%;height: 40%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form" id="platformConfigModal">

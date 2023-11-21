@@ -14,7 +14,8 @@
       :okButtonProps="{ props: {disabled: disableSubmit} }"
       @ok="handleOk"
       @cancel="handleCancel"
-      cancelText="关闭"
+      cancelText="取消"
+      okText="保存"
       style="top:50px;height: 80%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form" id="organizationModal">
