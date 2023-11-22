@@ -399,8 +399,11 @@ public class UserController {
         try {
             Map<String, Object> data = new HashMap<>();
             Long userId = userService.getUserId(request);
+            String loginName = userService.getUser(userId).getLoginName();
             JSONArray btnStrArr = userService.getBtnStrArrById(userId);
-            data.put("userBtn", btnStrArr);
+            if(!"admin".equals(loginName)) {
+                data.put("userBtn", btnStrArr);
+            }
             res.code = 200;
             res.data = data;
         } catch(Exception e){
