@@ -57,6 +57,9 @@
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                 <a>删除</a>
               </a-popconfirm>
+              <a-modal v-model="roleModalVisible" title="操作提示" @ok="handleRoleTip(record)">
+                <p>保存角色已经操作成功！现在继续<b>分配功能</b>吗？</p>
+              </a-modal>
             </span>
             <span slot="typeTitle">
               数据类型
@@ -80,10 +83,10 @@
         </div>
         <!-- table区域-end -->
         <!-- 表单区域 -->
-        <role-modal ref="modalForm" @ok="modalFormOk"></role-modal>
+        <role-modal ref="modalForm" @ok="roleModalFormOk"></role-modal>
         <role-function-modal ref="roleFunctionModal" @ok="roleFunctionModalFormOk"></role-function-modal>
         <role-push-btn-modal ref="rolePushBtnModal" @ok="modalFormOk"></role-push-btn-modal>
-        <a-modal v-model="roleFunctionModalVisible" title="操作提示" @ok="handleTipOk">
+        <a-modal v-model="roleFunctionModalVisible" title="操作提示" @ok="handleRoleFunctionTip">
           <p>分配功能已经操作成功！现在继续<b>分配按钮</b>吗？</p>
         </a-modal>
       </a-card>
@@ -109,6 +112,7 @@
     data () {
       return {
         description: '角色管理页面',
+        roleModalVisible: false,
         roleFunctionModalVisible: false,
         currentRoleId: '',
         labelCol: {
@@ -185,21 +189,37 @@
         this.$refs.rolePushBtnModal.title = "分配按钮";
         this.$refs.rolePushBtnModal.disableSubmit = false;
       },
+      roleModalFormOk() {
+        //重载列表
+        this.loadData()
+        this.roleModalVisible = true
+      },
       roleFunctionModalFormOk(id) {
         //重载列表
-        this.loadData();
-        this.roleFunctionModalVisible = true;
+        this.loadData()
+        this.roleFunctionModalVisible = true
         this.currentRoleId = id
       },
-      handleTipOk() {
+      handleRoleTip(record) {
+        if(record) {
+          this.roleModalVisible = false
+          this.handleSetFunction(record)
+        }
+      },
+      handleRoleFunctionTip() {
         if(this.currentRoleId) {
-          this.roleFunctionModalVisible = false;
+          this.roleFunctionModalVisible = false
           this.handleSetPushBtn(this.currentRoleId)
         }
       },
+      handleAdd: function () {
+        this.$refs.modalForm.add();
+        this.$refs.modalForm.title = "新增【保存之后请继续分配功能】";
+        this.$refs.modalForm.disableSubmit = false;
+      },
       handleEdit: function (record) {
         this.$refs.modalForm.edit(record);
-        this.$refs.modalForm.title = "编辑";
+        this.$refs.modalForm.title = "编辑【保存之后请继续分配功能】";
         this.$refs.modalForm.disableSubmit = false;
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
