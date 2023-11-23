@@ -12,4 +12,10 @@
         )
     </update>
 
+    <select id="getBasicDataByKeyIdAndType" resultType="com.jsh.erp.datasource.entities.UserBusiness">
+        select * from jsh_user_business
+        where key_id=#{keyId} and type=#{type}
+        and ifnull(delete_flag,'0') !='1'
+    </select>
+
 </mapper>

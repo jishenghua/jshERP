@@ -2,16 +2,14 @@ package com.jsh.erp.service.userBusiness;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.UserBusiness;
+import com.jsh.erp.datasource.entities.UserBusinessExample;
 import com.jsh.erp.datasource.mappers.UserBusinessMapper;
 import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
 import com.jsh.erp.exception.JshException;
-import com.jsh.erp.service.CommonQueryManager;
-import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,7 +19,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserBusinessService {
@@ -35,12 +34,6 @@ public class UserBusinessService {
     private LogService logService;
     @Resource
     private UserService userService;
-
-    @Resource
-    private FunctionService functionService;
-
-    @Resource
-    private CommonQueryManager configResourceManager;
 
     public UserBusiness getUserBusiness(long id)throws Exception {
         UserBusiness result=null;
@@ -69,14 +62,6 @@ public class UserBusinessService {
         UserBusiness userBusiness = JSONObject.parseObject(obj.toJSONString(), UserBusiness.class);
         int result=0;
         try{
-            String token = "";
-            if(request!=null) {
-                token = request.getHeader("X-Access-Token");
-                Long tenantId = Tools.getTenantIdByToken(token);
-                if(tenantId!=0L) {
-                    userBusiness.setTenantId(tenantId);
-                }
-            }
             String value = userBusiness.getValue();
             String newValue = value.replaceAll(",","\\]\\[");
             newValue = newValue.replaceAll("\\[0\\]","").replaceAll("\\[\\]","");
@@ -139,23 +124,7 @@ public class UserBusinessService {
     public List<UserBusiness> getBasicData(String keyId, String type)throws Exception{
         List<UserBusiness> list=null;
         try{
-            UserBusinessExample example = new UserBusinessExample();
-            example.createCriteria().andKeyIdEqualTo(keyId).andTypeEqualTo(type)
-                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-            list= userBusinessMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
-    }
-
-    public List<UserBusiness> getListBy(String keyId, String type)throws Exception{
-        List<UserBusiness> list=null;
-        try{
-            UserBusinessExample example = new UserBusinessExample();
-            example.createCriteria().andKeyIdEqualTo(keyId).andTypeEqualTo(type)
-                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-            list= userBusinessMapper.selectByExample(example);
+            list= userBusinessMapperEx.getBasicDataByKeyIdAndType(keyId, type);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

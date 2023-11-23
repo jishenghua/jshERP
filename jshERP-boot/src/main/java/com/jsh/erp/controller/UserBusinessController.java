@@ -1,14 +1,10 @@
 package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.UserBusiness;
-import com.jsh.erp.exception.BusinessRunTimeException;
-import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -34,8 +30,6 @@ public class UserBusinessController {
 
     @Resource
     private UserBusinessService userBusinessService;
-    @Resource
-    private UserService userService;
 
     /**
      * 获取信息
