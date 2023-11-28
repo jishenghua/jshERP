@@ -806,7 +806,7 @@ export const BillModalMixin = {
               let newDetailArr = []
               for(let detail of detailArr){
                 if(detail.barCode) {
-                  //如果条码重复，就在给原来的数量加1
+                  //如果扫码结果和条码重复，就在给原来的数量加1
                   if(detail.barCode === this.scanBarCode) {
                     detail.operNumber = (detail.operNumber-0)+1
                     //由于改变了商品数量，需要同时更新相关金额和价税合计
@@ -815,6 +815,11 @@ export const BillModalMixin = {
                     detail.allPrice = (unitPrice*detail.operNumber).toFixed(2)-0
                     detail.taxMoney = ((taxRate*0.01)*detail.allPrice).toFixed(2)-0
                     detail.taxLastMoney = (detail.allPrice + detail.taxMoney).toFixed(2)-0
+                    hasFinished = true
+                  }
+                  //如果扫码结果和序列号重复，就直接跳过
+                  if(detail.snList === this.scanBarCode) {
+                    this.$message.warning('抱歉，已经扫描过该序列号！');
                     hasFinished = true
                   }
                   newDetailArr.push(detail)
