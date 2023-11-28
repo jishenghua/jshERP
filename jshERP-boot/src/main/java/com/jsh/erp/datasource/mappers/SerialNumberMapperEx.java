@@ -54,4 +54,8 @@ public interface SerialNumberMapperEx {
                                     @Param("name") String name,
                                     @Param("depotId") Long depotId,
                                     @Param("barCode") String barCode);
+
+    int getIsNotSellCountByParam(
+            @Param("materialId") Long materialId,
+            @Param("serialNumber") String serialNumber);
 }

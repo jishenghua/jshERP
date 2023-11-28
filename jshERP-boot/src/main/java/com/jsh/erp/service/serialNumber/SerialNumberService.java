@@ -7,8 +7,6 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
-import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.user.UserService;
@@ -26,12 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Description
- *
- * @Author: cjl
- * @Date: 2019/1/21 16:33
- */
 @Service
 public class SerialNumberService {
     private Logger logger = LoggerFactory.getLogger(SerialNumberService.class);
@@ -150,7 +142,6 @@ public class SerialNumberService {
     }
 
     /**
-     * create by: qiankunpingtai
      *  逻辑删除序列号信息
      * create time: 2019/3/27 17:43
      * @Param: ids
@@ -188,11 +179,9 @@ public class SerialNumberService {
         }
         return list==null?0:list.size();
     }
+
     /**
-     * create by: cjl
-     * description:
      *  根据商品名称判断商品名称是否有效
-     * create time: 2019/1/23 17:04
      * @Param: materialName
      * @return Long 满足使用条件的商品的id
      */
@@ -225,17 +214,13 @@ public class SerialNumberService {
         }
         return null;
     }
+
     /**
-     * create by: cjl
-     * description:
      *  根据商品名称判断给商品添加序列号是否可行
      *  1、根据商品名称必须查询到唯一的商品
      *  2、该商品必须已经启用序列号
      *  3、该商品已绑定序列号数量小于商品现有库存
-     *  2019-02-01
      *  用商品的库存去限制序列号的添加有点不合乎道理，去掉此限制
-     * create time: 2019/1/23 17:04
-     * @Param: materialName
      * @return Long 满足使用条件的商品的id
      */
     public Long getSerialNumberMaterialIdByBarCode(String materialCode)throws Exception{
@@ -254,58 +239,40 @@ public class SerialNumberService {
     }
 
     /**
-     * create by: cjl
-     * description:
      * 出库时判断序列号库存是否足够，
      * 同时将对应的序列号绑定单据
-     * create time: 2019/1/24 16:24
-     * @Param: List<DepotItem>
-     * @return void
      */
     public void checkAndUpdateSerialNumber(DepotItem depotItem, String outBillNo,User userInfo, String snList) throws Exception{
         if(depotItem!=null){
             sellSerialNumber(depotItem.getMaterialId(), outBillNo, snList,userInfo);
         }
     }
+
     /**
-     *
-     *
-     * */
-    /**
-     * create by: cjl
-     * description:
-     * 卖出序列号
-     * create time: 2019/1/25 9:17
-     * @Param: materialId
-     * @Param: depotheadId
-     * @Param: isSell 卖出'1'
-     * @Param: Count 卖出或者赎回的数量
-     * @return com.jsh.erp.datasource.entities.SerialNumberEx
+     * 出售序列号
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int sellSerialNumber(Long materialId, String outBillNo, String snList, User user) throws Exception{
-        int result=0;
-        try{
-            //将中文的逗号批量替换为英文逗号
-            snList = snList.replaceAll("，",",");
-            String [] snArray=snList.split(",");
-            result = serialNumberMapperEx.sellSerialNumber(materialId, outBillNo, snArray, new Date(),user==null?null:user.getId());
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
+    public void sellSerialNumber(Long materialId, String outBillNo, String snList, User user) throws Exception{
+        //将中文的逗号批量替换为英文逗号
+        snList = snList.replaceAll("，",",");
+        String [] snArray=snList.split(",");
+        for (String sn : snArray) {
+            int isNotSellCount = serialNumberMapperEx.getIsNotSellCountByParam(materialId, sn);
+            if (isNotSellCount == 0) {
+                //如果序列号不存在或者已售出则进行提示，不再进行后续的出售操作
+                throw new BusinessRunTimeException(ExceptionConstants.SERIAL_NUMBERE_NOT_EXISTS_CODE,
+                        String.format(ExceptionConstants.SERIAL_NUMBERE_NOT_EXISTS_MSG, sn));
+            }
         }
-        return result;
+        serialNumberMapperEx.sellSerialNumber(materialId, outBillNo, snArray, new Date(), user == null ? null : user.getId());
     }
 
     /**
-     * create by: cjl
-     * description:
      * 赎回序列号
-     * create time: 2019/1/25 9:17
      * @Param: materialId
-     * @Param: depotheadId
-     * @Param: isSell 赎回'0'
-     * @Param: Count 卖出或者赎回的数量
-     * @return com.jsh.erp.datasource.entities.SerialNumberEx
+     * @Param: depotheadId
+     * @Param: isSell 赎回'0'
+     * @Param: Count 卖出或者赎回的数量
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int cancelSerialNumber(Long materialId, String outBillNo,int count,User user) throws Exception{
@@ -319,15 +286,7 @@ public class SerialNumberService {
     }
 
     /**
-     * create by: cjl
-     * description:
-     *批量添加序列号，最多500个
-     * create time: 2019/1/29 15:11
-     * @Param: materialName
-     * @Param: serialNumberPrefix
-     * @Param: batAddTotal
-     * @Param: remark
-     * @return java.lang.Object
+     * 批量添加序列号，最多500个
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batAddSerialNumber(String materialCode, String serialNumberPrefix, Integer batAddTotal, String remark)throws Exception {
@@ -394,7 +353,7 @@ public class SerialNumberService {
     }
 
     public void addSerialNumberByBill(String type, String subType, String inBillNo, Long materialId, Long depotId, String snList) throws Exception {
-        //录入序列号的时候不能重复
+        //录入序列号的时候不能和库里面的重复-入库
         if ((BusinessConstants.SUB_TYPE_PURCHASE.equals(subType) ||
                 BusinessConstants.SUB_TYPE_OTHER.equals(subType) ||
                 BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)||

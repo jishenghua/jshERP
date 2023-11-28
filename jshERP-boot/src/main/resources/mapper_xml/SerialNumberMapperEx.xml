@@ -210,4 +210,12 @@
         )
         and ifnull(ser.delete_flag,'0') !='1'
     </select>
+
+    <select id="getIsNotSellCountByParam" resultType="java.lang.Integer">
+        select count(1) from jsh_serial_number
+        where material_id = #{materialId}
+        and serial_number = #{serialNumber}
+        and is_sell = '0'
+        and ifnull(delete_flag,'0') !='1'
+    </select>
 </mapper>

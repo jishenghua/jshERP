@@ -484,15 +484,9 @@ public class ExceptionConstants {
     /**序列号已存在*/
     public static final int SERIAL_NUMBERE_ALREADY_EXISTS_CODE = 10500000;
     public static final String SERIAL_NUMBERE_ALREADY_EXISTS_MSG = "序列号:%s已存在";
-    /**序列号不能为为空*/
-    public static final int SERIAL_NUMBERE_NOT_BE_EMPTY_CODE = 10500001;
-    public static final String SERIAL_NUMBERE_NOT_BE_EMPTY_MSG = "序列号不能为为空";
-    /**商品%s下序列号不充足，请补充后重试*/
-    public static final int MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_CODE = 10500002;
-    public static final String MATERIAL_SERIAL_NUMBERE_NOT_ENOUGH_MSG = "商品:%s下序列号不充足，请补充后重试";
-    /**删序列号信息失败*/
-    public static final int SERIAL_NUMBERE_DELETE_FAILED_CODE = 10500003;
-    public static final String SERIAL_NUMBERE_DELETE_FAILED_MSG = "删序列号信息失败";
+    /**序列号不存在或者已经出库*/
+    public static final int SERIAL_NUMBERE_NOT_EXISTS_CODE = 10500001;
+    public static final String SERIAL_NUMBERE_NOT_EXISTS_MSG = "序列号:%s不存在或者已经出库";
     /**
      * 机构信息
      * type = 110
