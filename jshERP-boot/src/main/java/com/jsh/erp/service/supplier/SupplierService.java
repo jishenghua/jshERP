@@ -655,11 +655,6 @@ public class SupplierService {
                 ubObj.put("keyId", userId);
                 ubObj.put("value", ubKey);
                 UserBusiness userBusiness = JSONObject.parseObject(ubObj.toJSONString(), UserBusiness.class);
-                String token = request.getHeader("X-Access-Token");
-                Long tenantId = Tools.getTenantIdByToken(token);
-                if(tenantId!=0L) {
-                    userBusiness.setTenantId(tenantId);
-                }
                 userBusinessMapper.insertSelective(userBusiness);
             } else {
                 UserBusiness ubInfo = ubList.get(0);
