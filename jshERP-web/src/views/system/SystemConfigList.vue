@@ -50,13 +50,13 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库权限">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="depotFlagSwitch" @change="onDepotChange"></a-switch>
-              （如果启用则需要到<b>用户管理</b>进行<b>分配仓库</b>）
+              （启用后，需要到<b>用户管理</b>进行<b>分配仓库</b>）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户权限">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerFlagSwitch" @change="onCustomerChange"></a-switch>
-              （如果启用则需要到<b>用户管理</b>进行<b>分配客户</b>）
+              （启用后，需要到<b>用户管理</b>进行<b>分配客户</b>）
             </a-form-item>
           </a-col>
         </a-row>
@@ -64,13 +64,13 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支持负库存">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
-              （如果启用则单据<b>支持负库存</b>录入）
+              （启用后，单据<b>支持负库存</b>录入）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="以销定购">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="purchaseBySaleFlagSwitch" @change="onPurchaseBySaleChange"></a-switch>
-              （如果启用则根据<b>销售订单</b>来定制<b>采购订单</b>，进货后再发给客户）
+              （启用后，根据<b>销售订单</b>来定制<b>采购订单</b>，进货后再发给客户）
             </a-form-item>
           </a-col>
         </a-row>
@@ -78,13 +78,13 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="超出关联单据">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="overLinkBillFlagSwitch" @change="onOverLinkBillChange"></a-switch>
-              （如果启用则允许当前单据<b>超出关联单据</b>的商品数量进行出入库）
+              （启用后，允许当前单据<b>超出关联单据</b>的商品数量进行出入库）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="更新单价">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="updateUnitPriceFlagSwitch" @change="onUpdateUnitPriceChange"></a-switch>
-              （如果启用则会根据单据录入自动更新商品单价，默认是启用状态）
+              （启用后，会根据单据录入自动更新商品单价，默认是启用状态）
             </a-form-item>
           </a-col>
         </a-row>
@@ -92,10 +92,15 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="强审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="forceApprovalFlagSwitch" @change="onForceApprovalChange"></a-switch>
-              （如果启用则只有<b>已审核</b>的单据才生效，涉及库存和报表，需批量修正库存）
+              （启用后，只有<b>已审核</b>的单据才生效，涉及库存和报表，需批量修正库存）
             </a-form-item>
           </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="出入库管理">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="inOutManageFlagSwitch" @change="onInOutManageChange"></a-switch>
+              （启用后，采购入库退货、销售出库退货单据都会经过其它出入库单据）
+            </a-form-item>
+          </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24" v-if="isShowApproval">
           <a-col :lg="12" :md="12" :sm="24">
@@ -108,7 +113,7 @@
                   {{ item.value }}
                 </a-select-option>
               </a-select>
-              <br/>（如果启用多级审核，则需配置流程，开启会自动刷新浏览器）
+              <br/>（启用后，多级审核需配置流程，开启会自动刷新浏览器）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
@@ -151,6 +156,7 @@
         overLinkBillFlagSwitch: false, //超出关联单据状态
         updateUnitPriceFlagSwitch: true, //更新单价状态
         forceApprovalFlagSwitch: false, //强审核
+        inOutManageFlagSwitch: false, //出入库管理
         multiLevelApprovalFlagSwitch: false, //多级审核
         originalMultiLevelApprovalFlag: '0', //原始多级审核状态
         multiBillTypeSelect: [], //单据类型
@@ -231,6 +237,9 @@
       onForceApprovalChange(checked) {
         this.model.forceApprovalFlag = checked?'1':'0'
       },
+      onInOutManageChange(checked) {
+        this.model.inOutManageFlag = checked?'1':'0'
+      },
       onMultiLevelApprovalChange(checked) {
         this.model.multiLevelApprovalFlag = checked?'1':'0'
         if(!checked) {
@@ -275,6 +284,9 @@
               }
               if (record.forceApprovalFlag != null) {
                 this.forceApprovalFlagSwitch = record.forceApprovalFlag == '1' ? true : false;
+              }
+              if (record.inOutManageFlag != null) {
+                this.inOutManageFlagSwitch = record.inOutManageFlag == '1' ? true : false;
               }
               if (record.multiLevelApprovalFlag != null) {
                 this.multiLevelApprovalFlagSwitch = record.multiLevelApprovalFlag == '1' ? true : false;
@@ -355,6 +367,7 @@
         this.overLinkBillFlagSwitch = false
         this.updateUnitPriceFlagSwitch = true
         this.forceApprovalFlagSwitch = false
+        this.inOutManageFlagSwitch = false
         this.multiLevelApprovalFlagSwitch = false
         this.multiBillTypeSelect = []
       }
