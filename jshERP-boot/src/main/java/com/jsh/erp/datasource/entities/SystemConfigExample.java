@@ -1284,6 +1284,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andInOutManageFlagIsNull() {
+            addCriterion("in_out_manage_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagIsNotNull() {
+            addCriterion("in_out_manage_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagEqualTo(String value) {
+            addCriterion("in_out_manage_flag =", value, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagNotEqualTo(String value) {
+            addCriterion("in_out_manage_flag <>", value, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagGreaterThan(String value) {
+            addCriterion("in_out_manage_flag >", value, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("in_out_manage_flag >=", value, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagLessThan(String value) {
+            addCriterion("in_out_manage_flag <", value, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagLessThanOrEqualTo(String value) {
+            addCriterion("in_out_manage_flag <=", value, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagLike(String value) {
+            addCriterion("in_out_manage_flag like", value, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagNotLike(String value) {
+            addCriterion("in_out_manage_flag not like", value, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagIn(List<String> values) {
+            addCriterion("in_out_manage_flag in", values, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagNotIn(List<String> values) {
+            addCriterion("in_out_manage_flag not in", values, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagBetween(String value1, String value2) {
+            addCriterion("in_out_manage_flag between", value1, value2, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andInOutManageFlagNotBetween(String value1, String value2) {
+            addCriterion("in_out_manage_flag not between", value1, value2, "inOutManageFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

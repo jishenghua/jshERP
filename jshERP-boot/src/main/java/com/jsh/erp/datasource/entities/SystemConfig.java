@@ -35,6 +35,8 @@ public class SystemConfig {
 
     private String overLinkBillFlag;
 
+    private String inOutManageFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -173,6 +175,14 @@ public class SystemConfig {
 
     public void setOverLinkBillFlag(String overLinkBillFlag) {
         this.overLinkBillFlag = overLinkBillFlag == null ? null : overLinkBillFlag.trim();
+    }
+
+    public String getInOutManageFlag() {
+        return inOutManageFlag;
+    }
+
+    public void setInOutManageFlag(String inOutManageFlag) {
+        this.inOutManageFlag = inOutManageFlag == null ? null : inOutManageFlag.trim();
     }
 
     public Long getTenantId() {
