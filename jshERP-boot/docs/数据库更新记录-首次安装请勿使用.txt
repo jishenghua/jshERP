@@ -1540,3 +1540,10 @@ update jsh_function set push_btn='1,3' where number in ('01020101','01020102','0
 -- 将经手人里面的业务员改为销售员
 -- --------------------------------------------------------
 update jsh_person set type='销售员' where type='业务员';
+
+-- --------------------------------------------------------
+-- 时间 2023年12月01日
+-- by jishenghua
+-- 给系统参数表增加出入库管理启用标记，开启后，采购入库、采购退货、销售出库、销售退货单据都会经过出入库流程，适合有独立仓库的场景。
+-- --------------------------------------------------------
+alter table jsh_system_config add in_out_manage_flag varchar(1) DEFAULT '0' COMMENT '出入库管理启用标记，0未启用，1启用' after over_link_bill_flag;
