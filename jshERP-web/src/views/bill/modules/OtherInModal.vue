@@ -45,7 +45,11 @@
               <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
-          <a-col :lg="6" :md="12" :sm="24"></a-col>
+          <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item v-if="inOutManageFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="待入库单据">
+              <a-input-search placeholder="请选择待入库单据" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
         </a-row>
         <j-editable-table id="billModal"
           :ref="refKeys[0]"
@@ -105,6 +109,7 @@
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
     <import-item-modal ref="importItemModalForm" @ok="importItemModalFormOk"></import-item-modal>
+    <wait-bill-list ref="waitBillList" @ok="waitBillListOk"></wait-bill-list>
     <workflow-iframe ref="modalWorkflow"></workflow-iframe>
   </j-modal>
 </template>
@@ -122,6 +127,7 @@
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
+  import WaitBillList from '../dialog/WaitBillList'
   export default {
     name: "OtherInModal",
     mixins: [JEditableTableMixin, BillModalMixin],
@@ -130,6 +136,7 @@
       DepotModal,
       BatchSetDepot,
       ImportItemModal,
+      WaitBillList,
       WorkflowIframe,
       JUpload,
       JDate,
@@ -149,6 +156,8 @@
         operTimeStr: '',
         prefixNo: 'QTRK',
         fileList:[],
+        //出入库管理开关，适合独立仓管场景
+        inOutManageFlag: false,
         model: {},
         labelCol: {
           xs: { span: 24 },
@@ -275,6 +284,57 @@
           rows: JSON.stringify(detailArr),
         }
       },
+      onSearchLinkNumber() {
+        this.$refs.waitBillList.show('入库', '采购,销售退货', "1,3")
+        this.$refs.waitBillList.title = "选择采购入库或销售退货"
+      },
+      waitBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+        this.rowCanEdit = false
+        this.materialTable.columns[1].type = FormTypes.normal
+        this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
+        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
+        if(selectBillDetailRows && selectBillDetailRows.length>0) {
+          let listEx = []
+          let allTaxLastMoney = 0
+          for(let j=0; j<selectBillDetailRows.length; j++) {
+            let info = selectBillDetailRows[j];
+            if(info.finishNumber>0) {
+              info.operNumber = info.preNumber - info.finishNumber
+            }
+            info.unitPrice = 0
+            info.allPrice = 0
+            info.linkId = info.id
+            allTaxLastMoney += info.taxLastMoney
+            listEx.push(info)
+            this.changeColumnShow(info)
+          }
+          this.materialTable.dataSource = listEx
+          ///给优惠后金额重新赋值
+          allTaxLastMoney = allTaxLastMoney?allTaxLastMoney:0
+          let discount = 0
+          if(allTaxLastMoney!==0) {
+            discount = (discountMoney / allTaxLastMoney * 100).toFixed(2) - 0
+          }
+          let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
+          let changeAmount = discountLastMoney
+          if(deposit) {
+            this.depositStatus = true
+            changeAmount = (discountLastMoney - deposit).toFixed(2)-0
+          }
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              'organId': organId,
+              'linkNumber': linkNumber,
+              'discount': discount,
+              'discountMoney': discountMoney,
+              'discountLastMoney': discountLastMoney,
+              'deposit': deposit,
+              'changeAmount': changeAmount,
+              'remark': remark
+            })
+          })
+        }
+      }
     }
   }
 </script>
