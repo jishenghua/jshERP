@@ -573,4 +573,39 @@ public class DepotHeadController {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 查询等待入库或出库的单据
+     * @param search
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/waitBillList")
+    @ApiOperation(value = "查询等待入库或出库的单据")
+    public String waitBillList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                           @RequestParam("currentPage") Integer currentPage,
+                           @RequestParam("pageSize") Integer pageSize,
+                           HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String number = StringUtil.getInfo(search, "number");
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        String type = StringUtil.getInfo(search, "type");
+        String subType = StringUtil.getInfo(search, "subType");
+        String beginTime = StringUtil.getInfo(search, "beginTime");
+        String endTime = StringUtil.getInfo(search, "endTime");
+        String status = StringUtil.getInfo(search, "status");
+        List<DepotHeadVo4List> list = depotHeadService.waitBillList(number, materialParam, type, subType, beginTime, endTime,
+                status, (currentPage-1)*pageSize, pageSize);
+        long total = depotHeadService.waitBillCount(number, materialParam, type, subType, beginTime, endTime, status);
+        if (list != null) {
+            objectMap.put("rows", list);
+            objectMap.put("total", total);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            objectMap.put("rows", new ArrayList<>());
+            objectMap.put("total", 0);
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
+    }
 }

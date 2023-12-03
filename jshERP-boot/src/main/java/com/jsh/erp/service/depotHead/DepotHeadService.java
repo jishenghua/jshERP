@@ -1484,4 +1484,70 @@ public class DepotHeadService {
         }
         return "";
     }
+
+    public List<DepotHeadVo4List> waitBillList(String number, String materialParam, String type, String subType,
+                                               String beginTime, String endTime, String status, int offset, int rows) {
+        List<DepotHeadVo4List> resList = new ArrayList<>();
+        try{
+            String [] depotArray = getDepotArray("其它");
+            String [] creatorArray = getCreatorArray();
+            String [] subTypeArray = StringUtil.isNotEmpty(subType) ? subType.split(",") : null;
+            String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
+            Map<Long,String> accountMap = accountService.getAccountMap();
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            List<DepotHeadVo4List> list = depotHeadMapperEx.waitBillList(type, subTypeArray, creatorArray, statusArray, number, beginTime, endTime,
+                    materialParam, depotArray, offset, rows);
+            if (null != list) {
+                List<Long> idList = new ArrayList<>();
+                List<String> numberList = new ArrayList<>();
+                for (DepotHeadVo4List dh : list) {
+                    idList.add(dh.getId());
+                    numberList.add(dh.getNumber());
+                }
+                //通过批量查询去构造map
+                Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
+                Map<Long,BigDecimal> materialCountListMap = getMaterialCountListMapByHeaderIdList(idList);
+                for (DepotHeadVo4List dh : list) {
+                    if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
+                        String accountStr = accountService.getAccountStrByIdAndMoney(accountMap, dh.getAccountIdList(), dh.getAccountMoneyList());
+                        dh.setAccountName(accountStr);
+                    }
+                    if(dh.getOperTime() != null) {
+                        dh.setOperTimeStr(getCenternTime(dh.getOperTime()));
+                    }
+                    //商品信息简述
+                    if(materialsListMap!=null) {
+                        dh.setMaterialsList(materialsListMap.get(dh.getId()));
+                    }
+                    //商品总数量
+                    if(materialCountListMap!=null) {
+                        dh.setMaterialCount(materialCountListMap.get(dh.getId()));
+                    }
+                    resList.add(dh);
+                }
+            }
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return resList;
+    }
+
+    public Long waitBillCount(String number, String materialParam, String type, String subType,
+                             String beginTime, String endTime, String status) {
+        Long result=null;
+        try{
+            String [] depotArray = getDepotArray("其它");
+            String [] creatorArray = getCreatorArray();
+            String [] subTypeArray = StringUtil.isNotEmpty(subType) ? subType.split(",") : null;
+            String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            result=depotHeadMapperEx.waitBillCount(type, subTypeArray, creatorArray, statusArray, number, beginTime, endTime,
+                    materialParam, depotArray);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
 }

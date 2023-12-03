@@ -243,4 +243,28 @@ public interface DepotHeadMapperEx {
 
     int getSerialNumberBySell(
             @Param("number") String number);
+
+    List<DepotHeadVo4List> waitBillList(
+            @Param("type") String type,
+            @Param("subTypeArray") String[] subTypeArray,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("statusArray") String[] statusArray,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("materialParam") String materialParam,
+            @Param("depotArray") String[] depotArray,
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
+
+    Long waitBillCount(
+            @Param("type") String type,
+            @Param("subTypeArray") String[] subTypeArray,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("statusArray") String[] statusArray,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("materialParam") String materialParam,
+            @Param("depotArray") String[] depotArray);
 }

@@ -1097,4 +1097,130 @@
         where dh.number = #{number}
         and (s.out_bill_no is not null or s.out_bill_no!='')
     </select>
+
+    <select id="waitBillList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
+        select jdh.*, s.supplier OrganName, u.username userName, a.name AccountName
+        from (select dh.id
+        from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
+        where 1=1
+        <if test="type != null">
+            and dh.type=#{type}
+        </if>
+        <if test="subTypeArray != null and subTypeArray !=''">
+            and dh.sub_type in (
+            <foreach collection="subTypeArray" item="subType" separator=",">
+                #{subType}
+            </foreach>
+            )
+        </if>
+        <if test="statusArray != null and statusArray !=''">
+            and dh.status in (
+            <foreach collection="statusArray" item="status" separator=",">
+                #{status}
+            </foreach>
+            )
+        </if>
+        <if test="number != null">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like
+            #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+        </if>
+        <if test="depotArray != null and depotArray !=''">
+            and di.depot_id in (
+            <foreach collection="depotArray" item="depotId" separator=",">
+                #{depotId}
+            </foreach>
+            )
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+        group by dh.id
+        order by dh.id desc
+        <if test="offset != null and rows != null">
+            limit #{offset},#{rows}
+        </if>) tb
+        left join jsh_depot_head jdh on jdh.id=tb.id and ifnull(jdh.delete_flag,'0') !='1'
+        left join jsh_supplier s on jdh.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
+        left join jsh_user u on jdh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_account a on jdh.account_id=a.id and ifnull(a.delete_flag,'0') !='1'
+    </select>
+
+    <select id="waitBillCount" resultType="java.lang.Long">
+        select
+        count(1) from
+        (select distinct dh.id from jsh_depot_head dh
+        left join jsh_depot_item di on dh.Id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on di.material_id = m.Id and ifnull(m.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
+        WHERE 1=1
+        <if test="type != null">
+            and dh.type=#{type}
+        </if>
+        <if test="subTypeArray != null and subTypeArray !=''">
+            and dh.sub_type in (
+            <foreach collection="subTypeArray" item="subType" separator=",">
+                #{subType}
+            </foreach>
+            )
+        </if>
+        <if test="statusArray != null and statusArray !=''">
+            and dh.status in (
+            <foreach collection="statusArray" item="status" separator=",">
+                #{status}
+            </foreach>
+            )
+        </if>
+        <if test="number != null">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+        </if>
+        <if test="depotArray != null and depotArray !=''">
+            and di.depot_id in (
+            <foreach collection="depotArray" item="depotId" separator=",">
+                #{depotId}
+            </foreach>
+            )
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        and ifnull(dh.delete_Flag,'0') !='1') tb
+    </select>
 </mapper>
