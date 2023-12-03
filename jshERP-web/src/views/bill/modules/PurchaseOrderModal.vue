@@ -221,6 +221,7 @@
         prefixNo: 'CGDD',
         fileList:[],
         rowCanEdit: true,
+        //以销定购的场景开关
         purchaseBySaleFlag: false,
         model: {},
         labelCol: {
@@ -293,7 +294,6 @@
         this.currentSelectDepotId = ''
         this.rowCanEdit = true
         this.materialTable.columns[0].type = FormTypes.popupJsh
-        this.getSystemConfig()
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
@@ -419,14 +419,7 @@
           })
           this.materialTable.dataSource = selectBillDetailRows
         }
-      },
-      getSystemConfig() {
-        getCurrentSystemConfig().then((res) => {
-          if(res.code === 200 && res.data){
-            this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
-          }
-        })
-      },
+      }
     }
   }
 </script>

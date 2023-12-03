@@ -164,6 +164,8 @@ export const BillModalMixin = {
           let multiBillType = res.data.multiBillType
           let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
+          this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
+          this.inOutManageFlag = res.data.inOutManageFlag==='1'?true:false
         }
       })
     },
