@@ -1248,6 +1248,7 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
@@ -1271,6 +1272,7 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '已出库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
@@ -1313,6 +1315,7 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '已出库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
@@ -1336,6 +1339,7 @@
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '已入库', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '税率(%)', dataIndex: 'taxRate'},
@@ -1616,10 +1620,16 @@
               this.form.setFieldsValue(pick(this.model, 'id'))
             });
             let showType = 'basic'
-            if (item.status === '3') {
-              showType = 'basic'
-            } else if (item.purchaseStatus === '3') {
-              showType = 'purchase'
+            if(item.subType === '采购' || item.subType === '采购退货' || item.subType === '销售' || item.subType === '销售退货') {
+              if (item.status === '3') {
+                showType = 'other'
+              }
+            } else {
+              if (item.status === '3') {
+                showType = 'basic'
+              } else if (item.purchaseStatus === '3') {
+                showType = 'purchase'
+              }
             }
             let isReadOnly = '1'
             if(item.subType === '组装单' || item.subType === '拆卸单') {

@@ -182,7 +182,7 @@
     methods: {
       show(type, subType, status) {
         this.selectType = 'list'
-        this.showType = 'basic'
+        this.showType = 'other'
         this.queryParam.type = type
         this.queryParam.subType = subType
         this.queryParam.status = status
@@ -229,7 +229,7 @@
         } else {
           if(this.selectedDetailRowKeys.length) {
             this.getSelectBillDetailRows()
-            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discountMoney, this.deposit, this.remark)
+            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.remark)
             this.close()
           } else {
             this.$message.warning('抱歉，请选择单据明细！')

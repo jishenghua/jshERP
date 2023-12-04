@@ -52,7 +52,7 @@
                 <a-col :md="6" :sm="24">
                   <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择仓库" showSearch optionFilterProp="children" v-model="queryParam.depotId">
-                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                      <a-select-option v-for="(depot,index) in depotList" :key="index" :value="depot.id">
                         {{ depot.depotName }}
                       </a-select-option>
                     </a-select>
@@ -94,6 +94,8 @@
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
+                      <a-select-option value="3">部分入库</a-select-option>
+                      <a-select-option value="2">完成入库</a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
@@ -180,6 +182,8 @@
             <template slot="customRenderStatus" slot-scope="status">
               <a-tag v-if="status == '0'" color="red">未审核</a-tag>
               <a-tag v-if="status == '1'" color="green">已审核</a-tag>
+              <a-tag v-if="status == '2'" color="cyan">完成入库</a-tag>
+              <a-tag v-if="status == '3'" color="blue">部分入库</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
             </template>
           </a-table>

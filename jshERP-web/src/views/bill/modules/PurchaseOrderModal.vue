@@ -89,7 +89,7 @@
                 <a-button style="margin-left: 8px" @click="handleHistoryBillList"><a-icon type="history" />历史单据</a-button>
               </a-col>
             </a-row>
-            <a-row :gutter="24" style="float:left;padding-bottom: 5px;padding-left:20px;">
+            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;padding-left:20px;">
               <a-button icon="import" @click="onImport(prefixNo)">导入明细</a-button>
             </a-row>
           </template>

@@ -21,7 +21,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户">
-              <a-select placeholder="选择客户" v-decorator="[ 'organId' ]"
+              <a-select placeholder="选择客户" v-decorator="[ 'organId' ]" :disabled="!rowCanEdit"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="handleOrganChange">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -46,7 +46,7 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
-            <a-form-item v-if="inOutManageFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="待出库单据">
+            <a-form-item v-if="inOutManageFlag && !model.billType" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
               <a-input-search placeholder="请选择待出库单据" v-decorator="[ 'linkNumber' ]" @search="onSearchLinkNumber" :readOnly="true"/>
             </a-form-item>
           </a-col>
@@ -59,14 +59,14 @@
           :minWidth="minWidth"
           :maxHeight="300"
           :rowNumber="false"
-          :rowSelection="true"
-          :actionButton="true"
-          :dragSort="true"
+          :rowSelection="rowCanEdit"
+          :actionButton="rowCanEdit"
+          :dragSort="rowCanEdit"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
           <template #buttonAfter>
-            <a-row :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
+            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;" data-step="4" data-title="扫码录入" data-intro="此功能支持扫码枪扫描商品条码进行录入">
               <a-col v-if="scanStatus" :md="6" :sm="24">
                 <a-button @click="scanEnter">扫码录入</a-button>
               </a-col>
@@ -77,7 +77,7 @@
                 <a-button @click="stopScan">收起扫码</a-button>
               </a-col>
             </a-row>
-            <a-row :gutter="24" style="float:left;padding-bottom: 5px;padding-left:20px;">
+            <a-row v-if="rowCanEdit" :gutter="24" style="float:left;padding-bottom: 5px;padding-left:20px;">
               <a-button icon="import" @click="onImport(prefixNo)">导入明细</a-button>
             </a-row>
           </template>
@@ -156,6 +156,7 @@
         operTimeStr: '',
         prefixNo: 'QTCK',
         fileList:[],
+        rowCanEdit: true,
         //出入库管理开关，适合独立仓管场景
         inOutManageFlag: false,
         model: {},
@@ -190,12 +191,15 @@
             { title: '批号', key: 'batchNumber', width: '7%', type: FormTypes.popupJsh, kind: 'batch', multi: false },
             { title: '有效期', key: 'expirationDate',width: '7%', type: FormTypes.input, readonly: true },
             { title: '多属性', key: 'sku', width: '9%', type: FormTypes.normal },
+            { title: '原数量', key: 'preNumber', width: '4%', type: FormTypes.normal },
+            { title: '已入库', key: 'finishNumber', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
             { title: '单价', key: 'unitPrice', width: '5%', type: FormTypes.inputNumber},
             { title: '金额', key: 'allPrice', width: '5%', type: FormTypes.inputNumber, statistics: true },
-            { title: '备注', key: 'remark', width: '5%', type: FormTypes.input }
+            { title: '备注', key: 'remark', width: '5%', type: FormTypes.input },
+            { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
           ]
         },
         confirmLoading: false,
@@ -225,18 +229,25 @@
       editAfter() {
         this.billStatus = '0'
         this.currentSelectDepotId = ''
+        this.rowCanEdit = true
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'snList', 0)
         this.changeFormTypes(this.materialTable.columns, 'batchNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'expirationDate', 0)
+        this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
+        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
         } else {
+          if(this.model.linkNumber) {
+            this.rowCanEdit = false
+            this.materialTable.columns[1].type = FormTypes.normal
+          }
           this.model.operTime = this.model.operTimeStr
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
               'discount','discountMoney','discountLastMoney','otherMoney','accountId','changeAmount'))
           });
           // 加载子表数据
@@ -288,14 +299,13 @@
         this.$refs.waitBillList.show('出库', '销售,采购退货', "1,3")
         this.$refs.waitBillList.title = "选择销售出库或采购退货"
       },
-      waitBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      waitBillListOk(selectBillDetailRows, linkNumber, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
           let listEx = []
-          let allTaxLastMoney = 0
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
             if(info.finishNumber>0) {
@@ -304,32 +314,13 @@
             info.unitPrice = 0
             info.allPrice = 0
             info.linkId = info.id
-            allTaxLastMoney += info.taxLastMoney
             listEx.push(info)
             this.changeColumnShow(info)
           }
           this.materialTable.dataSource = listEx
-          ///给优惠后金额重新赋值
-          allTaxLastMoney = allTaxLastMoney?allTaxLastMoney:0
-          let discount = 0
-          if(allTaxLastMoney!==0) {
-            discount = (discountMoney / allTaxLastMoney * 100).toFixed(2) - 0
-          }
-          let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
-          let changeAmount = discountLastMoney
-          if(deposit) {
-            this.depositStatus = true
-            changeAmount = (discountLastMoney - deposit).toFixed(2)-0
-          }
           this.$nextTick(() => {
             this.form.setFieldsValue({
-              'organId': organId,
               'linkNumber': linkNumber,
-              'discount': discount,
-              'discountMoney': discountMoney,
-              'discountLastMoney': discountLastMoney,
-              'deposit': deposit,
-              'changeAmount': changeAmount,
               'remark': remark
             })
           })
