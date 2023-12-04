@@ -470,14 +470,18 @@ public class DepotHeadService {
                 depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{depotHead.getId()});
                 //删除单据主表信息
                 batchDeleteDepotHeadByIds(depotHead.getId().toString());
-                //将关联的单据置为审核状态-针对采购入库、销售出库和盘点复盘
+                //将关联的单据置为审核状态-针对采购入库、销售出库、盘点复盘、其它入库、其它出库
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
                     if((BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&
                         BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))
                     || (BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
-                        BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))) {
+                        BusinessConstants.SUB_TYPE_REPLAY.equals(depotHead.getSubType()))
+                    || (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) &&
+                        BusinessConstants.SUB_TYPE_OTHER.equals(depotHead.getSubType()))
+                    || (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType()) &&
+                        BusinessConstants.SUB_TYPE_OTHER.equals(depotHead.getSubType()))) {
                         String status = BusinessConstants.BILLS_STATUS_AUDIT;
                         //查询除当前单据之外的关联单据列表
                         List<DepotHead> exceptCurrentList = getListByLinkNumberExceptCurrent(depotHead.getLinkNumber(), depotHead.getNumber(), depotHead.getType());
@@ -1500,10 +1504,8 @@ public class DepotHeadService {
                     materialParam, depotArray, offset, rows);
             if (null != list) {
                 List<Long> idList = new ArrayList<>();
-                List<String> numberList = new ArrayList<>();
                 for (DepotHeadVo4List dh : list) {
                     idList.add(dh.getId());
-                    numberList.add(dh.getNumber());
                 }
                 //通过批量查询去构造map
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
