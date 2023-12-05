@@ -594,11 +594,21 @@ export const BillModalMixin = {
         this.changeFormTypes(this.materialTable.columns, 'sku', 1)
       }
       if(info.enableSerialNumber === "1") {
-        this.changeFormTypes(this.materialTable.columns, 'snList', 1)
+        //如果开启出入库管理，并且类型等于采购、采购退货、销售、销售退货，则跳过
+        if(this.inOutManageFlag && (this.prefixNo === 'CGRK' || this.prefixNo === 'CGTH' || this.prefixNo === 'XSCK' || this.prefixNo === 'XSTH')) {
+          //跳过
+        } else {
+          this.changeFormTypes(this.materialTable.columns, 'snList', 1)
+        }
       }
       if(info.enableBatchNumber === "1") {
-        this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
-        this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
+        //如果开启出入库管理，并且类型等于采购、采购退货、销售、销售退货，则跳过
+        if(this.inOutManageFlag && (this.prefixNo === 'CGRK' || this.prefixNo === 'CGTH' || this.prefixNo === 'XSCK' || this.prefixNo === 'XSTH')) {
+          //跳过
+        } else {
+          this.changeFormTypes(this.materialTable.columns, 'batchNumber', 1)
+          this.changeFormTypes(this.materialTable.columns, 'expirationDate', 1)
+        }
       }
     },
     //删除一行或多行的时候触发
