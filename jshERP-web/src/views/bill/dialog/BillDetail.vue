@@ -830,8 +830,11 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+              <a-form-item v-if="model.billType" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 {{model.linkNumber}} {{model.billType}}
+              </a-form-item>
+              <a-form-item v-if="!model.billType" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
           </a-row>
@@ -884,8 +887,11 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+              <a-form-item v-if="model.billType" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
                 {{model.linkNumber}} {{model.billType}}
+              </a-form-item>
+              <a-form-item v-if="!model.billType" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联单据">
+                <a @click="myHandleDetail(model.linkNumber)">{{model.linkNumber}}</a>
               </a-form-item>
             </a-col>
           </a-row>
