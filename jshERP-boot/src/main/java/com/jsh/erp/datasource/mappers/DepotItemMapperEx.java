@@ -153,6 +153,7 @@ public interface DepotItemMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("meId") Long meId,
             @Param("forceFlag") Boolean forceFlag,
+            @Param("inOutManageFlag") Boolean inOutManageFlag,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 
@@ -160,6 +161,7 @@ public interface DepotItemMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("mId") Long mId,
             @Param("forceFlag") Boolean forceFlag,
+            @Param("inOutManageFlag") Boolean inOutManageFlag,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime);
 

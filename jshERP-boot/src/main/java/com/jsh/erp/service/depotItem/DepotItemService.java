@@ -914,10 +914,11 @@ public class DepotItemService {
      */
     public BigDecimal getSkuStockByParam(Long depotId, Long meId, String beginTime, String endTime) throws Exception {
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+        Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
         List<Long> depotList = depotService.parseDepotList(depotId);
         //盘点复盘后数量的变动
         BigDecimal stockCheckSum = depotItemMapperEx.getSkuStockCheckSumByDepotList(depotList, meId, forceFlag, beginTime, endTime);
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getSkuStockByParamWithDepotList(depotList, meId, forceFlag, beginTime, endTime);
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getSkuStockByParamWithDepotList(depotList, meId, forceFlag, inOutManageFlag, beginTime, endTime);
         BigDecimal stockSum = BigDecimal.ZERO;
         if(stockObj!=null) {
             BigDecimal inTotal = stockObj.getInTotal();
@@ -957,11 +958,12 @@ public class DepotItemService {
      */
     public BigDecimal getStockByParamWithDepotList(List<Long> depotList, Long mId, String beginTime, String endTime) throws Exception {
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+        Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
         //初始库存
         BigDecimal initStock = materialService.getInitStockByMidAndDepotList(depotList, mId);
         //盘点复盘后数量的变动
         BigDecimal stockCheckSum = depotItemMapperEx.getStockCheckSumByDepotList(depotList, mId, forceFlag, beginTime, endTime);
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParamWithDepotList(depotList, mId, forceFlag, beginTime, endTime);
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParamWithDepotList(depotList, mId, forceFlag, inOutManageFlag, beginTime, endTime);
         BigDecimal stockSum = BigDecimal.ZERO;
         if(stockObj!=null) {
             BigDecimal inTotal = stockObj.getInTotal();
@@ -988,12 +990,13 @@ public class DepotItemService {
      */
     public Map<String, BigDecimal> getIntervalMapByParamWithDepotList(List<Long> depotList, Long mId, String beginTime, String endTime) throws Exception {
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+        Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
         Map<String,BigDecimal> intervalMap = new HashMap<>();
         BigDecimal inSum = BigDecimal.ZERO;
         BigDecimal outSum = BigDecimal.ZERO;
         //盘点复盘后数量的变动
         BigDecimal stockCheckSum = depotItemMapperEx.getStockCheckSumByDepotList(depotList, mId, forceFlag, beginTime, endTime);
-        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParamWithDepotList(depotList, mId, forceFlag, beginTime, endTime);
+        DepotItemVo4Stock stockObj = depotItemMapperEx.getStockByParamWithDepotList(depotList, mId, forceFlag, inOutManageFlag, beginTime, endTime);
         if(stockObj!=null) {
             BigDecimal inTotal = stockObj.getInTotal();
             BigDecimal transfInTotal = stockObj.getTransfInTotal();
