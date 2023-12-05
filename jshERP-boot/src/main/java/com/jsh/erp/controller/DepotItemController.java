@@ -246,7 +246,7 @@ public class DepotItemController {
                     item.put("preNumber", diEx.getOperNumber()); //原数量
                     item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
                     item.put("purchaseDecimal", roleService.parseBillPriceByLimit(diEx.getPurchaseDecimal(), billCategory, priceLimit, request));  //采购价
-                    if("basic".equals(linkType)) {
+                    if("basic".equals(linkType) || "1".equals(isReadOnly)) {
                         //正常情况显示金额，而以销定购的情况不能显示金额
                         item.put("unitPrice", roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request));
                         item.put("taxUnitPrice", roleService.parseBillPriceByLimit(diEx.getTaxUnitPrice(), billCategory, priceLimit, request));

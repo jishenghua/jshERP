@@ -1046,7 +1046,7 @@ public class DepotItemService {
                     || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_OTHER;
             }
-        } else {
+        } else if("basic".equals(linkType)) {
             //采购订单转采购入库
             if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
                 goToType = BusinessConstants.SUB_TYPE_PURCHASE;
