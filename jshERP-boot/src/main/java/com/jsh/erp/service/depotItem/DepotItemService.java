@@ -464,12 +464,21 @@ public class DepotItemService {
                     }
                 } else {
                     //入库或出库
-                    if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) ||
+                    if (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType()) ||
                             BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
                         //序列号不能为空
-                        if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
-                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_CODE,
-                                    String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_MSG, barCode));
+                        if (BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
+                            //如果开启出入库管理，并且类型等于采购、采购退货、销售、销售退货，则跳过
+                            if(systemConfigService.getInOutManageFlag() &&
+                                    (BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType()))) {
+                                //跳过
+                            } else {
+                                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_CODE,
+                                        String.format(ExceptionConstants.MATERIAL_SERIAL_NUMBERE_EMPTY_MSG, barCode));
+                            }
                         }
                     }
                 }
@@ -481,8 +490,17 @@ public class DepotItemService {
                             BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())) {
                         //批号不能为空
                         if (BusinessConstants.ENABLE_BATCH_NUMBER_ENABLED.equals(material.getEnableBatchNumber())) {
-                            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
-                                    String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
+                            //如果开启出入库管理，并且类型等于采购、采购退货、销售、销售退货，则跳过
+                            if(systemConfigService.getInOutManageFlag() &&
+                                    (BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType()))) {
+                                //跳过
+                            } else {
+                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_CODE,
+                                        String.format(ExceptionConstants.DEPOT_HEAD_BATCH_NUMBERE_EMPTY_MSG, barCode));
+                            }
                         }
                     }
                 }
@@ -629,9 +647,18 @@ public class DepotItemService {
                     if(!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
                         //判断商品是否开启序列号，开启的售出序列号，未开启的跳过
                         if(BusinessConstants.ENABLE_SERIAL_NUMBER_ENABLED.equals(material.getEnableSerialNumber())) {
-                            //售出序列号，获得当前操作人
-                            User userInfo=userService.getCurrentUser();
-                            serialNumberService.checkAndUpdateSerialNumber(depotItem, depotHead.getNumber(), userInfo, StringUtil.toNull(depotItem.getSnList()));
+                            //如果开启出入库管理，并且类型等于采购、采购退货、销售、销售退货，则跳过
+                            if(systemConfigService.getInOutManageFlag() &&
+                                    (BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType()))) {
+                                //跳过
+                            } else {
+                                //售出序列号，获得当前操作人
+                                User userInfo = userService.getCurrentUser();
+                                serialNumberService.checkAndUpdateSerialNumber(depotItem, depotHead.getNumber(), userInfo, StringUtil.toNull(depotItem.getSnList()));
+                            }
                         }
                     }
                 }

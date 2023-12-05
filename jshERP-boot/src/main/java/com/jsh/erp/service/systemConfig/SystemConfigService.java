@@ -464,4 +464,21 @@ public class SystemConfigService {
         }
         return multiLevelApprovalFlag;
     }
+
+    /**
+     * 获取出入库管理开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getInOutManageFlag() throws Exception {
+        boolean inOutManageFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getInOutManageFlag();
+            if(("1").equals(flag)) {
+                inOutManageFlag = true;
+            }
+        }
+        return inOutManageFlag;
+    }
 }
