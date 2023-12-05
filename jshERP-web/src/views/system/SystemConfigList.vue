@@ -92,13 +92,13 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="强审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="forceApprovalFlagSwitch" @change="onForceApprovalChange"></a-switch>
-              （启用后，只有<b>已审核</b>的单据才生效，涉及库存和报表，需批量修正库存）
+              （启用后，只有<b>已审核</b>的单据才生效，涉及库存和报表。启用或关闭后需到商品管理批量修正库存）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="出入库管理">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="inOutManageFlagSwitch" @change="onInOutManageChange"></a-switch>
-              （启用后，采购销售相关单据都会经过其它出入库单据，才能产生库存）
+              （启用后，采购销售相关单据都会经过其它出入库单据，才能产生库存。启用或关闭后需到商品管理批量修正库存）
             </a-form-item>
           </a-col>
         </a-row>
