@@ -1,47 +1,47 @@
 <template>
   <a-card :style="cardStyle" :bordered="false">
     <a-spin :spinning="confirmLoading">
-      <a-form :form="form" id="systemConfigModal">
+      <a-form :form="form">
         <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司名称">
-              <a-input placeholder="请输入公司名称" v-decorator.trim="[ 'companyName', validatorRules.companyName]" />
+              <a-input placeholder="请输入公司名称" v-decorator.trim="[ 'companyName' ]" @change="handleCompanyName" />
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系人">
-              <a-input placeholder="请输入联系人" v-decorator.trim="[ 'companyContacts' ]" />
+              <a-input placeholder="请输入联系人" v-decorator.trim="[ 'companyContacts' ]" @change="handleCompanyContacts" />
             </a-form-item>
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司地址">
-              <a-input placeholder="请输入公司地址" v-decorator.trim="[ 'companyAddress' ]" />
+              <a-input placeholder="请输入公司地址" v-decorator.trim="[ 'companyAddress' ]" @change="handleCompanyAddress" />
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司电话">
-              <a-input placeholder="请输入公司电话" v-decorator.trim="[ 'companyTel' ]" />
+              <a-input placeholder="请输入公司电话" v-decorator.trim="[ 'companyTel' ]" @change="handleCompanyTel" />
             </a-form-item>
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司传真">
-              <a-input placeholder="请输入公司传真" v-decorator.trim="[ 'companyFax' ]" />
+              <a-input placeholder="请输入公司传真" v-decorator.trim="[ 'companyFax' ]" @change="handleCompanyFax" />
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司邮编">
-              <a-input placeholder="请输入公司邮编" v-decorator.trim="[ 'companyPostCode' ]" />
+              <a-input placeholder="请输入公司邮编" v-decorator.trim="[ 'companyPostCode' ]" @change="handleCompanyPostCode" />
             </a-form-item>
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售协议">
-              <a-input placeholder="请输入销售协议" v-decorator.trim="[ 'saleAgreement', validatorRules.saleAgreement ]" />
+              <a-input placeholder="请输入销售协议" v-decorator.trim="[ 'saleAgreement' ]" @change="handleSaleAgreement" />
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
@@ -108,24 +108,18 @@
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
               <a-select placeholder="请选择流程类型" v-model="multiBillTypeSelect" style="width:400px;padding-left:10px"
                         mode="multiple" :maxTagCount="6" :dropdownMatchSelectWidth="false"
-                        showSearch allow-clear optionFilterProp="children">
+                        showSearch allow-clear optionFilterProp="children" @change="onMultiBillTypeChange">
                 <a-select-option v-for="(item,index) in billTypeList" :key="index" :value="item.key">
                   {{ item.value }}
                 </a-select-option>
               </a-select>
-              <br/>（启用后，多级审核需配置流程，开启会自动刷新浏览器）
+              <br/>（启用后，多级审核需配置流程，开启后需刷新浏览器才能看到效果）<a-button type="link" @click="handleReload">点此刷新</a-button>
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24"></a-col>
         </a-row>
       </a-form>
     </a-spin>
-    <a-row :gutter="24">
-      <a-col :md="24" align="middle">
-        <a-button type="primary" @click="handleOk">保存</a-button>
-        <a-button style="margin-left:20px" @click="handleReset">重置</a-button>
-      </a-col>
-    </a-row>
   </a-card>
 </template>
 <!-- b y 7 5 2 7  1 8 9 2 0 -->
@@ -193,59 +187,18 @@
           { 'key': 'FK', 'value': '付款单' },
           { 'key': 'ZZ', 'value': '转账单' },
           { 'key': 'SYF', 'value': '收预付款单' },
-        ],
-        validatorRules:{
-          companyName:{
-            rules: [
-              { required: true, message: '请输入公司名称!' },
-              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
-            ]
-          },
-          saleAgreement:{
-            rules: [
-              { min: 2, max: 400, message: '长度在 2 到 400 个字符', trigger: 'blur' }
-            ]
-          }
-        }
+        ]
       }
     },
     created () {
       this.init()
+      this.loadPlugins()
       if(this.isDesktop()) {
         this.cardStyle = 'height:' + (document.documentElement.clientHeight-125) + 'px'
       }
     },
     methods: {
-      onDepotChange(checked) {
-        this.model.depotFlag = checked?'1':'0'
-      },
-      onCustomerChange(checked) {
-        this.model.customerFlag = checked?'1':'0'
-      },
-      onMinusStockChange(checked) {
-        this.model.minusStockFlag = checked?'1':'0'
-      },
-      onPurchaseBySaleChange(checked) {
-        this.model.purchaseBySaleFlag = checked?'1':'0'
-      },
-      onOverLinkBillChange(checked) {
-        this.model.overLinkBillFlag = checked?'1':'0'
-      },
-      onUpdateUnitPriceChange(checked) {
-        this.model.updateUnitPriceFlag = checked?'1':'0'
-      },
-      onForceApprovalChange(checked) {
-        this.model.forceApprovalFlag = checked?'1':'0'
-      },
-      onInOutManageChange(checked) {
-        this.model.inOutManageFlag = checked?'1':'0'
-      },
-      onMultiLevelApprovalChange(checked) {
-        this.model.multiLevelApprovalFlag = checked?'1':'0'
-        if(!checked) {
-          this.multiBillTypeSelect = []
-        }
-      },
+      //初始化加载内容
       init () {
         let param = {
           search: {"companyName":""},
@@ -261,7 +214,6 @@
             this.$nextTick(() => {
               this.form.setFieldsValue(pick(this.model,'companyName', 'companyContacts', 'companyAddress',
                 'companyTel', 'companyFax', 'companyPostCode', 'saleAgreement'))
-              autoJumpNextInput('systemConfigModal')
             });
             if(record.id) {
               if (record.depotFlag != null) {
@@ -301,6 +253,8 @@
             this.$message.info(res.data);
           }
         })
+      },
+      loadPlugins() {
         //校验是否存在多级审批插件
         getAction('/plugin/checkByPluginId', { pluginIds: 'workflow' }).then((res)=> {
           if (res.code === 200) {
@@ -326,50 +280,108 @@
           }
         })
       },
-      handleOk () {
-        const that = this;
-        // 触发表单验证
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            that.confirmLoading = true;
-            let formData = Object.assign(this.model, values);
-            formData.multiBillType = this.multiBillTypeSelect.join(",")
-            let obj;
-            if(!this.model.id){
-              obj=addSystemConfig(formData);
-            }else{
-              obj=editSystemConfig(formData);
-            }
-            obj.then((res)=>{
-              if(res.code === 200){
-                this.init()
-                that.$message.info('保存成功！');
-                //如果多级审核切换状态需要刷新浏览器
-                if(this.originalMultiLevelApprovalFlag!= formData.multiLevelApprovalFlag ||
-                  this.originalMultiBillTypeSelect!=formData.multiBillType) {
-                  location.reload()
-                }
-              }else{
-                that.$message.warning(res.data.message);
-              }
-            }).finally(() => {
-              that.confirmLoading = false;
-            })
+      handleCompanyName(event) {
+        this.model.companyName = event.target.value
+        if(this.model.companyName && this.model.companyName.length>30) {
+          this.$message.warning('公司名称长度超过30个字符')
+        } else {
+          this.handleChange()
+        }
+      },
+      handleCompanyContacts(event) {
+        this.model.companyContacts = event.target.value
+        this.handleChange()
+      },
+      handleCompanyAddress(event) {
+        this.model.companyAddress = event.target.value
+        this.handleChange()
+      },
+      handleCompanyTel(event) {
+        this.model.companyTel = event.target.value
+        this.handleChange()
+      },
+      handleCompanyFax(event) {
+        this.model.companyFax = event.target.value
+        this.handleChange()
+      },
+      handleCompanyPostCode(event) {
+        this.model.companyPostCode = event.target.value
+        this.handleChange()
+      },
+      handleSaleAgreement(event) {
+        this.model.saleAgreement = event.target.value
+        if(this.model.saleAgreement && this.model.saleAgreement.length>400) {
+          this.$message.warning('销售协议长度超过400个字符')
+        } else {
+          this.handleChange()
+        }
+      },
+      onDepotChange(checked) {
+        this.model.depotFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onCustomerChange(checked) {
+        this.model.customerFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onMinusStockChange(checked) {
+        this.model.minusStockFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onPurchaseBySaleChange(checked) {
+        this.model.purchaseBySaleFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onOverLinkBillChange(checked) {
+        this.model.overLinkBillFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onUpdateUnitPriceChange(checked) {
+        this.model.updateUnitPriceFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onForceApprovalChange(checked) {
+        this.model.forceApprovalFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onInOutManageChange(checked) {
+        this.model.inOutManageFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onMultiLevelApprovalChange(checked) {
+        this.model.multiLevelApprovalFlag = checked?'1':'0'
+        if(!checked) {
+          this.multiBillTypeSelect = []
+          this.model.multiBillType = ''
+        }
+        this.handleChange()
+      },
+      onMultiBillTypeChange() {
+        this.model.multiBillType = this.multiBillTypeSelect.join(",")
+        this.handleChange()
+      },
+      //改变内容
+      handleChange() {
+        this.confirmLoading = true
+        let obj
+        if(!this.model.id){
+          obj = addSystemConfig(this.model)
+        }else{
+          obj = editSystemConfig(this.model)
+        }
+        obj.then((res)=>{
+          if(res.code === 200){
+            this.init()
+          }else{
+            this.$message.warning(res.data.message)
           }
+        }).finally(() => {
+          this.confirmLoading = false
         })
       },
-      handleReset () {
-        this.form.resetFields();
-        this.depotFlagSwitch = false
-        this.customerFlagSwitch = false
-        this.minusStockFlagSwitch = false
-        this.purchaseBySaleFlagSwitch = false
-        this.overLinkBillFlagSwitch = false
-        this.updateUnitPriceFlagSwitch = true
-        this.forceApprovalFlagSwitch = false
-        this.inOutManageFlagSwitch = false
-        this.multiLevelApprovalFlagSwitch = false
-        this.multiBillTypeSelect = []
+      //刷新浏览器
+      handleReload() {
+        location.reload()
       }
     }
   }
