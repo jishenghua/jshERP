@@ -877,7 +877,7 @@ public class DepotHeadService {
     public List<DepotHead> getBillListByLinkNumberList(List<String> linkNumberList)throws Exception {
         if(linkNumberList!=null && linkNumberList.size()>0) {
             DepotHeadExample example = new DepotHeadExample();
-            example.createCriteria().andLinkNumberIn(linkNumberList).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            example.createCriteria().andLinkNumberIn(linkNumberList).andSubTypeLike("退货").andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             return depotHeadMapper.selectByExample(example);
         } else {
             return new ArrayList<>();
@@ -892,19 +892,7 @@ public class DepotHeadService {
      */
     public List<DepotHead> getBillListByLinkNumber(String linkNumber)throws Exception {
         DepotHeadExample example = new DepotHeadExample();
-        example.createCriteria().andLinkNumberEqualTo(linkNumber).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        return depotHeadMapper.selectByExample(example);
-    }
-
-    /**
-     * 根据原单号查询关联的单据列表(排除当前的单据编号)
-     * @param linkNumber
-     * @return
-     * @throws Exception
-     */
-    public List<DepotHead> getBillListByLinkNumberExceptNumber(String linkNumber, String number)throws Exception {
-        DepotHeadExample example = new DepotHeadExample();
-        example.createCriteria().andLinkNumberEqualTo(linkNumber).andNumberNotEqualTo(number).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        example.createCriteria().andLinkNumberEqualTo(linkNumber).andSubTypeLike("退货").andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return depotHeadMapper.selectByExample(example);
     }
 
@@ -1100,38 +1088,6 @@ public class DepotHeadService {
         logService.insertLog("单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-    }
-
-    /**
-     * 退货单对应的原单实际欠款（这里面要除去收付款的金额）
-     * @param linkNumber 原单单号
-     * @param number 当前单号
-     * @return
-     */
-    public BigDecimal getOriginalRealDebt(String linkNumber, String number) throws Exception {
-        DepotHead depotHead = getDepotHead(linkNumber);
-        BigDecimal discountLastMoney = depotHead.getDiscountLastMoney()!=null?depotHead.getDiscountLastMoney():BigDecimal.ZERO;
-        BigDecimal otherMoney = depotHead.getOtherMoney()!=null?depotHead.getOtherMoney():BigDecimal.ZERO;
-        BigDecimal deposit = depotHead.getDeposit()!=null?depotHead.getDeposit():BigDecimal.ZERO;
-        BigDecimal changeAmount = depotHead.getChangeAmount()!=null?depotHead.getChangeAmount().abs():BigDecimal.ZERO;
-        //原单欠款
-        BigDecimal debt = discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount)));
-        //完成欠款
-        BigDecimal finishDebt = accountItemService.getEachAmountByBillId(depotHead.getId());
-        finishDebt = finishDebt!=null?finishDebt:BigDecimal.ZERO;
-        //原单对应的退货单欠款(总数)
-        List<DepotHead> billList = getBillListByLinkNumberExceptNumber(linkNumber, number);
-        BigDecimal allBillDebt = BigDecimal.ZERO;
-        for(DepotHead dh: billList) {
-            BigDecimal billDiscountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
-            BigDecimal billOtherMoney = dh.getOtherMoney()!=null?dh.getOtherMoney():BigDecimal.ZERO;
-            BigDecimal billDeposit = dh.getDeposit()!=null?dh.getDeposit():BigDecimal.ZERO;
-            BigDecimal billChangeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount().abs():BigDecimal.ZERO;
-            BigDecimal billDebt = billDiscountLastMoney.add(billOtherMoney).subtract((billDeposit.add(billChangeAmount)));
-            allBillDebt = allBillDebt.add(billDebt);
-        }
-        //原单实际欠款
-        return debt.subtract(finishDebt).subtract(allBillDebt);
     }
 
     public Map<String, Object> getBuyAndSaleStatistics(String today, String monthFirstDay, String yesterdayBegin, String yesterdayEnd,
