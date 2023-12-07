@@ -608,4 +608,28 @@ public class DepotHeadController {
             return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
         }
     }
+
+    /**
+     * 查询等待入库或出库的单据数量
+     * @param search
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/waitBillCount")
+    @ApiOperation(value = "查询等待入库或出库的单据数量")
+    public String waitBillCount(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                               HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String number = StringUtil.getInfo(search, "number");
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        String type = StringUtil.getInfo(search, "type");
+        String subType = StringUtil.getInfo(search, "subType");
+        String beginTime = StringUtil.getInfo(search, "beginTime");
+        String endTime = StringUtil.getInfo(search, "endTime");
+        String status = StringUtil.getInfo(search, "status");
+        long total = depotHeadService.waitBillCount(number, materialParam, type, subType, beginTime, endTime, status);
+        objectMap.put("total", total);
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
 }
