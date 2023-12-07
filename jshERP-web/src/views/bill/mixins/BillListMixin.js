@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import {getAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
-import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount,
+import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount, waitBillCount,
   getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
 import { getCheckFlag } from "@/utils/util"
 
@@ -12,6 +12,7 @@ export const BillListMixin = {
       checkFlag: true,
       /* 单据Excel是否开启 */
       isShowExcel: false,
+      waitTotal: 0,
       billExcelUrl: '',
       supList: [],
       cusList: [],
@@ -121,6 +122,7 @@ export const BillListMixin = {
           let multiBillType = res.data.multiBillType
           let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
+          this.inOutManageFlag = res.data.inOutManageFlag==='1'?true:false
         }
       })
       getPlatformConfigByKey({ "platformKey": "bill_excel_url" }).then((res) => {
@@ -174,8 +176,16 @@ export const BillListMixin = {
     initAccount() {
       getAccount({}).then((res)=>{
         if(res && res.code === 200) {
-          let list = res.data.accountList
-          this.accountList = list
+          this.accountList = res.data.accountList
+        }
+      })
+    },
+    initWaitBillCount(type, subType, status) {
+      waitBillCount({search: {
+          type: type, subType: subType, status: status
+        }}).then((res)=>{
+        if(res && res.code === 200) {
+          this.waitTotal = res.data.total
         }
       })
     },

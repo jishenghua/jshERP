@@ -52,7 +52,7 @@
                 <a-col :md="6" :sm="24">
                   <a-form-item label="仓库名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择仓库" showSearch optionFilterProp="children" v-model="queryParam.depotId">
-                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                      <a-select-option v-for="(depot,index) in depotList" :key="index" :value="depot.id">
                         {{ depot.depotName }}
                       </a-select-option>
                     </a-select>
@@ -92,6 +92,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
+          <a-button v-if="inOutManageFlag && btnEnableList.indexOf(1)>-1" @click="handleWaitBill" icon="link">待入库({{waitTotal}})</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
@@ -161,6 +162,7 @@
         <other-in-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></other-in-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
         <bill-excel-iframe ref="billExcelIframe" @ok="modalFormOk" @close="modalFormClose"></bill-excel-iframe>
+        <batch-wait-bill-list ref="batchWaitBill" @ok="modalFormOk" @close="waitModalFormClose"></batch-wait-bill-list>
       </a-card>
     </a-col>
   </a-row>
@@ -170,6 +172,7 @@
   import OtherInModal from './modules/OtherInModal'
   import BillDetail from './dialog/BillDetail'
   import BillExcelIframe from '@/components/tools/BillExcelIframe'
+  import BatchWaitBillList from './dialog/BatchWaitBillList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -182,6 +185,7 @@
       OtherInModal,
       BillDetail,
       BillExcelIframe,
+      BatchWaitBillList,
       JEllipsis,
       JDate
     },
@@ -201,6 +205,8 @@
           remark: ""
         },
         prefixNo: 'QTRK',
+        //出入库管理开关，适合独立仓管场景
+        inOutManageFlag: false,
         labelCol: {
           span: 5
         },
@@ -246,13 +252,36 @@
     },
     computed: {
     },
-    created () {
+    created() {
       this.initSystemConfig()
       this.initSupplier()
       this.getDepotData()
       this.initUser()
+      this.initWaitBillCount('入库', '采购,销售退货', '1,3')
     },
     methods: {
+      searchQuery() {
+        this.loadData(1)
+        if(this.inOutManageFlag) {
+          this.initWaitBillCount('入库', '采购,销售退货', '1,3')
+        }
+      },
+      searchReset() {
+        this.queryParam = {}
+        this.loadData(1)
+        if(this.inOutManageFlag) {
+          this.initWaitBillCount('入库', '采购,销售退货', '1,3')
+        }
+      },
+      //待入库
+      handleWaitBill() {
+        this.$refs.batchWaitBill.show('入库', '采购,销售退货', "1,3")
+        this.$refs.batchWaitBill.title = "批量选择采购入库或销售退货"
+      },
+      waitModalFormClose() {
+        this.loadData()
+        this.initWaitBillCount('入库', '采购,销售退货', '1,3')
+      },
     }
   }
 </script>
