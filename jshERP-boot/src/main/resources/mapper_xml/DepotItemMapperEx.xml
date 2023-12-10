@@ -165,6 +165,9 @@
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
         or (dh.type='其它' and dh.sub_type='盘点复盘'))
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
+        </if>
         <if test="depotIdArray != null">
             and di.depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
@@ -242,6 +245,9 @@
         or (dh.type='其它' and dh.sub_type='组装单')
         or (dh.type='其它' and dh.sub_type='拆卸单')
         or (dh.type='其它' and dh.sub_type='盘点复盘'))
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
+        </if>
         <if test="depotIdArray != null">
             and di.depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>

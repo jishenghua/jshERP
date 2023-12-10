@@ -176,7 +176,7 @@ public class DepotItemService {
         return list==null?0:list.size();
     }
 
-    public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(String depotIds, Boolean forceFlag, String sku, String batchNumber,
+    public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(String depotIds, Boolean forceFlag, Boolean inOutManageFlag, String sku, String batchNumber,
                                                                                       String number, String beginTime, String endTime, Long mId, int offset, int rows)throws Exception {
         Long depotId = null;
         if(StringUtil.isNotEmpty(depotIds)) {
@@ -186,14 +186,14 @@ public class DepotItemService {
         Long[] depotIdArray = StringUtil.listToLongArray(depotList);
         List<DepotItemVo4DetailByTypeAndMId> list =null;
         try{
-            list = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdList(depotIdArray, forceFlag, sku, batchNumber, number, beginTime, endTime, mId, offset, rows);
+            list = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdList(depotIdArray, forceFlag, inOutManageFlag, sku, batchNumber, number, beginTime, endTime, mId, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long findDetailByDepotIdsAndMaterialIdCount(String depotIds, Boolean forceFlag, String sku, String batchNumber,
+    public Long findDetailByDepotIdsAndMaterialIdCount(String depotIds, Boolean forceFlag, Boolean inOutManageFlag, String sku, String batchNumber,
                                                        String number, String beginTime, String endTime, Long mId)throws Exception {
         Long depotId = null;
         if(StringUtil.isNotEmpty(depotIds)) {
@@ -203,7 +203,7 @@ public class DepotItemService {
         Long[] depotIdArray = StringUtil.listToLongArray(depotList);
         Long result =null;
         try{
-            result = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdCount(depotIdArray, forceFlag, sku, batchNumber, number, beginTime, endTime, mId);
+            result = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdCount(depotIdArray, forceFlag, inOutManageFlag, sku, batchNumber, number, beginTime, endTime, mId);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
