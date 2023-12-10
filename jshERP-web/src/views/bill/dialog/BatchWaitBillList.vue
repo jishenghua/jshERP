@@ -53,7 +53,7 @@
       <!-- 操作按钮区域 -->
       <div class="table-operator"  style="margin-top: 5px">
         <a-button @click="handleBatchInOut" type="primary" icon="plus">批量{{queryParam.type}}</a-button>
-        <span style="padding-left:10px">注意：序列号和批号商品不能批量{{queryParam.type}}，需要到新增界面关联单据</span>
+        <span style="padding-left:10px">注意：含有序列号、批号商品或部分入库状态不能批量{{queryParam.type}}，需要到新增界面关联单据</span>
       </div>
       <!-- table区域-begin -->
       <a-table
@@ -103,7 +103,6 @@
         visible: false,
         disableMixinCreated: true,
         selectedRowKeys: [],
-        selectBillRows: [],
         linkNumber: '',
         organId: '',
         remark: '',
@@ -200,20 +199,27 @@
         if (this.selectedRowKeys.length <= 0) {
           this.$message.warning('请选择一条记录！')
         } else {
-          let ids = "";
-          for (let i = 0; i < this.selectedRowKeys.length; i++) {
-            ids += this.selectedRowKeys[i] + ",";
-          }
-          that.confirmLoading = true
-          batchAddDepotHeadAndDetail({'ids': ids}).then((res)=>{
-            if(res.code === 200){
-              that.$emit('ok')
-            }else{
-              that.$message.warning(res.data.message)
+          this.$confirm({
+            title: "确认批量操作",
+            content: "是否批量操作选中的单据?",
+            onOk: function () {
+              let ids = "";
+              for (let i = 0; i < that.selectedRowKeys.length; i++) {
+                ids += that.selectedRowKeys[i] + ",";
+              }
+              that.confirmLoading = true
+              batchAddDepotHeadAndDetail({ 'ids': ids }).then((res) => {
+                if (res.code === 200) {
+                  that.$emit('ok')
+                  that.selectedRowKeys = []
+                  that.confirmLoading = false
+                  that.close()
+                } else {
+                  that.$message.warning(res.data.message)
+                  that.confirmLoading = false
+                }
+              })
             }
-          }).finally(() => {
-            that.confirmLoading = false
-            that.close()
           })
         }
       }

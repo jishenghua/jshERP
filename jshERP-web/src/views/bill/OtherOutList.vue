@@ -177,7 +177,7 @@
   import { BillListMixin } from './mixins/BillListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import JDate from '@/components/jeecg/JDate'
-  import Vue from 'vue'
+  import { deleteAction } from '@/api/manage'
   export default {
     name: "OtherOutList",
     mixins:[JeecgListMixin,BillListMixin],
@@ -271,6 +271,54 @@
         this.loadData(1)
         if(this.inOutManageFlag) {
           this.initWaitBillCount('出库', '销售,采购退货', '1,3')
+        }
+      },
+      myHandleDelete(record) {
+        let that = this
+        if(record.status === '0') {
+          deleteAction(that.url.delete, {id: record.id}).then((res) => {
+            if(res.code === 200){
+              that.loadData(1)
+              if(that.inOutManageFlag) {
+                that.initWaitBillCount('出库', '销售,采购退货', '1,3')
+              }
+            } else {
+              that.$message.warning(res.data.message);
+            }
+          })
+        } else {
+          this.$message.warning("抱歉，只有未审核的单据才能删除，请先进行反审核！")
+        }
+      },
+      batchDel: function () {
+        if (this.selectedRowKeys.length <= 0) {
+          this.$message.warning('请选择一条记录！')
+        } else {
+          let ids = ""
+          for (let i = 0; i < this.selectedRowKeys.length; i++) {
+            ids += this.selectedRowKeys[i] + ","
+          }
+          let that = this
+          this.$confirm({
+            title: "确认删除",
+            content: "是否删除选中数据?",
+            onOk: function () {
+              that.loading = true
+              deleteAction(that.url.deleteBatch, {ids: ids}).then((res) => {
+                if(res.code === 200){
+                  that.loadData()
+                  that.onClearSelected()
+                  if(that.inOutManageFlag) {
+                    that.initWaitBillCount('出库', '销售,采购退货', '1,3')
+                  }
+                } else {
+                  that.$message.warning(res.data.message)
+                }
+              }).finally(() => {
+                that.loading = false
+              })
+            }
+          })
         }
       },
       //待出库
