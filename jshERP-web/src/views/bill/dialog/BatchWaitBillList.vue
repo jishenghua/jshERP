@@ -90,7 +90,7 @@
   import BillDetail from './BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import {mixinDevice} from '@/utils/mixin'
-  import { findBillDetailByNumber } from '@/api/api'
+  import { findBillDetailByNumber, batchAddDepotHeadAndDetail } from '@/api/api'
   export default {
     name: 'BatchWaitBillList',
     mixins:[JeecgListMixin, mixinDevice],
@@ -196,10 +196,25 @@
         this.loadData(1);
       },
       handleBatchInOut() {
+        const that = this
         if (this.selectedRowKeys.length <= 0) {
           this.$message.warning('请选择一条记录！')
         } else {
-
+          let ids = "";
+          for (let i = 0; i < this.selectedRowKeys.length; i++) {
+            ids += this.selectedRowKeys[i] + ",";
+          }
+          that.confirmLoading = true
+          batchAddDepotHeadAndDetail({'ids': ids}).then((res)=>{
+            if(res.code === 200){
+              that.$emit('ok')
+            }else{
+              that.$message.warning(res.data.message)
+            }
+          }).finally(() => {
+            that.confirmLoading = false
+            that.close()
+          })
         }
       }
     }
