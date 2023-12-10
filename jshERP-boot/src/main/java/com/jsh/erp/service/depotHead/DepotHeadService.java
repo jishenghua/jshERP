@@ -1512,12 +1512,20 @@ public class DepotHeadService {
         return result;
     }
 
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void batchAddDepotHeadAndDetail(String ids, HttpServletRequest request) throws Exception {
         List<DepotHead> dhList = getDepotHeadListByIds(ids);
+        StringBuilder sb = new StringBuilder();
+        User userInfo=userService.getCurrentUser();
         for(DepotHead depotHead : dhList) {
             String prefixNo = BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())?"QTRK":"QTCK";
             //关联单据单号
-            depotHead.setLinkNumber(depotHead.getNumber());
+            String oldNumber = depotHead.getNumber();
+            if("3".equals(depotHead.getStatus())) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_MSG, oldNumber, depotHead.getType()));
+            }
+            depotHead.setLinkNumber(oldNumber);
             //给单号重新赋值
             depotHead.setNumber(prefixNo + sequenceService.buildOnlyNumber());
             depotHead.setDefaultNumber(prefixNo + sequenceService.buildOnlyNumber());
@@ -1526,16 +1534,24 @@ public class DepotHeadService {
             depotHead.setChangeAmount(BigDecimal.ZERO);
             depotHead.setTotalPrice(BigDecimal.ZERO);
             depotHead.setDiscountLastMoney(BigDecimal.ZERO);
+            depotHead.setCreator(userInfo==null?null:userInfo.getId());
             depotHead.setOrganId(null);
             depotHead.setAccountId(null);
+            depotHead.setStatus("0");
             depotHead.setTenantId(null);
             //查询明细
             List<DepotItemVo4WithInfoEx> itemList = depotItemService.getDetailList(depotHead.getId());
             depotHead.setId(null);
-            String beanJson = JSONObject.toJSONString(depotHead);
             JSONArray rowArr = new JSONArray();
             for(DepotItemVo4WithInfoEx item: itemList) {
-                //TODO 增加序列号和批次的提示，不能进行录入
+                if("1".equals(item.getEnableSerialNumber())) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_SERIAL_NUMBER_FAILED_CODE,
+                            String.format(ExceptionConstants.DEPOT_ITEM_EXIST_SERIAL_NUMBER_FAILED_MSG, oldNumber));
+                }
+                if("1".equals(item.getEnableBatchNumber())) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_BATCH_NUMBER_FAILED_CODE,
+                            String.format(ExceptionConstants.DEPOT_ITEM_EXIST_BATCH_NUMBER_FAILED_MSG, oldNumber));
+                }
                 item.setUnitPrice(BigDecimal.ZERO);
                 item.setAllPrice(BigDecimal.ZERO);
                 item.setLinkId(item.getId());
@@ -1547,7 +1563,20 @@ public class DepotHeadService {
             }
             String rows = rowArr.toJSONString();
             //新增其它入库单或其它出库单
-            this.addDepotHeadAndDetail(beanJson, rows, request);
+            sb.append("[").append(depotHead.getNumber()).append("]");
+            depotHeadMapper.insertSelective(depotHead);
+            //根据单据编号查询单据id
+            DepotHeadExample dhExample = new DepotHeadExample();
+            dhExample.createCriteria().andNumberEqualTo(depotHead.getNumber()).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+            List<DepotHead> list = depotHeadMapper.selectByExample(dhExample);
+            if(list!=null) {
+                Long headId = list.get(0).getId();
+                /**入库和出库处理单据子表信息*/
+                depotItemService.saveDetials(rows, headId, "add", request);
+            }
         }
+        logService.insertLog("单据",
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_BATCH_ADD).append(sb).toString(),
+                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
     }
 }

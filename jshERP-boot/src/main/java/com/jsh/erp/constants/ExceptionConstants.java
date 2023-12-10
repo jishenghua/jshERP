@@ -421,6 +421,9 @@ public class ExceptionConstants {
     //单据录入-部分采购的单据不能进行反审核
     public static final int DEPOT_HEAD_PURCHASE_STATUS_THREE_CODE = 8500027;
     public static final String DEPOT_HEAD_PURCHASE_STATUS_THREE_MSG = "抱歉，部分采购的单据不能进行反审核";
+    //单据录入-单据中存在部分状态，需要到新增界面关联单据
+    public static final int DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_CODE = 8500028;
+    public static final String DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_MSG = "抱歉，单据:%s是部分%s状态，需要到新增界面关联单据";
 
     /**
      *  单据明细信息
@@ -441,6 +444,12 @@ public class ExceptionConstants {
     //单据明细-明细中仓库不存在
     public static final int DEPOT_ITEM_DEPOTNAME_IS_NOT_EXIST_CODE = 9000004;
     public static final String DEPOT_ITEM_DEPOTNAME_IS_NOT_EXIST_MSG = "抱歉，仓库:%s在基础资料-仓库信息中不存在";
+    //单据明细-单据中存在序列号，需要到新增界面关联单据
+    public static final int DEPOT_ITEM_EXIST_SERIAL_NUMBER_FAILED_CODE = 9000005;
+    public static final String DEPOT_ITEM_EXIST_SERIAL_NUMBER_FAILED_MSG = "抱歉，单据:%s里面存在序列号，需要到新增界面关联单据";
+    //单据明细-单据中存在批号，需要到新增界面关联单据
+    public static final int DEPOT_ITEM_EXIST_BATCH_NUMBER_FAILED_CODE = 9000006;
+    public static final String DEPOT_ITEM_EXIST_BATCH_NUMBER_FAILED_MSG = "抱歉，单据:%s里面存在批号，需要到新增界面关联单据";
 
     /**
      *  财务信息
