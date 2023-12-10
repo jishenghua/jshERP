@@ -632,4 +632,21 @@ public class DepotHeadController {
         objectMap.put("total", total);
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
+
+    /**
+     * 批量新增入库或出库单据
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/batchAddDepotHeadAndDetail")
+    @ApiOperation(value = "批量新增入库或出库单据")
+    public Object batchAddDepotHeadAndDetail(@RequestBody JSONObject jsonObject,
+                                             HttpServletRequest request) throws  Exception{
+        JSONObject result = ExceptionConstants.standardSuccess();
+        String ids = jsonObject.getString("ids");
+        depotHeadService.batchAddDepotHeadAndDetail(ids, request);
+        return result;
+    }
 }

@@ -20,6 +20,7 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.person.PersonService;
 import com.jsh.erp.service.role.RoleService;
+import com.jsh.erp.service.sequence.SequenceService;
 import com.jsh.erp.service.serialNumber.SerialNumberService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
@@ -82,6 +83,8 @@ public class DepotHeadService {
     private AccountHeadService accountHeadService;
     @Resource
     private AccountItemService accountItemService;
+    @Resource
+    private SequenceService sequenceService;
     @Resource
     DepotItemMapperEx depotItemMapperEx;
     @Resource
@@ -1507,5 +1510,44 @@ public class DepotHeadService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public void batchAddDepotHeadAndDetail(String ids, HttpServletRequest request) throws Exception {
+        List<DepotHead> dhList = getDepotHeadListByIds(ids);
+        for(DepotHead depotHead : dhList) {
+            String prefixNo = BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())?"QTRK":"QTCK";
+            //关联单据单号
+            depotHead.setLinkNumber(depotHead.getNumber());
+            //给单号重新赋值
+            depotHead.setNumber(prefixNo + sequenceService.buildOnlyNumber());
+            depotHead.setDefaultNumber(prefixNo + sequenceService.buildOnlyNumber());
+            depotHead.setOperTime(new Date());
+            depotHead.setSubType(BusinessConstants.SUB_TYPE_OTHER);
+            depotHead.setChangeAmount(BigDecimal.ZERO);
+            depotHead.setTotalPrice(BigDecimal.ZERO);
+            depotHead.setDiscountLastMoney(BigDecimal.ZERO);
+            depotHead.setOrganId(null);
+            depotHead.setAccountId(null);
+            depotHead.setTenantId(null);
+            //查询明细
+            List<DepotItemVo4WithInfoEx> itemList = depotItemService.getDetailList(depotHead.getId());
+            depotHead.setId(null);
+            String beanJson = JSONObject.toJSONString(depotHead);
+            JSONArray rowArr = new JSONArray();
+            for(DepotItemVo4WithInfoEx item: itemList) {
+                //TODO 增加序列号和批次的提示，不能进行录入
+                item.setUnitPrice(BigDecimal.ZERO);
+                item.setAllPrice(BigDecimal.ZERO);
+                item.setLinkId(item.getId());
+                item.setTenantId(null);
+                String itemStr = JSONObject.toJSONString(item);
+                JSONObject itemObj = JSONObject.parseObject(itemStr);
+                itemObj.put("unit", itemObj.getString("materialUnit"));
+                rowArr.add(itemObj.toJSONString());
+            }
+            String rows = rowArr.toJSONString();
+            //新增其它入库单或其它出库单
+            this.addDepotHeadAndDetail(beanJson, rows, request);
+        }
     }
 }
