@@ -306,6 +306,9 @@
         <if test="type != null">
             and dh.type=#{type}
         </if>
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
+        </if>
         <if test="creatorArray != null">
             and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
@@ -366,6 +369,9 @@
         </if>
         <if test="type != null">
             and dh.type=#{type}
+        </if>
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -461,6 +467,9 @@
         <if test="forceFlag">
             and dh.status = '1'
         </if>
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id
         <if test="offset != null and rows != null">
@@ -520,6 +529,9 @@
         </if>
         <if test="forceFlag">
             and dh.status = '1'
+        </if>
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id) a

@@ -657,11 +657,12 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InDetail> findInOutDetail(String beginTime, String endTime, String type, String [] creatorArray,
-                                                String [] organArray, Boolean forceFlag, String materialParam, List<Long> depotList, Integer oId, String number,
-                                                Long creator, String remark, Integer offset, Integer rows) throws Exception{
+                                                      String [] organArray, Boolean forceFlag, Boolean inOutManageFlag,
+                                                      String materialParam, List<Long> depotList, Integer oId, String number,
+                                                      Long creator, String remark, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag,
+            list =depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
                     materialParam, depotList, oId, number, creator, remark, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -670,11 +671,11 @@ public class DepotHeadService {
     }
 
     public int findInOutDetailCount(String beginTime, String endTime, String type, String [] creatorArray,
-                              String [] organArray, Boolean forceFlag, String materialParam, List<Long> depotList, Integer oId, String number,
+                              String [] organArray, Boolean forceFlag, Boolean inOutManageFlag, String materialParam, List<Long> depotList, Integer oId, String number,
                               Long creator, String remark) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag,
+            result =depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
                     materialParam, depotList, oId, number, creator, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -682,14 +683,15 @@ public class DepotHeadService {
         return result;
     }
 
-    public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, Boolean forceFlag, String materialParam,
-                              List<Long> depotList, Integer oId, Integer offset, Integer rows)throws Exception {
+    public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type,
+                                                                Boolean forceFlag, Boolean inOutManageFlag, String materialParam,
+                                                                List<Long> depotList, Integer oId, Integer offset, Integer rows)throws Exception {
         List<DepotHeadVo4InOutMCount> list = null;
         try{
             String [] creatorArray = getCreatorArray();
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = getOrganArray(subType, "");
-            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, forceFlag, materialParam, depotList, oId,
+            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, forceFlag, inOutManageFlag, materialParam, depotList, oId,
                     creatorArray, organArray, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -697,14 +699,15 @@ public class DepotHeadService {
         return list;
     }
 
-    public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, Boolean forceFlag, String materialParam,
-                               List<Long> depotList, Integer oId)throws Exception {
+    public int findInOutMaterialCountTotal(String beginTime, String endTime, String type,
+                                           Boolean forceFlag, Boolean inOutManageFlag, String materialParam,
+                                           List<Long> depotList, Integer oId)throws Exception {
         int result = 0;
         try{
             String [] creatorArray = getCreatorArray();
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = getOrganArray(subType, "");
-            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, materialParam, depotList, oId,
+            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, inOutManageFlag, materialParam, depotList, oId,
                     creatorArray, organArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
