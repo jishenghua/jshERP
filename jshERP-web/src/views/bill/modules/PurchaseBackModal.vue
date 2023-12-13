@@ -374,7 +374,7 @@
         }
       },
       onSearchLinkNumber() {
-        this.$refs.linkBillList.show('入库', '采购', '供应商', "1")
+        this.$refs.linkBillList.show('入库', '采购', '供应商', "1,2,3")
         this.$refs.linkBillList.title = "选择采购入库"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
