@@ -1138,9 +1138,11 @@ public class DepotItemService {
         return count;
     }
 
-    public List<DepotItemVoBatchNumberList> getBatchNumberList(String number, String name, Long depotId, String barCode, String batchNumber) throws Exception {
+    public List<DepotItemVoBatchNumberList> getBatchNumberList(String number, String name, Long depotId, String barCode,
+                                                               String batchNumber, Boolean forceFlag, Boolean inOutManageFlag) throws Exception {
         List<DepotItemVoBatchNumberList> reslist = new ArrayList<>();
-        List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name, depotId, barCode, batchNumber);
+        List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberList(StringUtil.toNull(number), name,
+                depotId, barCode, batchNumber, forceFlag, inOutManageFlag);
         for(DepotItemVoBatchNumberList bn: list) {
             if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
                 bn.setExpirationDateStr(Tools.parseDateToStr(bn.getExpirationDate()));

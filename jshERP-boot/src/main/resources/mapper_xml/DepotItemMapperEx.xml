@@ -947,6 +947,12 @@
         <if test="number != null">
             and dh.number!= #{number}
         </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
+        </if>
         and m.enable_batch_number =1
         and di.delete_flag!=1) tb
         group by batch_number

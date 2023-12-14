@@ -856,7 +856,10 @@ public class DepotItemController {
                 DepotItem depotItem = depotItemService.getDepotItem(depotItemId);
                 number = depotHeadService.getDepotHead(depotItem.getHeaderId()).getNumber();
             }
-            List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(number, name, depotId, barCode, batchNumber);
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+            Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
+            List<DepotItemVoBatchNumberList> list = depotItemService.getBatchNumberList(number, name, depotId, barCode,
+                    batchNumber, forceFlag, inOutManageFlag);
             map.put("rows", list);
             map.put("total", list.size());
             res.code = 200;

@@ -214,7 +214,9 @@ public interface DepotItemMapperEx {
             @Param("name") String name,
             @Param("depotId") Long depotId,
             @Param("barCode") String barCode,
-            @Param("batchNumber") String batchNumber);
+            @Param("batchNumber") String batchNumber,
+            @Param("forceFlag") Boolean forceFlag,
+            @Param("inOutManageFlag") Boolean inOutManageFlag);
 
     Long getCountByMaterialAndDepot(
             @Param("mId") Long mId,
