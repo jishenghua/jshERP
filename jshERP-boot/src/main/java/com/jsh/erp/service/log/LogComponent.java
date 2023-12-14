@@ -34,11 +34,12 @@ public class LogComponent implements ICommonQuery {
         String operation = StringUtil.getInfo(search, "operation");
         String userInfo = StringUtil.getInfo(search, "userInfo");
         String clientIp = StringUtil.getInfo(search, "clientIp");
-        Integer status = StringUtil.parseInteger(StringUtil.getInfo(search, "status"));
+        String tenantLoginName = StringUtil.getInfo(search, "tenantLoginName");
+        String tenantType = StringUtil.getInfo(search, "tenantType");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String content = StringUtil.getInfo(search, "content");
-        return logService.select(operation, userInfo, clientIp, status, beginTime, endTime, content,
+        return logService.select(operation, userInfo, clientIp, tenantLoginName, tenantType, beginTime, endTime, content,
                 QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -48,11 +49,12 @@ public class LogComponent implements ICommonQuery {
         String operation = StringUtil.getInfo(search, "operation");
         String userInfo = StringUtil.getInfo(search, "userInfo");
         String clientIp = StringUtil.getInfo(search, "clientIp");
-        Integer status = StringUtil.parseInteger(StringUtil.getInfo(search, "status"));
+        String tenantLoginName = StringUtil.getInfo(search, "tenantLoginName");
+        String tenantType = StringUtil.getInfo(search, "tenantType");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
         String content = StringUtil.getInfo(search, "content");
-        return logService.countLog(operation, userInfo, clientIp, status, beginTime, endTime, content);
+        return logService.countLog(operation, userInfo, clientIp, tenantLoginName, tenantType, beginTime, endTime, content);
     }
 
     @Override
