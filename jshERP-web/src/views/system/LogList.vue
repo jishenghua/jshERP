@@ -49,12 +49,17 @@
                     <a-input placeholder="请输入操作IP" v-model="queryParam.clientIp"></a-input>
                   </a-form-item>
                 </a-col>
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="操作状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select v-model="queryParam.status" placeholder="请选择操作状态">
+                <a-col :md="6" :sm="24" v-if="isManage">
+                  <a-form-item label="租户账号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入租户账号" v-model="queryParam.tenantLoginName"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24" v-if="isManage">
+                  <a-form-item label="租户类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select v-model="queryParam.tenantType" placeholder="请选择租户类型">
                       <a-select-option value="">请选择</a-select-option>
-                      <a-select-option value="0">成功</a-select-option>
-                      <a-select-option value="1">失败</a-select-option>
+                      <a-select-option value="0">试用租户</a-select-option>
+                      <a-select-option value="1">付费租户</a-select-option>
                     </a-select>
                   </a-form-item>
                 </a-col>
@@ -88,6 +93,7 @@
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
+  import {getAction } from '@/api/manage'
 
   export default {
     name: "LogList",
@@ -104,9 +110,11 @@
           createTimeRange:[],
           userInfo: '',
           clientIp:'',
-          status:''
+          tenantLoginName:'',
+          tenantType:''
         },
         tabKey: "1",
+        isManage: false,
         // 表头
         columns: [
           {
@@ -120,21 +128,11 @@
             }
           },
           {title: '操作模块', dataIndex: 'operation', width: 120, align: "left"},
-          {title: '操作详情', dataIndex: 'content', scopedSlots: { customRender: 'content' }, width: 350, align:"left" },
+          {title: '操作详情', dataIndex: 'content', scopedSlots: { customRender: 'content' }, width: 360, align:"left" },
           {title: '操作员账号', dataIndex: 'loginName', width: 80, align: "left"},
           {title: '操作员姓名', dataIndex: 'userName', width: 80, align: "left"},
-          {
-            title: '操作状态', dataIndex: 'status',width:80, align:"left",
-            customRender:function (text) {
-              if(text){
-                return "失败";
-              }else {
-                return "成功";
-              }
-            }
-          },
-          {title: '操作IP', dataIndex: 'clientIp', width: 110, align: "left"},
-          {title: '操作时间', dataIndex: 'createTimeStr', width: 120, align: "left"}
+          {title: '操作IP', dataIndex: 'clientIp', width: 100, align: "left"},
+          {title: '操作时间', dataIndex: 'createTimeStr', width: 110, align: "left"}
         ],
         operateColumn:
         {
@@ -154,23 +152,10 @@
         }
       }
     },
+    created() {
+      this.initUserInfo()
+    },
     methods: {
-      // 日志类型
-      callback(key){
-        // 动态添加操作类型列
-        if (key == 2) {
-          this.tabKey = '2';
-          this.columns.splice(7, 0, this.operateColumn);
-        }else if(this.columns.length == 9)
-        {
-          this.tabKey = '1';
-          this.columns.splice(7,1);
-        }
-
-        let that=this;
-        that.queryParam.logType=key;
-        that.loadData();
-      },
       onDateChange: function (value, dateString) {
         console.log(dateString[0],dateString[1]);
         this.queryParam.beginTime=dateString[0];
@@ -179,6 +164,18 @@
       onDateOk(value) {
         console.log(value);
       },
+      initUserInfo() {
+        getAction('/user/getUserSession').then((res)=>{
+          if(res.code === 200){
+            let user = res.data.user
+            if(user.tenantId === 0) {
+              this.isManage = true
+            }
+          }else{
+            this.$message.warning(res.data)
+          }
+        })
+      }
     }
   }
 </script>
