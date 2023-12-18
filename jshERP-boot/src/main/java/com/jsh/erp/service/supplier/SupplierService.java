@@ -287,24 +287,24 @@ public class SupplierService {
         return list==null?0:list.size();
     }
 
+    /**
+     * 更新会员的预付款
+     * @param supplierId
+     */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateAdvanceIn(Long supplierId, BigDecimal advanceIn)throws Exception{
-        Supplier supplier=null;
+    public void updateAdvanceIn(Long supplierId) {
         try{
-            supplier = supplierMapper.selectByPrimaryKey(supplierId);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        int result=0;
-        try{
-            if(supplier!=null){
-                supplier.setAdvanceIn(supplier.getAdvanceIn().add(advanceIn));  //增加预收款的金额，可能增加的是负值
-                 result=supplierMapper.updateByPrimaryKeySelective(supplier);
-            }
-        }catch(Exception e){
+            //查询会员在收预付款单据的总金额
+            BigDecimal financialAllPrice = accountHeadMapperEx.getFinancialAllPriceByOrganId(supplierId);
+            //查询会员在零售出库单据的总金额
+            BigDecimal billAllPrice = depotHeadMapperEx.getBillAllPriceByOrganId(supplierId);
+            Supplier supplier = new Supplier();
+            supplier.setId(supplierId);
+            supplier.setAdvanceIn(financialAllPrice.subtract(billAllPrice));
+            supplierMapper.updateByPrimaryKeySelective(supplier);
+        } catch (Exception e){
             JshException.writeFail(logger, e);
         }
-        return result;
     }
 
     public List<Supplier> findBySelectCus()throws Exception {
@@ -667,5 +667,16 @@ public class SupplierService {
                 userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
             }
         }
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetAdvanceIn(String ids) throws Exception {
+        int res = 0;
+        List<Long> idList = StringUtil.strToLongList(ids);
+        for(Long sId: idList) {
+            updateAdvanceIn(sId);
+            res = 1;
+        }
+        return res;
     }
 }

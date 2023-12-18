@@ -271,4 +271,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("materialParam") String materialParam,
             @Param("depotArray") String[] depotArray);
+
+    BigDecimal getBillAllPriceByOrganId(
+            @Param("organId") Long organId);
 }

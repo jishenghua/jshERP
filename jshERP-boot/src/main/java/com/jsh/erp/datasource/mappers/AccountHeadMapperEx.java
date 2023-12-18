@@ -58,4 +58,7 @@ public interface AccountHeadMapperEx {
 
     List<AccountHead> getFinancialBillNoByBillId(
             @Param("billId") Long billId);
+
+    BigDecimal getFinancialAllPriceByOrganId(
+            @Param("organId") Long organId);
 }

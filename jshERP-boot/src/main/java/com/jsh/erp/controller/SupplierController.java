@@ -391,4 +391,25 @@ public class SupplierController {
         }
     }
 
+    /**
+     * 批量设置会员当前的预付款
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/batchSetAdvanceIn")
+    @ApiOperation(value = "批量设置会员当前的预付款")
+    public String batchSetAdvanceIn(@RequestBody JSONObject jsonObject,
+                                    HttpServletRequest request)throws Exception {
+        String ids = jsonObject.getString("ids");
+        Map<String, Object> objectMap = new HashMap<>();
+        int res = supplierService.batchSetAdvanceIn(ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
 }

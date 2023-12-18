@@ -212,6 +212,12 @@ public class AccountHeadService {
     public int batchDeleteAccountHeadByIds(String ids)throws Exception {
         StringBuffer sb = new StringBuffer();
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        User userInfo=userService.getCurrentUser();
+        String [] idArray=ids.split(",");
+        //删除主表
+        accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
+        //删除子表
+        accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         List<AccountHead> list = getAccountHeadListByIds(ids);
         for(AccountHead accountHead: list){
             sb.append("[").append(accountHead.getBillNo()).append("]");
@@ -221,17 +227,11 @@ public class AccountHeadService {
             }
             if("收预付款".equals(accountHead.getType())){
                 if (accountHead.getOrganId() != null) {
-                    //删除时需要从会员扣除预付款
-                    supplierService.updateAdvanceIn(accountHead.getOrganId(), BigDecimal.ZERO.subtract(accountHead.getTotalPrice()));
+                    //更新会员预付款
+                    supplierService.updateAdvanceIn(accountHead.getOrganId());
                 }
             }
         }
-        User userInfo=userService.getCurrentUser();
-        String [] idArray=ids.split(",");
-        //删除主表
-        accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
-        //删除子表
-        accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         logService.insertLog("财务", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         return 1;
@@ -314,7 +314,8 @@ public class AccountHeadService {
             accountItemService.saveDetials(rows, headId, type, request);
         }
         if("收预付款".equals(accountHead.getType())){
-            supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice());
+            //更新会员预付款
+            supplierService.updateAdvanceIn(accountHead.getOrganId());
         }
         logService.insertLog("财务单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).toString(), request);
@@ -328,8 +329,6 @@ public class AccountHeadService {
             throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_BILL_NO_EXIST_CODE,
                     String.format(ExceptionConstants.ACCOUNT_HEAD_BILL_NO_EXIST_MSG));
         }
-        //获取之前的金额数据
-        BigDecimal preTotalPrice = getAccountHead(accountHead.getId()).getTotalPrice().abs();
         accountHeadMapper.updateByPrimaryKeySelective(accountHead);
         //根据单据编号查询单据id
         AccountHeadExample dhExample = new AccountHeadExample();
@@ -342,7 +341,8 @@ public class AccountHeadService {
             accountItemService.saveDetials(rows, headId, type, request);
         }
         if("收预付款".equals(accountHead.getType())){
-            supplierService.updateAdvanceIn(accountHead.getOrganId(), accountHead.getTotalPrice().subtract(preTotalPrice));
+            //更新会员预付款
+            supplierService.updateAdvanceIn(accountHead.getOrganId());
         }
         logService.insertLog("财务单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillNo()).toString(), request);

@@ -459,15 +459,6 @@ public class DepotHeadService {
                         }
                     }
                 }
-                //对于零售出库单据，更新会员的预收款信息
-                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
-                        && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())){
-                    if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
-                        if (depotHead.getOrganId() != null) {
-                            supplierService.updateAdvanceIn(depotHead.getOrganId(), depotHead.getTotalPrice().abs());
-                        }
-                    }
-                }
                 List<DepotItem> list = depotItemService.getListByHeaderId(depotHead.getId());
                 //删除单据子表数据
                 depotItemMapperEx.batchDeleteDepotItemByDepotHeadIds(new Long[]{depotHead.getId()});
@@ -513,6 +504,16 @@ public class DepotHeadService {
                         DepotHeadExample example = new DepotHeadExample();
                         example.createCriteria().andNumberEqualTo(depotHead.getLinkNumber());
                         depotHeadMapper.updateByExampleSelective(dh, example);
+                    }
+                }
+                //对于零售出库单据，更新会员的预收款信息
+                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())
+                        && BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType())){
+                    if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())) {
+                        if (depotHead.getOrganId() != null) {
+                            //更新会员预付款
+                            supplierService.updateAdvanceIn(depotHead.getOrganId());
+                        }
                     }
                 }
                 //更新当前库存
@@ -981,7 +982,8 @@ public class DepotHeadService {
             if(depotHead.getOrganId()!=null) {
                 BigDecimal currentAdvanceIn = supplierService.getSupplier(depotHead.getOrganId()).getAdvanceIn();
                 if(currentAdvanceIn.compareTo(depotHead.getTotalPrice())>=0) {
-                    supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice()));
+                    //更新会员的预付款
+                    supplierService.updateAdvanceIn(depotHead.getOrganId());
                 } else {
                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_CODE,
                             String.format(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_MSG));
@@ -1023,8 +1025,8 @@ public class DepotHeadService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_CANNOT_EDIT_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_CANNOT_EDIT_MSG));
         }
-        //获取之前的金额数据
-        BigDecimal preTotalPrice = getDepotHead(depotHead.getId()).getTotalPrice().abs();
+        //获取之前的会员id
+        Long preOrganId = getDepotHead(depotHead.getId()).getOrganId();
         String subType = depotHead.getSubType();
         //结算账户校验
         if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
@@ -1082,7 +1084,12 @@ public class DepotHeadService {
             if(depotHead.getOrganId()!=null){
                 BigDecimal currentAdvanceIn = supplierService.getSupplier(depotHead.getOrganId()).getAdvanceIn();
                 if(currentAdvanceIn.compareTo(depotHead.getTotalPrice())>=0) {
-                    supplierService.updateAdvanceIn(depotHead.getOrganId(), BigDecimal.ZERO.subtract(depotHead.getTotalPrice().subtract(preTotalPrice)));
+                    //更新会员的预付款
+                    supplierService.updateAdvanceIn(depotHead.getOrganId());
+                    if(null != preOrganId && !preOrganId.equals(depotHead.getOrganId())) {
+                        //更新之前会员的预付款
+                        supplierService.updateAdvanceIn(preOrganId);
+                    }
                 } else {
                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_CODE,
                             String.format(ExceptionConstants.DEPOT_HEAD_MEMBER_PAY_LACK_MSG));

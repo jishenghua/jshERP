@@ -1235,4 +1235,13 @@
         </if>
         and ifnull(dh.delete_Flag,'0') !='1') tb
     </select>
+
+    <select id="getBillAllPriceByOrganId" resultType="java.math.BigDecimal">
+        select ifnull(sum(dh.total_price),0) allPrice from jsh_depot_head dh
+        where dh.organ_id=#{organId}
+        and dh.type = '出库'
+        and dh.sub_type = '零售'
+        and dh.pay_type = '预付款'
+        and ifnull(dh.delete_flag,'0') !='1'
+    </select>
 </mapper>

@@ -211,4 +211,11 @@
         where ai.bill_id=#{billId}
         and ifnull(ah.delete_flag,'0') !='1'
     </select>
+
+    <select id="getFinancialAllPriceByOrganId" resultType="java.math.BigDecimal">
+        select ifnull(sum(ah.total_price),0) allPrice from jsh_account_head ah
+        where ah.organ_id=#{organId}
+        and ah.type = '收预付款'
+        and ifnull(ah.delete_flag,'0') !='1'
+    </select>
 </mapper>
