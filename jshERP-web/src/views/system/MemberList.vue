@@ -39,6 +39,7 @@
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchSetStatus(false)" icon="close-square">禁用</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleImportXls()" icon="import">导入</a-button>
           <a-button v-if="btnEnableList.indexOf(3)>-1" @click="handleExportXls('会员信息')" icon="download">导出</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchSetAdvanceIn()" icon="stock">修正预付款</a-button>
         </div>
         <!-- table区域-begin -->
         <div>
@@ -80,6 +81,7 @@
 <script>
   import MemberModal from './modules/MemberModal'
   import ImportFileModal from '@/components/tools/ImportFileModal'
+  import { postAction } from '@/api/manage'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -146,7 +148,8 @@
           deleteBatch: "/supplier/deleteBatch",
           importExcelUrl: "/supplier/importMember",
           exportXlsUrl: "/supplier/exportExcel",
-          batchSetStatusUrl: "/supplier/batchSetStatus"
+          batchSetStatusUrl: "/supplier/batchSetStatus",
+          batchSetAdvanceInUrl: "/supplier/batchSetAdvanceIn"
         }
       }
     },
@@ -175,6 +178,35 @@
         this.$refs.modalForm.disableSubmit = false;
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
+        }
+      },
+      batchSetAdvanceIn() {
+        if (this.selectedRowKeys.length <= 0) {
+          this.$message.warning('请选择一条记录！');
+        } else {
+          let ids = "";
+          for (let a = 0; a < this.selectedRowKeys.length; a++) {
+            ids += this.selectedRowKeys[a] + ",";
+          }
+          let that = this;
+          this.$confirm({
+            title: "确认操作",
+            content: "是否操作选中数据?",
+            onOk: function () {
+              that.loading = true;
+              postAction(that.url.batchSetAdvanceInUrl, {ids: ids}).then((res) => {
+                if(res.code === 200){
+                  that.$message.info('修正预付款成功！');
+                  that.loadData();
+                  that.onClearSelected();
+                } else {
+                  that.$message.warning(res.data.message);
+                }
+              }).finally(() => {
+                that.loading = false;
+              });
+            }
+          });
         }
       }
     }
