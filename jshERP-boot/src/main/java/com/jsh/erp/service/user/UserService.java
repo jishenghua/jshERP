@@ -349,19 +349,13 @@ public class UserService {
         }
         data.put("msgTip", msgTip);
         if(user!=null){
-            String roleType = getRoleTypeByUserId(user.getId()).getType(); //角色类型
+            user.setPassword(null);
             redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
             logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            JSONArray btnStrArr = getBtnStrArrById(user.getId());
             data.put("token", token);
             data.put("user", user);
-            //用户的按钮权限
-            if(!"admin".equals(user.getLoginName())){
-                data.put("userBtn", btnStrArr);
-            }
-            data.put("roleType", roleType);
         }
         return data;
     }
