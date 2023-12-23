@@ -255,8 +255,13 @@ export const JeecgListMixin = {
     handleTableChange(pagination, filters, sorter) {
       //分页、排序、筛选变化时触发
       if (Object.keys(sorter).length > 0) {
-        this.isorter.column = sorter.field;
-        this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
+        if(sorter.order) {
+          this.isorter.column = sorter.field
+          this.isorter.order = 'ascend' === sorter.order ? 'asc' : 'desc'
+        } else {
+          this.isorter.column = 'createTime'
+          this.isorter.order = 'desc'
+        }
       }
       if(pagination && pagination.current) {
         this.ipagination = pagination;

@@ -15,7 +15,7 @@
                     showSearch style="width: 100%"
                     placeholder="请选择仓库"
                     v-model="depotSelected">
-                    <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                    <a-select-option v-for="(depot,index) in depotList" :key="index" :value="depot.id">
                       {{ depot.depotName }}
                     </a-select-option>
                   </a-select>
@@ -167,6 +167,7 @@
         categoryTree:[],
         currentStock: '',
         currentStockPrice: '',
+        currentWeight: '',
         // 表头
         columns: [
           {
