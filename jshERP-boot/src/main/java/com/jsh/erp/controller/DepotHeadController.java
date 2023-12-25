@@ -98,8 +98,8 @@ public class DepotHeadController {
                                             @RequestParam("type") String type,
                                             @RequestParam(value = "creator", required = false) Long creator,
                                             @RequestParam("remark") String remark,
-                                            @RequestParam(value = "column", required = false) String column,
-                                            @RequestParam(value = "order", required = false) String order,
+                                            @RequestParam(value = "column", required = false, defaultValue = "createTime") String column,
+                                            @RequestParam(value = "order", required = false, defaultValue = "desc") String order,
                                             HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -169,8 +169,8 @@ public class DepotHeadController {
                                                    @RequestParam("beginTime") String beginTime,
                                                    @RequestParam("endTime") String endTime,
                                                    @RequestParam("type") String type,
-                                                   @RequestParam(value = "column", required = false) String column,
-                                                   @RequestParam(value = "order", required = false) String order,
+                                                   @RequestParam(value = "column", required = false, defaultValue = "createTime") String column,
+                                                   @RequestParam(value = "order", required = false, defaultValue = "desc") String order,
                                                    HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -233,8 +233,8 @@ public class DepotHeadController {
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam("subType") String subType,
                                                  @RequestParam("remark") String remark,
-                                                 @RequestParam(value = "column", required = false) String column,
-                                                 @RequestParam(value = "order", required = false) String order,
+                                                 @RequestParam(value = "column", required = false, defaultValue = "createTime") String column,
+                                                 @RequestParam(value = "order", required = false, defaultValue = "desc") String order,
                                                  HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
