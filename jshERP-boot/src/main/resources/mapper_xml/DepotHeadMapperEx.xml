@@ -13,28 +13,28 @@
     </resultMap>
 
     <resultMap id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.DepotHeadVo4InDetail">
-        <result column="Number" jdbcType="VARCHAR" property="Number" />
-        <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
-        <result column="MName" jdbcType="VARCHAR" property="MName" />
-        <result column="Model" jdbcType="VARCHAR" property="Model" />
+        <result column="number" jdbcType="VARCHAR" property="number" />
+        <result column="barCode" jdbcType="VARCHAR" property="barCode" />
+        <result column="mname" jdbcType="VARCHAR" property="mname" />
+        <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
-        <result column="unit_price" jdbcType="DECIMAL" property="UnitPrice" />
-        <result column="oper_number" jdbcType="DECIMAL" property="OperNumber" />
-        <result column="all_price" jdbcType="DECIMAL" property="AllPrice" />
-        <result column="tax_rate" jdbcType="DECIMAL" property="taxRate" />
-        <result column="tax_money" jdbcType="DECIMAL" property="taxMoney" />
-        <result column="tax_last_money" jdbcType="DECIMAL" property="taxLastMoney" />
-        <result column="SName" jdbcType="VARCHAR" property="SName" />
-        <result column="DName" jdbcType="VARCHAR" property="DName" />
-        <result column="OperTime" jdbcType="VARCHAR" property="OperTime" />
-        <result column="NewType" jdbcType="VARCHAR" property="NewType" />
+        <result column="unitPrice" jdbcType="DECIMAL" property="unitPrice" />
+        <result column="operNumber" jdbcType="DECIMAL" property="operNumber" />
+        <result column="allPrice" jdbcType="DECIMAL" property="allPrice" />
+        <result column="taxRate" jdbcType="DECIMAL" property="taxRate" />
+        <result column="taxMoney" jdbcType="DECIMAL" property="taxMoney" />
+        <result column="taxLastMoney" jdbcType="DECIMAL" property="taxLastMoney" />
+        <result column="sname" jdbcType="VARCHAR" property="sname" />
+        <result column="dname" jdbcType="VARCHAR" property="dname" />
+        <result column="operTime" jdbcType="VARCHAR" property="operTime" />
+        <result column="newType" jdbcType="VARCHAR" property="newType" />
     </resultMap>
 
     <resultMap id="ResultInOutMaterialCount" type="com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount">
-        <result column="MaterialId" jdbcType="BIGINT" property="MaterialId" />
-        <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
+        <result column="materialId" jdbcType="BIGINT" property="materialId" />
+        <result column="barCode" jdbcType="VARCHAR" property="barCode" />
         <result column="mName" jdbcType="VARCHAR" property="mName" />
-        <result column="Model" jdbcType="VARCHAR" property="Model" />
+        <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="materialUnit" jdbcType="VARCHAR" property="materialUnit" />
@@ -283,9 +283,9 @@
     </select>
 
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code, m.`name` MName,m.model,m.standard,di.unit_price,di.material_unit as mUnit,
-        di.oper_number,di.all_price, ifnull(di.tax_rate,0) tax_rate, ifnull(di.tax_money,0) tax_money, ifnull(di.tax_last_money,0) tax_last_money,
-        s.supplier SName,d.dName DName, date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType,
+        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit,
+        di.oper_number operNumber,di.all_price allPrice, ifnull(di.tax_rate,0) taxRate, ifnull(di.tax_money,0) taxMoney, ifnull(di.tax_last_money,0) taxLastMoney,
+        s.supplier sname,d.dname dname, date_format(dh.oper_time, '%Y-%m-%d') operTime, concat(dh.sub_type,dh.type) as newType,
         concat_ws('  ',dh.remark,di.remark) as newRemark
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
@@ -343,7 +343,12 @@
         </if>
         and dh.sub_type!='调拨'
         and ifnull(dh.delete_flag,'0') !='1'
-        ORDER BY oper_time DESC,number desc
+        <if test="column == 'createTime'">
+            order by oper_time desc,number desc
+        </if>
+        <if test="column != 'createTime'">
+            order by ${column} ${order}
+        </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -407,11 +412,10 @@
         </if>
         and dh.sub_type!='调拨'
         and ifnull(dh.delete_flag,'0') !='1'
-        ORDER BY oper_time DESC,number desc
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
-        select di.material_id, me.bar_code, m.name mName,m.Model,m.standard,mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
+        select di.material_id materialId, me.bar_code barCode, m.name mName,m.model,m.standard,mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
         sum(di.basic_number) numSum,
         sum(di.all_price) priceSum
         from jsh_depot_head dh
@@ -472,6 +476,12 @@
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_id
+        <if test="column == 'createTime'">
+            order by materialId desc
+        </if>
+        <if test="column != 'createTime'">
+            order by ${column} ${order}
+        </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -538,15 +548,16 @@
     </select>
 
     <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code, m.`name` MName,m.model,m.standard,di.unit_price,di.material_unit as mUnit,di.oper_number,di.all_price,SName, d.dName DName,
-        date_format(dh.oper_time, '%Y-%m-%d') OperTime, concat(dh.sub_type,dh.type) as NewType, concat_ws('  ',dh.remark,di.remark) as newRemark
+        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit,
+               di.oper_number operNumber,di.all_price allPrice,sname, d.dName dname,date_format(dh.oper_time, '%Y-%m-%d') operTime,
+               concat(dh.sub_type,dh.type) as newType, concat_ws('  ',dh.remark,di.remark) as newRemark
         from jsh_depot_head dh
         left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         left join (select id,name as dName,delete_Flag from jsh_depot ) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
         <!-- 调出仓库名查询 -->
-        left join (select id as aid,name as SName,delete_Flag as adelete_Flag from jsh_depot ) ddd on ddd.aid=di.another_depot_id and ifnull(ddd.adelete_Flag,'0') !='1'
+        left join (select id as aid,name as sname,delete_Flag as adelete_Flag from jsh_depot ) ddd on ddd.aid=di.another_depot_id and ifnull(ddd.adelete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="depotFList.size()>0">
             and di.depot_id in
@@ -586,7 +597,12 @@
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        ORDER BY oper_time DESC,number desc
+        <if test="column == 'createTime'">
+            order by oper_time desc,number desc
+        </if>
+        <if test="column != 'createTime'">
+            order by ${column} ${order}
+        </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -638,7 +654,6 @@
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        ORDER BY oper_time DESC,number desc
     </select>
 
     <select id="getStatementAccount" resultType="com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount">

@@ -6,25 +6,25 @@ import java.util.Date;
 
 public class DepotHeadVo4InDetail {
 
-    private String Number;
+    private String number;
 
     private String barCode;
 
-    private String MName;
+    private String mname;
 
-    private String Model;
+    private String model;
 
     private String standard;
 
-    private BigDecimal UnitPrice;
+    private BigDecimal unitPrice;
 
     private String mUnit;
 
     private String newRemark;
 
-    private BigDecimal OperNumber;
+    private BigDecimal operNumber;
 
-    private BigDecimal AllPrice;
+    private BigDecimal allPrice;
 
     private BigDecimal taxRate;
 
@@ -32,22 +32,22 @@ public class DepotHeadVo4InDetail {
 
     private BigDecimal taxLastMoney;
 
-    private String SName;
+    private String sname;
 
-    private String DName;
+    private String dname;
 
-    private String OperTime;
+    private String operTime;
 
-    private String NewType;
+    private String newType;
 
     private Long tenantId;
 
     public String getNumber() {
-        return Number;
+        return number;
     }
 
     public void setNumber(String number) {
-        Number = number;
+        this.number = number;
     }
 
     public String getBarCode() {
@@ -58,20 +58,20 @@ public class DepotHeadVo4InDetail {
         this.barCode = barCode;
     }
 
-    public String getMName() {
-        return MName;
+    public String getMname() {
+        return mname;
     }
 
-    public void setMName(String MName) {
-        this.MName = MName;
+    public void setMname(String mname) {
+        this.mname = mname;
     }
 
     public String getModel() {
-        return Model;
+        return model;
     }
 
     public void setModel(String model) {
-        Model = model;
+        this.model = model;
     }
 
     public String getStandard() {
@@ -83,11 +83,11 @@ public class DepotHeadVo4InDetail {
     }
 
     public BigDecimal getUnitPrice() {
-        return UnitPrice;
+        return unitPrice;
     }
 
     public void setUnitPrice(BigDecimal unitPrice) {
-        UnitPrice = unitPrice;
+        this.unitPrice = unitPrice;
     }
 
     public String getmUnit() {
@@ -107,19 +107,19 @@ public class DepotHeadVo4InDetail {
     }
 
     public BigDecimal getOperNumber() {
-        return OperNumber;
+        return operNumber;
     }
 
     public void setOperNumber(BigDecimal operNumber) {
-        OperNumber = operNumber;
+        this.operNumber = operNumber;
     }
 
     public BigDecimal getAllPrice() {
-        return AllPrice;
+        return allPrice;
     }
 
     public void setAllPrice(BigDecimal allPrice) {
-        AllPrice = allPrice;
+        this.allPrice = allPrice;
     }
 
     public BigDecimal getTaxRate() {
@@ -146,36 +146,36 @@ public class DepotHeadVo4InDetail {
         this.taxLastMoney = taxLastMoney;
     }
 
-    public String getSName() {
-        return SName;
+    public String getSname() {
+        return sname;
     }
 
-    public void setSName(String SName) {
-        this.SName = SName;
+    public void setSname(String sname) {
+        this.sname = sname;
     }
 
-    public String getDName() {
-        return DName;
+    public String getDname() {
+        return dname;
     }
 
-    public void setDName(String DName) {
-        this.DName = DName;
+    public void setDname(String dname) {
+        this.dname = dname;
     }
 
     public String getOperTime() {
-        return OperTime;
+        return operTime;
     }
 
     public void setOperTime(String operTime) {
-        OperTime = operTime;
+        this.operTime = operTime;
     }
 
     public String getNewType() {
-        return NewType;
+        return newType;
     }
 
     public void setNewType(String newType) {
-        NewType = newType;
+        this.newType = newType;
     }
 
     public Long getTenantId() {

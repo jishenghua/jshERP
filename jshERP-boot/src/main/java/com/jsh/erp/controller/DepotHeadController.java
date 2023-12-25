@@ -6,40 +6,31 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.DepotHeadVo4Body;
-import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InDetail;
 import com.jsh.erp.datasource.vo.DepotHeadVo4InOutMCount;
 import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
-import com.jsh.erp.exception.BusinessParamCheckingException;
-import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.redis.RedisService;
-import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
-import static com.jsh.erp.utils.Tools.getNow3;
 
 /**
  * @author ji-sheng-hua 752*718*920
@@ -58,9 +49,6 @@ public class DepotHeadController {
 
     @Resource
     private SystemConfigService systemConfigService;
-
-    @Resource
-    private RedisService redisService;
 
     /**
      * 批量设置状态-审核或者反审核
@@ -100,17 +88,19 @@ public class DepotHeadController {
     @GetMapping(value = "/findInOutDetail")
     @ApiOperation(value = "入库出库明细接口")
     public BaseResponseInfo findInOutDetail(@RequestParam("currentPage") Integer currentPage,
-                                        @RequestParam("pageSize") Integer pageSize,
-                                        @RequestParam(value = "organId", required = false) Integer oId,
-                                        @RequestParam("number") String number,
-                                        @RequestParam("materialParam") String materialParam,
-                                        @RequestParam(value = "depotId", required = false) Long depotId,
-                                        @RequestParam("beginTime") String beginTime,
-                                        @RequestParam("endTime") String endTime,
-                                        @RequestParam("type") String type,
-                                        @RequestParam(value = "creator", required = false) Long creator,
-                                        @RequestParam("remark") String remark,
-                                        HttpServletRequest request)throws Exception {
+                                            @RequestParam("pageSize") Integer pageSize,
+                                            @RequestParam(value = "organId", required = false) Integer oId,
+                                            @RequestParam("number") String number,
+                                            @RequestParam("materialParam") String materialParam,
+                                            @RequestParam(value = "depotId", required = false) Long depotId,
+                                            @RequestParam("beginTime") String beginTime,
+                                            @RequestParam("endTime") String endTime,
+                                            @RequestParam("type") String type,
+                                            @RequestParam(value = "creator", required = false) Long creator,
+                                            @RequestParam("remark") String remark,
+                                            @RequestParam(value = "column", required = false) String column,
+                                            @RequestParam(value = "order", required = false) String order,
+                                            HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -134,7 +124,8 @@ public class DepotHeadController {
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
             List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
-                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark, (currentPage-1)*pageSize, pageSize);
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark,
+                    StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark);
             map.put("total", total);
@@ -171,14 +162,16 @@ public class DepotHeadController {
     @GetMapping(value = "/findInOutMaterialCount")
     @ApiOperation(value = "入库出库统计接口")
     public BaseResponseInfo findInOutMaterialCount(@RequestParam("currentPage") Integer currentPage,
-                                         @RequestParam("pageSize") Integer pageSize,
-                                         @RequestParam(value = "organId", required = false) Integer oId,
-                                         @RequestParam("materialParam") String materialParam,
-                                         @RequestParam(value = "depotId", required = false) Long depotId,
-                                         @RequestParam("beginTime") String beginTime,
-                                         @RequestParam("endTime") String endTime,
-                                         @RequestParam("type") String type,
-                                         HttpServletRequest request)throws Exception {
+                                                   @RequestParam("pageSize") Integer pageSize,
+                                                   @RequestParam(value = "organId", required = false) Integer oId,
+                                                   @RequestParam("materialParam") String materialParam,
+                                                   @RequestParam(value = "depotId", required = false) Long depotId,
+                                                   @RequestParam("beginTime") String beginTime,
+                                                   @RequestParam("endTime") String endTime,
+                                                   @RequestParam("type") String type,
+                                                   @RequestParam(value = "column", required = false) String column,
+                                                   @RequestParam(value = "order", required = false) String order,
+                                                   HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -198,7 +191,8 @@ public class DepotHeadController {
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, forceFlag, inOutManageFlag,
-                    StringUtil.toNull(materialParam), depotList, oId, (currentPage-1)*pageSize, pageSize);
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order),
+                    (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, inOutManageFlag,
                     StringUtil.toNull(materialParam), depotList, oId);
             map.put("total", total);
@@ -239,6 +233,8 @@ public class DepotHeadController {
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam("subType") String subType,
                                                  @RequestParam("remark") String remark,
+                                                 @RequestParam(value = "column", required = false) String column,
+                                                 @RequestParam(value = "order", required = false) String order,
                                                  HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -270,7 +266,8 @@ public class DepotHeadController {
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, StringUtil.toNull(number),
-                    creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark, (currentPage-1)*pageSize, pageSize);
+                    creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark,
+                    StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, StringUtil.toNull(number),
                     creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
             map.put("rows", list);

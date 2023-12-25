@@ -595,9 +595,8 @@ public class MaterialController {
                                              @RequestParam(value = "position", required = false) String position,
                                              @RequestParam("materialParam") String materialParam,
                                              @RequestParam("zeroStock") Integer zeroStock,
-                                             @RequestParam("mpList") String mpList,
-                                             @RequestParam("column") String column,
-                                             @RequestParam("order") String order,
+                                             @RequestParam(value = "column", required = false) String column,
+                                             @RequestParam(value = "order", required = false) String order,
                                              HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();

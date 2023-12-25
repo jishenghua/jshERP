@@ -1,17 +1,16 @@
 package com.jsh.erp.datasource.vo;
 
-
 import java.math.BigDecimal;
 
 public class DepotHeadVo4InOutMCount {
 
-    private Long MaterialId;
+    private Long materialId;
 
     private String barCode;
 
     private String mName;
 
-    private String Model;
+    private String model;
 
     private String standard;
 
@@ -26,11 +25,11 @@ public class DepotHeadVo4InOutMCount {
     private Long tenantId;
 
     public Long getMaterialId() {
-        return MaterialId;
+        return materialId;
     }
 
     public void setMaterialId(Long materialId) {
-        MaterialId = materialId;
+        this.materialId = materialId;
     }
 
     public String getBarCode() {
@@ -50,11 +49,11 @@ public class DepotHeadVo4InOutMCount {
     }
 
     public String getModel() {
-        return Model;
+        return model;
     }
 
     public void setModel(String model) {
-        Model = model;
+        this.model = model;
     }
 
     public String getStandard() {

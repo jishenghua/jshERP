@@ -77,6 +77,8 @@ public interface DepotHeadMapperEx {
             @Param("number") String number,
             @Param("creator") Long creator,
             @Param("remark") String remark,
+            @Param("column") String column,
+            @Param("order") String order,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -106,6 +108,8 @@ public interface DepotHeadMapperEx {
             @Param("oId") Integer oId,
             @Param("creatorArray") String[] creatorArray,
             @Param("organArray") String[] organArray,
+            @Param("column") String column,
+            @Param("order") String order,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -132,6 +136,8 @@ public interface DepotHeadMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("depotFList") List<Long> depotFList,
             @Param("remark") String remark,
+            @Param("column") String column,
+            @Param("order") String order,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
