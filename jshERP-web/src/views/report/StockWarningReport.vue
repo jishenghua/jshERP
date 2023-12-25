@@ -115,7 +115,7 @@
             }
           },
           {title: '仓库', dataIndex: 'depotName', width: 100, ellipsis:true},
-          {title: '条码', dataIndex: 'barCode', width: 100},
+          {title: '条码', dataIndex: 'barCode', sorter: (a, b) => a.barCode - b.barCode, width: 100},
           {title: '名称', dataIndex: 'mname', width: 100, ellipsis:true},
           {title: '规格', dataIndex: 'mstandard', width: 80, ellipsis:true},
           {title: '型号', dataIndex: 'mmodel', width: 80, ellipsis:true},

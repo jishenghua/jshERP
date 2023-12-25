@@ -151,10 +151,10 @@
           {title: '手机号码', dataIndex: 'telephone', width: 100},
           {title: '联系电话', dataIndex: 'phoneNum', width: 100},
           {title: '电子邮箱', dataIndex: 'email', width: 100},
-          {title: '期初应付', dataIndex: 'preNeed', width: 80},
-          {title: '本期欠款', dataIndex: 'debtMoney', width: 80},
-          {title: '本期付款', dataIndex: 'backMoney', width: 80},
-          {dataIndex: 'allNeed', width: 80,
+          {title: '期初应付', dataIndex: 'preNeed', sorter: (a, b) => a.preNeed - b.preNeed, width: 80},
+          {title: '本期欠款', dataIndex: 'debtMoney', sorter: (a, b) => a.debtMoney - b.debtMoney, width: 80},
+          {title: '本期付款', dataIndex: 'backMoney', sorter: (a, b) => a.backMoney - b.backMoney, width: 80},
+          {dataIndex: 'allNeed', sorter: (a, b) => a.allNeed - b.allNeed, width: 80,
             slots: { title: 'customTitle' }
           }
         ],

@@ -186,7 +186,7 @@
             title: '单据编号', dataIndex: 'number', width: 100,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          {title: '条码', dataIndex: 'barCode', width: 80},
+          {title: '条码', dataIndex: 'barCode', sorter: (a, b) => a.barCode - b.barCode, width: 80},
           {title: '名称', dataIndex: 'mname', width: 120, ellipsis:true},
           {title: '规格', dataIndex: 'standard', width: 60, ellipsis:true},
           {title: '型号', dataIndex: 'model', width: 60, ellipsis:true},

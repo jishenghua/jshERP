@@ -157,7 +157,7 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '条码', dataIndex: 'barCode', width: 160},
+          {title: '条码', dataIndex: 'barCode', sorter: (a, b) => a.barCode - b.barCode, width: 160},
           {title: '名称', dataIndex: 'materialName', width: 160, ellipsis:true},
           {title: '规格', dataIndex: 'materialStandard', width: 80, ellipsis:true},
           {title: '型号', dataIndex: 'materialModel', width: 80, ellipsis:true},
