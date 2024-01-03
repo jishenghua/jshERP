@@ -73,6 +73,13 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24" v-if="orgaTree.length">
+                  <a-form-item label="机构" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" allow-clear :treeData="orgaTree"
+                                   v-model="queryParam.organizationId" placeholder="请选择机构">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入备注" v-model="queryParam.remark"></a-input>
@@ -130,7 +137,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectSup, findBillDetailByNumber} from '@/api/api'
+  import {findBySelectSup, findBillDetailByNumber, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -157,6 +164,7 @@
           materialParam:'',
           depotId: '',
           depotIdF: '',
+          organizationId: '',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           subType: "调拨",
@@ -171,6 +179,7 @@
         defaultTimeStr: '',
         supList: [],
         depotList: [],
+        orgaTree: [],
         tabKey: "1",
         // 表头
         columns: [
@@ -205,6 +214,7 @@
     created () {
       this.getDepotData()
       this.initSupplier()
+      this.loadAllOrgaData()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
@@ -238,6 +248,15 @@
             this.depotList = res.data;
           }else{
             this.$message.info(res.data);
+          }
+        })
+      },
+      loadAllOrgaData(){
+        let that = this
+        let params = {}
+        getAllOrganizationTreeByUser(params).then((res)=>{
+          if(res){
+            that.orgaTree = res
           }
         })
       },

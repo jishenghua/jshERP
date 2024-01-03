@@ -65,6 +65,13 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24" v-if="orgaTree.length">
+                  <a-form-item label="机构" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" allow-clear :treeData="orgaTree"
+                                   v-model="queryParam.organizationId" placeholder="请选择机构">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -111,7 +118,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectCus} from '@/api/api'
+  import {findBySelectCus, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -136,6 +143,7 @@
           endTime: moment().format('YYYY-MM-DD'),
           organId: '',
           depotId: '',
+          organizationId: '',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
         },
         ipagination:{
@@ -147,6 +155,7 @@
         defaultTimeStr: '',
         cusList: [],
         depotList: [],
+        orgaTree: [],
         realityPriceTotal: '',
         tabKey: "1",
         // 表头
@@ -177,6 +186,7 @@
     created () {
       this.initCustomer()
       this.getDepotData()
+      this.loadAllOrgaData()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
@@ -233,6 +243,15 @@
             this.depotList = res.data;
           }else{
             this.$message.info(res.data);
+          }
+        })
+      },
+      loadAllOrgaData(){
+        let that = this
+        let params = {}
+        getAllOrganizationTreeByUser(params).then((res)=>{
+          if(res){
+            that.orgaTree = res
           }
         })
       },

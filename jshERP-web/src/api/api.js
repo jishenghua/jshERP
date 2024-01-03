@@ -20,6 +20,7 @@ const getUserBtnByCurrentUser = (params)=>getAction("/user/getUserBtnByCurrentUs
 const queryPermissionsByUser = (params)=>postAction("/function/findMenuByPNumber",params);
 //机构管理
 const queryOrganizationTreeList = (params)=>getAction("/organization/getOrganizationTree",params);
+const getAllOrganizationTreeByUser = (params)=>getAction("/organization/getAllOrganizationTreeByUser",params);
 const queryOrganizationById = (params)=>getAction("/organization/findById",params);
 const checkOrganization = (params)=>getAction("/organization/checkIsNameExist",params);
 //经手人管理
@@ -127,6 +128,7 @@ export {
   getUserBtnByCurrentUser,
   queryPermissionsByUser,
   queryOrganizationTreeList,
+  getAllOrganizationTreeByUser,
   queryOrganizationById,
   checkOrganization,
   addPerson,

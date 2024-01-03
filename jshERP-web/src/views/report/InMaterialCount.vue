@@ -59,6 +59,13 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24" v-if="orgaTree.length">
+                  <a-form-item label="机构" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" allow-clear :treeData="orgaTree"
+                                   v-model="queryParam.organizationId" placeholder="请选择机构">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -105,7 +112,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectOrgan} from '@/api/api'
+  import {findBySelectOrgan, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -129,6 +136,7 @@
           organId: '',
           materialParam:'',
           depotId: '',
+          organizationId: '',
           beginTime: getNowFormatYear() + '-01-01',
           endTime: moment().format('YYYY-MM-DD'),
           type: "入库",
@@ -142,6 +150,7 @@
         defaultTimeStr: '',
         organList: [],
         depotList: [],
+        orgaTree: [],
         tabKey: "1",
         // 表头
         columns: [
@@ -168,6 +177,7 @@
     created () {
       this.getDepotData()
       this.initSupplier()
+      this.loadAllOrgaData()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
@@ -198,6 +208,15 @@
             this.depotList = res.data;
           }else{
             this.$message.info(res.data);
+          }
+        })
+      },
+      loadAllOrgaData(){
+        let that = this
+        let params = {}
+        getAllOrganizationTreeByUser(params).then((res)=>{
+          if(res){
+            that.orgaTree = res
           }
         })
       },

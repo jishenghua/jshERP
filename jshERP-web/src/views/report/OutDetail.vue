@@ -74,6 +74,13 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24" v-if="orgaTree.length">
+                  <a-form-item label="机构" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" allow-clear :treeData="orgaTree"
+                                   v-model="queryParam.organizationId" placeholder="请选择机构">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入备注" v-model="queryParam.remark"></a-input>
@@ -131,7 +138,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
   import {getAction} from '@/api/manage'
-  import {findBySelectOrgan, findBillDetailByNumber, getUserList} from '@/api/api'
+  import {findBySelectOrgan, findBillDetailByNumber, getUserList, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -161,6 +168,7 @@
           endTime: moment().format('YYYY-MM-DD'),
           type: "出库",
           creator: "",
+          organizationId: '',
           remark: ''
         },
         ipagination:{
@@ -173,6 +181,7 @@
         organList: [],
         depotList: [],
         userList: [],
+        orgaTree: [],
         tabKey: "1",
         // 表头
         columns: [
@@ -210,6 +219,7 @@
       this.getDepotData()
       this.initSupplier()
       this.initUser()
+      this.loadAllOrgaData()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     mounted () {
@@ -252,6 +262,15 @@
             this.userList = res;
           }
         });
+      },
+      loadAllOrgaData(){
+        let that = this
+        let params = {}
+        getAllOrganizationTreeByUser(params).then((res)=>{
+          if(res){
+            that.orgaTree = res
+          }
+        })
       },
       myHandleDetail(record) {
         findBillDetailByNumber({ number: record.number }).then((res) => {
