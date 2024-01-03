@@ -471,7 +471,7 @@
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="inOutManageFlag">
             and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
@@ -540,7 +540,7 @@
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="inOutManageFlag">
             and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
@@ -942,7 +942,7 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -976,7 +976,7 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="creatorArray != null">
             and dh.creator in (

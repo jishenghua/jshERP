@@ -443,7 +443,7 @@
             </foreach>
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
@@ -500,7 +500,7 @@
             </foreach>
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(di.delete_flag,'0') !='1'
         group by m.id) cc
@@ -537,7 +537,7 @@
             </foreach>
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
@@ -576,7 +576,7 @@
             </foreach>
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         and ifnull(di.delete_flag,'0') !='1'
@@ -593,7 +593,7 @@
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
@@ -617,7 +617,7 @@
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="creatorArray != null">
             and dh.creator in (
