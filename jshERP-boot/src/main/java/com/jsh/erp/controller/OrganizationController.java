@@ -3,13 +3,13 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.MaterialCategory;
 import com.jsh.erp.datasource.entities.Organization;
 import com.jsh.erp.datasource.vo.TreeNode;
 import com.jsh.erp.exception.BusinessRunTimeException;
-import com.jsh.erp.service.materialCategory.MaterialCategoryService;
 import com.jsh.erp.service.organization.OrganizationService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +36,10 @@ public class OrganizationController {
 
     @Resource
     private OrganizationService organizationService;
+
+    @Resource
+    private UserService userService;
+
     /**
      * 根据id来查询机构信息
      * @param id
@@ -76,14 +80,11 @@ public class OrganizationController {
     }
 
     /**
-     * create by: cjl
-     * description:
      * 获取机构树数据
-     * create time: 2019/2/19 11:49
-     * @Param:
-     * @return com.alibaba.fastjson.JSONArray
+     * @return
+     * @throws Exception
      */
-    @RequestMapping(value = "/getOrganizationTree")
+    @GetMapping(value = "/getOrganizationTree")
     @ApiOperation(value = "获取机构树数据")
     public JSONArray getOrganizationTree(@RequestParam("id") Long id) throws Exception{
        JSONArray arr=new JSONArray();
@@ -97,6 +98,32 @@ public class OrganizationController {
        }
         return arr;
     }
+
+    /**
+     * 根据用户获取全部机构树
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getAllOrganizationTreeByUser")
+    @ApiOperation(value = "根据用户获取全部机构树")
+    public JSONArray getAllOrganizationTreeByUser(HttpServletRequest request) throws Exception{
+        JSONArray arr = new JSONArray();
+        Long userId = userService.getUserId(request);
+        String roleType = userService.getRoleTypeByUserId(userId).getType();
+        if(BusinessConstants.ROLE_TYPE_PUBLIC.equals(roleType)) {
+            List<TreeNode> organizationTree = organizationService.getOrganizationTree(null);
+            if(organizationTree!=null && organizationTree.size()>0){
+                for(TreeNode node: organizationTree){
+                    String str = JSON.toJSONString(node);
+                    JSONObject obj = JSON.parseObject(str);
+                    arr.add(obj);
+                }
+            }
+        }
+        return arr;
+    }
+
     /**
      * create by: cjl
      * description:

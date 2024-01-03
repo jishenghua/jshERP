@@ -45,6 +45,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.Tools.getCenternTime;
 import static com.jsh.erp.utils.Tools.getNow3;
@@ -274,6 +275,22 @@ public class DepotHeadService {
             creatorArray = creator.split(",");
         }
         return creatorArray;
+    }
+
+    /**
+     * 根据角色类型获取操作员数组
+     * @param organizationId
+     * @return
+     * @throws Exception
+     */
+    public String[] getCreatorArrayByOrg(Long organizationId) throws Exception {
+        List<Long> userIdList = orgaUserRelService.getUserIdListByOrgId(organizationId);
+        if(userIdList.size()>0) {
+            List<String> userIdStrList = userIdList.stream().map(Object::toString).collect(Collectors.toList());
+            return StringUtil.listToStringArray(userIdStrList);
+        } else {
+            return null;
+        }
     }
 
     /**

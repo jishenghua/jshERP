@@ -205,6 +205,8 @@ public class BusinessConstants {
 
     public static final String ROLE_TYPE_THIS_ORG = "本机构数据";
 
+    public static final String ROLE_TYPE_PUBLIC = "全部数据";
+
     /**
      * redis相关
      * */
