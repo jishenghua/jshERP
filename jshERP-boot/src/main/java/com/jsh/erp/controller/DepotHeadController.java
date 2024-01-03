@@ -97,6 +97,7 @@ public class DepotHeadController {
                                             @RequestParam("endTime") String endTime,
                                             @RequestParam("type") String type,
                                             @RequestParam(value = "creator", required = false) Long creator,
+                                            @RequestParam(value = "organizationId", required = false) Long organizationId,
                                             @RequestParam("remark") String remark,
                                             @RequestParam(value = "column", required = false, defaultValue = "createTime") String column,
                                             @RequestParam(value = "order", required = false, defaultValue = "desc") String order,
@@ -117,6 +118,9 @@ public class DepotHeadController {
             }
             List<DepotHeadVo4InDetail> resList = new ArrayList<DepotHeadVo4InDetail>();
             String [] creatorArray = depotHeadService.getCreatorArray();
+            if(creatorArray == null && organizationId != null) {
+                creatorArray = depotHeadService.getCreatorArrayByOrg(organizationId);
+            }
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = depotHeadService.getOrganArray(subType, "");
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
@@ -166,6 +170,7 @@ public class DepotHeadController {
                                                    @RequestParam(value = "organId", required = false) Integer oId,
                                                    @RequestParam("materialParam") String materialParam,
                                                    @RequestParam(value = "depotId", required = false) Long depotId,
+                                                   @RequestParam(value = "organizationId", required = false) Long organizationId,
                                                    @RequestParam("beginTime") String beginTime,
                                                    @RequestParam("endTime") String endTime,
                                                    @RequestParam("type") String type,
@@ -191,10 +196,10 @@ public class DepotHeadController {
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
             List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, forceFlag, inOutManageFlag,
-                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order),
+                    StringUtil.toNull(materialParam), depotList, organizationId, oId, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order),
                     (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, inOutManageFlag,
-                    StringUtil.toNull(materialParam), depotList, oId);
+                    StringUtil.toNull(materialParam), depotList, organizationId, oId);
             map.put("total", total);
             map.put("rows", list);
             res.code = 200;
@@ -229,6 +234,7 @@ public class DepotHeadController {
                                                  @RequestParam("materialParam") String materialParam,
                                                  @RequestParam(value = "depotId", required = false) Long depotId,
                                                  @RequestParam(value = "depotIdF", required = false) Long depotIdF,
+                                                 @RequestParam(value = "organizationId", required = false) Long organizationId,
                                                  @RequestParam("beginTime") String beginTime,
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam("subType") String subType,
@@ -262,6 +268,9 @@ public class DepotHeadController {
                 }
             }
             String [] creatorArray = depotHeadService.getCreatorArray();
+            if(creatorArray == null && organizationId != null) {
+                creatorArray = depotHeadService.getCreatorArrayByOrg(organizationId);
+            }
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();

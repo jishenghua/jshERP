@@ -480,6 +480,7 @@ public class DepotItemController {
                                   @RequestParam("endTime") String endTime,
                                   @RequestParam(value = "organId", required = false) Long organId,
                                   @RequestParam(value = "depotId", required = false) Long depotId,
+                                  @RequestParam(value = "organizationId", required = false) Long organizationId,
                                   @RequestParam("materialParam") String materialParam,
                                   @RequestParam("mpList") String mpList,
                                   HttpServletRequest request)throws Exception {
@@ -489,6 +490,9 @@ public class DepotItemController {
         endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
         try {
             String [] creatorArray = depotHeadService.getCreatorArray();
+            if(creatorArray == null && organizationId != null) {
+                creatorArray = depotHeadService.getCreatorArrayByOrg(organizationId);
+            }
             String [] organArray = null;
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
@@ -645,6 +649,7 @@ public class DepotItemController {
                                     @RequestParam("endTime") String endTime,
                                     @RequestParam(value = "organId", required = false) Long organId,
                                     @RequestParam(value = "depotId", required = false) Long depotId,
+                                    @RequestParam(value = "organizationId", required = false) Long organizationId,
                                     @RequestParam("materialParam") String materialParam,
                                     @RequestParam("mpList") String mpList,
                                     HttpServletRequest request)throws Exception {
@@ -654,6 +659,9 @@ public class DepotItemController {
         endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
         try {
             String [] creatorArray = depotHeadService.getCreatorArray();
+            if(creatorArray == null && organizationId != null) {
+                creatorArray = depotHeadService.getCreatorArrayByOrg(organizationId);
+            }
             String [] organArray = depotHeadService.getOrganArray("销售", "");
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
