@@ -289,7 +289,7 @@ public class DepotHeadService {
             List<String> userIdStrList = userIdList.stream().map(Object::toString).collect(Collectors.toList());
             return StringUtil.listToStringArray(userIdStrList);
         } else {
-            return null;
+            return "-1".split(",");
         }
     }
 
