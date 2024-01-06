@@ -521,10 +521,10 @@ public class MaterialService {
                 objs[10] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getBarCode();
                 objs[11] = m.getRatio() == null ? "" : m.getRatio().toString();
                 objs[12] = m.getSku();
-                objs[13] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[14] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[15] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                objs[16] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                objs[13] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[14] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[15] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[16] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
                 objs[17] = m.getEnabled() ? "1" : "0";
                 objs[18] = m.getEnableSerialNumber();
                 objs[19] = m.getEnableBatchNumber();
