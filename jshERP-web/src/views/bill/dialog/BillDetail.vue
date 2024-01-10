@@ -1190,7 +1190,7 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
+          { title: '序列号', dataIndex: 'snList', width:300},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1210,7 +1210,7 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
+          { title: '序列号', dataIndex: 'snList', width:300},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1249,7 +1249,7 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
+          { title: '序列号', dataIndex: 'snList', width:300},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1273,7 +1273,7 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
+          { title: '序列号', dataIndex: 'snList', width:300},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1316,7 +1316,7 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
+          { title: '序列号', dataIndex: 'snList', width:300},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1340,7 +1340,7 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
+          { title: '序列号', dataIndex: 'snList', width:300},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1364,7 +1364,7 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
+          { title: '序列号', dataIndex: 'snList', width:300},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1384,7 +1384,7 @@
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
-          { title: '序列号', dataIndex: 'snList'},
+          { title: '序列号', dataIndex: 'snList', width:300},
           { title: '批号', dataIndex: 'batchNumber'},
           { title: '有效期', dataIndex: 'expirationDate'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1533,6 +1533,9 @@
             let info = {}
             info.title = this.defColumns[i].title
             info.dataIndex = this.defColumns[i].dataIndex
+            if(this.defColumns[i].width) {
+              info.width = this.defColumns[i].width
+            }
             if(this.defColumns[i].dataIndex === 'finishNumber') {
               info.title = '已采购'
             }
@@ -1551,6 +1554,9 @@
               let info = {}
               info.title = this.defColumns[i].title
               info.dataIndex = this.defColumns[i].dataIndex
+              if(this.defColumns[i].width) {
+                info.width = this.defColumns[i].width
+              }
               if(this.defColumns[i].dataIndex === 'barCode') {
                 info.scopedSlots = { customRender: 'customBarCode' }
               }
@@ -1561,6 +1567,9 @@
               let info = {}
               info.title = this.defColumns[i].title
               info.dataIndex = this.defColumns[i].dataIndex
+              if(this.defColumns[i].width) {
+                info.width = this.defColumns[i].width
+              }
               currentCol.push(info)
             }
           }
