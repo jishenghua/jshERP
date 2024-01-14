@@ -220,13 +220,16 @@
         }
       },
       exportExcel() {
-        let aoa = [['供应商', '联系人', '手机号码', '联系电话', '电子邮箱', '期初应付', '本期欠款', '本期付款', '期末应付']]
+        let list = []
+        let head = '供应商,联系人,手机号码,联系电话,电子邮箱,期初应付,本期欠款,本期付款,期末应付'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.preNeed, ds.debtMoney, ds.backMoney, ds.allNeed]
-          aoa.push(item)
+          item.push(ds.supplier, ds.contacts, ds.telephone, ds.phoneNum, ds.email, ds.preNeed, ds.debtMoney, ds.backMoney, ds.allNeed)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '供应商对账')
+        let tip = '单据日期：' + this.queryParam.beginTime + '~' + this.queryParam.endTime
+        this.handleExportXlsPost('供应商对账', '供应商对账', head, tip, list)
       },
       showDebtAccountList(record) {
         this.$refs.debtAccountList.show(record.id, '入库', '采购', '供应商', "", this.queryParam.beginTime, this.queryParam.endTime)

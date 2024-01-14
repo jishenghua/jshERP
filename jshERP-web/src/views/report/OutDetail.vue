@@ -288,14 +288,17 @@
         }
       },
       exportExcel() {
-        let aoa = [['单据编号', '条码', '名称', '规格', '型号', '单位', '数量', '单价', '金额', '税率(%)', '税额', '往来单位', '仓库', '出库日期', '备注']]
+        let list = []
+        let head = '单据编号,条码,名称,规格,型号,单位,数量,单价,金额,税率(%),税额,往来单位,仓库,出库日期,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.number, ds.barCode, ds.mname, ds.standard, ds.model, ds.mUnit, ds.operNumber, ds.unitPrice,
-            ds.allPrice, ds.taxRate, ds.taxMoney, ds.sname, ds.dname, ds.operTime, ds.newRemark]
-          aoa.push(item)
+          item.push(ds.number, ds.barCode, ds.mname, ds.standard, ds.model, ds.mUnit, ds.operNumber, ds.unitPrice,
+            ds.allPrice, ds.taxRate, ds.taxMoney, ds.sname, ds.dname, ds.operTime, ds.newRemark)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '出库明细')
+        let tip = '单据日期：' + this.queryParam.beginTime + '~' + this.queryParam.endTime
+        this.handleExportXlsPost('出库明细', '出库明细', head, tip, list)
       }
     }
   }

@@ -228,13 +228,16 @@
         }
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '类型', '单位', '出库数量', '出库金额']]
+        let list = []
+        let head = '条码,名称,规格,型号,类型,单位,出库数量,出库金额'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.mName, ds.standard, ds.model, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum]
-          aoa.push(item)
+          item.push(ds.barCode, ds.mName, ds.standard, ds.model, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '出库汇总')
+        let tip = '单据日期：' + this.queryParam.beginTime + '~' + this.queryParam.endTime
+        this.handleExportXlsPost('出库汇总', '出库汇总', head, tip, list)
       }
     }
   }

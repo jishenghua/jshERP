@@ -77,7 +77,6 @@
 <script>
   import AccountInOutList from './modules/AccountInOutList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { openDownloadDialog, sheet2blob} from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import {getAction} from '@/api/manage'
   export default {
@@ -162,13 +161,16 @@
         this.$refs.accountInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['名称', '编号', '期初金额', '本月发生额', '当前余额']]
+        let list = []
+        let head = '名称,编号,期初金额,本月发生额,当前余额'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.name, ds.serialNo, ds.initialAmount, ds.thisMonthAmount, ds.currentAmount]
-          aoa.push(item)
+          item.push(ds.name, ds.serialNo, ds.initialAmount, ds.thisMonthAmount, ds.currentAmount)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '账户统计')
+        let tip = '账户统计查询'
+        this.handleExportXlsPost('账户统计', '账户统计', head, tip, list)
       }
     }
   }

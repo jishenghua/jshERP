@@ -245,14 +245,17 @@
         }
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '扩展信息', '单位', '单价', '上月结存数量', '入库数量', '出库数量', '本月结存数量', '结存金额']]
+        let list = []
+        let head = '条码,名称,规格,型号,扩展信息,单位,单价,上月结存数量,入库数量,出库数量,本月结存数量,结存金额'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialOther, ds.unitName, ds.unitPrice,
-            ds.prevSum, ds.inSum, ds.outSum, ds.thisSum, ds.thisAllPrice]
-          aoa.push(item)
+          item.push(ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialOther, ds.unitName, ds.unitPrice,
+            ds.prevSum, ds.inSum, ds.outSum, ds.thisSum, ds.thisAllPrice)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '进销存统计')
+        let tip = '月份：' + this.queryParam.monthTime
+        this.handleExportXlsPost('进销存统计', '进销存统计', head, tip, list)
       }
     }
   }
