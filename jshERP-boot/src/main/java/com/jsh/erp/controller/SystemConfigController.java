@@ -1,5 +1,7 @@
 package com.jsh.erp.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
@@ -14,10 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
@@ -269,6 +268,25 @@ public class SystemConfigController {
                     logger.error(e.getMessage(), e);
                 }
             }
+        }
+    }
+
+    /**
+     * Excel导出统一接口
+     * @param response
+     */
+    @PostMapping(value = "/exportExcelByParam")
+    @ApiOperation(value = "生成excel表格")
+    public void exportExcelByParam(@RequestBody JSONObject jsonObject,
+                                   HttpServletResponse response) {
+        try {
+            String title = jsonObject.getString("title");
+            String head = jsonObject.getString("head");
+            String tip = jsonObject.getString("tip");
+            JSONArray arr = jsonObject.getJSONArray("list");
+            systemConfigService.exportExcelByParam(title, head, tip, arr, response);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

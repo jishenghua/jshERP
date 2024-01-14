@@ -1,5 +1,6 @@
 package com.jsh.erp.service.systemConfig;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
@@ -17,6 +18,7 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.platformConfig.PlatformConfigService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.ExcelUtils;
 import com.jsh.erp.utils.FileUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
@@ -34,11 +36,13 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -482,5 +486,34 @@ public class SystemConfigService {
             }
         }
         return inOutManageFlag;
+    }
+
+    /**
+     * Excel导出统一方法
+     * @param title
+     * @param head
+     * @param tip
+     * @param arr
+     * @param response
+     * @throws Exception
+     */
+    public void exportExcelByParam(String title, String head, String tip, JSONArray arr, HttpServletResponse response) throws Exception {
+        List<String> nameList = StringUtil.strToStringList(head);
+        String[] names = StringUtil.listToStringArray(nameList);
+        List<String[]> objects = new ArrayList<>();
+        if (null != arr) {
+            for (Object object: arr) {
+                List<Object> list = (List<Object>) object;
+                String[] objs = new String[100];
+                for (int i = 0; i < list.size(); i++) {
+                    if(null != list.get(i)) {
+                        objs[i] = list.get(i).toString();
+                    }
+                }
+                objects.add(objs);
+            }
+        }
+        File file = ExcelUtils.exportObjectsWithoutTitle(title, tip, names, title, objects);
+        ExcelUtils.downloadExcel(file, file.getName(), response);
     }
 }
