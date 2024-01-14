@@ -1,5 +1,5 @@
 import { isURL } from '@/utils/validate'
-import XLSX from 'xlsx'
+import { downFilePost} from '@/api/manage'
 import Vue from 'vue'
 import introJs from 'intro.js'
 
@@ -585,58 +585,32 @@ export function changeListFmtMinus(str) {
   return newArr;
 }
 
-/**
- 通用的打开下载对话框方法，没有测试过具体兼容性
- @param url 下载地址，也可以是一个blob对象，必选
- @param saveName 保存文件名，可选
- */
-export function openDownloadDialog (url, saveName) {
-  if (typeof url === 'object' && url instanceof Blob) {
-    url = URL.createObjectURL(url) // 创建blob地址
+//通过post方式导出Excel
+export function exportXlsPost(fileName, title, head, tip, list) {
+  if(!fileName || typeof fileName != "string"){
+    fileName = "导出文件"
   }
-  let aLink = document.createElement('a')
-  aLink.href = url
-  saveName = saveName + '_' + getNowFormatStr() + '.xls'
-  aLink.download = saveName || '' // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
-  let event
-  if (window.MouseEvent) event = new MouseEvent('click')
-  else {
-    event = document.createEvent('MouseEvents')
-    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
-  }
-  aLink.dispatchEvent(event)
-}
-
-/**
- * 将一个sheet转成最终的excel文件的blob对象，然后利用URL.createObjectURL下载
- * @param sheet
- * @param sheetName
- * @returns {Blob}
- */
-export function sheet2blob (aoa, sheetName) {
-  let sheet = XLSX.utils.aoa_to_sheet(aoa)
-  sheetName = sheetName || 'sheet1'
-  let workbook = {
-    SheetNames: [sheetName],
-    Sheets: {}
-  }
-  workbook.Sheets[sheetName] = sheet
-  // 生成excel的配置项
-  let wopts = {
-    bookType: 'xls', // 要生成的文件类型
-    bookSST: false, // 是否生成Shared String Table，官方解释是，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
-    type: 'binary'
-  }
-  let wbout = XLSX.write(workbook, wopts)
-  let blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
-  // 字符串转ArrayBuffer
-  function s2ab (s) {
-    let buf = new ArrayBuffer(s.length)
-    let view = new Uint8Array(buf)
-    for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF
-    return buf
-  }
-  return blob
+  let paramObj = {'title': title, 'head': head, 'tip': tip, 'list': list}
+  console.log("导出参数", paramObj)
+  downFilePost(paramObj).then((data)=>{
+    if (!data) {
+      this.$message.warning("文件下载失败")
+      return
+    }
+    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+      window.navigator.msSaveBlob(new Blob([data],{type: 'application/vnd.ms-excel'}), fileName+'.xls')
+    }else{
+      let url = window.URL.createObjectURL(new Blob([data],{type: 'application/vnd.ms-excel'}))
+      let link = document.createElement('a')
+      link.style.display = 'none'
+      link.href = url
+      link.setAttribute('download', fileName + '_' + getNowFormatStr()+'.xls')
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link); //下载完成移除元素
+      window.URL.revokeObjectURL(url); //释放掉blob对象
+    }
+  })
 }
 
 /**

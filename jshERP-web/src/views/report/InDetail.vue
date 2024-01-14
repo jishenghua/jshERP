@@ -136,7 +136,7 @@
 <script>
   import BillDetail from '../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatYear, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getNowFormatYear } from "@/utils/util"
   import {getAction} from '@/api/manage'
   import {findBySelectOrgan, findBillDetailByNumber, getUserList, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'

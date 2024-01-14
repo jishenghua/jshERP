@@ -116,7 +116,7 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatYear, getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getNowFormatYear, getMpListShort } from "@/utils/util"
   import {getAction} from '@/api/manage'
   import {findBySelectCus, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'

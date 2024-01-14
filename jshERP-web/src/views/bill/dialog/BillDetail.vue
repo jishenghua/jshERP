@@ -1127,7 +1127,7 @@
   import pick from 'lodash.pick'
   import { getAction, postAction, getFileAccessHttpUrl } from '@/api/manage'
   import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
-  import { getMpListShort, getCheckFlag, openDownloadDialog, sheet2blob } from "@/utils/util"
+  import { getMpListShort, getCheckFlag, exportXlsPost } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
   import FinancialDetail from '../../financial/dialog/FinancialDetail'
   import JUpload from '@/components/jeecg/JUpload'
@@ -1747,21 +1747,22 @@
       },
       //零售出库|零售退货入库
       retailExportExcel() {
-        let aoa = []
-        aoa = [['会员卡号：', this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '规格', '型号', '颜色', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多属性', '数量', '单价', '金额', '备注']
-        aoa.push(title)
+        let list = []
+        let head = '仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
-          aoa.push(item)
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
+            ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+        let organName = this.model.organName? '会员卡号' + this.model.organName: ''
+        let tip = organName + ' ' + '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' + this.model.number
+        exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
       },
       //采购订单|销售订单
       orderExportExcel() {
-        let aoa = []
+        let list = []
         let finishType = ''
         let organType = ''
         if(this.billType === '采购订单') {
@@ -1771,98 +1772,104 @@
           finishType = '已出库'
           organType = '客户：'
         }
-        aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['条码', '名称', '规格', '型号', '颜色', '扩展信息', '库存', '单位', '多属性', '数量', finishType, '单价', '金额', '税率(%)', '税额', '价税合计', '备注']
-        aoa.push(title)
+        let head = '条码,名称,规格,型号,颜色,扩展信息,库存,单位,多属性,数量,' + finishType + ',单价,金额,税率(%),税额,价税合计,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit, ds.sku,
-            ds.operNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark]
-          aoa.push(item)
+          item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit, ds.sku,
+            ds.operNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+        let organName = this.model.organName? this.model.organName: ''
+        let tip = organType + organName + ' ' + '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' + this.model.number
+        exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
       },
       //采购入库|采购退货出库|销售出库|销售退货入库
       purchaseSaleExportExcel() {
-        let aoa = []
+        let list = []
         let organType = ''
         if(this.billType === '采购入库' || this.billType === '采购退货出库') {
           organType = '供应商：'
         } else if(this.billType === '销售出库' || this.billType === '销售退货入库') {
           organType = '客户：'
         }
-        aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单号：', this.model.linkNumber],[]]
-        let title = ['仓库名称', '条码', '名称', '规格', '型号', '颜色', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多属性', '数量', '单价', '金额', '税率(%)', '税额', '价税合计', '重量', '备注']
-        aoa.push(title)
+        let head = '仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.weight, ds.remark]
-          aoa.push(item)
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
+            ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.weight, ds.remark)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+        let organName = this.model.organName? this.model.organName: ''
+        let linkNumber = this.model.linkNumber? this.model.linkNumber: ''
+        let tip = organType + organName + ' ' + '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' +
+          this.model.number + '' + '关联单号：' + linkNumber
+        exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
       },
       //其它入库|其它出库
       otherExportExcel() {
-        let aoa = []
+        let list = []
         let organType = ''
         if(this.billType === '其它入库') {
           organType = '供应商：'
         } else if(this.billType === '其它出库') {
           organType = '客户：'
         }
-        aoa = [[organType, this.model.organName, '', '单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '规格', '型号', '颜色', '扩展信息', '库存', '单位', '序列号', '批号', '有效期', '多属性', '数量', '单价', '金额', '备注']
-        aoa.push(title)
+        let head = '仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
-            ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
-          aoa.push(item)
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
+            ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+        let organName = this.model.organName? this.model.organName: ''
+        let tip = organType + organName + ' ' + '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' + this.model.number
+        exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
       },
       //调拨出库
       allocationOutExportExcel() {
-        let aoa = []
-        aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['仓库名称', '条码', '名称', '规格', '型号', '颜色', '扩展信息', '库存', '调入仓库', '单位', '多属性', '数量', '单价', '金额', '备注']
-        aoa.push(title)
+        let list = []
+        let head = '仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,调入仓库,单位,多属性,数量,单价,金额,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.anotherDepotName, ds.unit,
-            ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
-          aoa.push(item)
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.anotherDepotName, ds.unit,
+            ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+        let tip = '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' + this.model.number
+        exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
       },
       //组装单|拆卸单
       assembleExportExcel() {
-        let aoa = []
-        aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number],[]]
-        let title = ['商品类型', '仓库名称', '条码', '名称', '规格', '型号', '颜色', '扩展信息', '库存', '单位', '多属性', '数量', '单价', '金额', '备注']
-        aoa.push(title)
+        let list = []
+        let head = ['商品类型,仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,单位,多属性,数量,单价,金额,备注']
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.mType, ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
-            ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
-          aoa.push(item)
+          item.push(ds.mType, ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
+            ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+        let tip = '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' + this.model.number
+        exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
       },
       //盘点复盘
       stockCheckReplayExportExcel() {
-        let aoa = []
-        aoa = [['单据日期：', this.model.operTimeStr, '', '单据编号：', this.model.number, '', '关联单据：', this.model.linkNumber],[]]
-        let title = ['仓库名称', '条码', '名称', '规格', '型号', '扩展信息', '库存', '单位', '多属性', '数量', '单价', '金额', '备注']
-        aoa.push(title)
+        let list = []
+        let head = '仓库名称,条码,名称,规格,型号,扩展信息,库存,单位,多属性,数量,单价,金额,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.materialOther, ds.stock, ds.unit,
-            ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark]
-          aoa.push(item)
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.materialOther, ds.stock, ds.unit,
+            ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), this.billType + '_' + this.model.number)
+        let linkNumber = this.model.linkNumber? this.model.linkNumber: ''
+        let tip = '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' + this.model.number + '' + '关联单号：' + linkNumber
+        exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
       }
     }
   }

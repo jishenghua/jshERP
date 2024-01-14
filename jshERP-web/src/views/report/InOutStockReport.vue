@@ -107,7 +107,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
-  import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getMpListShort } from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'

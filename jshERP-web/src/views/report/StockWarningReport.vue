@@ -77,7 +77,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import {getAction} from '@/api/manage'
-  import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getMpListShort } from "@/utils/util"
   import Vue from 'vue'
   export default {
     name: "StockWarningReport",
