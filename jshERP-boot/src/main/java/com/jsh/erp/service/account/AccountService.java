@@ -331,15 +331,17 @@ public class AccountService {
         List<DepotHead> dataList = accountMapperEx.getManyAccountSum(accountId, beginTime, endTime, forceFlag);
         if (dataList != null) {
             for (DepotHead depotHead : dataList) {
-                String accountIdList = depotHead.getAccountIdList();
-                String accountMoneyList = depotHead.getAccountMoneyList();
-                if(StringUtil.isNotEmpty(accountIdList) && StringUtil.isNotEmpty(accountMoneyList)) {
-                    String[] aList = accountIdList.split(",");
-                    String[] amList = accountMoneyList.split(",");
-                    for (int i = 0; i < aList.length; i++) {
-                        if (aList[i].equals(accountId.toString())) {
-                            if(amList.length>0) {
-                                accountSum = accountSum.add(new BigDecimal(amList[i]));
+                if(depotHead != null) {
+                    String accountIdList = depotHead.getAccountIdList();
+                    String accountMoneyList = depotHead.getAccountMoneyList();
+                    if(StringUtil.isNotEmpty(accountIdList) && StringUtil.isNotEmpty(accountMoneyList)) {
+                        String[] aList = accountIdList.split(",");
+                        String[] amList = accountMoneyList.split(",");
+                        for (int i = 0; i < aList.length; i++) {
+                            if (aList[i].equals(accountId.toString())) {
+                                if(amList.length>0) {
+                                    accountSum = accountSum.add(new BigDecimal(amList[i]));
+                                }
                             }
                         }
                     }
