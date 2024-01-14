@@ -4,7 +4,7 @@
  * data中url定义 list为查询列表  delete为删除单条记录  deleteBatch为批量删除
  */
 import { filterObj,getNowFormatStr } from '@/utils/util';
-import { deleteAction, getAction, postAction, downFile, getFileAccessHttpUrl } from '@/api/manage'
+import { deleteAction, getAction, postAction, downFile, downFilePost, getFileAccessHttpUrl } from '@/api/manage'
 import Vue from 'vue'
 import VueDraggableResizable from 'vue-draggable-resizable'
 import { ACCESS_TOKEN } from "@/store/mutation-types"
@@ -293,6 +293,7 @@ export const JeecgListMixin = {
       let url = `${window._CONFIG['domianURL']}/${this.url.exportXlsUrl}?paramsStr=${paramsStr}`;
       window.location.href = url;
     },
+    //通过get方式导出Excel
     handleExportXls(fileName){
       if(!fileName || typeof fileName != "string"){
         fileName = "导出文件"
@@ -303,6 +304,33 @@ export const JeecgListMixin = {
       }
       console.log("导出参数",param)
       downFile(this.url.exportXlsUrl,param).then((data)=>{
+        if (!data) {
+          this.$message.warning("文件下载失败")
+          return
+        }
+        if (typeof window.navigator.msSaveBlob !== 'undefined') {
+          window.navigator.msSaveBlob(new Blob([data],{type: 'application/vnd.ms-excel'}), fileName+'.xls')
+        }else{
+          let url = window.URL.createObjectURL(new Blob([data],{type: 'application/vnd.ms-excel'}))
+          let link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.setAttribute('download', fileName + '_' + getNowFormatStr()+'.xls')
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link); //下载完成移除元素
+          window.URL.revokeObjectURL(url); //释放掉blob对象
+        }
+      })
+    },
+    //通过post方式导出Excel
+    handleExportXlsPost(fileName, title, head, tip, list) {
+      if(!fileName || typeof fileName != "string"){
+        fileName = "导出文件"
+      }
+      let paramObj = {'title': title, 'head': head, 'tip': tip, 'list': list}
+      console.log("导出参数", paramObj)
+      downFilePost(paramObj).then((data)=>{
         if (!data) {
           this.$message.warning("文件下载失败")
           return

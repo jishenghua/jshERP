@@ -130,7 +130,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction, getFileAccessHttpUrl } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
-  import { getMpListShort, openDownloadDialog, sheet2blob} from "@/utils/util"
+  import { getMpListShort } from "@/utils/util"
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -287,14 +287,17 @@
         this.$refs.materialInOutList.disableSubmit = false;
       },
       exportExcel() {
-        let aoa = [['条码', '名称', '规格', '型号', '颜色', '类别', '单位', '单价', '初始库存', '库存', '库存金额', '重量']]
+        let list = []
+        let head = '条码, 名称, 规格, 型号, 颜色, 类别, 单位, 单价, 初始库存, 库存, 库存金额, 重量'
         for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
           let ds = this.dataSource[i]
-          let item = [ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,
-            ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice, ds.currentWeight]
-          aoa.push(item)
+          item.push(ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,
+            ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice, ds.currentWeight)
+          list.push(item)
         }
-        openDownloadDialog(sheet2blob(aoa), '商品库存')
+        let tip = '商品库存查询'
+        this.handleExportXlsPost('商品库存', '商品库存', head, tip, list)
       }
     }
   }
