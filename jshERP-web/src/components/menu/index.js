@@ -36,7 +36,7 @@ export default {
   computed: {
     rootSubmenuKeys: vm => {
       const keys = []
-      vm.menu.forEach(item => keys.push(item.path))
+      vm.menu.forEach(item => keys.push(item.url))
       return keys
     }
   },
