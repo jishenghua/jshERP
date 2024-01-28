@@ -179,9 +179,16 @@
         const routers = this.$store.state.permission.routers;
         for (let i = 0; i < routers.length; i++) {
           if(routers[i].children) {
+            //二级目录
             for (let j = 0; j < routers[i].children.length; j++) {
               if(routers[i].children[j].iframeComponent) {
                 iframeArr.push(routers[i].children[j])
+                if(routers[i].children[j].children) {
+                  //三级目录
+                  for (let k = 0; k < routers[i].children[j].children.length; k++) {
+                    iframeArr.push(routers[i].children[j].children[k])
+                  }
+                }
               }
             }
           }
