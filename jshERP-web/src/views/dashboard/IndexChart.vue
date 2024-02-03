@@ -156,7 +156,7 @@
   import LineChartMultid from '@/components/chart/LineChartMultid'
   import HeadInfo from '@/components/tools/HeadInfo.vue'
   import Trend from '@/components/Trend'
-  import { getBuyAndSaleStatistics, buyOrSalePrice, getPlatformConfigByKey } from '@/api/api'
+  import { getBuyAndSaleStatisticsByType, getBuyPrice, getSalePrice, getRetailPrice, getPlatformConfigByKey } from '@/api/api'
   import { handleIntroJs } from "@/utils/util"
   import { getAction,postAction } from '../../api/manage'
   import Vue from 'vue'
@@ -213,15 +213,46 @@
     },
     methods: {
       initInfo () {
-        getBuyAndSaleStatistics().then((res)=>{
+        getBuyAndSaleStatisticsByType({"type": "today"}).then((res)=>{
           if(res.code === 200){
-            this.statistics = res.data;
+            this.statistics.todayBuy = res.data.todayBuy;
+            this.statistics.todaySale = res.data.todaySale;
+            this.statistics.todayRetailSale = res.data.todayRetailSale;
           }
         })
-        buyOrSalePrice().then(res=>{
+        getBuyAndSaleStatisticsByType({"type": "month"}).then((res)=>{
+          if(res.code === 200){
+            this.statistics.monthBuy = res.data.monthBuy;
+            this.statistics.monthSale = res.data.monthSale;
+            this.statistics.monthRetailSale = res.data.monthRetailSale;
+          }
+        })
+        getBuyAndSaleStatisticsByType({"type": "yesterday"}).then((res)=>{
+          if(res.code === 200){
+            this.statistics.yesterdayBuy = res.data.yesterdayBuy;
+            this.statistics.yesterdaySale = res.data.yesterdaySale;
+            this.statistics.yesterdayRetailSale = res.data.yesterdayRetailSale;
+          }
+        })
+        getBuyAndSaleStatisticsByType({"type": "year"}).then((res)=>{
+          if(res.code === 200){
+            this.statistics.yearBuy = res.data.yearBuy;
+            this.statistics.yearSale = res.data.yearSale;
+            this.statistics.yearRetailSale = res.data.yearRetailSale;
+          }
+        })
+        getBuyPrice().then(res=>{
           if(res.code === 200){
             this.buyPriceData = res.data.buyPriceList;
+          }
+        })
+        getSalePrice().then(res=>{
+          if(res.code === 200){
             this.salePriceData = res.data.salePriceList;
+          }
+        })
+        getRetailPrice().then(res=>{
+          if(res.code === 200){
             this.retailPriceData = res.data.retailPriceList;
           }
         })
