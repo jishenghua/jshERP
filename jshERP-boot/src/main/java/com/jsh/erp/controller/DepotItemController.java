@@ -792,14 +792,14 @@ public class DepotItemController {
     }
 
     /**
-     * 统计采购、销售、零售的总金额——后续将废弃
+     * 统计采购、销售、零售的总金额
      * @param request
      * @param response
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/buyOrSalePrice")
-    @ApiOperation(value = "统计采购、销售、零售的总金额——后续将废弃")
+    @ApiOperation(value = "统计采购、销售、零售的总金额")
     public BaseResponseInfo buyOrSalePrice(HttpServletRequest request,
                                            HttpServletResponse response)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
@@ -828,117 +828,6 @@ public class DepotItemController {
                 salePriceList.add(obj);
             }
             map.put("salePriceList", salePriceList);
-            JSONArray retailPriceList = new JSONArray();
-            for(String month: list) {
-                JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutRetailPrice("出库", "零售", month);
-                BigDecimal inPrice = depotItemService.inOrOutRetailPrice("入库", "零售退货", month);
-                obj.put("x", month);
-                obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "retail", priceLimit, "***", request));
-                retailPriceList.add(obj);
-            }
-            map.put("retailPriceList", retailPriceList);
-            res.code = 200;
-            res.data = map;
-        } catch (Exception e) {
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "统计失败";
-        }
-        return res;
-    }
-
-    /**
-     * 统计采购的总金额
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/getBuyPrice")
-    @ApiOperation(value = "统计采购的总金额")
-    public BaseResponseInfo getBuyPrice(HttpServletRequest request,
-                                        HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Long userId = userService.getUserId(request);
-            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
-            List<String> list = Tools.getLastMonths(6);
-            JSONArray buyPriceList = new JSONArray();
-            for(String month: list) {
-                JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutPrice("入库", "采购", month);
-                BigDecimal inPrice = depotItemService.inOrOutPrice("出库", "采购退货", month);
-                obj.put("x", month);
-                obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "buy", priceLimit, "***", request));
-                buyPriceList.add(obj);
-            }
-            map.put("buyPriceList", buyPriceList);
-            res.code = 200;
-            res.data = map;
-        } catch (Exception e) {
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "统计失败";
-        }
-        return res;
-    }
-
-    /**
-     * 统计销售的总金额
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/getSalePrice")
-    @ApiOperation(value = "统计销售的总金额")
-    public BaseResponseInfo getSalePrice(HttpServletRequest request,
-                                         HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Long userId = userService.getUserId(request);
-            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
-            List<String> list = Tools.getLastMonths(6);
-            JSONArray salePriceList = new JSONArray();
-            for(String month: list) {
-                JSONObject obj = new JSONObject();
-                BigDecimal outPrice = depotItemService.inOrOutPrice("出库", "销售", month);
-                BigDecimal inPrice = depotItemService.inOrOutPrice("入库", "销售退货", month);
-                obj.put("x", month);
-                obj.put("y", roleService.parseHomePriceByLimit(outPrice.subtract(inPrice), "sale", priceLimit, "***", request));
-                salePriceList.add(obj);
-            }
-            map.put("salePriceList", salePriceList);
-            res.code = 200;
-            res.data = map;
-        } catch (Exception e) {
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "统计失败";
-        }
-        return res;
-    }
-
-    /**
-     * 统计零售的总金额
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/getRetailPrice")
-    @ApiOperation(value = "统计零售的总金额")
-    public BaseResponseInfo getRetailPrice(HttpServletRequest request,
-                                           HttpServletResponse response)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        Map<String, Object> map = new HashMap<>();
-        try {
-            Long userId = userService.getUserId(request);
-            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
-            List<String> list = Tools.getLastMonths(6);
             JSONArray retailPriceList = new JSONArray();
             for(String month: list) {
                 JSONObject obj = new JSONObject();

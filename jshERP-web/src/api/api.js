@@ -1,10 +1,8 @@
 import { getAction, deleteAction, putAction, postAction, httpAction } from '@/api/manage'
 
 //首页统计
-const getBuyAndSaleStatisticsByType = (params)=>getAction("/depotHead/getBuyAndSaleStatisticsByType",params);
-const getBuyPrice = (params)=>getAction("/depotItem/getBuyPrice",params);
-const getSalePrice = (params)=>getAction("/depotItem/getSalePrice",params);
-const getRetailPrice = (params)=>getAction("/depotItem/getRetailPrice",params);
+const getBuyAndSaleStatistics = (params)=>getAction("/depotHead/getBuyAndSaleStatistics",params);
+const buyOrSalePrice = (params)=>getAction("/depotItem/buyOrSalePrice",params);
 //租户管理
 const checkTenant = (params)=>getAction("/tenant/checkIsNameExist",params);
 const editTenant = (params)=>putAction("/tenant/update",params);
@@ -115,10 +113,8 @@ const getBatchNumberList = (params)=>getAction("/depotItem/getBatchNumberList",p
 const findFinancialDetailByNumber = (params)=>getAction("/accountHead/getDetailByNumber",params);
 
 export {
-  getBuyAndSaleStatisticsByType,
-  getBuyPrice,
-  getSalePrice,
-  getRetailPrice,
+  getBuyAndSaleStatistics,
+  buyOrSalePrice,
   checkTenant,
   editTenant,
   addRole,
