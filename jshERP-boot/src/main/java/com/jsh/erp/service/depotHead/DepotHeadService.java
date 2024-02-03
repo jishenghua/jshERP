@@ -1200,6 +1200,87 @@ public class DepotHeadService {
         return map;
     }
 
+    public Map<String, Object> getBuyAndSaleStatisticsByType(String type, String today, String monthFirstDay, String yesterdayBegin, String yesterdayEnd,
+                                                       String yearBegin, String yearEnd, HttpServletRequest request) throws Exception {
+        Long userId = userService.getUserId(request);
+        String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
+        String [] creatorArray = getCreatorArray();
+        Map<String, Object> map = new HashMap<>();
+        //今日
+        if("today".equals(type)) {
+            BigDecimal todayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
+                    1, today, getNow3(), creatorArray); //今日采购入库
+            BigDecimal todayBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
+                    1, today, getNow3(), creatorArray); //今日采购退货
+            BigDecimal todaySale = getBuyAndSaleBasicStatistics("出库", "销售",
+                    1, today, getNow3(), creatorArray); //今日销售出库
+            BigDecimal todaySaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
+                    1, today, getNow3(), creatorArray); //今日销售退货
+            BigDecimal todayRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
+                    today, getNow3(), creatorArray); //今日零售出库
+            BigDecimal todayRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
+                    today, getNow3(), creatorArray); //今日零售退货
+            map.put("todayBuy", roleService.parseHomePriceByLimit(todayBuy.subtract(todayBuyBack), "buy", priceLimit, "***", request));
+            map.put("todaySale", roleService.parseHomePriceByLimit(todaySale.subtract(todaySaleBack), "sale", priceLimit, "***", request));
+            map.put("todayRetailSale", roleService.parseHomePriceByLimit(todayRetailSale.subtract(todayRetailSaleBack), "retail", priceLimit, "***", request));
+        }
+        //本月
+        if("month".equals(type)) {
+            BigDecimal monthBuy = getBuyAndSaleBasicStatistics("入库", "采购",
+                    1, monthFirstDay, getNow3(), creatorArray); //本月采购入库
+            BigDecimal monthBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
+                    1, monthFirstDay, getNow3(), creatorArray); //本月采购退货
+            BigDecimal monthSale = getBuyAndSaleBasicStatistics("出库", "销售",
+                    1, monthFirstDay, getNow3(), creatorArray); //本月销售出库
+            BigDecimal monthSaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
+                    1, monthFirstDay, getNow3(), creatorArray); //本月销售退货
+            BigDecimal monthRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
+                    monthFirstDay, getNow3(), creatorArray); //本月零售出库
+            BigDecimal monthRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
+                    monthFirstDay, getNow3(), creatorArray); //本月零售退货
+            map.put("monthBuy", roleService.parseHomePriceByLimit(monthBuy.subtract(monthBuyBack), "buy", priceLimit, "***", request));
+            map.put("monthSale", roleService.parseHomePriceByLimit(monthSale.subtract(monthSaleBack), "sale", priceLimit, "***", request));
+            map.put("monthRetailSale", roleService.parseHomePriceByLimit(monthRetailSale.subtract(monthRetailSaleBack), "retail", priceLimit, "***", request));
+        }
+        //昨日
+        if("yesterday".equals(type)) {
+            BigDecimal yesterdayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
+                    1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日采购入库
+            BigDecimal yesterdayBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
+                    1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日采购退货
+            BigDecimal yesterdaySale = getBuyAndSaleBasicStatistics("出库", "销售",
+                    1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日销售出库
+            BigDecimal yesterdaySaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
+                    1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日销售退货
+            BigDecimal yesterdayRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
+                    yesterdayBegin, yesterdayEnd, creatorArray); //昨日零售出库
+            BigDecimal yesterdayRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
+                    yesterdayBegin, yesterdayEnd, creatorArray); //昨日零售退货
+            map.put("yesterdayBuy", roleService.parseHomePriceByLimit(yesterdayBuy.subtract(yesterdayBuyBack), "buy", priceLimit, "***", request));
+            map.put("yesterdaySale", roleService.parseHomePriceByLimit(yesterdaySale.subtract(yesterdaySaleBack), "sale", priceLimit, "***", request));
+            map.put("yesterdayRetailSale", roleService.parseHomePriceByLimit(yesterdayRetailSale.subtract(yesterdayRetailSaleBack), "retail", priceLimit, "***", request));
+        }
+        //今年
+        if("year".equals(type)) {
+            BigDecimal yearBuy = getBuyAndSaleBasicStatistics("入库", "采购",
+                    1, yearBegin, yearEnd, creatorArray); //今年采购入库
+            BigDecimal yearBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
+                    1, yearBegin, yearEnd, creatorArray); //今年采购退货
+            BigDecimal yearSale = getBuyAndSaleBasicStatistics("出库", "销售",
+                    1, yearBegin, yearEnd, creatorArray); //今年销售出库
+            BigDecimal yearSaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
+                    1, yearBegin, yearEnd, creatorArray); //今年销售退货
+            BigDecimal yearRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
+                    yearBegin, yearEnd, creatorArray); //今年零售出库
+            BigDecimal yearRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
+                    yearBegin, yearEnd, creatorArray); //今年零售退货
+            map.put("yearBuy", roleService.parseHomePriceByLimit(yearBuy.subtract(yearBuyBack), "buy", priceLimit, "***", request));
+            map.put("yearSale", roleService.parseHomePriceByLimit(yearSale.subtract(yearSaleBack), "sale", priceLimit, "***", request));
+            map.put("yearRetailSale", roleService.parseHomePriceByLimit(yearRetailSale.subtract(yearRetailSaleBack), "retail", priceLimit, "***", request));
+        }
+        return map;
+    }
+
     public BigDecimal getBuyAndSaleBasicStatistics(String type, String subType, Integer hasSupplier,
                                                    String beginTime, String endTime, String[] creatorArray) throws Exception {
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();

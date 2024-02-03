@@ -463,12 +463,12 @@ public class DepotHeadController {
     }
 
     /**
-     * 统计今日采购额、昨日采购额、本月采购额、今年采购额|销售额|零售额
+     * 统计今日采购额、昨日采购额、本月采购额、今年采购额|销售额|零售额——后续将废弃
      * @param request
      * @return
      */
     @GetMapping(value = "/getBuyAndSaleStatistics")
-    @ApiOperation(value = "统计今日采购额、昨日采购额、本月采购额、今年采购额|销售额|零售额")
+    @ApiOperation(value = "统计今日采购额、昨日采购额、本月采购额、今年采购额|销售额|零售额——后续将废弃")
     public BaseResponseInfo getBuyAndSaleStatistics(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -479,6 +479,34 @@ public class DepotHeadController {
             String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
             String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
             Map<String, Object> map = depotHeadService.getBuyAndSaleStatistics(today, monthFirstDay,
+                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, request);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            e.printStackTrace();
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
+     * 分别统计今日(today)采购额、昨日(yesterday)采购额、本月(month)采购额、今年(year)采购额|销售额|零售额
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getBuyAndSaleStatisticsByType")
+    @ApiOperation(value = "统计今日采购额、昨日采购额、本月采购额、今年采购额|销售额|零售额")
+    public BaseResponseInfo getBuyAndSaleStatisticsByType(@RequestParam("type") String type, HttpServletRequest request) {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
+            String monthFirstDay = Tools.firstDayOfMonth(Tools.getCurrentMonth()) + BusinessConstants.DAY_FIRST_TIME;
+            String yesterdayBegin = Tools.getYesterday() + BusinessConstants.DAY_FIRST_TIME;
+            String yesterdayEnd = Tools.getYesterday() + BusinessConstants.DAY_LAST_TIME;
+            String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
+            String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
+            Map<String, Object> map = depotHeadService.getBuyAndSaleStatisticsByType(type, today, monthFirstDay,
                     yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, request);
             res.code = 200;
             res.data = map;
