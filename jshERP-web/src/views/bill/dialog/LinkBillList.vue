@@ -132,6 +132,7 @@
         discountMoney: '',
         deposit: '',
         remark: '',
+        defaultDepotId: '',
         queryParam: {
           number: "",
           materialParam: "",
@@ -254,6 +255,7 @@
       },
       handleOk () {
         if(this.selectType === 'list') {
+          this.getDepotByCurrentUser()
           this.getSelectBillRows();
           this.selectType = 'detail'
           this.title = "选择单据明细"
@@ -269,7 +271,7 @@
         } else {
           if(this.selectedDetailRowKeys.length) {
             this.getSelectBillDetailRows()
-            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discountMoney, this.deposit, this.remark)
+            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discountMoney, this.deposit, this.remark, this.defaultDepotId)
             this.close()
           } else {
             this.$message.warning('抱歉，请选择单据明细！')
@@ -348,6 +350,22 @@
             this.selectBillDetailRows.push(dataSource[i]);
           }
         }
+      },
+      //加载默认仓库id
+      getDepotByCurrentUser() {
+        getAction('/depot/findDepotByCurrentUser').then((res) => {
+          if (res.code === 200) {
+            if (res.data.length === 1) {
+              this.defaultDepotId = res.data[0].id+''
+            } else {
+              for (let i = 0; i < res.data.length; i++) {
+                if(res.data[i].isDefault){
+                  this.defaultDepotId = res.data[i].id+''
+                }
+              }
+            }
+          }
+        })
       },
       rowAction(record, index) {
         return {

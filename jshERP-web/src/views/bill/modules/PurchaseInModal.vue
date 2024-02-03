@@ -433,7 +433,7 @@
         this.$refs.linkBillList.show('其它', '采购订单', '供应商', "1,3")
         this.$refs.linkBillList.title = "选择采购订单"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark, depotId) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
@@ -450,6 +450,7 @@
               info.taxMoney = (info.allPrice*taxRate/100).toFixed(2)-0
               info.taxLastMoney = (info.allPrice + info.taxMoney).toFixed(2)-0
             }
+            info.depotId = depotId ? depotId:''
             info.linkId = info.id
             allTaxLastMoney += info.taxLastMoney
             listEx.push(info)
