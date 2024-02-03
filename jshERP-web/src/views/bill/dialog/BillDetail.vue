@@ -1198,6 +1198,7 @@
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         retailBackColumns: [
@@ -1218,6 +1219,7 @@
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseOrderColumns: [
@@ -1261,6 +1263,7 @@
           { title: '税额', dataIndex: 'taxMoney'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         purchaseBackColumns: [
@@ -1285,6 +1288,7 @@
           { title: '税额', dataIndex: 'taxMoney'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleOrderColumns: [
@@ -1328,6 +1332,7 @@
           { title: '税额', dataIndex: 'taxMoney'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         saleBackColumns: [
@@ -1352,6 +1357,7 @@
           { title: '税额', dataIndex: 'taxMoney'},
           { title: '价税合计', dataIndex: 'taxLastMoney'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         otherInColumns: [
@@ -1372,6 +1378,7 @@
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         otherOutColumns: [
@@ -1392,6 +1399,7 @@
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         allocationOutColumns: [
@@ -1410,6 +1418,7 @@
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '重量', dataIndex: 'weight'},
+          { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
         assembleColumns: [
@@ -1504,7 +1513,7 @@
         } else if (type === '盘点复盘') {
           this.defColumns = this.stockCheckReplayColumns
         }
-        //判断序列号、批号、有效期、多属性是否有值
+        //判断序列号、批号、有效期、多属性、重量、仓位货架是否有值
         let needAddkeywords = []
         for (let i = 0; i < ds.length; i++) {
           if(ds[i].snList) {
@@ -1521,6 +1530,9 @@
           }
           if(ds[i].weight) {
             needAddkeywords.push('weight')
+          }
+          if(ds[i].position) {
+            needAddkeywords.push('position')
           }
         }
         if(record.status === '3') {
@@ -1549,7 +1561,7 @@
           let currentCol = []
           for(let i=0; i<this.defColumns.length; i++){
             //移除列
-            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight']
+            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position']
             if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
               let info = {}
               info.title = this.defColumns[i].title
