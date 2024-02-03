@@ -258,6 +258,7 @@ public class DepotItemController {
                     }
                     BigDecimal allWeight = diEx.getBasicNumber()==null||diEx.getWeight()==null?BigDecimal.ZERO:diEx.getBasicNumber().multiply(diEx.getWeight());
                     item.put("weight", allWeight);
+                    item.put("position", diEx.getPosition());
                     item.put("remark", diEx.getRemark());
                     item.put("imgName", diEx.getImgName());
                     if(fileUploadType == 2) {
