@@ -96,7 +96,6 @@
         :dataSource="dataSource"
         :components="handleDrag(columns)"
         :pagination="ipagination"
-        :scroll="scroll"
         :loading="loading"
         @change="handleTableChange">
         <span slot="billNoCustomRender" slot-scope="text, record">
@@ -194,9 +193,6 @@
       this.initUser()
       this.initPerson()
       this.initAccount()
-    },
-    mounted () {
-      this.scroll.x = 1520
     },
     methods: {
       show() {

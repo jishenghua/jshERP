@@ -222,9 +222,6 @@
       this.loadAllOrgaData()
       this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
-    mounted () {
-      this.scroll.x = 1620
-    },
     methods: {
       moment,
       getQueryParams() {

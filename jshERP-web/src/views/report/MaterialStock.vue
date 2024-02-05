@@ -206,9 +206,6 @@
       this.getDepotData()
       this.loadTreeData()
     },
-    mounted () {
-      this.scroll.x = 1620
-    },
     methods: {
       moment,
       getQueryParams() {

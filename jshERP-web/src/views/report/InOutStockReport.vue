@@ -180,9 +180,6 @@
       this.loadTreeData()
       this.getTotalCountMoney()
     },
-    mounted () {
-      this.scroll.x = 1620
-    },
     methods: {
       moment,
       getQueryParams() {

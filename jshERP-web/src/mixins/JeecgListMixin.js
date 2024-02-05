@@ -418,6 +418,7 @@ export const JeecgListMixin = {
       if (this.isMobile()) {
         this.scroll.y = ''
       } else {
+        let basicWidth = 150
         let basicLength = 274
         let searchWrapperDomLen=0, operatorDomLen=0
         //搜索区域
@@ -430,7 +431,7 @@ export const JeecgListMixin = {
         if(operatorDom && operatorDom[0]) {
           operatorDomLen = operatorDom[0].offsetHeight+10
         }
-        this.scroll.x = 1640
+        this.scroll.x = document.documentElement.clientWidth-basicWidth-64
         this.scroll.y = document.documentElement.clientHeight-searchWrapperDomLen-operatorDomLen-basicLength
       }
     },
