@@ -16,7 +16,8 @@ import java.io.IOException;
                       value = "/jshERP-boot/user/login#/jshERP-boot/user/weixinLogin#/jshERP-boot/user/weixinBind#" +
                               "/jshERP-boot/user/registerUser#/jshERP-boot/user/randomImage#" +
                               "/jshERP-boot/platformConfig/getPlatform#/jshERP-boot/v2/api-docs#/jshERP-boot/webjars#" +
-                              "/jshERP-boot/systemConfig/static#/jshERP-boot/api/plugin/wechat/weChat/share")})
+                              "/jshERP-boot/systemConfig/static#/jshERP-boot/api/plugin/wechat/weChat/share#" +
+                              "/jshERP-boot/api/plugin/general-ledger/pfd/voucher")})
 public class LogCostFilter implements Filter {
 
     private static final String FILTER_PATH = "filterPath";
