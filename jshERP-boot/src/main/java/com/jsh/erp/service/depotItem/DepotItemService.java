@@ -641,7 +641,7 @@ public class DepotItemService {
                     BigDecimal thisBasicNumber = depotItem.getBasicNumber()==null?BigDecimal.ZERO:depotItem.getBasicNumber();
                     if(!systemConfigService.getMinusStockFlag() && stock.compareTo(thisBasicNumber)<0){
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
-                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, material.getName()));
+                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, material.getName() + "-" + barCode));
                     }
                     //出库时处理序列号
                     if(!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
