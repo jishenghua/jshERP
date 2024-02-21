@@ -434,6 +434,7 @@
         this.$refs.linkBillList.title = "选择采购订单"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark, depotId) {
+        let that = this
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
@@ -450,7 +451,6 @@
               info.taxMoney = (info.allPrice*taxRate/100).toFixed(2)-0
               info.taxLastMoney = (info.allPrice + info.taxMoney).toFixed(2)-0
             }
-            info.depotId = depotId ? depotId:''
             info.linkId = info.id
             allTaxLastMoney += info.taxLastMoney
             listEx.push(info)
@@ -481,6 +481,12 @@
               'remark': remark
             })
           })
+          //判断后进行仓库的切换
+          if(depotId) {
+            setTimeout(function () {
+              that.batchSetDepotModalFormOk(depotId)
+            },1000)
+          }
         }
       },
     }
