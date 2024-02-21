@@ -9,7 +9,7 @@
     <select id="selectByConditionLog" parameterType="com.jsh.erp.datasource.entities.LogExample" resultMap="ResultExMap">
         select l.*,u.login_name,u.username userName
         FROM jsh_log l
-        left join jsh_user u on l.user_id = u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_user u on l.user_id = u.id
         left join jsh_tenant t on l.tenant_id=t.tenant_id
         where 1=1
         <if test="operation != null">
@@ -49,7 +49,7 @@
         SELECT
         COUNT(1)
         FROM jsh_log l
-        left join jsh_user u on l.user_id = u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_user u on l.user_id = u.id
         left join jsh_tenant t on l.tenant_id=t.tenant_id
         WHERE 1=1
         <if test="operation != null">
