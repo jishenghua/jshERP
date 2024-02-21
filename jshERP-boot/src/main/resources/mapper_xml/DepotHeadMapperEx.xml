@@ -155,7 +155,7 @@
         </if>) tb
         left join jsh_depot_head jdh on jdh.id=tb.id and ifnull(jdh.delete_flag,'0') !='1'
         left join jsh_supplier s on jdh.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
-        left join jsh_user u on jdh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_user u on jdh.creator=u.id
         left join jsh_account a on jdh.account_id=a.id and ifnull(a.delete_flag,'0') !='1'
         order by jdh.id desc
     </select>
