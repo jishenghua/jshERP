@@ -802,7 +802,7 @@ export const BillModalMixin = {
           return getListData(this.form, tables)
         }).then(allValues => {
           let param = {
-            barCode: this.scanBarCode,
+            barCode: this.scanBarCode.trim(),
             organId: this.form.getFieldValue('organId'),
             mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
             prefixNo: this.prefixNo
@@ -819,7 +819,7 @@ export const BillModalMixin = {
               for(let detail of detailArr){
                 if(detail.barCode) {
                   //如果扫码结果和条码重复，就在给原来的数量加1
-                  if(detail.barCode === this.scanBarCode) {
+                  if(detail.barCode === this.scanBarCode.trim()) {
                     detail.operNumber = (detail.operNumber-0)+1
                     //由于改变了商品数量，需要同时更新相关金额和价税合计
                     let taxRate = detail.taxRate-0 //税率
@@ -830,7 +830,7 @@ export const BillModalMixin = {
                     hasFinished = true
                   }
                   //如果扫码结果和序列号重复，就直接跳过
-                  if(detail.snList === this.scanBarCode) {
+                  if(detail.snList === this.scanBarCode.trim()) {
                     this.$message.warning('抱歉，已经扫描过该序列号！');
                     hasFinished = true
                   }
@@ -854,10 +854,10 @@ export const BillModalMixin = {
                   item.stock = mInfo.stock
                   item.unit = mInfo.commodityUnit
                   item.sku = mInfo.sku
-                  if(mInfo.mBarCode !== this.scanBarCode) {
+                  if(mInfo.mBarCode !== this.scanBarCode.trim()) {
                     if(this.prefixNo ==='LSCK' || this.prefixNo ==='CGTH' || this.prefixNo ==='XSCK' || this.prefixNo ==='QTCK') {
                       //此时给序列号赋值
-                      item.snList = this.scanBarCode
+                      item.snList = this.scanBarCode.trim()
                     }
                   }
                   item.operNumber = 1
