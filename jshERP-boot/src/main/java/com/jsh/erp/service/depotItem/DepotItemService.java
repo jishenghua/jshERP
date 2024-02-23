@@ -666,7 +666,7 @@ public class DepotItemService {
                 //更新当前库存
                 updateCurrentStock(depotItem);
                 //更新商品的价格
-                updateMaterialExtendPrice(materialExtend.getId(), depotHead.getSubType(), rowObj);
+                updateMaterialExtendPrice(materialExtend.getId(), depotHead.getSubType(), depotHead.getBillType(), rowObj);
             }
             //如果关联单据号非空则更新订单的状态,单据类型：采购入库单、销售出库单、盘点复盘单、其它入库单、其它出库单
             if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
@@ -863,7 +863,7 @@ public class DepotItemService {
      * @param rowObj
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void updateMaterialExtendPrice(Long meId, String subType, JSONObject rowObj) throws Exception {
+    public void updateMaterialExtendPrice(Long meId, String subType, String billType, JSONObject rowObj) throws Exception {
         if(systemConfigService.getUpdateUnitPriceFlag()) {
             if (StringUtil.isExist(rowObj.get("unitPrice"))) {
                 BigDecimal unitPrice = rowObj.getBigDecimal("unitPrice");
@@ -877,6 +877,12 @@ public class DepotItemService {
                 }
                 if(BusinessConstants.SUB_TYPE_RETAIL.equals(subType)) {
                     materialExtend.setCommodityDecimal(unitPrice);
+                }
+                //其它入库-生产入库的情况更新采购单价
+                if(BusinessConstants.SUB_TYPE_OTHER.equals(subType)) {
+                    if(BusinessConstants.BILL_TYPE_PRODUCE_IN.equals(billType)) {
+                        materialExtend.setPurchaseDecimal(unitPrice);
+                    }
                 }
                 materialExtendService.updateMaterialExtend(materialExtend);
             }

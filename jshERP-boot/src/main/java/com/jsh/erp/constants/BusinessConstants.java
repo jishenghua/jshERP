@@ -97,6 +97,11 @@ public class BusinessConstants {
     public static final String SUB_TYPE_ASSEMBLE = "组装单";
     public static final String SUB_TYPE_DISASSEMBLE = "拆卸单";
     /**
+     * 生产类型分类
+     * 生产入库
+     * */
+    public static final String BILL_TYPE_PRODUCE_IN = "生产入库";
+    /**
      * 财务单据分类
      * 收款、付款
      * */
