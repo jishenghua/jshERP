@@ -123,45 +123,4 @@ public class OrganizationController {
         }
         return arr;
     }
-
-    /**
-     * create by: cjl
-     * description:
-     *  新增机构信息
-     * create time: 2019/2/19 17:17
-     * @Param: beanJson
-     * @return java.lang.Object
-     */
-    @PostMapping(value = "/addOrganization")
-    @ApiOperation(value = "新增机构信息")
-    public Object addOrganization(@RequestParam("info") String beanJson) throws Exception {
-        JSONObject result = ExceptionConstants.standardSuccess();
-        Organization org= JSON.parseObject(beanJson, Organization.class);
-        int i= organizationService.addOrganization(org);
-        if(i<1){
-            throw new BusinessRunTimeException(ExceptionConstants.ORGANIZATION_ADD_FAILED_CODE,
-                    ExceptionConstants.ORGANIZATION_ADD_FAILED_MSG);
-        }
-        return result;
-    }
-    /**
-     * create by: cjl
-     * description:
-     *  修改机构信息
-     * create time: 2019/2/20 9:30
-     * @Param: beanJson
-     * @return java.lang.Object
-     */
-    @PostMapping(value = "/editOrganization")
-    @ApiOperation(value = "修改机构信息")
-    public Object editOrganization(@RequestParam("info") String beanJson) throws Exception {
-        JSONObject result = ExceptionConstants.standardSuccess();
-        Organization org= JSON.parseObject(beanJson, Organization.class);
-        int i= organizationService.editOrganization(org);
-        if(i<1){
-            throw new BusinessRunTimeException(ExceptionConstants.ORGANIZATION_EDIT_FAILED_CODE,
-                    ExceptionConstants.ORGANIZATION_EDIT_FAILED_MSG);
-        }
-        return result;
-    }
 }

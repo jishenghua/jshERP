@@ -85,7 +85,7 @@ public class OrganizationService {
         organization.setUpdateTime(new Date());
         int result=0;
         try{
-            result=organizationMapper.updateByPrimaryKeySelective(organization);
+            result=organizationMapperEx.editOrganization(organization);
             logService.insertLog("机构",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(organization.getOrgAbr()).toString(), request);
         }catch(Exception e){
@@ -141,66 +141,6 @@ public class OrganizationService {
             JshException.readFail(logger, e);
         }
         return list==null?0:list.size();
-    }
-
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int addOrganization(Organization org) throws Exception{
-        logService.insertLog("机构",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(org.getOrgAbr()).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        //新增时间
-        Date date=new Date();
-        User userInfo=userService.getCurrentUser();
-        org.setCreateTime(date);
-        //修改时间
-        org.setUpdateTime(date);
-        /**
-         *添加的时候检测机构编号是否已存在
-         * */
-        if(StringUtil.isNotEmpty(org.getOrgNo())){
-            checkOrgNoIsExists(org.getOrgNo(),null);
-        }
-        /**
-         * 未指定父级机构的时候默认为根机构
-         * */
-        if(org.getParentId()!=null){
-            org.setParentId(null);
-        }
-        int result=0;
-        try{
-            result=organizationMapperEx.addOrganization(org);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
-    }
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int editOrganization(Organization org)throws Exception {
-        logService.insertLog("机构",
-               new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(org.getOrgAbr()).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        //修改时间
-        org.setUpdateTime(new Date());
-        User userInfo=userService.getCurrentUser();
-        /**
-         * 修改的时候检测机构编号是否已存在
-         * */
-        if(StringUtil.isNotEmpty(org.getOrgNo())){
-            checkOrgNoIsExists(org.getOrgNo(),org.getId());
-        }
-        /**
-         * 未指定父级机构的时候默认为根机构
-         * */
-        if(org.getParentId()!=null){
-            org.setParentId(null);
-        }
-        int result=0;
-        try{
-            result=organizationMapperEx.editOrganization(org);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
     }
 
     public List<TreeNode> getOrganizationTree(Long id)throws Exception {
