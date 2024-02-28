@@ -816,10 +816,11 @@ export const BillModalMixin = {
               let detailArr = allValues.tablesValue[0].values
               //构造新的列表数组，用于存放单据明细信息
               let newDetailArr = []
+              let hasAdd = false
               for(let detail of detailArr){
                 if(detail.barCode) {
                   //如果扫码结果和条码重复，就在给原来的数量加1
-                  if(detail.barCode === this.scanBarCode.trim()) {
+                  if(detail.barCode === this.scanBarCode.trim() && !hasAdd) {
                     detail.operNumber = (detail.operNumber-0)+1
                     //由于改变了商品数量，需要同时更新相关金额和价税合计
                     let taxRate = detail.taxRate-0 //税率
@@ -828,6 +829,7 @@ export const BillModalMixin = {
                     detail.taxMoney = ((taxRate*0.01)*detail.allPrice).toFixed(2)-0
                     detail.taxLastMoney = (detail.allPrice + detail.taxMoney).toFixed(2)-0
                     hasFinished = true
+                    hasAdd = true
                   }
                   //如果扫码结果和序列号重复，就直接跳过
                   if(detail.snList === this.scanBarCode.trim()) {
