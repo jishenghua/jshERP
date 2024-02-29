@@ -147,7 +147,7 @@ public class MaterialCategoryService {
         materialCategory.setUpdateTime(new Date());
         int result=0;
         try{
-            result=materialCategoryMapper.updateByPrimaryKeySelective(materialCategory);
+            result=materialCategoryMapperEx.editMaterialCategory(materialCategory);
             logService.insertLog("商品类型",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialCategory.getName()).toString(), request);
         }catch(Exception e){
@@ -238,12 +238,8 @@ public class MaterialCategoryService {
         return list;
     }
     /**
-     * create by: cjl
      * description:
-     *获取商品类别树数据
-     * create time: 2019/2/19 14:30
-     * @Param:
-     * @return java.util.List<com.jsh.erp.datasource.vo.TreeNode>
+     * 获取商品类别树数据
      */
     public List<TreeNode> getMaterialCategoryTree(Long id) throws Exception{
         List<TreeNode> list=null;
@@ -253,67 +249,6 @@ public class MaterialCategoryService {
             JshException.readFail(logger, e);
         }
        return list;
-    }
-    /**
-     * create by: cjl
-     * description:
-     *  新增商品类别信息
-     * create time: 2019/2/19 16:30
-     * @Param: mc
-     * @return void
-     */
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int addMaterialCategory(MaterialCategory mc) throws Exception {
-        logService.insertLog("商品类型",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(mc.getName()).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        if(mc==null){
-            return 0;
-        }
-        if(mc.getParentId()==null){
-            //没有给定父级目录的id，默认设置父级目录为根目录的父目录
-            mc.setParentId(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
-        }
-        //检查商品类型编号是否已存在
-        checkMaterialCategorySerialNo(mc);
-        //数据状态新增时默认设置为启用
-        Date date=new Date();
-        User userInfo=userService.getCurrentUser();
-        //创建时间
-        mc.setCreateTime(date);
-        //更新时间
-        mc.setUpdateTime(date);
-        int result=0;
-        try{
-            result=materialCategoryMapperEx.addMaterialCategory(mc);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
-    }
-
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int editMaterialCategory(MaterialCategory mc) throws Exception{
-        logService.insertLog("商品类型",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(mc.getName()).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        if(mc.getParentId()==null){
-            //没有给定父级目录的id，默认设置父级目录为根目录的父目录
-            mc.setParentId(BusinessConstants.MATERIAL_CATEGORY_ROOT_PARENT_ID);
-        }
-        //检查商品类型编号是否已存在
-        checkMaterialCategorySerialNo(mc);
-        //更新时间
-        mc.setUpdateTime(new Date());
-        //更新人
-        User userInfo=userService.getCurrentUser();
-        int result=0;
-        try{
-            result= materialCategoryMapperEx.editMaterialCategory(mc);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
     }
     /**
      * 根据商品类别编号判断商品类别是否已存在

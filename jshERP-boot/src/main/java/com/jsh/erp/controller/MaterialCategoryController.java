@@ -93,10 +93,7 @@ public class MaterialCategoryController {
         return res;
     }
     /**
-     * create by: cjl
-     * description:
      * 获取商品类别树数据
-     * create time: 2019/2/19 11:49
      * @Param:
      * @return com.alibaba.fastjson.JSONArray
      */
@@ -113,45 +110,5 @@ public class MaterialCategoryController {
            }
        }
         return arr;
-    }
-    /**
-     * create by: cjl
-     * description:
-     *  新增商品类别数据
-     * create time: 2019/2/19 17:17
-     * @Param: beanJson
-     * @return java.lang.Object
-     */
-    @RequestMapping(value = "/addMaterialCategory")
-    @ApiOperation(value = "新增商品类别数据")
-    public Object addMaterialCategory(@RequestParam("info") String beanJson) throws Exception {
-        JSONObject result = ExceptionConstants.standardSuccess();
-        MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);
-        int i= materialCategoryService.addMaterialCategory(mc);
-        if(i<1){
-            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_ADD_FAILED_CODE,
-                    ExceptionConstants.MATERIAL_CATEGORY_ADD_FAILED_MSG);
-        }
-        return result;
-    }
-    /**
-     * create by: cjl
-     * description:
-     *  修改商品类别数据
-     * create time: 2019/2/20 9:30
-     * @Param: beanJson
-     * @return java.lang.Object
-     */
-    @RequestMapping(value = "/editMaterialCategory")
-    @ApiOperation(value = "修改商品类别数据")
-    public Object editMaterialCategory(@RequestParam("info") String beanJson) throws Exception {
-        JSONObject result = ExceptionConstants.standardSuccess();
-        MaterialCategory mc= JSON.parseObject(beanJson, MaterialCategory.class);
-        int i= materialCategoryService.editMaterialCategory(mc);
-        if(i<1){
-            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_CATEGORY_EDIT_FAILED_CODE,
-                    ExceptionConstants.MATERIAL_CATEGORY_EDIT_FAILED_MSG);
-        }
-        return result;
     }
 }
