@@ -582,10 +582,10 @@ public class DepotItemController {
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBugOrSale(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
+                    "retail", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBugOrSaleCount(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+                    "retail", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();

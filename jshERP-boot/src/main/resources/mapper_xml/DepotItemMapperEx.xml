@@ -412,7 +412,10 @@
             and (dh.sub_type = '采购' or dh.sub_type = '采购退货')
         </if>
         <if test="billType =='sale'">
-            and (dh.sub_type = '销售' or dh.sub_type = '销售退货' or dh.sub_type = '零售' or dh.sub_type = '零售退货')
+            and (dh.sub_type = '销售' or dh.sub_type = '销售退货')
+        </if>
+        <if test="billType =='retail'">
+            and (dh.sub_type = '零售' or dh.sub_type = '零售退货')
         </if>
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}
