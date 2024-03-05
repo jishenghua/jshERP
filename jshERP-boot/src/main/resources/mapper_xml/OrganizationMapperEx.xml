@@ -84,8 +84,7 @@
       update jsh_organization
       set update_time=#{updateTime},
       org_no = #{orgNo},org_abr = #{orgAbr},
-      delete_flag = #{deleteFlag},parent_id = #{parentId},
-      sort = #{sort},remark = #{remark}
+      parent_id = #{parentId}, sort = #{sort},remark = #{remark}
       where id =#{id}
     </update>
 

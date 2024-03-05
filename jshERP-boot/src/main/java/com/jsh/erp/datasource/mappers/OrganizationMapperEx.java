@@ -28,5 +28,6 @@ public interface OrganizationMapperEx {
     int batchDeleteOrganizationByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 
     int editOrganization(Organization org);
+
     List <Organization> getOrganizationRootByIds(@Param("ids") String ids[]);
 }
