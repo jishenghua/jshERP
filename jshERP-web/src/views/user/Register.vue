@@ -217,7 +217,7 @@
       handleSubmit() {
         this.form.validateFields((err, values) => {
           if (!err) {
-            if(values.inputCode == this.randCode) {
+            if(values.inputCode === this.randCode) {
               let register = {
                 loginName: values.username,
                 password: md5(values.password)
@@ -306,7 +306,7 @@
   .user-layout-register {
 
     .ant-form-item {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     & > h3 {
