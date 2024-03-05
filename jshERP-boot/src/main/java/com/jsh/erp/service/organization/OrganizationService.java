@@ -83,6 +83,7 @@ public class OrganizationService {
     public int updateOrganization(JSONObject obj, HttpServletRequest request)throws Exception {
         Organization organization = JSONObject.parseObject(obj.toJSONString(), Organization.class);
         organization.setUpdateTime(new Date());
+        organization.setDeleteFlag("0");
         int result=0;
         try{
             result=organizationMapperEx.editOrganization(organization);
