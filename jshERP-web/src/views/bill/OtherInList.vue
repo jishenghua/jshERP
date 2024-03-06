@@ -267,7 +267,10 @@
         }
       },
       searchReset() {
-        this.queryParam = {}
+        this.queryParam = {
+          type: this.queryParam.type,
+          subType: this.queryParam.subType
+        }
         this.loadData(1)
         if(this.inOutManageFlag) {
           this.initWaitBillCount('入库', '采购,销售退货', '1,3')
