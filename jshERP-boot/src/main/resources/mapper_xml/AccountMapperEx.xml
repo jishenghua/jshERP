@@ -230,6 +230,7 @@
         <if test="accountId != null">
             and dh.account_id=#{accountId}
         </if>
+        and ifnull(dh.change_amount, 0)!=0
         and ifnull(dh.delete_flag,'0') !='1'
         <!--主表收入和支出涉及的账户 -->
         UNION ALL
@@ -239,16 +240,18 @@
         <if test="accountId != null">
             and ah.account_id=#{accountId}
         </if>
+        and ifnull(ah.change_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
         <!--明细中涉及的账户（收款,付款,收预付款） -->
         UNION ALL
-        select ah.bill_no,ah.type as newType, 'financial' as fromType, s.supplier,ai.each_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        select ah.bill_no,ah.type as newType, 'financial' as fromType, s.supplier,ai.each_amount change_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_account_head ah left join jsh_supplier s on ah.organ_id=s.id
         left join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type in ('收款','付款','收预付款')
         <if test="accountId != null">
             and ai.account_id=#{accountId}
         </if>
+        and ifnull(ai.each_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
         <!--主表中转出的账户 -->
         UNION ALL
@@ -258,15 +261,17 @@
         <if test="accountId != null">
             and ah.account_id=#{accountId}
         </if>
+        and ifnull(ah.change_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
         <!--明细中被转入的账户 -->
         UNION ALL
-        select ah.bill_no,ah.type as newType, 'financial' as fromType, '' as sName,ai.each_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
+        select ah.bill_no,ah.type as newType, 'financial' as fromType, '' as sName,ai.each_amount change_amount,date_format(ah.bill_time,'%Y-%m-%d %H:%i:%S') as oTime,'' as AList,'' as AMList
         from jsh_account_head ah left join jsh_account_item ai on ai.header_id=ah.id and ifnull(ai.delete_flag,'0') !='1'
         where ah.type='转账'
         <if test="accountId != null">
             and ai.account_id=#{accountId}
         </if>
+        and ifnull(ai.each_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
         <!--多账户的情况 -->
         UNION ALL
@@ -278,6 +283,7 @@
             <bind name="bindAccountId" value="'%'+accountId+'%'"/>
             and dh.account_id_list like #{bindAccountId}
         </if>
+        and ifnull(dh.change_amount, 0)!=0
         and ifnull(dh.delete_flag,'0') !='1'
         ORDER BY oTime desc
         <if test="offset != null and rows != null">
@@ -295,6 +301,7 @@
             <if test="accountId != null">
                 and dh.account_id=#{accountId}
             </if>
+            and ifnull(dh.change_amount, 0)!=0
             and ifnull(dh.delete_flag,'0') !='1'
             <!--主表收入和支出涉及的账户 -->
             UNION ALL
@@ -304,6 +311,7 @@
             <if test="accountId != null">
                 and ah.account_id=#{accountId}
             </if>
+            and ifnull(ah.change_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
             <!--明细中涉及的账户（收款,付款,收预付款） -->
             UNION ALL
@@ -314,6 +322,7 @@
             <if test="accountId != null">
                 and ai.account_id=#{accountId}
             </if>
+            and ifnull(ai.each_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
             <!--主表中转出的账户 -->
             UNION ALL
@@ -323,6 +332,7 @@
             <if test="accountId != null">
                 and ah.account_id=#{accountId}
             </if>
+            and ifnull(ah.change_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
             <!--明细中被转入的账户 -->
             UNION ALL
@@ -332,6 +342,7 @@
             <if test="accountId != null">
                 and ai.account_id=#{accountId}
             </if>
+            and ifnull(ai.each_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
             <!--多账户的情况 -->
             UNION ALL
@@ -342,6 +353,7 @@
                 <bind name="bindAccountId" value="'%'+accountId+'%'"/>
                 and dh.account_id_list like #{bindAccountId}
             </if>
+            and ifnull(dh.change_amount, 0)!=0
             and ifnull(dh.delete_flag,'0') !='1'
         ) cc
     </select>
