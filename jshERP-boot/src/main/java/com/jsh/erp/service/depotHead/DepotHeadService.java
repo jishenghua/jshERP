@@ -1571,6 +1571,9 @@ public class DepotHeadService {
             depotHead.setCreator(userInfo==null?null:userInfo.getId());
             depotHead.setOrganId(null);
             depotHead.setAccountId(null);
+            depotHead.setAccountIdList(null);
+            depotHead.setAccountMoneyList(null);
+            depotHead.setSalesMan(null);
             depotHead.setStatus("0");
             depotHead.setTenantId(null);
             //查询明细
