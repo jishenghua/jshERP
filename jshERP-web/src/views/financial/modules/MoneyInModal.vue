@@ -63,7 +63,7 @@
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
-          <a-col :lg="6" :md="12" :sm="24">
+          <a-col :lg="12" :md="12" :sm="24">
             <!-- 操作按钮 -->
             <div class="action-button">
               <a-button type="primary" icon="plus" @click="handleClickAdd">选择单据</a-button>
