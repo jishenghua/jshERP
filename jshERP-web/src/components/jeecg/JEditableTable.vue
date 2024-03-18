@@ -90,12 +90,12 @@
 
             <!-- 动态生成tr -->
             <template v-for="(row,rowIndex) in rows">
-              <!-- tr 只加载可见的和预加载的总共十条数据 -->
+              <!-- tr 如果超出200条，则只加载可见的和预加载的总共十条数据 -->
               <div
-                v-if="
+                v-if="rows.length<=200 ||
+                (rows.length>200 &&
                 rowIndex >= parseInt(`${(scrollTop-rowHeight) / rowHeight}`) &&
-                  (parseInt(`${scrollTop / rowHeight}`) + 9) > rowIndex
-              "
+                  (parseInt(`${scrollTop / rowHeight}`) + 9) > rowIndex)"
                 :id="`${caseId}tbody-tr-${rowIndex}`"
                 :data-idx="rowIndex"
                 class="tr"

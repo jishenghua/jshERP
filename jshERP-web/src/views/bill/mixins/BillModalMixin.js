@@ -797,6 +797,7 @@ export const BillModalMixin = {
     },
     //扫码之后回车
     scanPressEnter() {
+      let that = this
       if(this.scanBarCode) {
         this.getAllTable().then(tables => {
           return getListData(this.form, tables)
@@ -910,6 +911,10 @@ export const BillModalMixin = {
               //置空扫码的内容
               this.scanBarCode = ''
               this.$refs.scanBarCode.focus()
+              //自动下滑到最后一行
+              setTimeout(function(){
+                that.$refs.materialDataTable.resetScrollTop((newDetailArr.length+1)*that.$refs.materialDataTable.rowHeight)
+              },1000)
             }
           })
         })
