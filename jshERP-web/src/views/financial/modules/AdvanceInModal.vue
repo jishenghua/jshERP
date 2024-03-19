@@ -63,7 +63,7 @@
           :dataSource="accountTable.dataSource"
           :minWidth="minWidth"
           :maxHeight="300"
-          :rowNumber="false"
+          :rowNumber="true"
           :rowSelection="true"
           :actionButton="true"
           @valueChange="onValueChange" />

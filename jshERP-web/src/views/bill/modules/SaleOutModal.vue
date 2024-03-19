@@ -69,7 +69,7 @@
           :rowNumber="false"
           :rowSelection="rowCanEdit"
           :actionButton="rowCanEdit"
-          :dragSort="rowCanEdit"
+          :dragSortAndNumber="rowCanEdit"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">

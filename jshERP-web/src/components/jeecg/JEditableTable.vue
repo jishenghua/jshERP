@@ -42,6 +42,12 @@
           <div v-if="dragSort" class="td td-ds" :style="style.tdLeftDs">
             <span></span>
           </div>
+          <div v-if="dragSortAndNumber" class="td td-ds" :style="style.tdLeftDs">
+            <span>#</span>
+          </div>
+          <div v-if="rowNumber" class="td td-num" :style="style.tdLeft">
+            <span>#</span>
+          </div>
           <div v-if="rowSelection" class="td td-cb" :style="style.tdLeft">
             <!--:indeterminate="true"-->
             <a-checkbox
@@ -49,9 +55,6 @@
               :indeterminate="getSelectIndeterminate"
               @change="handleChangeCheckedAll"
             />
-          </div>
-          <div v-if="rowNumber" class="td td-num" :style="style.tdLeft">
-            <span>#</span>
           </div>
           <!-- 右侧动态生成td -->
           <template v-for="col in columns">
@@ -120,6 +123,25 @@
                   </a-dropdown>
                 </div>
 
+                <div v-if="dragSortAndNumber" class="td td-ds" :style="style.tdLeftDs">
+                  <a-dropdown :trigger="['click']" :getPopupContainer="getParentContainer">
+                    <div class="td-ds-icons" title="点击不放可以拖动" style="text-align: center; line-height: 32px">
+                      <span>{{ rowIndex+1 }}</span>
+                    </div>
+
+                    <a-menu slot="overlay">
+                      <a-menu-item key="0" :disabled="rowIndex===0" @click="_handleRowMoveUp(rowIndex)">向上移</a-menu-item>
+                      <a-menu-item key="1" :disabled="rowIndex===(rows.length-1)" @click="_handleRowMoveDown(rowIndex)">向下移</a-menu-item>
+                      <!-- <a-menu-divider/>
+                      <a-menu-item key="3" @click="_handleRowInsertDown(rowIndex)">插入一行</a-menu-item> -->
+                    </a-menu>
+                  </a-dropdown>
+                </div>
+
+                <div v-if="rowNumber" class="td td-num" :style="style.tdLeft">
+                  <span>{{ rowIndex+1 }}</span>
+                </div>
+
                 <div v-if="rowSelection" class="td td-cb" :style="style.tdLeft">
                   <!-- 此 v-for 只是为了拼接 id 字符串 -->
                   <template v-for="(id,i) in [`${row.id}`]">
@@ -130,9 +152,7 @@
                       @change="handleChangeLeftCheckbox"/>
                   </template>
                 </div>
-                <div v-if="rowNumber" class="td td-num" :style="style.tdLeft">
-                  <span>{{ rowIndex+1 }}</span>
-                </div>
+
                 <!-- 右侧动态生成td -->
                 <div
                   class="td"
@@ -736,11 +756,12 @@
           >
             <div v-if="dragSort" class="td td-ds" :style="style.tdLeftDs">
             </div>
-            <div v-if="rowSelection" class="td td-cb" :style="style.tdLeft">
-
+            <div v-if="dragSortAndNumber" class="td td-ds" :style="style.tdLeftDs">
             </div>
             <div v-if="rowNumber" class="td td-num" :style="style.tdLeft">
               <span v-if="!rowSelection">统计</span>
+            </div>
+            <div v-if="rowSelection" class="td td-cb" :style="style.tdLeft">
             </div>
 
             <!-- 右侧动态生成td -->
@@ -853,6 +874,11 @@
       },
       // 是否可拖拽排序
       dragSort: {
+        type: Boolean,
+        default: false
+      },
+      // 是否可拖拽排序并显示行号
+      dragSortAndNumber: {
         type: Boolean,
         default: false
       },

@@ -68,7 +68,7 @@
           :rowNumber="false"
           :rowSelection="true"
           :actionButton="true"
-          :dragSort="true"
+          :dragSortAndNumber="true"
           @valueChange="onValueChange"
           @added="onAdded"
           @deleted="onDeleted">
