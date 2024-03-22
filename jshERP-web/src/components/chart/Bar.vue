@@ -4,13 +4,15 @@
     <v-chart :forceFit="true" :height="height" :data="dataSource" :scale="scale" :padding="padding">
       <v-tooltip/>
       <v-axis/>
-      <v-bar position="x*y"/>
+      <v-bar position="x*y" :color="color"/>
     </v-chart>
   </div>
 </template>
 
 <script>
   import { triggerWindowResizeEvent } from '@/utils/util'
+  import { DEFAULT_COLOR } from "@/store/mutation-types"
+  import Vue from 'vue'
 
   export default {
     name: 'Bar',
@@ -33,7 +35,10 @@
       }
     },
     data() {
-      return { padding: ['auto', 'auto', '40', '50'] }
+      return {
+        padding: ['auto', 'auto', '40', '50'],
+        color: Vue.ls.get(DEFAULT_COLOR)
+      }
     },
     computed: {
       scale() {
