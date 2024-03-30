@@ -45,9 +45,8 @@ public class ExcelUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static void exportObjectsWithTitle(WritableWorkbook wtwb, String tip,
-											  String[] names, String title, int index, List<String[]> objects)
-			throws Exception {
+	public static void exportObjectsManySheet(WritableWorkbook wtwb, String tip,
+											  String[] names, String title, int index, List<String[]> objects) throws Exception {
 		WritableSheet sheet = wtwb.createSheet(title, index);
 		sheet.getSettings().setDefaultColumnWidth(12);
 
@@ -72,6 +71,7 @@ public class ExcelUtils {
 		WritableCellFormat format = new WritableCellFormat(wfont);
 		format.setAlignment(Alignment.LEFT);
 		format.setVerticalAlignment(VerticalAlignment.TOP);
+		format.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
 
 		// 第一行写入提示
 		if(com.jsh.erp.utils.StringUtil.isNotEmpty(tip) && tip.contains("*")) {
@@ -101,7 +101,7 @@ public class ExcelUtils {
 	}
 
 	/**
-	 * 导出excel，不需要第一行的title
+	 * 导出excel，带单个sheet
 	 *
 	 * @param fileName
 	 * @param names
@@ -110,9 +110,8 @@ public class ExcelUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static File exportObjectsWithoutTitle(String fileName, String tip,
-			String[] names, String title, List<String[]> objects)
-			throws Exception {
+	public static File exportObjectsOneSheet(String fileName, String tip,
+											 String[] names, String title, List<String[]> objects) throws Exception {
 		File excelFile = new File("/opt/"+ fileName);
 		WritableWorkbook wtwb = Workbook.createWorkbook(excelFile);
 		WritableSheet sheet = wtwb.createSheet(title, 0);
@@ -120,16 +119,14 @@ public class ExcelUtils {
 
 		// 标题的格式-红色
 		WritableFont redWF = new WritableFont(WritableFont.ARIAL, 12,
-				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
-				Colour.RED);
+				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.RED);
 		WritableCellFormat redWFFC = new WritableCellFormat(redWF);
 		redWFFC.setVerticalAlignment(VerticalAlignment.CENTRE);
 		redWFFC.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
 
 		// 标题的格式-黑色
 		WritableFont blackWF = new WritableFont(WritableFont.ARIAL, 12,
-				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
-				Colour.BLACK);
+				WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.BLACK);
 		WritableCellFormat blackWFFC = new WritableCellFormat(blackWF);
 		blackWFFC.setVerticalAlignment(VerticalAlignment.CENTRE);
 		blackWFFC.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
@@ -139,6 +136,7 @@ public class ExcelUtils {
 		WritableCellFormat format = new WritableCellFormat(wfont);
 		format.setAlignment(Alignment.LEFT);
 		format.setVerticalAlignment(VerticalAlignment.TOP);
+		format.setBorder(jxl.format.Border.ALL,jxl.format.BorderLineStyle.THIN);
 
 		// 第一行写入提示
 		if(StringUtil.isNotEmpty(tip) && tip.contains("*")) {

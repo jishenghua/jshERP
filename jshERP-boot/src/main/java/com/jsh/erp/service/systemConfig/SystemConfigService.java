@@ -504,7 +504,7 @@ public class SystemConfigService {
         if (null != arr) {
             for (Object object: arr) {
                 List<Object> list = (List<Object>) object;
-                String[] objs = new String[100];
+                String[] objs = new String[names.length];
                 for (int i = 0; i < list.size(); i++) {
                     if(null != list.get(i)) {
                         objs[i] = list.get(i).toString();
@@ -513,7 +513,7 @@ public class SystemConfigService {
                 objects.add(objs);
             }
         }
-        File file = ExcelUtils.exportObjectsWithoutTitle(title, tip, names, title, objects);
+        File file = ExcelUtils.exportObjectsOneSheet(title, tip, names, title, objects);
         ExcelUtils.downloadExcel(file, file.getName(), response);
     }
 }
