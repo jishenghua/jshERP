@@ -153,7 +153,8 @@
     </select>
 
     <update id="updateUserWithWeixinOpenId">
-        update jsh_user u set u.weixin_open_id = null where u.weixin_open_id = #{weixinOpenId};
-        update jsh_user u set u.weixin_open_id = #{weixinOpenId} where u.login_name = #{loginName} and u.password = #{password} and ifnull(u.status,'0') not in('1','2');
+        update jsh_user u set u.weixin_open_id = #{weixinOpenId}
+        where u.login_name = #{loginName} and u.password = #{password}
+        and ifnull(u.status,'0') not in('1','2')
     </update>
 </mapper>
