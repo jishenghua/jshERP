@@ -1535,12 +1535,15 @@
             needAddkeywords.push('position')
           }
         }
+        let currentCol = [{title:'#',dataIndex:'',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}}]
         if(record.status === '3') {
           //部分采购|部分销售的时候显示全部列
-          this.columns = this.defColumns
+          for(let i=0; i<this.defColumns.length; i++){
+            currentCol.push(this.defColumns[i])
+          }
+          this.columns = currentCol
         } else if(record.purchaseStatus === '3') {
           //将已出库的标题转为已采购，针对销售订单转采购订单的场景
-          let currentCol = []
           for(let i=0; i<this.defColumns.length; i++){
             let info = {}
             info.title = this.defColumns[i].title
@@ -1558,7 +1561,6 @@
           }
           this.columns = currentCol
         } else {
-          let currentCol = []
           for(let i=0; i<this.defColumns.length; i++){
             //移除列
             let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position']

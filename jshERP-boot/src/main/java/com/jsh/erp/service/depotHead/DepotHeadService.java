@@ -996,11 +996,7 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.DEPOT_HEAD_FILE_NUM_LIMIT_MSG, 4));
             }
         }
-        try{
-            depotHeadMapper.insertSelective(depotHead);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
+        depotHeadMapper.insertSelective(depotHead);
         /**入库和出库处理预付款信息*/
         if(BusinessConstants.PAY_TYPE_PREPAID.equals(depotHead.getPayType())){
             if(depotHead.getOrganId()!=null) {
@@ -1094,11 +1090,7 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.DEPOT_HEAD_FILE_NUM_LIMIT_MSG, 4));
             }
         }
-        try{
-            depotHeadMapper.updateByPrimaryKeySelective(depotHead);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
+        depotHeadMapper.updateByPrimaryKeySelective(depotHead);
         //如果存在多账户结算需要将原账户的id置空
         if(StringUtil.isNotEmpty(depotHead.getAccountIdList())) {
             depotHeadMapperEx.setAccountIdToNull(depotHead.getId());
@@ -1311,7 +1303,7 @@ public class DepotHeadService {
                 billListCacheVo.setOrganName(dh.getOrganName());
                 billListCacheVo.setOperTimeStr(getCenternTime(dh.getOperTime()));
                 billListCacheVoMap.put(dh.getId(), billListCacheVo);
-                String[] objs = new String[100];
+                String[] objs = new String[sheetOneArr.length];
                 objs[0] = dh.getOrganName();
                 objs[1] = dh.getNumber();
                 objs[2] = dh.getLinkNumber();
@@ -1328,7 +1320,7 @@ public class DepotHeadService {
                 objs[10] = dh.getRemark();
                 billList.add(objs);
             }
-            ExcelUtils.exportObjectsWithTitle(wtwb, oneTip, sheetOneArr, "单据列表", 0, billList);
+            ExcelUtils.exportObjectsManySheet(wtwb, oneTip, sheetOneArr, "单据列表", 0, billList);
             //导出明细数据
             if(idList.size()>0) {
                 List<DepotItemVo4WithInfoEx> dataList = depotItemMapperEx.getBillDetailListByIds(idList);
@@ -1349,7 +1341,7 @@ public class DepotHeadService {
                 String[] sheetTwoArr = StringUtil.listToStringArray(sheetTwoList);
                 List<String[]> billDetail = new ArrayList<>();
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    String[] objs = new String[100];
+                    String[] objs = new String[sheetTwoArr.length];
                     BillListCacheVo billListCacheVo = billListCacheVoMap.get(diEx.getHeaderId());
                     objs[0] = billListCacheVo != null ? billListCacheVo.getOrganName() : "";
                     objs[1] = billListCacheVo != null ? billListCacheVo.getNumber() : "";
@@ -1377,7 +1369,7 @@ public class DepotHeadService {
                     objs[22] = diEx.getRemark();
                     billDetail.add(objs);
                 }
-                ExcelUtils.exportObjectsWithTitle(wtwb, twoTip, sheetTwoArr, "单据明细", 1, billDetail);
+                ExcelUtils.exportObjectsManySheet(wtwb, twoTip, sheetTwoArr, "单据明细", 1, billDetail);
             }
             wtwb.write();
             wtwb.close();

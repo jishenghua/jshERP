@@ -507,7 +507,7 @@ public class MaterialService {
         List<String[]> objects = new ArrayList<>();
         if (null != dataList) {
             for (MaterialVo4Unit m : dataList) {
-                String[] objs = new String[100];
+                String[] objs = new String[names.length];
                 objs[0] = m.getName();
                 objs[1] = m.getStandard();
                 objs[2] = m.getModel();
@@ -544,7 +544,7 @@ public class MaterialService {
                 objects.add(objs);
             }
         }
-        File file = ExcelUtils.exportObjectsWithoutTitle(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
+        File file = ExcelUtils.exportObjectsOneSheet(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
         ExcelUtils.downloadExcel(file, file.getName(), response);
     }
 

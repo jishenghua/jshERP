@@ -582,7 +582,7 @@ public class SupplierService {
             List<String[]> objects = new ArrayList<String[]>();
             if (null != dataList) {
                 for (Supplier s : dataList) {
-                    String[] objs = new String[10];
+                    String[] objs = new String[names.length];
                     objs[0] = s.getSupplier();
                     objs[1] = s.getContacts();
                     objs[2] = s.getTelephone();
@@ -594,7 +594,7 @@ public class SupplierService {
                     objects.add(objs);
                 }
             }
-            return ExcelUtils.exportObjectsWithoutTitle(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
+            return ExcelUtils.exportObjectsOneSheet(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
         }
     }
 
@@ -611,7 +611,7 @@ public class SupplierService {
         List<String[]> objects = new ArrayList<String[]>();
         if (null != dataList) {
             for (Supplier s : dataList) {
-                String[] objs = new String[20];
+                String[] objs = new String[names.length];
                 objs[0] = s.getSupplier();
                 objs[1] = s.getContacts();
                 objs[2] = s.getTelephone();
@@ -634,7 +634,7 @@ public class SupplierService {
                 objects.add(objs);
             }
         }
-        return ExcelUtils.exportObjectsWithoutTitle(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
+        return ExcelUtils.exportObjectsOneSheet(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
     }
 
     /**

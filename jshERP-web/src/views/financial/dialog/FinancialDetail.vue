@@ -442,38 +442,40 @@
           batchSetStatusUrl: '/accountHead/batchSetStatus'
         },
         advanceInColumns: [
+          { title: '#',dataIndex:'',width:'5%',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}},
           { title: '账户名称',dataIndex: 'accountName',width: '30%'},
           { title: '金额',dataIndex: 'eachAmount', width: '30%'},
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
         giroColumns: [
+          { title: '#',dataIndex:'',width:'5%',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}},
           { title: '账户名称',dataIndex: 'accountName',width: '30%'},
           { title: '金额',dataIndex: 'eachAmount', width: '30%'},
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
         itemInColumns: [
+          { title: '#',dataIndex:'',width:'5%',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}},
           { title: '收入项目',dataIndex: 'inOutItemName',width: '30%'},
           { title: '金额',dataIndex: 'eachAmount', width: '30%'},
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
         itemOutColumns: [
+          { title: '#',dataIndex:'',width:'5%',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}},
           { title: '支出项目',dataIndex: 'inOutItemName',width: '30%'},
           { title: '金额',dataIndex: 'eachAmount', width: '30%'},
           { title: '备注',dataIndex: 'remark', width: '30%'}
         ],
         moneyInColumns: [
-          {
-            title: '销售单据编号', dataIndex: 'billNumber', width: '20%'
-          },
+          { title: '#',dataIndex:'',width:'5%',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}},
+          { title: '销售单据编号', dataIndex: 'billNumber', width: '20%' },
           { title: '应收欠款',dataIndex: 'needDebt', width: '10%'},
           { title: '已收欠款',dataIndex: 'finishDebt', width: '10%'},
           { title: '本次收款',dataIndex: 'eachAmount', width: '10%'},
           { title: '备注',dataIndex: 'remark', width: '20%'}
         ],
         moneyOutColumns: [
-          {
-            title: '采购单据编号', dataIndex: 'billNumber', width: '20%'
-          },
+          { title: '#',dataIndex:'',width:'5%',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}},
+          { title: '采购单据编号', dataIndex: 'billNumber', width: '20%' },
           { title: '应付欠款',dataIndex: 'needDebt', width: '10%'},
           { title: '已付欠款',dataIndex: 'finishDebt', width: '10%'},
           { title: '本次付款',dataIndex: 'eachAmount', width: '10%'},
