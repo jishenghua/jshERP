@@ -97,6 +97,21 @@ public interface DepotHeadMapperEx {
             @Param("creator") Long creator,
             @Param("remark") String remark);
 
+    List<DepotHeadVo4InDetail> findInOutDetailStatistic(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("type") String type,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String[] organArray,
+            @Param("forceFlag") Boolean forceFlag,
+            @Param("inOutManageFlag") Boolean inOutManageFlag,
+            @Param("materialParam") String materialParam,
+            @Param("depotList") List<Long> depotList,
+            @Param("oId") Integer oId,
+            @Param("number") String number,
+            @Param("creator") Long creator,
+            @Param("remark") String remark);
+
     List<DepotHeadVo4InOutMCount> findInOutMaterialCount(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -125,6 +140,18 @@ public interface DepotHeadMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("organArray") String[] organArray);
 
+    List<DepotHeadVo4InOutMCount> findInOutMaterialCountStatistic(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("type") String type,
+            @Param("forceFlag") Boolean forceFlag,
+            @Param("inOutManageFlag") Boolean inOutManageFlag,
+            @Param("materialParam") String materialParam,
+            @Param("depotList") List<Long> depotList,
+            @Param("oId") Integer oId,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("organArray") String[] organArray);
+
     List<DepotHeadVo4InDetail> findAllocationDetail(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -142,6 +169,18 @@ public interface DepotHeadMapperEx {
             @Param("rows") Integer rows);
 
     int findAllocationDetailCount(
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("subType") String subType,
+            @Param("number") String number,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("forceFlag") Boolean forceFlag,
+            @Param("materialParam") String materialParam,
+            @Param("depotList") List<Long> depotList,
+            @Param("depotFList") List<Long> depotFList,
+            @Param("remark") String remark);
+
+    List<DepotHeadVo4InDetail> findAllocationStatistic(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("subType") String subType,

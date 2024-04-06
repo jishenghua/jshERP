@@ -416,6 +416,66 @@
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
 
+    <select id="findInOutDetailStatistic" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select sum(di.oper_number) operNumber, sum(di.all_price) allPrice
+        from jsh_depot_head dh
+        left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_supplier s on s.id=dh.organ_id and ifnull(s.delete_Flag,'0') !='1'
+        left join (select id,name as dName,delete_Flag from jsh_depot ) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
+        where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
+        <if test="oId != null">
+            and dh.organ_id = #{oId}
+        </if>
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="type != null">
+            and dh.type=#{type}
+        </if>
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        <if test="organArray != null and organArray !=''">
+            and (dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
+        </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="creator != null">
+            and dh.creator=#{creator}
+        </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+        </if>
+        and dh.sub_type!='调拨'
+        and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
         select di.material_id materialId, me.bar_code barCode, m.name mName,m.model,m.standard,mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
         sum(di.basic_number) numSum,
@@ -549,6 +609,67 @@
         group by di.material_id) a
     </select>
 
+    <select id="findInOutMaterialCountStatistic" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
+        select sum(di.basic_number) numSum, sum(di.all_price) priceSum
+        from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on m.category_id=mc.Id and ifnull(mc.delete_flag,'0') !='1'
+        where me.default_flag=1
+        and (dh.type=#{type} or dh.sub_type='调拨') and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
+        <if test="oId != null">
+            and dh.organ_id = #{oId}
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        <if test="organArray != null and organArray !=''">
+            and (dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
+        </if>
+        <if test="depotList.size()>0">
+            <if test="type == '入库'">
+                and ((
+                dh.sub_type!='调拨' and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                ) or (
+                dh.sub_type='调拨' and di.another_depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                ))
+            </if>
+            <if test="type == '出库'">
+                and di.depot_id in
+                <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="forceFlag">
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
+        </if>
+        <if test="inOutManageFlag">
+            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
     <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit,
                di.oper_number operNumber,di.all_price allPrice,sname, d.dName dname,date_format(dh.oper_time, '%Y-%m-%d') operTime,
@@ -617,6 +738,56 @@
         left join jsh_material m on m.id=di.material_id and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         left join (select id,name as dName,delete_Flag from jsh_depot) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
+        where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
+        <if test="depotFList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotFList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="depotList.size()>0">
+            and di.another_depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="subType != null">
+            and dh.sub_type=#{subType}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        <if test="forceFlag">
+            and dh.status = '1'
+        </if>
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
+        </if>
+        <if test="remark != null and remark !=''">
+            <bind name="bindRemark" value="'%'+remark+'%'"/>
+            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
+    <select id="findAllocationStatistic" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
+        select sum(di.oper_number) operNumber, sum(di.all_price) allPrice
+        from jsh_depot_head dh
+        left join jsh_depot_item di on di.header_id=dh.id and ifnull(di.delete_flag,'0') !='1'
+        left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
+        left join (select id,name as dName,delete_Flag from jsh_depot ) d on d.id=di.depot_id and ifnull(d.delete_Flag,'0') !='1'
+        <!-- 调出仓库名查询 -->
+        left join (select id as aid,name as sname,delete_Flag as adelete_Flag from jsh_depot ) ddd on ddd.aid=di.another_depot_id and ifnull(ddd.adelete_Flag,'0') !='1'
         where dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
         <if test="depotFList.size()>0">
             and di.depot_id in

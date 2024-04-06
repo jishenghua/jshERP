@@ -135,11 +135,13 @@ public class DepotHeadController {
             map.put("total", total);
             //存放数据json数组
             if (null != list) {
-                for (DepotHeadVo4InDetail dhd : list) {
-                    resList.add(dhd);
-                }
+                resList.addAll(list);
             }
             map.put("rows", resList);
+            DepotHeadVo4InDetail statistic = depotHeadService.findInOutDetailStatistic(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
+                    StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark);
+            map.put("operNumberTotal", statistic.getOperNumber());
+            map.put("allPriceTotal", statistic.getAllPrice());
             res.code = 200;
             res.data = map;
         } catch(Exception e){
@@ -151,7 +153,7 @@ public class DepotHeadController {
     }
 
     /**
-     * 入库出库统计接口
+     * 入库出库汇总接口
      * @param currentPage
      * @param pageSize
      * @param oId
@@ -164,7 +166,7 @@ public class DepotHeadController {
      * @return
      */
     @GetMapping(value = "/findInOutMaterialCount")
-    @ApiOperation(value = "入库出库统计接口")
+    @ApiOperation(value = "入库出库汇总接口")
     public BaseResponseInfo findInOutMaterialCount(@RequestParam("currentPage") Integer currentPage,
                                                    @RequestParam("pageSize") Integer pageSize,
                                                    @RequestParam(value = "organId", required = false) Integer oId,
@@ -202,6 +204,10 @@ public class DepotHeadController {
                     StringUtil.toNull(materialParam), depotList, organizationId, oId);
             map.put("total", total);
             map.put("rows", list);
+            DepotHeadVo4InOutMCount statistic = depotHeadService.findInOutMaterialCountStatistic(beginTime, endTime, type, forceFlag, inOutManageFlag,
+                    StringUtil.toNull(materialParam), depotList, organizationId, oId);
+            map.put("numSumTotal", statistic.getNumSum());
+            map.put("priceSumTotal", statistic.getPriceSum());
             res.code = 200;
             res.data = map;
         } catch(Exception e){
@@ -281,6 +287,10 @@ public class DepotHeadController {
                     creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
             map.put("rows", list);
             map.put("total", total);
+            DepotHeadVo4InDetail statistic = depotHeadService.findAllocationStatistic(beginTime, endTime, subType, StringUtil.toNull(number),
+                    creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
+            map.put("operNumberTotal", statistic.getOperNumber());
+            map.put("allPriceTotal", statistic.getAllPrice());
             res.code = 200;
             res.data = map;
         } catch(Exception e){
