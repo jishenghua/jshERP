@@ -8,11 +8,6 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
@@ -40,7 +35,17 @@
                   </a>
                 </span>
               </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item>
+                  <span>总数量：{{operNumberTotalStr}}，总金额：{{allPriceTotalStr}}</span>
+                </a-form-item>
+              </a-col>
               <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
+                  </a-form-item>
+                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="往来单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择往来单位" v-model="queryParam.organId"
@@ -182,6 +187,8 @@
         depotList: [],
         userList: [],
         orgaTree: [],
+        operNumberTotalStr: '0',
+        allPriceTotalStr: '0',
         tabKey: "1",
         // 表头
         columns: [
@@ -235,6 +242,26 @@
         console.log(dateString[0],dateString[1]);
         this.queryParam.beginTime=dateString[0];
         this.queryParam.endTime=dateString[1];
+      },
+      loadData(arg) {
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        let params = this.getQueryParams();//查询条件
+        this.loading = true;
+        getAction(this.url.list, params).then((res) => {
+          if (res.code===200) {
+            this.dataSource = res.data.rows;
+            this.ipagination.total = res.data.total;
+            this.operNumberTotalStr = res.data.operNumberTotal.toFixed(2)
+            this.allPriceTotalStr = res.data.allPriceTotal.toFixed(2)
+            this.tableAddTotalRow(this.columns, this.dataSource)
+          }
+          if(res.code===510){
+            this.$message.warning(res.data)
+          }
+          this.loading = false;
+        })
       },
       initSupplier() {
         let that = this;
