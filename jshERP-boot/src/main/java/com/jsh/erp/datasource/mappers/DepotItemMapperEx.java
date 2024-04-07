@@ -234,6 +234,7 @@ public interface DepotItemMapperEx {
             @Param("batchNumber") String batchNumber);
 
     List<DepotItem> getDepotItemByBatchNumber(
+            @Param("materialExtendId") Long materialExtendId,
             @Param("batchNumber") String batchNumber);
 
     List<MaterialVo4Unit> getBillItemByParam(

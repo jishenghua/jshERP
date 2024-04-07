@@ -585,7 +585,7 @@ public class DepotItemService {
                     BusinessConstants.SUB_TYPE_RETAIL_RETURN.equals(depotHead.getSubType())) {
                     depotItem.setPurchaseUnitPrice(materialExtend.getPurchaseDecimal());
                     if(StringUtil.isNotEmpty(depotItem.getBatchNumber())) {
-                        depotItem.setPurchaseUnitPrice(getDepotItemByBatchNumber(depotItem.getBatchNumber()).getUnitPrice());
+                        depotItem.setPurchaseUnitPrice(getDepotItemByBatchNumber(depotItem.getMaterialExtendId(),depotItem.getBatchNumber()).getUnitPrice());
                     }
                 }
                 if (StringUtil.isExist(rowObj.get("taxUnitPrice"))) {
@@ -771,11 +771,12 @@ public class DepotItemService {
 
     /**
      * 根据批号查询单据明细信息
+     * @param materialExtendId
      * @param batchNumber
      * @return
      */
-    public DepotItem getDepotItemByBatchNumber(String batchNumber) {
-        List<DepotItem> depotItemList = depotItemMapperEx.getDepotItemByBatchNumber(batchNumber);
+    public DepotItem getDepotItemByBatchNumber(Long materialExtendId, String batchNumber) {
+        List<DepotItem> depotItemList = depotItemMapperEx.getDepotItemByBatchNumber(materialExtendId, batchNumber);
         if(null != depotItemList && depotItemList.size() > 0){
             return depotItemList.get(0);
         } else {
