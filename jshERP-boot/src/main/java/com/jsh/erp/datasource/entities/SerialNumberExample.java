@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -422,6 +423,66 @@ public class SerialNumberExample {
 
         public Criteria andIsSellNotBetween(String value1, String value2) {
             addCriterion("is_sell not between", value1, value2, "isSell");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceIsNull() {
+            addCriterion("in_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceIsNotNull() {
+            addCriterion("in_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceEqualTo(BigDecimal value) {
+            addCriterion("in_price =", value, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceNotEqualTo(BigDecimal value) {
+            addCriterion("in_price <>", value, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceGreaterThan(BigDecimal value) {
+            addCriterion("in_price >", value, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("in_price >=", value, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceLessThan(BigDecimal value) {
+            addCriterion("in_price <", value, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("in_price <=", value, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceIn(List<BigDecimal> values) {
+            addCriterion("in_price in", values, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceNotIn(List<BigDecimal> values) {
+            addCriterion("in_price not in", values, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("in_price between", value1, value2, "inPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andInPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("in_price not between", value1, value2, "inPrice");
             return (Criteria) this;
         }
 

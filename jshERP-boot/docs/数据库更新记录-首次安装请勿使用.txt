@@ -1547,3 +1547,10 @@ update jsh_person set type='销售员' where type='业务员';
 -- 给系统参数表增加出入库管理启用标记，开启后，采购入库、采购退货、销售出库、销售退货单据都会经过出入库流程，适合有独立仓库的场景。
 -- --------------------------------------------------------
 alter table jsh_system_config add in_out_manage_flag varchar(1) DEFAULT '0' COMMENT '出入库管理启用标记，0未启用，1启用' after over_link_bill_flag;
+
+-- --------------------------------------------------------
+-- 时间 2024年4月8日
+-- by jishenghua
+-- 给序列号表里面增加入库单价字段
+-- --------------------------------------------------------
+alter table jsh_serial_number add in_price decimal(24,6) DEFAULT NULL COMMENT '入库单价' after is_sell;

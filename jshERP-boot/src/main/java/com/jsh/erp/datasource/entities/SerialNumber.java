@@ -1,5 +1,6 @@
 package com.jsh.erp.datasource.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class SerialNumber {
@@ -12,6 +13,8 @@ public class SerialNumber {
     private String serialNumber;
 
     private String isSell;
+
+    private BigDecimal inPrice;
 
     private String remark;
 
@@ -69,6 +72,14 @@ public class SerialNumber {
 
     public void setIsSell(String isSell) {
         this.isSell = isSell == null ? null : isSell.trim();
+    }
+
+    public BigDecimal getInPrice() {
+        return inPrice;
+    }
+
+    public void setInPrice(BigDecimal inPrice) {
+        this.inPrice = inPrice;
     }
 
     public String getRemark() {

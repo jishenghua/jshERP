@@ -20,6 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -352,7 +353,7 @@ public class SerialNumberService {
         return count;
     }
 
-    public void addSerialNumberByBill(String type, String subType, String inBillNo, Long materialId, Long depotId, String snList) throws Exception {
+    public void addSerialNumberByBill(String type, String subType, String inBillNo, Long materialId, Long depotId, BigDecimal inPrice, String snList) throws Exception {
         //录入序列号的时候不能和库里面的重复-入库
         if ((BusinessConstants.SUB_TYPE_PURCHASE.equals(subType) ||
                 BusinessConstants.SUB_TYPE_OTHER.equals(subType) ||
@@ -374,6 +375,7 @@ public class SerialNumberService {
                     serialNumber.setMaterialId(materialId);
                     serialNumber.setDepotId(depotId);
                     serialNumber.setSerialNumber(sn);
+                    serialNumber.setInPrice(inPrice);
                     Date date = new Date();
                     serialNumber.setCreateTime(date);
                     serialNumber.setUpdateTime(date);

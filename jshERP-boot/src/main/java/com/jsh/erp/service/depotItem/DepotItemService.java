@@ -455,8 +455,12 @@ public class DepotItemService {
                         int operNum = rowObj.getInteger("operNumber");
                         if(snArray.length == operNum) {
                             Long depotId = rowObj.getLong("depotId");
+                            BigDecimal inPrice = BigDecimal.ZERO;
+                            if (StringUtil.isExist(rowObj.get("unitPrice"))) {
+                                inPrice = rowObj.getBigDecimal("unitPrice");
+                            }
                             serialNumberService.addSerialNumberByBill(depotHead.getType(), depotHead.getSubType(),
-                                    depotHead.getNumber(), materialExtend.getMaterialId(), depotId, depotItem.getSnList());
+                                    depotHead.getNumber(), materialExtend.getMaterialId(), depotId, inPrice, depotItem.getSnList());
                         } else {
                             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SN_NUMBERE_FAILED_CODE,
                                     String.format(ExceptionConstants.DEPOT_HEAD_SN_NUMBERE_FAILED_MSG, barCode));
