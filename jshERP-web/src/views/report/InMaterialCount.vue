@@ -58,7 +58,7 @@
                       showSearch allow-clear style="width: 100%"
                       placeholder="请选择仓库"
                       v-model="queryParam.depotId">
-                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+                      <a-select-option v-for="(depot,index) in depotList" :value="depot.id" :key="index">
                         {{ depot.depotName }}
                       </a-select-option>
                     </a-select>
