@@ -531,6 +531,24 @@ export function getNowFormatStr() {
 }
 
 /**
+ * js获取N天前的日期， 格式“yyyy-MM-dd”
+ */
+export function getBeforeFormatDate(day) {
+  let currentDate = new Date();
+  let thirtyDaysAgo = new Date(currentDate.getTime() - day * 24 * 60 * 60 * 1000);
+  let seperator1 = "-";
+  let month = thirtyDaysAgo.getMonth() + 1;
+  let strDate = thirtyDaysAgo.getDate();
+  if (month >= 1 && month <= 9) {
+    month = "0" + month;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  return thirtyDaysAgo.getFullYear() + seperator1 + month + seperator1 + strDate
+}
+
+/**
  * JS中根据指定值删除数组中的元素
  * @param arrylist
  * @param val

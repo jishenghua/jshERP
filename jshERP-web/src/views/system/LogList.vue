@@ -20,7 +20,7 @@
                 <a-form-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 100%"
-                    v-model="queryParam.createTimeRange"
+                    v-model="defaultTimeStr"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
                     @change="onDateChange"
@@ -93,7 +93,9 @@
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
+  import { getBeforeFormatDate } from '@/utils/util'
   import {getAction } from '@/api/manage'
+  import moment from 'moment'
 
   export default {
     name: "LogList",
@@ -107,12 +109,16 @@
         queryParam: {
           operation:'',
           content:'',
-          createTimeRange:[],
           userInfo: '',
           clientIp:'',
           tenantLoginName:'',
-          tenantType:''
+          tenantType:'',
+          beginTime: getBeforeFormatDate(30),
+          endTime: moment().format('YYYY-MM-DD'),
         },
+        dateFormat: 'YYYY-MM-DD',
+        currentDay: moment().format('YYYY-MM-DD'),
+        defaultTimeStr: '',
         tabKey: "1",
         isManage: false,
         // 表头
@@ -154,6 +160,7 @@
     },
     created() {
       this.initUserInfo()
+      this.defaultTimeStr = [moment(getBeforeFormatDate(30), this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       onDateChange: function (value, dateString) {
@@ -163,6 +170,20 @@
       },
       onDateOk(value) {
         console.log(value);
+      },
+      searchReset() {
+        this.queryParam = {
+          operation:'',
+          content:'',
+          userInfo: '',
+          clientIp:'',
+          tenantLoginName:'',
+          tenantType:'',
+          beginTime: getBeforeFormatDate(30),
+          endTime: moment().format('YYYY-MM-DD')
+        }
+        this.defaultTimeStr = [moment(getBeforeFormatDate(30), this.dateFormat), moment(this.currentDay, this.dateFormat)]
+        this.loadData(1);
       },
       initUserInfo() {
         getAction('/user/getUserSession').then((res)=>{
