@@ -83,5 +83,5 @@
 # 如何支持
 * 开源不易，坚持更难！如果您觉得华夏ERP不错，不用请作者喝咖啡。
 * 您可以将我们的云平台地址：https://cloud.huaxiaerp.com 发给您的家人或朋友，只要是开店的、办厂的、做批发的都可以用得上。
-* 您可以到我们自营的网上商城进行支持，访问地址：https://www.huaxiaerp.com/thread-234-1-1.html
+* 您可以到我们自营的网上商城进行支持，访问地址：https://mobile.pinduoduo.com/mall_page.html?mall_id=375313371
 * 以上将是对我们开源最大的支持！在此表示感谢！
