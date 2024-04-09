@@ -479,17 +479,17 @@ export const JeecgListMixin = {
         //分页条数为11、21、31等的时候增加合计行
         let numKey = 'rowIndex'
         let totalRow = { [numKey]: '合计' }
-        //需要合计的列
+        //需要合计的列，记住最后的逗号不要删除
         let parseCols = 'initialStock,currentStock,currentStockPrice,currentWeight,initialAmount,thisMonthAmount,currentAmount,inSum,inSumPrice,' +
           'inOutSumPrice,outSum,outSumPrice,outInSumPrice,operNumber,allPrice,numSum,priceSum,prevSum,thisSum,thisAllPrice,changeAmount,' +
           'allPrice,taxMoney,currentNumber,lowCritical,highCritical,preNeed,debtMoney,backMoney,allNeed,' +
-          'needDebt,realNeedDebt,finishDebt,debt'
+          'needDebt,realNeedDebt,finishDebt,debt,'
         columns.forEach(column => {
           let { key, dataIndex } = column
           if (![key, dataIndex].includes(numKey)) {
             let total = 0
             dataSource.forEach(data => {
-              if(parseCols.indexOf(dataIndex)>-1) {
+              if(parseCols.indexOf(dataIndex+',')>-1) {
                 if(data[dataIndex]) {
                   total += Number.parseFloat(data[dataIndex])
                 } else {
