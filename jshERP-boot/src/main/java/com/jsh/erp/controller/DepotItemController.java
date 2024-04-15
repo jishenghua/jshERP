@@ -531,8 +531,8 @@ public class DepotItemController {
                     dataArray.add(item);
                 }
             }
-            BigDecimal inSumPriceTotal = depotItemService.buyOrSale("入库", "采购", null, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, "price");
-            BigDecimal outSumPriceTotal = depotItemService.buyOrSale("出库", "采购退货", null, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, "price");
+            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "采购", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "采购退货", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
             BigDecimal realityPriceTotal = inSumPriceTotal.subtract(outSumPriceTotal);
             map.put("rows", dataArray);
             map.put("realityPriceTotal", realityPriceTotal);
@@ -615,8 +615,8 @@ public class DepotItemController {
                     dataArray.add(item);
                 }
             }
-            BigDecimal outSumPriceTotal = depotItemService.buyOrSale("出库", "零售", null, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, "price");
-            BigDecimal inSumPriceTotal = depotItemService.buyOrSale("入库", "零售退货", null, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, "price");
+            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "零售", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "零售退货", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
             BigDecimal realityPriceTotal = outSumPriceTotal.subtract(inSumPriceTotal);
             map.put("rows", dataArray);
             map.put("realityPriceTotal", realityPriceTotal);
@@ -700,8 +700,8 @@ public class DepotItemController {
                     dataArray.add(item);
                 }
             }
-            BigDecimal outSumPriceTotal = depotItemService.buyOrSale("出库", "销售", null, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, "price");
-            BigDecimal inSumPriceTotal = depotItemService.buyOrSale("入库", "销售退货", null, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, "price");
+            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "销售", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "销售退货", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
             BigDecimal realityPriceTotal = outSumPriceTotal.subtract(inSumPriceTotal);
             map.put("rows", dataArray);
             map.put("realityPriceTotal", realityPriceTotal);

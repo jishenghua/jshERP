@@ -589,6 +589,48 @@
         and ifnull(di.delete_flag,'0') !='1'
     </select>
 
+    <select id="buyOrSalePriceTotal" resultType="java.math.BigDecimal">
+        select ifnull(sum(di.all_price),0) as AllPrice
+        from jsh_depot_item di
+        left join jsh_depot_head dh on dh.id=di.header_id and ifnull(dh.delete_flag,'0') !='1'
+        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material m on m.id=di.material_id and ifnull(m.delete_Flag,'0') !='1'
+        where ifnull(di.delete_flag,'0') !='1'
+        and dh.type=#{type} and dh.sub_type=#{subType}
+        and dh.oper_time &gt;= #{beginTime}
+        and dh.oper_time &lt;= #{endTime}
+        <if test="materialParam != null and materialParam !=''">
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+        </if>
+        <if test="creatorArray != null">
+            and dh.creator in (
+            <foreach collection="creatorArray" item="creator" separator=",">
+                #{creator}
+            </foreach>
+            )
+        </if>
+        <if test="organId != null">
+            and dh.organ_id = #{organId}
+        </if>
+        <if test="organArray != null and organArray !=''">
+            and dh.organ_id in (
+            <foreach collection="organArray" item="organId" separator=",">
+                #{organId}
+            </foreach>
+            )
+        </if>
+        <if test="depotList.size()>0">
+            and di.depot_id in
+            <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="forceFlag">
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
+        </if>
+    </select>
+
     <select id="inOrOutPrice" resultType="java.math.BigDecimal">
         select ifnull(sum(discount_last_money),0) as allMoney from
         (select distinct dh.id, dh.discount_last_money

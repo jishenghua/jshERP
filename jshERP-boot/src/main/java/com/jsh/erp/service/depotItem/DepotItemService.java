@@ -354,6 +354,17 @@ public class DepotItemService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public BigDecimal buyOrSalePriceTotal(String type, String subType, String materialParam, String beginTime, String endTime,
+                                String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag) throws Exception{
+        BigDecimal result= BigDecimal.ZERO;
+        try{
+            result= depotItemMapperEx.buyOrSalePriceTotal(type, subType, materialParam, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
 
     }
 

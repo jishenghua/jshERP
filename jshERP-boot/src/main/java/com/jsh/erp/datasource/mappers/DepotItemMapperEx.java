@@ -121,6 +121,18 @@ public interface DepotItemMapperEx {
             @Param("forceFlag") Boolean forceFlag,
             @Param("sumType") String sumType);
 
+    BigDecimal buyOrSalePriceTotal(
+            @Param("type") String type,
+            @Param("subType") String subType,
+            @Param("materialParam") String materialParam,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("creatorArray") String[] creatorArray,
+            @Param("organId") Long organId,
+            @Param("organArray") String [] organArray,
+            @Param("depotList") List<Long> depotList,
+            @Param("forceFlag") Boolean forceFlag);
+
     BigDecimal inOrOutPrice(
             @Param("type") String type,
             @Param("subType") String subType,
