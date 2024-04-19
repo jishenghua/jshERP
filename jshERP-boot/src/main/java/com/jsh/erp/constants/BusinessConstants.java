@@ -80,8 +80,9 @@ public class BusinessConstants {
     public static final String PURCHASE_STATUS_SKIPING = "3";
     /**
      * 出入库分类
-     *采购、采购退货、其它、零售、销售、调拨、盘点复盘等
+     * 请购单、采购、采购退货、其它、零售、销售、调拨、盘点复盘等
      * */
+    public static final String SUB_TYPE_PURCHASE_APPLY = "请购单";
     public static final String SUB_TYPE_PURCHASE_ORDER = "采购订单";
     public static final String SUB_TYPE_PURCHASE = "采购";
     public static final String SUB_TYPE_PURCHASE_RETURN = "采购退货";

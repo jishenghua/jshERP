@@ -256,7 +256,9 @@ public class DepotHeadService {
      */
     public String[] getDepotArray(String subType) throws Exception {
         String [] depotArray = null;
-        if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType) && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)) {
+        if(!BusinessConstants.SUB_TYPE_PURCHASE_APPLY.equals(subType)
+                && !BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType)
+                && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)) {
             String depotIds = depotService.findDepotStrByCurrentUser();
             depotArray = StringUtil.isNotEmpty(depotIds) ? depotIds.split(",") : null;
         }

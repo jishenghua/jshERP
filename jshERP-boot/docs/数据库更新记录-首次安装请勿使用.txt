@@ -1554,3 +1554,13 @@ alter table jsh_system_config add in_out_manage_flag varchar(1) DEFAULT '0' COMM
 -- 给序列号表里面增加入库单价字段
 -- --------------------------------------------------------
 alter table jsh_serial_number add in_price decimal(24,6) DEFAULT NULL COMMENT '入库单价' after is_sell;
+
+-- --------------------------------------------------------
+-- 时间 2024年4月19日
+-- by jishenghua
+-- 给功能表增加请购单的菜单
+-- 给角色勾选请购单的菜单
+-- --------------------------------------------------------
+INSERT INTO jsh_function
+(`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`)
+VALUES ('050203', '请购单', '0502', '/bill/purchase_apply', '/bill/PurchaseApplyList', b'0', '0330', b'1', '电脑版', '1,2,3,7', 'profile', '0');

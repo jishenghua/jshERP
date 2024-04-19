@@ -612,7 +612,8 @@ public class DepotItemService {
                 if (StringUtil.isExist(rowObj.get("depotId"))) {
                     depotItem.setDepotId(rowObj.getLong("depotId"));
                 } else {
-                    if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
+                    if(!BusinessConstants.SUB_TYPE_PURCHASE_APPLY.equals(depotHead.getSubType())
+                            && !BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())
                             && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
                         throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_CODE,
                                 String.format(ExceptionConstants.DEPOT_HEAD_DEPOT_FAILED_MSG));
