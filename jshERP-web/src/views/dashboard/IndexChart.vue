@@ -35,7 +35,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <chart-card :loading="loading" title="本月累计零售">
-          <a-tooltip placement="left" title="统计本月零售单据的总金额" slot="action">
+          <a-tooltip title="统计本月零售单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.monthRetailSale"></head-info>
@@ -43,7 +43,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <chart-card :loading="loading" title="本月累计采购">
-          <a-tooltip title="统计本月采购单据的总金额" slot="action">
+          <a-tooltip placement="left" title="统计本月采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.monthBuy"></head-info>
@@ -83,7 +83,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <chart-card :loading="loading" title="今年累计零售">
-          <a-tooltip placement="left" title="统计今年零售单据的总金额" slot="action">
+          <a-tooltip title="统计今年零售单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.yearRetailSale"></head-info>
@@ -91,7 +91,7 @@
       </a-col>
       <a-col :sm="24" :md="12" :xl="4" :style="{ paddingRight: '0px',marginBottom: '12px' }">
         <chart-card :loading="loading" title="今年累计采购">
-          <a-tooltip title="统计今年采购单据的总金额" slot="action">
+          <a-tooltip placement="left" title="统计今年采购单据的总金额" slot="action">
             <a-icon type="info-circle-o" />
           </a-tooltip>
           <head-info :content="statistics.yearBuy"></head-info>
