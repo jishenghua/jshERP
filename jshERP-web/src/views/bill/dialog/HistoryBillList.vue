@@ -20,7 +20,7 @@
         <!-- 搜索区域 -->
         <a-form layout="inline" @keyup.enter.native="searchQuery">
           <a-row :gutter="24">
-            <a-col :md="4" :sm="24">
+            <a-col :md="4" :sm="24" v-if="organLabel">
               <a-form-item :label="organLabel" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParam.organId" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in supplierList" :key="index" :value="item.id">

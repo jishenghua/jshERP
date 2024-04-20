@@ -14,6 +14,7 @@
       <!--此处为解决缓存问题-->
       <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
       <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
+      <a-button v-if="billType === '请购单'" v-print="'#purchaseApplyPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'">普通打印</a-button>
       <a-button v-if="billType === '采购退货出库'" v-print="'#purchaseBackPrint'">普通打印</a-button>
@@ -28,6 +29,7 @@
       <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
       <!--导出Excel-->
       <a-button v-if="billType === '零售出库'||billType === '零售退货入库'" @click="retailExportExcel()">导出</a-button>
+      <a-button v-if="billType === '请购单'" @click="applyExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购订单'||billType === '销售订单'" @click="orderExportExcel()">导出</a-button>
       <a-button v-if="billType === '采购入库'||billType === '采购退货出库'||billType === '销售出库'||billType === '销售退货入库'"
                 @click="purchaseSaleExportExcel()">导出</a-button>
@@ -202,6 +204,53 @@
               </a-row>
             </a-col>
           </a-row>
+          <a-row class="form-row" :gutter="24">
+            <a-col :lg="24" :md="24" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
+                {{model.remark}}
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </section>
+      </template>
+      <!--请购单-->
+      <template v-else-if="billType === '请购单'">
+        <section ref="print" id="purchaseApplyPrint">
+          <a-row class="form-row" :gutter="24">
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                {{model.operTimeStr}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
+                {{model.number}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+            </a-col>
+            <a-col :span="6">
+            </a-col>
+          </a-row>
+          <div :style="tableWidth">
+            <a-table
+              ref="table"
+              size="middle"
+              bordered
+              rowKey="id"
+              :pagination="false"
+              :loading="loading"
+              :columns="columns"
+              :dataSource="dataSource">
+              <template slot="customBarCode" slot-scope="text, record">
+                <div :style="record.imgName?'float:left;line-height:30px':'float:left;'">{{record.barCode}}</div>
+                <a-popover placement="right" trigger="click">
+                  <template slot="content"><img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" /></template>
+                  <div class="item-info" v-if="record.imgName"><img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" /></div>
+                </a-popover>
+              </template>
+            </a-table>
+          </div>
           <a-row class="form-row" :gutter="24">
             <a-col :lg="24" :md="24" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="" style="padding:20px 10px;">
@@ -1222,6 +1271,19 @@
           { title: '仓位货架', dataIndex: 'position'},
           { title: '备注', dataIndex: 'remark'}
         ],
+        purchaseApplyColumns: [
+          { title: '条码', dataIndex: 'barCode'},
+          { title: '名称', dataIndex: 'name'},
+          { title: '规格', dataIndex: 'standard'},
+          { title: '型号', dataIndex: 'model'},
+          { title: '颜色', dataIndex: 'color'},
+          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '单位', dataIndex: 'unit'},
+          { title: '多属性', dataIndex: 'sku'},
+          { title: '数量', dataIndex: 'operNumber'},
+          { title: '已采购', dataIndex: 'finishNumber'},
+          { title: '备注', dataIndex: 'remark'}
+        ],
         purchaseOrderColumns: [
           { title: '条码', dataIndex: 'barCode'},
           { title: '名称', dataIndex: 'name'},
@@ -1488,6 +1550,8 @@
           this.defColumns = this.retailOutColumns
         } else if (type === '零售退货入库') {
           this.defColumns = this.retailBackColumns
+        } else if (type === '请购单') {
+          this.defColumns = this.purchaseApplyColumns
         } else if (type === '采购订单') {
           this.defColumns = this.purchaseOrderColumns
         } else if (type === '采购入库') {
@@ -1772,6 +1836,20 @@
         }
         let organName = this.model.organName? '会员卡号' + this.model.organName: ''
         let tip = organName + ' ' + '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' + this.model.number
+        exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
+      },
+      //请购单
+      applyExportExcel() {
+        let list = []
+        let head = '条码,名称,规格,型号,颜色,扩展信息,单位,多属性,原数量,已采购,数量,备注'
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
+          let ds = this.dataSource[i]
+          item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.unit, ds.sku,
+            ds.preNumber, ds.finishNumber, ds.operNumber, ds.remark)
+          list.push(item)
+        }
+        let tip = '单据日期：' + this.model.operTimeStr + ' ' + '单据编号：' + this.model.number
         exportXlsPost(this.billType + '_' + this.model.number, '单据导出', head, tip, list)
       },
       //采购订单|销售订单

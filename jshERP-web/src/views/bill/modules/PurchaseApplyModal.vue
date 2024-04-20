@@ -90,28 +90,19 @@
         </a-row>
       </a-form>
     </a-spin>
-    <many-account-modal ref="manyAccountModalForm" @ok="manyAccountModalFormOk"></many-account-modal>
     <import-item-modal ref="importItemModalForm" @ok="importItemModalFormOk"></import-item-modal>
-    <vendor-modal ref="vendorModalForm" @ok="vendorModalFormOk"></vendor-modal>
-    <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
-    <link-bill-list ref="linkBillList" @ok="linkBillListOk"></link-bill-list>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
     <workflow-iframe ref="modalWorkflow"></workflow-iframe>
   </j-modal>
 </template>
 <script>
   import pick from 'lodash.pick'
-  import ManyAccountModal from '../dialog/ManyAccountModal'
   import ImportItemModal from '../dialog/ImportItemModal'
-  import LinkBillList from '../dialog/LinkBillList'
-  import VendorModal from '../../system/modules/VendorModal'
-  import AccountModal from '../../system/modules/AccountModal'
   import HistoryBillList from '../dialog/HistoryBillList'
   import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getCurrentSystemConfig } from '@/api/api'
   import { getMpListShort, changeListFmtMinus,handleIntroJs } from "@/utils/util"
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -120,11 +111,7 @@
     name: "PurchaseApplyModal",
     mixins: [JEditableTableMixin,BillModalMixin],
     components: {
-      ManyAccountModal,
       ImportItemModal,
-      LinkBillList,
-      VendorModal,
-      AccountModal,
       HistoryBillList,
       WorkflowIframe,
       JUpload,
@@ -239,8 +226,7 @@
           }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
-            'discount','discountMoney','discountLastMoney','accountId','changeAmount'))
+            this.form.setFieldsValue(pick(this.model, 'operTime', 'number', 'remark'))
           });
           // 加载子表数据
           let params = {
@@ -258,8 +244,6 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initSupplier()
-        this.initAccount()
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {
@@ -270,17 +254,9 @@
         billMain.subType = '请购单'
         billMain.defaultNumber = billMain.number
         for(let item of detailArr){
-          item.depotId = '' //订单不需要仓库
           totalPrice += item.allPrice-0
         }
         billMain.totalPrice = 0-totalPrice
-        billMain.changeAmount = 0-billMain.changeAmount
-        if(billMain.accountId === 0) {
-          billMain.accountId = ''
-        }
-        this.accountMoneyList = changeListFmtMinus(this.accountMoneyList)
-        billMain.accountIdList = this.accountIdList.length>0 ? JSON.stringify(this.accountIdList) : ""
-        billMain.accountMoneyList = this.accountMoneyList.length>0 ? JSON.stringify(this.accountMoneyList) : ""
         if(this.fileList && this.fileList.length > 0) {
           billMain.fileName = this.fileList
         } else {
