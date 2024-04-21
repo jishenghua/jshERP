@@ -71,7 +71,9 @@
     methods: {
       add (prefixNo) {
         this.prefixNo = prefixNo
-        if(prefixNo === 'CGDD' || prefixNo === 'XSDD') {
+        if(prefixNo === 'QGD') {
+          this.tmpUrl = '/doc/apply_item_template.xls'
+        } else if(prefixNo === 'CGDD' || prefixNo === 'XSDD') {
           this.tmpUrl = '/doc/order_item_template.xls'
         } else if(prefixNo === 'CGRK' || prefixNo === 'XSCK') {
           this.tmpUrl = '/doc/buy_sale_item_template.xls'
