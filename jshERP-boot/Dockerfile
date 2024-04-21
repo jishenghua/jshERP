@@ -14,4 +14,4 @@ COPY target/jshERP.jar /app/app.jar
 
 EXPOSE 8080
 
-CMD java -Dfile.encoding=utf-8 -XX:+HeapDumpOnOutOfMemoryError -jar /app/app.jar
+CMD ["java", "-Dfile.encoding=utf-8", "-XX:+HeapDumpOnOutOfMemoryError", "-jar", "/app/app.jar"]

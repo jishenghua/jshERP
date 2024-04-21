@@ -20,7 +20,10 @@ sudo docker build -t erp-demo:$tag .
 
 # 停止并删除名称为 awsomechat 的容器
 #sudo docker ps -a | grep -q awsomechat && sudo docker stop release-ninefactor && sudo docker rm release-ninefactor
-sudo docker stop erp-demo && sudo docker rm erp-demo
+if sudo docker ps -a | grep -q erp-demo; then
+  sudo docker stop erp-demo
+  sudo docker rm erp-demo
+fi
 
 # 运行 Docker 容器
 sudo docker run \
