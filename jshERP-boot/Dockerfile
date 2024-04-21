@@ -11,17 +11,20 @@ MAINTAINER yaoyuanming "yaoyuanming0601@gmail.com"
 COPY target/jshERP.jar /app/jshERP.jar
 
 # 设置配置和其他路径
-ENV SERVER_NAME="jshERP"
-ENV APP_HOME="/app"
-ENV CONFIG_HOME="/app/config"
-ENV LIB_HOME="/app/lib"
-ENV LOGS_HOME="/app/logs"
-ENV PID_FILE="/app/logs/application.pid"
-ENV APP_MAIN_CLASS="jshERP.jar"
-ENV LOG_CONFIG="/app/config/logback-spring.xml"
+#ENV SERVER_NAME="jshERP"
+#ENV APP_HOME="/app"
+#ENV CONFIG_HOME="/app/config"
+#ENV LIB_HOME="/app/lib"
+#ENV LOGS_HOME="/app/logs"
+#ENV PID_FILE="/app/logs/application.pid"
+#ENV APP_MAIN_CLASS="jshERP.jar"
+#ENV LOG_CONFIG="/app/config/logback-spring.xml"
 
 # 创建日志目录
 RUN mkdir -p /app/logs
+
+#COPY src/main/resources/logback-spring.xml /app/config/logback-spring.xml
+#COPY src/main/resources/application.properties /app/config/application.properties
 
 # 确保 JAR 可执行
 RUN chmod +x /app/jshERP.jar
@@ -30,7 +33,7 @@ RUN chmod +x /app/jshERP.jar
 EXPOSE 8080
 
 # 设置启动命令，包含 JAVA_OPTS 和 JAVA_RUN
-ENV JAVA_OPTS="-server -Xms128m -Xmx320m -XX:PermSize=128M -XX:MaxPermSize=256M"
+ENV JAVA_OPTS="-server -Xms128m -Xmx320m"
 ENV JAVA_RUN="-Dlogs.home=/app/logs -Dlogging.config=$LOG_CONFIG -Dspring.config.location=file:/app/config -Dspring.pid.file=$PID_FILE -Dspring.pid.fail-on-write-error=true"
 
 # 运行应用程序，使用 JAVA_OPTS 和 JAVA_RUN
