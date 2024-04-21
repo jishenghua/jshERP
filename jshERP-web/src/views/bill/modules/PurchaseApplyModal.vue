@@ -153,6 +153,7 @@
           loading: false,
           dataSource: [],
           columns: [
+            { title: '', key: 'hiddenKey', width: '1%', type: FormTypes.hidden },
             { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -163,8 +164,6 @@
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
             { title: '多属性', key: 'sku', width: '4%', type: FormTypes.normal },
-            { title: '原数量', key: 'preNumber', width: '4%', type: FormTypes.normal },
-            { title: '已采购', key: 'finishNumber', width: '4%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '5%', type: FormTypes.inputNumber, statistics: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -200,10 +199,7 @@
         this.billStatus = '0'
         this.currentSelectDepotId = ''
         this.rowCanEdit = true
-        this.materialTable.columns[0].type = FormTypes.popupJsh
         this.changeColumnHide()
-        this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
-        this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
@@ -211,10 +207,6 @@
             handleIntroJs(this.prefixNo, 1)
           })
         } else {
-          if(this.model.linkNumber) {
-            this.rowCanEdit = false
-            this.materialTable.columns[0].type = FormTypes.normal
-          }
           this.model.operTime = this.model.operTimeStr
           if(this.model.accountId == null && this.model.accountIdList) {
             this.model.accountId = 0

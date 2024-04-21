@@ -239,6 +239,7 @@
           loading: false,
           dataSource: [],
           columns: [
+            { title: '', key: 'hiddenKey', width: '1%', type: FormTypes.hidden },
             { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
@@ -293,7 +294,7 @@
         this.billStatus = '0'
         this.currentSelectDepotId = ''
         this.rowCanEdit = true
-        this.materialTable.columns[0].type = FormTypes.popupJsh
+        this.materialTable.columns[1].type = FormTypes.popupJsh
         this.changeColumnHide()
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 0)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 0)
@@ -306,7 +307,7 @@
         } else {
           if(this.model.linkNumber) {
             this.rowCanEdit = false
-            this.materialTable.columns[0].type = FormTypes.normal
+            this.materialTable.columns[1].type = FormTypes.normal
           }
           this.model.operTime = this.model.operTimeStr
           if(this.model.accountId == null && this.model.accountIdList) {
@@ -386,7 +387,7 @@
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId) {
         this.rowCanEdit = false
-        this.materialTable.columns[0].type = FormTypes.normal
+        this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         if(selectBillDetailRows && selectBillDetailRows.length>0) {

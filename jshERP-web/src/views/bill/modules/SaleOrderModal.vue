@@ -231,6 +231,7 @@
           loading: false,
           dataSource: [],
           columns: [
+            { title: '', key: 'hiddenKey', width: '1%', type: FormTypes.hidden },
             { title: '条码', key: 'barCode', width: '12%', type: FormTypes.popupJsh, kind: 'material', multi: true,
               validateRules: [{ required: true, message: '${title}不能为空' }]
             },
