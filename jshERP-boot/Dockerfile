@@ -11,20 +11,20 @@ MAINTAINER yaoyuanming "yaoyuanming0601@gmail.com"
 COPY target/jshERP.jar /app/jshERP.jar
 
 # 设置配置和其他路径
-ENV SERVER_NAME="jshERP"
-ENV APP_HOME="/app"
-ENV CONFIG_HOME="/app/config"
-ENV LIB_HOME="/app/lib"
-ENV LOGS_HOME="/app/logs"
+#ENV SERVER_NAME="jshERP"
+#ENV APP_HOME="/app"
+#ENV CONFIG_HOME="/app/config"
+#ENV LIB_HOME="/app/lib"
+#ENV LOGS_HOME="/app/logs"
 #ENV PID_FILE="/app/logs/application.pid"
-ENV APP_MAIN_CLASS="jshERP.jar"
-ENV LOG_CONFIG="/app/config/logback-spring.xml"
+#ENV APP_MAIN_CLASS="jshERP.jar"
+#ENV LOG_CONFIG="/app/config/logback-spring.xml"
 
 # 创建日志目录
 RUN mkdir -p /app/logs
 
-COPY src/main/resources/logback-spring.xml /app/config/logback-spring.xml
-COPY src/main/resources/application.properties /app/config/application.properties
+#COPY src/main/resources/logback-spring.xml /app/config/logback-spring.xml
+#COPY src/main/resources/application.properties /app/config/application.properties
 
 # 确保 JAR 可执行
 RUN chmod +x /app/jshERP.jar
