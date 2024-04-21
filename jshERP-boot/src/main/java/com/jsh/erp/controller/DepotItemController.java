@@ -921,6 +921,11 @@ public class DepotItemController {
                 List<Map<String, String>> detailList = new ArrayList<>();
                 for (int i = 2; i < src.getRows(); i++) {
                     String depotName = "", barCode = "", num = "", unitPrice = "", taxRate = "", remark = "";
+                    if("QGD".equals(prefixNo)) {
+                        barCode = ExcelUtils.getContent(src, i, 0);
+                        num = ExcelUtils.getContent(src, i, 2);
+                        remark = ExcelUtils.getContent(src, i, 3);
+                    }
                     if("CGDD".equals(prefixNo) || "XSDD".equals(prefixNo)) {
                         barCode = ExcelUtils.getContent(src, i, 0);
                         num = ExcelUtils.getContent(src, i, 2);
