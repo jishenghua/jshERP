@@ -1,0 +1,41 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 36000
+  tomcat:
+    basedir: /opt/tmp/tomcat
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_IP:172.17.0.3}:${DB_PORT:3306}/${DB_NAME:jsh_erp}?useUnicode=true&characterEncoding=utf8&useCursorFetch=true&defaultFetchSize=500&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+  redis:
+    host: ${REDIS_HOST:172.17.0.2}
+    port: 6379
+    password: jHWVClW8d05uqYc
+  servlet:
+    multipart:
+      max-file-size: 10485760
+      max-request-size: 10485760
+
+mybatis-plus:
+  mapper-locations: classpath:./mapper_xml/*.xml
+
+manage:
+  roleId: 10
+
+tenant:
+  userNumLimit: 1000000
+  tryDayLimit: 3000
+
+plugin:
+  runMode: prod
+  pluginPath: plugins
+  pluginConfigFilePath: pluginConfig
+
+file:
+  uploadType: 1
+  path: /opt/jshERP/upload
