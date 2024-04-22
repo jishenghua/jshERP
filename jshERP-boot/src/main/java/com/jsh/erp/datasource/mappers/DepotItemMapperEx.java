@@ -211,13 +211,15 @@ public interface DepotItemMapperEx {
     BigDecimal getFinishNumber(
             @Param("meId") Long meId,
             @Param("linkId") Long linkId,
-            @Param("linkNumber") String linkNumber,
+            @Param("linkStr") String linkStr,
+            @Param("noType") String noType,
             @Param("goToType") String goToType);
 
     BigDecimal getRealFinishNumber(
             @Param("meId") Long meId,
             @Param("linkId") Long linkId,
-            @Param("linkNumber") String linkNumber,
+            @Param("linkStr") String linkStr,
+            @Param("linkType") String linkType,
             @Param("currentHeaderId") Long currentHeaderId,
             @Param("goToType") String goToType);
 
@@ -235,10 +237,11 @@ public interface DepotItemMapperEx {
             @Param("depotId") Long depotId);
 
     List<DepotItemVo4MaterialAndSum> getLinkBillDetailMaterialSum(
-            @Param("linkNumber") String linkNumber);
+            @Param("linkStr") String linkStr);
 
     List<DepotItemVo4MaterialAndSum> getBatchBillDetailMaterialSum(
-            @Param("linkNumber") String linkNumber,
+            @Param("linkStr") String linkStr,
+            @Param("linkType") String linkType,
             @Param("type") String type);
 
     Long getCountByMaterialAndBatchNumber(

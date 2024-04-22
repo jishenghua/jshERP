@@ -944,8 +944,13 @@
         in
         (
         select dh.id from jsh_depot_head dh
-        where
-        dh.link_number=#{linkNumber}
+        where 1=1
+        <if test="noType == 'normal'">
+            and dh.link_number=#{linkStr}
+        </if>
+        <if test="noType == 'apply'">
+            and dh.link_apply=#{linkStr}
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         <if test="goToType != null and goToType !=''">
             and dh.sub_type=#{goToType}
@@ -963,8 +968,13 @@
         (
         select dh.id from jsh_depot_head dh
         where
-        dh.link_number=#{linkNumber}
-        and dh.id!=#{currentHeaderId}
+        dh.id!=#{currentHeaderId}
+        <if test="linkType == 'normal'">
+            and dh.link_number=#{linkStr}
+        </if>
+        <if test="linkType == 'apply'">
+            and dh.link_apply=#{linkStr}
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         <if test="goToType != null and goToType !=''">
             and dh.sub_type=#{goToType}
@@ -1017,7 +1027,7 @@
     <select id="getLinkBillDetailMaterialSum" resultMap="materialSumMap">
         select di.material_extend_id, sum(di.oper_number) oper_number from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        where dh.number=#{linkNumber}
+        where dh.number=#{linkStr}
           and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_extend_id
     </select>
@@ -1025,8 +1035,14 @@
     <select id="getBatchBillDetailMaterialSum" resultMap="materialSumMap">
         select di.material_extend_id, sum(di.oper_number) oper_number from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        where dh.link_number=#{linkNumber} and dh.type=#{type}
-          and ifnull(dh.delete_flag,'0') !='1'
+        where dh.type=#{type}
+        <if test="linkType == 'normal'">
+            and dh.link_number=#{linkStr}
+        </if>
+        <if test="linkType == 'apply'">
+            and dh.link_apply=#{linkStr}
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_extend_id
     </select>
 

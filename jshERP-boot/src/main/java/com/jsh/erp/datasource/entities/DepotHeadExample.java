@@ -1996,6 +1996,76 @@ public class DepotHeadExample {
             return (Criteria) this;
         }
 
+        public Criteria andLinkApplyIsNull() {
+            addCriterion("link_apply is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyIsNotNull() {
+            addCriterion("link_apply is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyEqualTo(String value) {
+            addCriterion("link_apply =", value, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyNotEqualTo(String value) {
+            addCriterion("link_apply <>", value, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyGreaterThan(String value) {
+            addCriterion("link_apply >", value, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyGreaterThanOrEqualTo(String value) {
+            addCriterion("link_apply >=", value, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyLessThan(String value) {
+            addCriterion("link_apply <", value, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyLessThanOrEqualTo(String value) {
+            addCriterion("link_apply <=", value, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyLike(String value) {
+            addCriterion("link_apply like", value, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyNotLike(String value) {
+            addCriterion("link_apply not like", value, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyIn(List<String> values) {
+            addCriterion("link_apply in", values, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyNotIn(List<String> values) {
+            addCriterion("link_apply not in", values, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyBetween(String value1, String value2) {
+            addCriterion("link_apply between", value1, value2, "linkApply");
+            return (Criteria) this;
+        }
+
+        public Criteria andLinkApplyNotBetween(String value1, String value2) {
+            addCriterion("link_apply not between", value1, value2, "linkApply");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

@@ -691,15 +691,21 @@ public class DepotItemService {
                     || BusinessConstants.SUB_TYPE_OTHER.equals(depotHead.getSubType())) {
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
                     //单据状态:是否全部完成 2-全部完成 3-部分完成（针对订单的分批出入库）
-                    String billStatus = getBillStatusByParam(depotHead);
-                    changeBillStatus(depotHead, billStatus);
+                    String billStatus = getBillStatusByParam(depotHead, depotHead.getLinkNumber(), "normal");
+                    changeBillStatus(depotHead.getLinkNumber(), billStatus);
                 }
             }
-            //如果关联单据号非空则更新订单的状态,此处针对销售订单转采购订单的场景
+            //当前单据类型为采购订单的逻辑
             if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
+                //如果关联单据号非空则更新订单的状态,此处针对销售订单转采购订单的场景
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
-                    String billStatus = getBillStatusByParam(depotHead);
-                    changeBillPurchaseStatus(depotHead, billStatus);
+                    String billStatus = getBillStatusByParam(depotHead, depotHead.getLinkNumber(), "normal");
+                    changeBillPurchaseStatus(depotHead.getLinkNumber(), billStatus);
+                }
+                //如果关联单据号非空则更新订单的状态,此处针对请购单转采购订单的场景
+                if(StringUtil.isNotEmpty(depotHead.getLinkApply())) {
+                    String billStatus = getBillStatusByParam(depotHead, depotHead.getLinkApply(), "apply");
+                    changeBillStatus(depotHead.getLinkApply(), billStatus);
                 }
             }
         } else {
@@ -711,15 +717,16 @@ public class DepotItemService {
      * 判断单据的状态
      * 通过数组对比：原单据的商品和商品数量（汇总） 与 分批操作后单据的商品和商品数量（汇总）
      * @param depotHead
+     * @param linkStr
      * @return
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public String getBillStatusByParam(DepotHead depotHead) {
+    public String getBillStatusByParam(DepotHead depotHead, String linkStr, String linkType) {
         String res = BusinessConstants.BILLS_STATUS_SKIPED;
         //获取原单据的商品和商品数量（汇总）
-        List<DepotItemVo4MaterialAndSum> linkList = depotItemMapperEx.getLinkBillDetailMaterialSum(depotHead.getLinkNumber());
+        List<DepotItemVo4MaterialAndSum> linkList = depotItemMapperEx.getLinkBillDetailMaterialSum(linkStr);
         //获取分批操作后单据的商品和商品数量（汇总）
-        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), depotHead.getType());
+        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(linkStr, linkType, depotHead.getType());
         //将分批操作后的单据的商品和商品数据构造成Map
         Map<Long, BigDecimal> materialSumMap = new HashMap<>();
         for(DepotItemVo4MaterialAndSum materialAndSum : batchList) {
@@ -743,16 +750,16 @@ public class DepotItemService {
 
     /**
      * 更新单据状态
-     * @param depotHead
+     * @param linkStr
      * @param billStatus
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void changeBillStatus(DepotHead depotHead, String billStatus) {
+    public void changeBillStatus(String linkStr, String billStatus) {
         DepotHead depotHeadOrders = new DepotHead();
         depotHeadOrders.setStatus(billStatus);
         DepotHeadExample example = new DepotHeadExample();
-        List<String> linkNumberList = StringUtil.strToStringList(depotHead.getLinkNumber());
-        example.createCriteria().andNumberIn(linkNumberList);
+        List<String> linkNoList = StringUtil.strToStringList(linkStr);
+        example.createCriteria().andNumberIn(linkNoList);
         try{
             depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
         }catch(Exception e){
@@ -765,16 +772,16 @@ public class DepotItemService {
 
     /**
      * 更新单据状态,此处针对销售订单转采购订单的场景
-     * @param depotHead
+     * @param linkStr
      * @param billStatus
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void changeBillPurchaseStatus(DepotHead depotHead, String billStatus) {
+    public void changeBillPurchaseStatus(String linkStr, String billStatus) {
         DepotHead depotHeadOrders = new DepotHead();
         depotHeadOrders.setPurchaseStatus(billStatus);
         DepotHeadExample example = new DepotHeadExample();
-        List<String> linkNumberList = StringUtil.strToStringList(depotHead.getLinkNumber());
-        example.createCriteria().andNumberIn(linkNumberList);
+        List<String> linkNoList = StringUtil.strToStringList(linkStr);
+        example.createCriteria().andNumberIn(linkNoList);
         try{
             depotHeadMapper.updateByExampleSelective(depotHeadOrders, example);
         }catch(Exception e){
@@ -1085,7 +1092,7 @@ public class DepotItemService {
         Long linkId = id;
         String goToType = "";
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
-        String linkNumber = depotHead.getNumber(); //订单号
+        String linkStr = depotHead.getNumber(); //订单号
         if("purchase".equals(linkType)) {
             //针对以销定购的情况
             if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
@@ -1117,7 +1124,11 @@ public class DepotItemService {
                 goToType = BusinessConstants.SUB_TYPE_SALES_RETURN;
             }
         }
-        BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkId, linkNumber, goToType);
+        String noType = "normal";
+        if(linkStr.contains("QGD")) {
+            noType = "apply";
+        }
+        BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkId, linkStr, noType, goToType);
         //根据多单位情况进行数量的转换
         if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
             count = count.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);
@@ -1146,8 +1157,12 @@ public class DepotItemService {
     public BigDecimal getRealFinishNumber(String currentSubType, Long meId, Long linkId, Long preHeaderId, Long currentHeaderId, Unit unitInfo, String materialUnit) {
         String goToType = currentSubType;
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(preHeaderId);
-        String linkNumber = depotHead.getNumber(); //订单号
-        BigDecimal count = depotItemMapperEx.getRealFinishNumber(meId, linkId, linkNumber, currentHeaderId, goToType);
+        String linkStr = depotHead.getNumber(); //订单号
+        String linkType = "normal";
+        if(linkStr.contains("QGD")) {
+            linkType = "apply";
+        }
+        BigDecimal count = depotItemMapperEx.getRealFinishNumber(meId, linkId, linkStr, linkType, currentHeaderId, goToType);
         //根据多单位情况进行数量的转换
         if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
             count = count.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);

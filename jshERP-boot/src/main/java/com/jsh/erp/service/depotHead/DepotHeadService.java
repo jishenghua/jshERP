@@ -514,7 +514,7 @@ public class DepotHeadService {
                             BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
                         DepotHead dh = new DepotHead();
                         //获取分批操作后单据的商品和商品数量（汇总）
-                        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), depotHead.getType());
+                        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), "normal", depotHead.getType());
                         if(batchList.size()>0) {
                             dh.setPurchaseStatus(BusinessConstants.PURCHASE_STATUS_SKIPING);
                         } else {
@@ -1004,6 +1004,11 @@ public class DepotHeadService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
         }
+        //校验是否同时录入关联请购单号和关联订单号
+        if(StringUtil.isNotEmpty(depotHead.getLinkNumber()) && StringUtil.isNotEmpty(depotHead.getLinkApply())) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_CODE,
+                    String.format(ExceptionConstants.DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_MSG));
+        }
         String subType = depotHead.getSubType();
         //结算账户校验
         if("采购".equals(subType) || "采购退货".equals(subType) || "销售".equals(subType) || "销售退货".equals(subType)) {
@@ -1100,7 +1105,12 @@ public class DepotHeadService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
         }
-        //校验单据状态，如何不是未审核则提示
+        //校验是否同时录入关联请购单号和关联订单号
+        if(StringUtil.isNotEmpty(depotHead.getLinkNumber()) && StringUtil.isNotEmpty(depotHead.getLinkApply())) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_CODE,
+                    String.format(ExceptionConstants.DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_MSG));
+        }
+        //校验单据状态，如果不是未审核则提示
         if(!"0".equals(getDepotHead(depotHead.getId()).getStatus())) {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_CANNOT_EDIT_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_CANNOT_EDIT_MSG));

@@ -424,6 +424,9 @@ public class ExceptionConstants {
     //单据录入-单据中存在部分状态，需要到新增界面关联单据
     public static final int DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_CODE = 8500028;
     public static final String DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_MSG = "抱歉，单据:%s是部分%s状态，需要到新增界面关联单据";
+    //单据录入-关联请购单号和关联订单号不能同时录入
+    public static final int DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_CODE = 8500029;
+    public static final String DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_MSG = "抱歉，关联请购单号和关联订单号不能同时录入";
 
     /**
      *  单据明细信息
