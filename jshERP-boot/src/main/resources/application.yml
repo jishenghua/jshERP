@@ -1,6 +1,7 @@
 server:
   port: 8080
   servlet:
+    context-path: /jshERP-boot
     session:
       timeout: 36000
   tomcat:
