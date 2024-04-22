@@ -1,9 +1,12 @@
 <template>
   <div class="back-layout">
+    <div class="jiuyin-logo">
+      <img width="100%" src="/static/index-logo.png" />
+    </div>
     <div id="userLayout" :class="['user-layout-wrapper', device]">
       <div class="container">
         <div class="poster-img">
-          <img src="/static/rightImg.png?v=320">
+          <img class="main-img" src="/static/rightImg.png?v=320">
         </div>
         <div class="right-form">
           <div class="top">
@@ -22,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div class="footer" v-if="device === 'desktop'">
+    <!-- <div class="footer" v-if="device === 'desktop'">
       <div class="third-party-platform" v-if="isShowRight">
         <div class="platform-info" @click="openAndroid()">
           <img src="/static/Android.png" style="height:30px" >
@@ -45,7 +48,7 @@
         <a style="color:#00458a; padding-right: 10px" :href="systemUrl" target="_blank">官方网站</a>
         <span v-if="this.isShowRight"><a href="http://beian.miit.gov.cn/" target="_blank">苏ICP备2021042833号</a></span>
       </p>
-    </div>
+    </div> -->
     <a-modal v-model="isAndroidShow" title="微信扫一扫下载安卓版" width="200" centered>
       <template slot="footer">
         <a-button key="back" @click="handleAndroidCancel">取消</a-button>
@@ -160,6 +163,13 @@
   }
 </style>
 <style lang="less" scoped>
+  .jiuyin-logo {
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    width: 200px;
+  }
+
   #userLayout.user-layout-wrapper {
     position: fixed;
     left: 50%;
@@ -185,9 +195,18 @@
       z-index: 99;
       height: 70%;
 
+
+
       .poster-img {
         float: left;
         height: 100%;
+        padding-top: 80px;
+        width: 740px;
+
+        .main-img {
+          width: 740px;
+          padding-right: 60px;
+        }
       }
 
       .right-form {
