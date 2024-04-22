@@ -216,6 +216,7 @@
               return text
             }
           },
+          { title: '关联请购单', dataIndex: 'linkApply',width:140},
           { title: '关联订单', dataIndex: 'linkNumber',width:140},
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true},
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},

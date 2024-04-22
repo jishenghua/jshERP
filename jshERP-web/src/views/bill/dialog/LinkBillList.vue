@@ -70,8 +70,10 @@
           <template v-if="!queryParam.purchaseStatus">
             <a-tag v-if="record.status === '0'" color="red">未审核</a-tag>
             <a-tag v-if="record.status === '1'" color="green">已审核</a-tag>
+            <a-tag v-if="record.status === '2' && queryParam.subType === '请购单'" color="cyan">完成采购</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '采购订单'" color="cyan">完成采购</a-tag>
             <a-tag v-if="record.status === '2' && queryParam.subType === '销售订单'" color="cyan">完成销售</a-tag>
+            <a-tag v-if="record.status === '3' && queryParam.subType === '请购单'" color="blue">部分采购</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '采购订单'" color="blue">部分采购</a-tag>
             <a-tag v-if="record.status === '3' && queryParam.subType === '销售订单'" color="blue">部分销售</a-tag>
             <a-tag v-if="record.status === '2' && (queryParam.subType === '采购'||queryParam.subType === '销售')" color="green">已审核</a-tag>
@@ -213,9 +215,9 @@
         this.queryParam.type = type
         this.queryParam.subType = subType
         this.queryParam.status = status
-        this.columns[0].title = organType
         this.model = Object.assign({}, {});
         this.visible = true;
+        this.initColumns(subType, organType)
         this.loadData(1)
       },
       purchaseShow(type, subType, organType, status, purchaseStatus) {
@@ -225,10 +227,30 @@
         this.queryParam.subType = subType
         this.queryParam.status = status
         this.queryParam.purchaseStatus = purchaseStatus
-        this.columns[0].title = organType
         this.model = Object.assign({}, {});
         this.visible = true;
+        this.initColumns(subType, organType)
         this.loadData(1)
+      },
+      initColumns(subType, organType) {
+        for(let i=0; i<this.columns.length; i++) {
+          if (this.columns[i].dataIndex === 'organName') {
+            this.columns[i].title = organType
+          }
+        }
+        if(subType === '请购单') {
+          for(let i=0; i<this.columns.length; i++){
+            if(this.columns[i].dataIndex === 'organName') {
+              this.columns.splice(i, 1)
+            }
+            if(this.columns[i].dataIndex === 'totalPrice') {
+              this.columns.splice(i, 1)
+            }
+            if(this.columns[i].dataIndex === 'totalTaxLastMoney') {
+              this.columns.splice(i, 1)
+            }
+          }
+        }
       },
       myHandleDetail(record) {
         findBillDetailByNumber({ number: record.number }).then((res) => {
@@ -266,6 +288,7 @@
             this.discountMoney = record.discountMoney
             this.deposit = record.changeAmount - record.finishDeposit
             this.remark = record.remark
+            this.initListColumns()
             this.loadDetailData(1)
           }
         } else {
@@ -275,6 +298,27 @@
             this.close()
           } else {
             this.$message.warning('抱歉，请选择单据明细！')
+          }
+        }
+      },
+      initListColumns() {
+        if(this.queryParam.subType === '请购单') {
+          for(let i=0; i<this.columnsDetail.length; i++){
+            if(this.columnsDetail[i].dataIndex === 'unitPrice') {
+              this.columnsDetail.splice(i, 1)
+            }
+            if(this.columnsDetail[i].dataIndex === 'allPrice') {
+              this.columnsDetail.splice(i, 1)
+            }
+            if(this.columnsDetail[i].dataIndex === 'taxRate') {
+              this.columnsDetail.splice(i, 1)
+            }
+            if(this.columnsDetail[i].dataIndex === 'taxMoney') {
+              this.columnsDetail.splice(i, 1)
+            }
+            if(this.columnsDetail[i].dataIndex === 'taxLastMoney') {
+              this.columnsDetail.splice(i, 1)
+            }
           }
         }
       },

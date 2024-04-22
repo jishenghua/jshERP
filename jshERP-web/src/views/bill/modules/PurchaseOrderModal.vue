@@ -51,6 +51,13 @@
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联请购单" data-step="3" data-title="关联请购单"
+                         data-intro="采购订单单据可以通过关联请购单来选择已录入的请购单，选择之后会自动加载请购单的内容，
+              提交之后原来的请购单会对应的改变单据状态。另外本系统支持分批多次关联">
+              <a-input-search placeholder="请选择关联请购单" v-decorator="[ 'linkApply' ]" @search="onSearchLinkApply" :readOnly="true"/>
+            </a-form-item>
+          </a-col>
+          <a-col :lg="6" :md="12" :sm="24">
             <a-form-item v-if="purchaseBySaleFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单" data-step="3" data-title="关联订单"
                          data-intro="采购订单单据可以通过关联订单来选择已录入的销售订单，选择之后会自动加载订单的内容，
               提交之后原来的销售订单会对应的改变单据状态。另外本系统支持分批多次关联">
@@ -320,7 +327,7 @@
           }
           this.fileList = this.model.fileName
           this.$nextTick(() => {
-            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkNumber', 'remark',
+            this.form.setFieldsValue(pick(this.model,'organId', 'operTime', 'number', 'linkApply', 'linkNumber', 'remark',
             'discount','discountMoney','discountLastMoney','accountId','changeAmount'))
           });
           // 加载子表数据
@@ -385,6 +392,10 @@
         this.$refs.linkBillList.purchaseShow('其它', '销售订单', '客户', "1,3","0,3")
         this.$refs.linkBillList.title = "选择销售订单"
       },
+      onSearchLinkApply() {
+        this.$refs.linkBillList.purchaseShow('其它', '请购单', '客户', "1,3")
+        this.$refs.linkBillList.title = "选择请购单"
+      },
       linkBillListOk(selectBillDetailRows, linkNumber, organId) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
@@ -405,11 +416,20 @@
             }
             info.linkId = info.id
           }
-          this.$nextTick(() => {
-            this.form.setFieldsValue({
-              'linkNumber': linkNumber
+          if(linkNumber.indexOf('QGD')===-1) {
+            this.$nextTick(() => {
+              this.form.setFieldsValue({
+                'linkNumber': linkNumber
+              })
             })
-          })
+          } else {
+            //关联请购单
+            this.$nextTick(() => {
+              this.form.setFieldsValue({
+                'linkApply': linkNumber
+              })
+            })
+          }
           //给优惠后金额重新赋值
           discountLastMoney = discountLastMoney?discountLastMoney:0
           this.$nextTick(() => {

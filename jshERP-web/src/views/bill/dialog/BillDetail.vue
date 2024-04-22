@@ -281,6 +281,11 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
+              <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="关联请购单">
+                {{model.linkApply}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
               <a-form-item v-if="purchaseBySaleFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
                 {{model.linkNumber}}
               </a-form-item>
