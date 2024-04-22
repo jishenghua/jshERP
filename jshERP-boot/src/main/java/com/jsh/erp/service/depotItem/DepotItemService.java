@@ -1125,7 +1125,7 @@ public class DepotItemService {
             }
         }
         String noType = "normal";
-        if(linkStr.contains("QGD")) {
+        if(BusinessConstants.SUB_TYPE_PURCHASE_APPLY.equals(depotHead.getSubType())) {
             noType = "apply";
         }
         BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkId, linkStr, noType, goToType);
@@ -1159,7 +1159,7 @@ public class DepotItemService {
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(preHeaderId);
         String linkStr = depotHead.getNumber(); //订单号
         String linkType = "normal";
-        if(linkStr.contains("QGD")) {
+        if(BusinessConstants.SUB_TYPE_PURCHASE_APPLY.equals(depotHead.getSubType())) {
             linkType = "apply";
         }
         BigDecimal count = depotItemMapperEx.getRealFinishNumber(meId, linkId, linkStr, linkType, currentHeaderId, goToType);
