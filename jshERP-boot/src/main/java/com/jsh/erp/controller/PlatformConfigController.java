@@ -50,6 +50,7 @@ public class PlatformConfigController {
             e.printStackTrace();
             res = "ERP系统";
         }
+        logger.info("获取平台名称：" + res);
         return res;
     }
 
