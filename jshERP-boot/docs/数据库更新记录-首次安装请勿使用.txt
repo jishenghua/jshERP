@@ -1564,3 +1564,10 @@ alter table jsh_serial_number add in_price decimal(24,6) DEFAULT NULL COMMENT '�
 INSERT INTO jsh_function
 (`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`)
 VALUES ('050203', '请购单', '0502', '/bill/purchase_apply', '/bill/PurchaseApplyList', b'0', '0330', b'1', '电脑版', '1,2,3,7', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2024年4月22日
+-- by jishenghua
+-- 给单据主表里面增加关联请购单字段
+-- --------------------------------------------------------
+alter table jsh_depot_head add link_apply varchar(50) DEFAULT NULL COMMENT '关联请购单' after link_number;
