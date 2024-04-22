@@ -27,7 +27,7 @@ RUN mkdir -p /app/logs
 #COPY src/main/resources/application.properties /app/config/application.properties
 
 # 确保 JAR 可执行
-RUN chmod +x /app/jshERP.jar
+RUN #chmod +x /app/jshERP.jar
 
 # 暴露应用程序的端口
 EXPOSE 8080
@@ -37,4 +37,4 @@ ENV JAVA_OPTS="-server -Xms128m -Xmx320m"
 ENV JAVA_RUN="-Dlogs.home=/app/logs -Dlogging.config=$LOG_CONFIG -Dspring.config.location=file:/app/config -Dspring.pid.file=$PID_FILE -Dspring.pid.fail-on-write-error=true"
 
 # 运行应用程序，使用 JAVA_OPTS 和 JAVA_RUN
-CMD java $JAVA_OPTS $JAVA_RUN -jar /app/jshERP.jar
+CMD java -Dfile.encoding=utf-8 -XX:+HeapDumpOnOutOfMemoryError -jar /app/jshERP.jar
