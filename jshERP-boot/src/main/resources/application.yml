@@ -8,6 +8,11 @@ server:
     basedir: /opt/tmp/tomcat
 
 spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   datasource:
     url: jdbc:mysql://${DB_IP:172.17.0.3}:${DB_PORT:3306}/${DB_NAME:jsh_erp}?useUnicode=true&characterEncoding=utf8&useCursorFetch=true&defaultFetchSize=500&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
