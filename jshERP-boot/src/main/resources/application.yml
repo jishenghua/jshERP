@@ -14,7 +14,7 @@ spring:
       enabled: true
       force: true
   datasource:
-    url: jdbc:mysql://${DB_IP:172.17.0.3}:${DB_PORT:3306}/${DB_NAME:jsh_erp}?autoReconnect=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://${DB_IP:172.17.0.3}:${DB_PORT:3306}/${DB_NAME:jsh_erp}?autoReconnect=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     driver-class-name: org.mariadb.jdbc.Driver
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:123456}
