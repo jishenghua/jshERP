@@ -268,15 +268,15 @@ public class DepotItemService {
 
     /**
      * 查询被关联订单中指定商品的明细信息
-     * @param linkNumber
+     * @param linkStr
      * @param meId
      * @return
      * @throws Exception
      */
-    public DepotItem getPreItemByHeaderIdAndMaterial(String linkNumber, Long meId, Long linkId)throws Exception {
+    public DepotItem getPreItemByHeaderIdAndMaterial(String linkStr, Long meId, Long linkId)throws Exception {
         DepotItem depotItem = new DepotItem();
         try{
-            DepotHead depotHead = depotHeadService.getDepotHead(linkNumber);
+            DepotHead depotHead = depotHeadService.getDepotHead(linkStr);
             DepotItemExample example = new DepotItemExample();
             example.createCriteria().andHeaderIdEqualTo(depotHead.getId()).andMaterialExtendIdEqualTo(meId).andIdEqualTo(linkId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             List<DepotItem> list = depotItemMapper.selectByExample(example);
@@ -549,9 +549,9 @@ public class DepotItemService {
                         depotItem.setBasicNumber(oNumber); //其他情况
                     }
                 }
-                //如果数量+已完成数量>原订单数量，给出预警(判断前提是存在关联订单)
-                if (StringUtil.isNotEmpty(depotHead.getLinkNumber())
-                        && StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
+                //如果数量+已完成数量>原订单数量，给出预警(判断前提是存在关联订单|关联请购单)
+                String linkStr = StringUtil.isNotEmpty(depotHead.getLinkNumber())? depotHead.getLinkNumber(): depotHead.getLinkApply();
+                if (StringUtil.isNotEmpty(linkStr) && StringUtil.isExist(rowObj.get("preNumber")) && StringUtil.isExist(rowObj.get("finishNumber"))) {
                     if("add".equals(actionType)) {
                         //在新增模式进行状态赋值
                         BigDecimal preNumber = rowObj.getBigDecimal("preNumber");
@@ -567,9 +567,9 @@ public class DepotItemService {
                         String currentSubType = depotHead.getSubType();
                         //在更新模式进行状态赋值
                         String unit = rowObj.get("unit").toString();
-                        Long preHeaderId = depotHeadService.getDepotHead(depotHead.getLinkNumber()).getId();
+                        Long preHeaderId = depotHeadService.getDepotHead(linkStr).getId();
                         //前一个单据的数量
-                        BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(depotHead.getLinkNumber(), depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
+                        BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(linkStr, depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
                         //除去此单据之外的已入库|已出库
                         BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
                         if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)>0) {

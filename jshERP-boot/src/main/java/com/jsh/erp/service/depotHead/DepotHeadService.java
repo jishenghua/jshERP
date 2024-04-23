@@ -508,6 +508,23 @@ public class DepotHeadService {
                         depotHeadMapper.updateByExampleSelective(dh, example);
                     }
                 }
+                //将关联的单据置为审核状态-针对请购单转采购订单的情况
+                if(StringUtil.isNotEmpty(depotHead.getLinkApply())){
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
+                            BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
+                        String status = BusinessConstants.BILLS_STATUS_AUDIT;
+                        //查询除当前单据之外的关联单据列表
+                        List<DepotHead> exceptCurrentList = getListByLinkApplyExceptCurrent(depotHead.getLinkApply(), depotHead.getNumber(), depotHead.getType());
+                        if(exceptCurrentList!=null && exceptCurrentList.size()>0) {
+                            status = BusinessConstants.BILLS_STATUS_SKIPING;
+                        }
+                        DepotHead dh = new DepotHead();
+                        dh.setStatus(status);
+                        DepotHeadExample example = new DepotHeadExample();
+                        example.createCriteria().andNumberEqualTo(depotHead.getLinkApply());
+                        depotHeadMapper.updateByExampleSelective(dh, example);
+                    }
+                }
                 //将关联的销售订单单据置为未采购状态-针对销售订单转采购订单的情况
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
                     if(BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
@@ -955,6 +972,20 @@ public class DepotHeadService {
     public List<DepotHead> getListByLinkNumberExceptCurrent(String linkNumber, String number, String type)throws Exception {
         DepotHeadExample example = new DepotHeadExample();
         example.createCriteria().andLinkNumberEqualTo(linkNumber).andNumberNotEqualTo(number).andTypeEqualTo(type)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        return depotHeadMapper.selectByExample(example);
+    }
+
+    /**
+     * 查询除当前单据之外的关联单据列表
+     * @param linkApply
+     * @param number
+     * @return
+     * @throws Exception
+     */
+    public List<DepotHead> getListByLinkApplyExceptCurrent(String linkApply, String number, String type)throws Exception {
+        DepotHeadExample example = new DepotHeadExample();
+        example.createCriteria().andLinkApplyEqualTo(linkApply).andNumberNotEqualTo(number).andTypeEqualTo(type)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         return depotHeadMapper.selectByExample(example);
     }
