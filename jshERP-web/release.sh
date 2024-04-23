@@ -18,4 +18,4 @@ docker build -f Dockerfile -t release-erp-demo:$tag .
 
 # 删除旧容器并启动新容器
 docker stop release-erp-demo && sudo docker rm release-erp-demo
-docker run -p 84:84 -d --name release-erp-demo release-erp-demo:$tag
+docker run -p 84:84 -d --name release-erp-demo --network=release-network release-erp-demo:$tag

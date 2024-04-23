@@ -27,12 +27,12 @@ fi
 
 # 运行 Docker 容器
 sudo docker run \
-  -p 83:8080 \
-  -e DB_IP=theninefactor-database.mysql.database.azure.com \
+  -p 85:8080 \
+  -e DB_IP=release-mysql \
   -e DB_PORT=3306 \
   -e DB_NAME=jsh_erp \
   -e REDIS_HOST=release-redis \
-  -e DB_USERNAME=theninefactor \
+  -e DB_USERNAME=root \
   -e DB_PASSWORD=pYWOx7pJIe^EmRSBa7 \
   --network=release-network \
   -d --name erp-demo erp-demo:$tag
