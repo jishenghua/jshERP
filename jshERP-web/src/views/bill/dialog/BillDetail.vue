@@ -280,12 +280,12 @@
                 {{model.number}}
               </a-form-item>
             </a-col>
-            <a-col :span="6">
+            <a-col :span="6" v-if="model.linkApply">
               <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 6 }}" :wrapperCol="wrapperCol" label="关联请购单">
-                {{model.linkApply}}
+                <a @click="myHandleDetail(model.linkApply)">{{model.linkApply}}</a>
               </a-form-item>
             </a-col>
-            <a-col :span="6">
+            <a-col :span="6" v-if="model.linkNumber">
               <a-form-item v-if="purchaseBySaleFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="关联订单">
                 {{model.linkNumber}}
               </a-form-item>
