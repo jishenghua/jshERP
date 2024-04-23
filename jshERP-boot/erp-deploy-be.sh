@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # cd到AwsomeChat目录
-cd /root/erp/jshERP/jshERP-boot
+cd /root/release/jshERP/jshERP-boot
 
 # 更新代码
 # git fetch --all && git reset --hard origin/master
