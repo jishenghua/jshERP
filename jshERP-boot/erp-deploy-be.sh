@@ -28,7 +28,7 @@ fi
 # 运行 Docker 容器
 sudo docker run \
   -p 85:8080 \
-  -e DB_IP=127.0.0.1 \
+  -e DB_IP=release-mysql \
   -e DB_PORT=3306 \
   -e DB_NAME=jsh_erp \
   -e REDIS_HOST=release-redis \
