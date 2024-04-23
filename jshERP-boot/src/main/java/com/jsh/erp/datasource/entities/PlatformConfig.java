@@ -1,6 +1,11 @@
 package com.jsh.erp.datasource.entities;
 
-public class PlatformConfig {
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class PlatformConfig implements Serializable {
     private Long id;
 
     private String platformKey;
