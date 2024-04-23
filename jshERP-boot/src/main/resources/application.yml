@@ -14,10 +14,24 @@ spring:
       enabled: true
       force: true
   datasource:
-    url: jdbc:mysql://${DB_IP:172.17.0.3}:${DB_PORT:3306}/${DB_NAME:jsh_erp}?useUnicode=true&characterEncoding=utf8&useCursorFetch=true&defaultFetchSize=500&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false
+    url: jdbc:mysql://${DB_IP:172.17.0.3}:${DB_PORT:3306}/${DB_NAME:jsh_erp}?autoReconnect=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     driver-class-name: org.mariadb.jdbc.Driver
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:123456}
+    type: com.zaxxer.hikari.HikariDataSource
+#    schema: classpath:schema.sql
+#    initialization-mode: never
+    #    initialization-mode: always
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 600000 # 空闲超时时间设为10分钟
+      pool-name: HikariCP
+      max-lifetime: 28000000 # 连接最大生命周期设为7小时46分钟
+      connection-timeout: 60000
+      connection-test-query: SELECT 1
+      leak-detection-threshold: 2000 # 连接泄漏检测阈值设为2秒
   redis:
     host: ${REDIS_HOST:172.17.0.2}
     port: 6379
