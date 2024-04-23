@@ -163,6 +163,8 @@ public class PlatformConfigService {
                 PlatformConfigExample example = new PlatformConfigExample();
                 example.createCriteria().andPlatformKeyEqualTo(platformKey);
                 List<PlatformConfig> list=platformConfigMapper.selectByExample(example);
+                logger.info("getInfoByKey: " + list.size());
+                logger.info("getInfoByKey: " + list.get(0).getPlatformValue());
                 if(list!=null && list.size()>0){
                     platformConfig = list.get(0);
                 }
@@ -170,6 +172,7 @@ public class PlatformConfigService {
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
+        logger.info("getInfoByKey: " + platformConfig.getPlatformValue());
         return platformConfig;
     }
 
