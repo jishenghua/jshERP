@@ -73,46 +73,70 @@ public class FunctionController {
      */
     @PostMapping(value = "/findMenuByPNumber")
     @ApiOperation(value = "根据父编号查询菜单")
-    public JSONArray findMenuByPNumber(@RequestBody JSONObject jsonObject,
-                              HttpServletRequest request)throws Exception {
+    public JSONArray findMenuByPNumber(@RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {
+        Logger logger = LoggerFactory.getLogger(getClass());
+
+        long startTime = System.currentTimeMillis();  // 开始计时
+        logger.info("Method findMenuByPNumber started at: " + startTime);
+
         String pNumber = jsonObject.getString("pNumber");
         String userId = jsonObject.getString("userId");
-        //存放数据json数组
+
+        logger.info("Received request - pNumber: " + pNumber + ", userId: " + userId);  // 记录输入参数
+
+        // 存放数据json数组
         JSONArray dataArray = new JSONArray();
+
         try {
             Long roleId = 0L;
             String fc = "";
+            logger.info("Getting user roles for userId: " + userId);
+
             List<UserBusiness> roleList = userBusinessService.getBasicData(userId, "UserRole");
-            if(roleList!=null && roleList.size()>0){
+            if (roleList != null && roleList.size() > 0) {
                 String value = roleList.get(0).getValue();
-                if(StringUtil.isNotEmpty(value)){
+                logger.info("User role data: " + value);
+
+                if (StringUtil.isNotEmpty(value)) {
                     String roleIdStr = value.replace("[", "").replace("]", "");
                     roleId = Long.parseLong(roleIdStr);
                 }
             }
             //当前用户所拥有的功能列表，格式如：[1][2][5]
+            logger.info("Getting functions for roleId: " + roleId);
             List<UserBusiness> funList = userBusinessService.getBasicData(roleId.toString(), "RoleFunctions");
-            if(funList!=null && funList.size()>0){
+            if (funList != null && funList.size() > 0) {
                 fc = funList.get(0).getValue();
             }
-            //获取系统配置信息-是否开启多级审核
+
+            // 获取系统配置信息-是否开启多级审核
             String approvalFlag = "0";
+            logger.info("Fetching system configuration");
+
             List<SystemConfig> list = systemConfigService.getSystemConfig();
-            if(list.size()>0) {
+            if (list.size() > 0) {
                 approvalFlag = list.get(0).getMultiLevelApprovalFlag();
             }
+
+            logger.info("Fetching functions for pNumber: " + pNumber);
+
             List<Function> dataList = functionService.getRoleFunction(pNumber);
             if (dataList.size() != 0) {
                 dataArray = getMenuByFunction(dataList, fc, approvalFlag);
-                //增加首页菜单项
+
+                // 增加首页菜单项
                 JSONObject homeItem = new JSONObject();
                 homeItem.put("id", 0);
                 homeItem.put("text", "首页");
                 homeItem.put("icon", "home");
                 homeItem.put("url", "/dashboard/analysis");
                 homeItem.put("component", "/layouts/TabLayout");
-                dataArray.add(0,homeItem);
+                dataArray.add(0, homeItem);
             }
+
+            long endTime = System.currentTimeMillis();
+            logger.info("Method findMenuByPNumber ended at: " + endTime + ", elapsed time: " + (endTime - startTime) + "ms");
+
         } catch (DataAccessException e) {
             logger.error(">>>>>>>>>>>>>>>>>>>查找异常", e);
         }
