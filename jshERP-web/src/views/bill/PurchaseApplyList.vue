@@ -175,8 +175,6 @@
           materialParam: "",
           type: "其它",
           subType: "请购单",
-          organId: "",
-          depotId: "",
           creator: "",
           status: "",
           remark: ""
@@ -190,8 +188,7 @@
           offset: 1
         },
         // 默认索引
-        defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalPrice','totalTaxLastMoney',
-          'changeAmount','status'],
+        defDataIndex:['action','number','materialsList','operTimeStr','userName','materialCount','status'],
         // 默认列
         defColumns: [
           {
@@ -225,7 +222,6 @@
     },
     created() {
       this.initSystemConfig()
-      this.initSupplier()
       this.initUser()
     },
     computed: {
