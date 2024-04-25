@@ -20,7 +20,7 @@
                 <a-form-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-range-picker
                     style="width: 100%"
-                    v-model="defaultTimeStr"
+                    v-model="queryParam.createTimeRange"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
                     @change="onDateChange"
@@ -93,7 +93,7 @@
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
-  import { getBeforeFormatDate } from '@/utils/util'
+  import { getFormatDate, getPrevMonthFormatDate } from '@/utils/util'
   import {getAction } from '@/api/manage'
   import moment from 'moment'
 
@@ -113,12 +113,10 @@
           clientIp:'',
           tenantLoginName:'',
           tenantType:'',
-          beginTime: getBeforeFormatDate(30),
-          endTime: moment().format('YYYY-MM-DD'),
+          beginTime: getPrevMonthFormatDate(1),
+          endTime: getFormatDate(),
+          createTimeRange: [moment(getPrevMonthFormatDate(1)), moment(getFormatDate())],
         },
-        dateFormat: 'YYYY-MM-DD',
-        currentDay: moment().format('YYYY-MM-DD'),
-        defaultTimeStr: '',
         tabKey: "1",
         isManage: false,
         // 表头
@@ -160,13 +158,14 @@
     },
     created() {
       this.initUserInfo()
-      this.defaultTimeStr = [moment(getBeforeFormatDate(30), this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       onDateChange: function (value, dateString) {
-        console.log(dateString[0],dateString[1]);
-        this.queryParam.beginTime=dateString[0];
-        this.queryParam.endTime=dateString[1];
+        this.queryParam.beginTime=dateString[0]
+        this.queryParam.endTime=dateString[1]
+        if(dateString[0] && dateString[1]) {
+          this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+        }
       },
       onDateOk(value) {
         console.log(value);
@@ -179,10 +178,10 @@
           clientIp:'',
           tenantLoginName:'',
           tenantType:'',
-          beginTime: getBeforeFormatDate(30),
-          endTime: moment().format('YYYY-MM-DD')
+          beginTime: getPrevMonthFormatDate(1),
+          endTime: getFormatDate(),
+          createTimeRange: [moment(getPrevMonthFormatDate(1)), moment(getFormatDate())],
         }
-        this.defaultTimeStr = [moment(getBeforeFormatDate(30), this.dateFormat), moment(this.currentDay, this.dateFormat)]
         this.loadData(1);
       },
       initUserInfo() {
