@@ -21,7 +21,6 @@
                   <a-range-picker
                     style="width: 100%"
                     v-model="queryParam.createTimeRange"
-                    :default-value="defaultTimeStr"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
                     @change="onDateChange"
@@ -140,7 +139,7 @@
 <script>
   import BillDetail from '../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatYear } from "@/utils/util"
+  import { getFormatDate, getNowFormatYear, getPrevMonthFormatDate } from '@/utils/util'
   import {getAction} from '@/api/manage'
   import {findBySelectSup, findBillDetailByNumber, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -170,8 +169,9 @@
           depotId: '',
           depotIdF: '',
           organizationId: '',
-          beginTime: getNowFormatYear() + '-01-01',
-          endTime: moment().format('YYYY-MM-DD'),
+          beginTime: getPrevMonthFormatDate(3),
+          endTime: getFormatDate(),
+          createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())],
           subType: "调拨",
           remark: ''
         },
@@ -179,9 +179,6 @@
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201', '301', '1001', '2001', '3001']
         },
-        dateFormat: 'YYYY-MM-DD',
-        currentDay: moment().format('YYYY-MM-DD'),
-        defaultTimeStr: '',
         supList: [],
         depotList: [],
         orgaTree: [],
@@ -222,7 +219,6 @@
       this.getDepotData()
       this.initSupplier()
       this.loadAllOrgaData()
-      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       moment,
@@ -234,9 +230,11 @@
         return param;
       },
       onDateChange: function (value, dateString) {
-        console.log(dateString[0],dateString[1]);
-        this.queryParam.beginTime=dateString[0];
-        this.queryParam.endTime=dateString[1];
+        this.queryParam.beginTime=dateString[0]
+        this.queryParam.endTime=dateString[1]
+        if(dateString[0] && dateString[1]) {
+          this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+        }
       },
       loadData(arg) {
         if (arg === 1) {

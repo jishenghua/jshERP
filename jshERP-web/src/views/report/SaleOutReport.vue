@@ -17,7 +17,6 @@
                   <a-range-picker
                     style="width: 100%"
                     v-model="queryParam.createTimeRange"
-                    :default-value="defaultTimeStr"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
                     @change="onDateChange"
@@ -116,7 +115,7 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatYear, getMpListShort } from "@/utils/util"
+  import { getNowFormatYear, getMpListShort, getPrevMonthFormatDate, getFormatDate } from '@/utils/util'
   import {getAction} from '@/api/manage'
   import {findBySelectCus, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -139,8 +138,9 @@
         },
         queryParam: {
           materialParam:'',
-          beginTime: getNowFormatYear() + '-01-01',
-          endTime: moment().format('YYYY-MM-DD'),
+          beginTime: getPrevMonthFormatDate(3),
+          endTime: getFormatDate(),
+          createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())],
           organId: '',
           depotId: '',
           organizationId: '',
@@ -150,9 +150,6 @@
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
-        dateFormat: 'YYYY-MM-DD',
-        currentDay: moment().format('YYYY-MM-DD'),
-        defaultTimeStr: '',
         cusList: [],
         depotList: [],
         orgaTree: [],
@@ -187,7 +184,6 @@
       this.initCustomer()
       this.getDepotData()
       this.loadAllOrgaData()
-      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       moment,
@@ -202,9 +198,11 @@
         return param;
       },
       onDateChange: function (value, dateString) {
-        console.log(dateString[0],dateString[1]);
-        this.queryParam.beginTime=dateString[0];
-        this.queryParam.endTime=dateString[1];
+        this.queryParam.beginTime=dateString[0]
+        this.queryParam.endTime=dateString[1]
+        if(dateString[0] && dateString[1]) {
+          this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+        }
       },
       loadData(arg) {
         //加载数据 若传入参数1则加载第一页的内容

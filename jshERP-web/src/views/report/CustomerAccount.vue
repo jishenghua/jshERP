@@ -22,7 +22,6 @@
                   <a-range-picker
                     style="width: 100%"
                     v-model="queryParam.createTimeRange"
-                    :default-value="defaultTimeStr"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
                     @change="onDateChange"
@@ -96,7 +95,7 @@
 <script>
   import DebtAccountList from './modules/DebtAccountList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatYear } from "@/utils/util"
+  import { getFormatDate, getNowFormatYear, getPrevMonthFormatDate } from '@/utils/util'
   import { getAction } from '@/api/manage'
   import {findBySelectCus} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -121,16 +120,14 @@
         queryParam: {
           supplierType: "客户",
           organId: '',
-          beginTime: getNowFormatYear() + '-01-01',
-          endTime: moment().format('YYYY-MM-DD'),
+          beginTime: getPrevMonthFormatDate(3),
+          endTime: getFormatDate(),
+          createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())],
         },
         ipagination:{
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
-        dateFormat: 'YYYY-MM-DD',
-        currentDay: moment().format('YYYY-MM-DD'),
-        defaultTimeStr: '',
         supList: [],
         firstTotal: '',
         lastTotal: '',
@@ -165,7 +162,6 @@
     },
     created () {
       this.initSupplier()
-      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
     },
     methods: {
       getQueryParams() {
@@ -184,9 +180,11 @@
         });
       },
       onDateChange: function (value, dateString) {
-        console.log(dateString[0],dateString[1]);
-        this.queryParam.beginTime=dateString[0];
-        this.queryParam.endTime=dateString[1];
+        this.queryParam.beginTime=dateString[0]
+        this.queryParam.endTime=dateString[1]
+        if(dateString[0] && dateString[1]) {
+          this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+        }
       },
       loadData(arg) {
         //加载数据 若传入参数1则加载第一页的内容
