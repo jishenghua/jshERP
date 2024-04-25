@@ -120,9 +120,11 @@ export const BillListMixin = {
       this.loadData(1);
     },
     onDateChange: function (value, dateString) {
-      this.queryParam.beginTime=dateString[0];
-      this.queryParam.endTime=dateString[1];
-      this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+      this.queryParam.beginTime=dateString[0]
+      this.queryParam.endTime=dateString[1]
+      if(dateString[0] && dateString[1]) {
+        this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+      }
     },
     onDateOk(value) {
       console.log(value);
