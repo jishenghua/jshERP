@@ -36,6 +36,7 @@
       line-height: @height !important;
       box-shadow: none !important;
       transition: background 300ms;
+      background: linear-gradient(90deg, #2750E5 0%, #2750E5 5%);
       background: #002140;
       h1 {
         font-size: 24px;
@@ -47,11 +48,12 @@
           color: rgba(255, 255, 255, 0.8);
         }
       }
-
     }
 
     &.light .logo {
-      background-color: @primary-color;
+      // 暂时去掉动态颜色
+      // background-color: @primary-color;
+      background: linear-gradient(90deg, #2750E5 0%, #2750E5 5%);
     }
   }
 </style>

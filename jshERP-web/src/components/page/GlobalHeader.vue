@@ -200,8 +200,9 @@
       z-index: 2;
       color: white;
       height: @height;
-      background-color: @primary-color;
+      // background-color: @primary-color;
       transition: background 300ms;
+      background: linear-gradient(90deg, #2750E5 5%, #34AFF7 94%);
 
       /* dark 样式 */
       &.dark {

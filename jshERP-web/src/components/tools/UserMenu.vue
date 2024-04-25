@@ -32,14 +32,14 @@
     <!-- update-end author:sunjianlei date:20200219 for: 菜单搜索改为动态组件，在手机端呈现出弹出框 -->
     <!-- update-end author:sunjianlei date:20191220 for: 解决全局样式冲突的问题 -->
     <!-- update_end  author:zhaoxin date:20191129 for: 做头部菜单栏导航 -->
-    <span class="action">
+    <!-- <span class="action">
       <a-tooltip>
         <template slot="title">官方网站</template>
         <a target="_blank" :href="systemUrl">
           <a-icon type="bank" style="font-size: 16px;" />
         </a>
       </a-tooltip>
-    </span>
+    </span> -->
     <header-notice class="action"/>
     <a-dropdown>
       <span v-if="isDesktop()" class="action ant-dropdown-link user-dropdown-menu">
@@ -47,10 +47,10 @@
         <span style="margin-left:4px">欢迎您，{{ nickname() }}</span>
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
-        <a-menu-item key="3"  @click="systemSetting">
+        <!-- <a-menu-item key="3"  @click="systemSetting">
            <a-icon type="tool"/>
            <span>界面设置</span>
-        </a-menu-item>
+        </a-menu-item> -->
         <a-menu-item key="4" @click="updatePassword">
           <a-icon type="setting"/>
           <span>密码修改</span>

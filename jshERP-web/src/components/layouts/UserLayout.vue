@@ -15,7 +15,7 @@
                 <a-col>
                   <a href="/">
                     <span class="title">{{systemTitle}}</span>
-                    <small class="desc">V3.3</small>
+                    <!-- <small class="desc">V3.3</small> -->
                   </a>
                 </a-col>
               </a-row>
@@ -167,7 +167,7 @@
     position: absolute;
     top: 40px;
     left: 60px;
-    width: 200px;
+    width: 120px;
   }
 
   #userLayout.user-layout-wrapper {
