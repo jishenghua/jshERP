@@ -1,7 +1,8 @@
 import {findFinancialDetailByNumber, findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail,
   getUserList, getPersonByType, getAccount, getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
-import { getCheckFlag } from "@/utils/util"
+import { getCheckFlag, getFormatDate, getPrevMonthFormatDate } from '@/utils/util'
 import Vue from 'vue'
+import moment from 'moment'
 
 export const FinancialListMixin = {
   data () {
@@ -18,7 +19,12 @@ export const FinancialListMixin = {
       retailList: [],
       userList: [],
       personList: [],
-      accountList: []
+      accountList: [],
+      queryParam: {
+        beginTime: getPrevMonthFormatDate(3),
+        endTime: getFormatDate(),
+        createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())]
+      }
     }
   },
   computed: {
@@ -83,7 +89,10 @@ export const FinancialListMixin = {
     },
     searchReset() {
       this.queryParam = {
-        type: this.queryParam.type
+        type: this.queryParam.type,
+        beginTime: getPrevMonthFormatDate(3),
+        endTime: getFormatDate(),
+        createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())]
       }
       this.loadData(1);
     },
@@ -161,6 +170,7 @@ export const FinancialListMixin = {
     onDateChange: function (value, dateString) {
       this.queryParam.beginTime=dateString[0];
       this.queryParam.endTime=dateString[1];
+      this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
     },
     onDateOk(value) {
       console.log(value);

@@ -3,7 +3,8 @@ import {getAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
 import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount, waitBillCount,
   getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
-import { getCheckFlag } from "@/utils/util"
+import { getCheckFlag, getFormatDate, getPrevMonthFormatDate } from '@/utils/util'
+import moment from 'moment'
 
 export const BillListMixin = {
   data () {
@@ -13,6 +14,7 @@ export const BillListMixin = {
       /* 单据Excel是否开启 */
       isShowExcel: false,
       waitTotal: 0,
+      dateFormat: 'YYYY-MM-DD',
       billExcelUrl: '',
       supList: [],
       cusList: [],
@@ -23,6 +25,11 @@ export const BillListMixin = {
       settingDataIndex:[],
       // 实际列
       columns:[],
+      queryParam: {
+        beginTime: getPrevMonthFormatDate(3),
+        endTime: getFormatDate(),
+        createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())]
+      }
     }
   },
   computed: {
@@ -105,13 +112,17 @@ export const BillListMixin = {
     searchReset() {
       this.queryParam = {
         type: this.queryParam.type,
-        subType: this.queryParam.subType
+        subType: this.queryParam.subType,
+        beginTime: getPrevMonthFormatDate(3),
+        endTime: getFormatDate(),
+        createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())]
       }
       this.loadData(1);
     },
     onDateChange: function (value, dateString) {
       this.queryParam.beginTime=dateString[0];
       this.queryParam.endTime=dateString[1];
+      this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
     },
     onDateOk(value) {
       console.log(value);
