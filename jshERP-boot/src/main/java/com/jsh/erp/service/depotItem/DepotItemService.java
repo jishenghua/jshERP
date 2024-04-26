@@ -9,6 +9,7 @@ import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
+import com.jsh.erp.datasource.vo.InOutPriceVo;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.depot.DepotService;
@@ -369,44 +370,18 @@ public class DepotItemService {
     }
 
     /**
-     * 统计采购或销售的总金额
-     * @param type
-     * @param subType
-     * @param month
+     * 统计采购、销售、零售的总金额列表
+     * @param beginTime
+     * @param endTime
      * @return
      * @throws Exception
      */
-    public BigDecimal inOrOutPrice(String type, String subType, String month) throws Exception{
-        BigDecimal result= BigDecimal.ZERO;
+    public List<InOutPriceVo> inOrOutPriceList(String beginTime, String endTime) throws Exception{
+        List<InOutPriceVo> result = new ArrayList<>();
         try{
             String [] creatorArray = depotHeadService.getCreatorArray();
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-            String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
-            String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
-            result = depotItemMapperEx.inOrOutPrice(type, subType, beginTime, endTime, creatorArray, forceFlag);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
-    }
-
-    /**
-     * 统计零售的总金额
-     * @param type
-     * @param subType
-     * @param month
-     * @return
-     * @throws Exception
-     */
-    public BigDecimal inOrOutRetailPrice(String type, String subType, String month) throws Exception{
-        BigDecimal result= BigDecimal.ZERO;
-        try{
-            String [] creatorArray = depotHeadService.getCreatorArray();
-            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-            String beginTime = Tools.firstDayOfMonth(month) + BusinessConstants.DAY_FIRST_TIME;
-            String endTime = Tools.lastDayOfMonth(month) + BusinessConstants.DAY_LAST_TIME;
-            result = depotItemMapperEx.inOrOutRetailPrice(type, subType, beginTime, endTime, creatorArray, forceFlag);
-            result = result.abs();
+            result = depotItemMapperEx.inOrOutPriceList(beginTime, endTime, creatorArray, forceFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

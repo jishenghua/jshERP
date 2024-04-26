@@ -4,6 +4,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
+import com.jsh.erp.datasource.vo.InOutPriceVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -133,17 +134,7 @@ public interface DepotItemMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("forceFlag") Boolean forceFlag);
 
-    BigDecimal inOrOutPrice(
-            @Param("type") String type,
-            @Param("subType") String subType,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("creatorArray") String[] creatorArray,
-            @Param("forceFlag") Boolean forceFlag);
-
-    BigDecimal inOrOutRetailPrice(
-            @Param("type") String type,
-            @Param("subType") String subType,
+    List<InOutPriceVo> inOrOutPriceList(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,

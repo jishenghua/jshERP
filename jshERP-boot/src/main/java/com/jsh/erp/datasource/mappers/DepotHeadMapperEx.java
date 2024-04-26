@@ -241,18 +241,7 @@ public interface DepotHeadMapperEx {
 
     List<DepotHead> getDepotHeadListByCreator(@Param("creatorArray") String[] creatorArray);
 
-    BigDecimal getBuyAndSaleBasicStatistics(
-            @Param("type") String type,
-            @Param("subType") String subType,
-            @Param("hasSupplier") Integer hasSupplier,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("creatorArray") String[] creatorArray,
-            @Param("forceFlag") Boolean forceFlag);
-
-    BigDecimal getBuyAndSaleRetailStatistics(
-            @Param("type") String type,
-            @Param("subType") String subType,
+    List<InOutPriceVo> getBuyAndSaleStatisticsList(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,

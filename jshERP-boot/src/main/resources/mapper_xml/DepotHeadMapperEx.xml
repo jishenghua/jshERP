@@ -1086,26 +1086,12 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
-    <select id="getBuyAndSaleBasicStatistics" resultType="java.math.BigDecimal">
-        select
-        ifnull(sum(discount_last_money),0) from
-        (select distinct dh.id, dh.discount_last_money
+    <select id="getBuyAndSaleStatisticsList" resultType="com.jsh.erp.datasource.vo.InOutPriceVo">
+        select distinct dh.id, dh.discount_last_money, dh.total_price, dh.type, dh.sub_type, dh.oper_time
         from jsh_depot_head dh
-        left join jsh_depot_item di on dh.id = di.header_id
-        where 1=1
-        and di.id is not null
-        <if test="type != null">
-            and dh.type=#{type}
-        </if>
-        <if test="subType != null">
-            and dh.sub_type=#{subType}
-        </if>
-        <if test="hasSupplier == 1">
-            and dh.organ_id is not null
-        </if>
-        <if test="hasSupplier == 0">
-            and dh.organ_id is null
-        </if>
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where di.id is not null
+        and (dh.type='入库' or dh.type='出库')
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}
         </if>
@@ -1123,41 +1109,6 @@
             )
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag,'0') !='1') tb
-    </select>
-
-    <select id="getBuyAndSaleRetailStatistics" resultType="java.math.BigDecimal">
-        select
-        ifnull(sum(total_price),0) from
-        (select distinct dh.id, dh.total_price
-        from jsh_depot_head dh
-        left join jsh_depot_item di on dh.id = di.header_id
-        where 1=1
-        and di.id is not null
-        <if test="type != null">
-            and dh.type=#{type}
-        </if>
-        <if test="subType != null">
-            and dh.sub_type=#{subType}
-        </if>
-        <if test="beginTime != null">
-            and dh.oper_time >= #{beginTime}
-        </if>
-        <if test="endTime != null">
-            and dh.oper_time &lt;= #{endTime}
-        </if>
-        <if test="forceFlag">
-            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
-        </if>
-        <if test="creatorArray != null">
-            and dh.creator in (
-            <foreach collection="creatorArray" item="creator" separator=",">
-                #{creator}
-            </foreach>
-            )
-        </if>
-        and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag,'0') !='1') tb
     </select>
 
     <select id="debtList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">

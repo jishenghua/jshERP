@@ -1224,60 +1224,126 @@ public class DepotHeadService {
                                                        String yearBegin, String yearEnd, HttpServletRequest request) throws Exception {
         Long userId = userService.getUserId(request);
         String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
+        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         String [] creatorArray = getCreatorArray();
+        List<InOutPriceVo> inOutPriceVoList = depotHeadMapperEx.getBuyAndSaleStatisticsList(yearBegin, yearEnd, creatorArray, forceFlag);
         Map<String, Object> map = new HashMap<>();
         //今日
-        BigDecimal todayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, today, getNow3(), creatorArray); //今日采购入库
-        BigDecimal todayBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, today, getNow3(), creatorArray); //今日采购退货
-        BigDecimal todaySale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, today, getNow3(), creatorArray); //今日销售出库
-        BigDecimal todaySaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, today, getNow3(), creatorArray); //今日销售退货
-        BigDecimal todayRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                today, getNow3(), creatorArray); //今日零售出库
-        BigDecimal todayRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                today, getNow3(), creatorArray); //今日零售退货
+        BigDecimal todayBuy = BigDecimal.ZERO; //今日采购入库
+        BigDecimal todayBuyBack = BigDecimal.ZERO; //今日采购退货
+        BigDecimal todaySale = BigDecimal.ZERO; //今日销售出库
+        BigDecimal todaySaleBack = BigDecimal.ZERO; //今日销售退货
+        BigDecimal todayRetailSale = BigDecimal.ZERO; //今日零售出库
+        BigDecimal todayRetailSaleBack = BigDecimal.ZERO; //今日零售退货
+        for(InOutPriceVo item: inOutPriceVoList) {
+            if(item.getOperTime().compareTo(Tools.strToDate(today))>=0 && item.getOperTime().compareTo(Tools.strToDate(getNow3()))<=0) {
+                if("入库".equals(item.getType()) && "采购".equals(item.getSubType())) {
+                    todayBuy = todayBuy.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "采购退货".equals(item.getSubType())) {
+                    todayBuyBack = todayBuyBack.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "销售".equals(item.getSubType())) {
+                    todaySale = todaySale.add(item.getDiscountLastMoney());
+                }
+                if("入库".equals(item.getType()) && "销售退货".equals(item.getSubType())) {
+                    todaySaleBack = todaySaleBack.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "零售".equals(item.getSubType())) {
+                    todayRetailSale = todayRetailSale.add(item.getTotalPrice().abs());
+                }
+                if("入库".equals(item.getType()) && "零售退货".equals(item.getSubType())) {
+                    todayRetailSaleBack = todayRetailSaleBack.add(item.getTotalPrice().abs());
+                }
+            }
+        }
         //本月
-        BigDecimal monthBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, monthFirstDay, getNow3(), creatorArray); //本月采购入库
-        BigDecimal monthBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, monthFirstDay, getNow3(), creatorArray); //本月采购退货
-        BigDecimal monthSale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1,monthFirstDay, getNow3(), creatorArray); //本月销售出库
-        BigDecimal monthSaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1,monthFirstDay, getNow3(), creatorArray); //本月销售退货
-        BigDecimal monthRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                monthFirstDay, getNow3(), creatorArray); //本月零售出库
-        BigDecimal monthRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                monthFirstDay, getNow3(), creatorArray); //本月零售退货
+        BigDecimal monthBuy = BigDecimal.ZERO; //本月采购入库
+        BigDecimal monthBuyBack = BigDecimal.ZERO; //本月采购退货
+        BigDecimal monthSale = BigDecimal.ZERO; //本月销售出库
+        BigDecimal monthSaleBack = BigDecimal.ZERO; //本月销售退货
+        BigDecimal monthRetailSale = BigDecimal.ZERO; //本月零售出库
+        BigDecimal monthRetailSaleBack = BigDecimal.ZERO; //本月零售退货
+        for(InOutPriceVo item: inOutPriceVoList) {
+            if(item.getOperTime().compareTo(Tools.strToDate(monthFirstDay))>=0 && item.getOperTime().compareTo(Tools.strToDate(getNow3()))<=0) {
+                if("入库".equals(item.getType()) && "采购".equals(item.getSubType())) {
+                    monthBuy = monthBuy.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "采购退货".equals(item.getSubType())) {
+                    monthBuyBack = monthBuyBack.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "销售".equals(item.getSubType())) {
+                    monthSale = monthSale.add(item.getDiscountLastMoney());
+                }
+                if("入库".equals(item.getType()) && "销售退货".equals(item.getSubType())) {
+                    monthSaleBack = monthSaleBack.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "零售".equals(item.getSubType())) {
+                    monthRetailSale = monthRetailSale.add(item.getTotalPrice().abs());
+                }
+                if("入库".equals(item.getType()) && "零售退货".equals(item.getSubType())) {
+                    monthRetailSaleBack = monthRetailSaleBack.add(item.getTotalPrice().abs());
+                }
+            }
+        }
         //昨日
-        BigDecimal yesterdayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日采购入库
-        BigDecimal yesterdayBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日采购退货
-        BigDecimal yesterdaySale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日销售出库
-        BigDecimal yesterdaySaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日销售退货
-        BigDecimal yesterdayRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                yesterdayBegin, yesterdayEnd, creatorArray); //昨日零售出库
-        BigDecimal yesterdayRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                yesterdayBegin, yesterdayEnd, creatorArray); //昨日零售退货
+        BigDecimal yesterdayBuy = BigDecimal.ZERO; //昨日采购入库
+        BigDecimal yesterdayBuyBack = BigDecimal.ZERO; //昨日采购退货
+        BigDecimal yesterdaySale = BigDecimal.ZERO; //昨日销售出库
+        BigDecimal yesterdaySaleBack = BigDecimal.ZERO; //昨日销售退货
+        BigDecimal yesterdayRetailSale = BigDecimal.ZERO; //昨日零售出库
+        BigDecimal yesterdayRetailSaleBack = BigDecimal.ZERO; //昨日零售退货
+        for(InOutPriceVo item: inOutPriceVoList) {
+            if(item.getOperTime().compareTo(Tools.strToDate(yesterdayBegin))>=0 && item.getOperTime().compareTo(Tools.strToDate(yesterdayEnd))<=0) {
+                if("入库".equals(item.getType()) && "采购".equals(item.getSubType())) {
+                    yesterdayBuy = yesterdayBuy.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "采购退货".equals(item.getSubType())) {
+                    yesterdayBuyBack = yesterdayBuyBack.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "销售".equals(item.getSubType())) {
+                    yesterdaySale = yesterdaySale.add(item.getDiscountLastMoney());
+                }
+                if("入库".equals(item.getType()) && "销售退货".equals(item.getSubType())) {
+                    yesterdaySaleBack = yesterdaySaleBack.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "零售".equals(item.getSubType())) {
+                    yesterdayRetailSale = yesterdayRetailSale.add(item.getTotalPrice().abs());
+                }
+                if("入库".equals(item.getType()) && "零售退货".equals(item.getSubType())) {
+                    yesterdayRetailSaleBack = yesterdayRetailSaleBack.add(item.getTotalPrice().abs());
+                }
+            }
+        }
         //今年
-        BigDecimal yearBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, yearBegin, yearEnd, creatorArray); //今年采购入库
-        BigDecimal yearBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, yearBegin, yearEnd, creatorArray); //今年采购退货
-        BigDecimal yearSale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, yearBegin, yearEnd, creatorArray); //今年销售出库
-        BigDecimal yearSaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, yearBegin, yearEnd, creatorArray); //今年销售退货
-        BigDecimal yearRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                yearBegin, yearEnd, creatorArray); //今年零售出库
-        BigDecimal yearRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                yearBegin, yearEnd, creatorArray); //今年零售退货
+        BigDecimal yearBuy = BigDecimal.ZERO; //今年采购入库
+        BigDecimal yearBuyBack = BigDecimal.ZERO; //今年采购退货
+        BigDecimal yearSale = BigDecimal.ZERO; //今年销售出库
+        BigDecimal yearSaleBack = BigDecimal.ZERO; //今年销售退货
+        BigDecimal yearRetailSale = BigDecimal.ZERO; //今年零售出库
+        BigDecimal yearRetailSaleBack = BigDecimal.ZERO; //今年零售退货
+        for(InOutPriceVo item: inOutPriceVoList) {
+            if(item.getOperTime().compareTo(Tools.strToDate(yearBegin))>=0 && item.getOperTime().compareTo(Tools.strToDate(yearEnd))<=0) {
+                if("入库".equals(item.getType()) && "采购".equals(item.getSubType())) {
+                    yearBuy = yearBuy.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "采购退货".equals(item.getSubType())) {
+                    yearBuyBack = yearBuyBack.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "销售".equals(item.getSubType())) {
+                    yearSale = yearSale.add(item.getDiscountLastMoney());
+                }
+                if("入库".equals(item.getType()) && "销售退货".equals(item.getSubType())) {
+                    yearSaleBack = yearSaleBack.add(item.getDiscountLastMoney());
+                }
+                if("出库".equals(item.getType()) && "零售".equals(item.getSubType())) {
+                    yearRetailSale = yearRetailSale.add(item.getTotalPrice().abs());
+                }
+                if("入库".equals(item.getType()) && "零售退货".equals(item.getSubType())) {
+                    yearRetailSaleBack = yearRetailSaleBack.add(item.getTotalPrice().abs());
+                }
+            }
+        }
         map.put("todayBuy", roleService.parseHomePriceByLimit(todayBuy.subtract(todayBuyBack), "buy", priceLimit, "***", request));
         map.put("todaySale", roleService.parseHomePriceByLimit(todaySale.subtract(todaySaleBack), "sale", priceLimit, "***", request));
         map.put("todayRetailSale", roleService.parseHomePriceByLimit(todayRetailSale.subtract(todayRetailSaleBack), "retail", priceLimit, "***", request));
@@ -1291,18 +1357,6 @@ public class DepotHeadService {
         map.put("yearSale", roleService.parseHomePriceByLimit(yearSale.subtract(yearSaleBack), "sale", priceLimit, "***", request));
         map.put("yearRetailSale", roleService.parseHomePriceByLimit(yearRetailSale.subtract(yearRetailSaleBack), "retail", priceLimit, "***", request));
         return map;
-    }
-
-    public BigDecimal getBuyAndSaleBasicStatistics(String type, String subType, Integer hasSupplier,
-                                                   String beginTime, String endTime, String[] creatorArray) throws Exception {
-        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-        return depotHeadMapperEx.getBuyAndSaleBasicStatistics(type, subType, hasSupplier, beginTime, endTime, creatorArray, forceFlag);
-    }
-
-    public BigDecimal getBuyAndSaleRetailStatistics(String type, String subType,
-                                                    String beginTime, String endTime, String[] creatorArray) throws Exception {
-        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-        return depotHeadMapperEx.getBuyAndSaleRetailStatistics(type, subType, beginTime, endTime, creatorArray, forceFlag).abs();
     }
 
     public DepotHead getDepotHead(String number)throws Exception {

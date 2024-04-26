@@ -84,6 +84,29 @@ public class Tools {
     }
 
     /**
+     * 获得指定时间，格式为yyyy-MM-dd HH:mm:ss或yyyy-MM-dd
+     *
+     * @return 格式化后的日期格式
+     */
+    public static String dateToStr(Date date, String format) {
+        if(date!=null) {
+            return new SimpleDateFormat(format).format(date);
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * 将日期的字符串格式转为时间格式
+     * @param dateString
+     * @return
+     * @throws ParseException
+     */
+    public static Date strToDate(String dateString) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 日期格式
+        return formatter.parse(dateString); // 字符串转换为Date
+    }
+    /**
      * 获取指定日期格式 yyyy-MM-dd
      *
      * @return
