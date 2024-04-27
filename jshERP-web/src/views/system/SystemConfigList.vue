@@ -170,6 +170,7 @@
         billTypeList: [
           { 'key': 'LSCK', 'value': '零售出库' },
           { 'key': 'LSTH', 'value': '零售退货' },
+          { 'key': 'QGD', 'value': '请购单' },
           { 'key': 'CGDD', 'value': '采购订单' },
           { 'key': 'CGRK', 'value': '采购入库' },
           { 'key': 'CGTH', 'value': '采购退货' },
