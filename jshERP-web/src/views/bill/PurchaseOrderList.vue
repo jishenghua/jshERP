@@ -59,6 +59,16 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="关联请购单" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联请购单" v-model="queryParam.linkApply"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24" v-if="purchaseBySaleFlag">
+                  <a-form-item label="关联订单" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联订单" v-model="queryParam.linkNumber"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
@@ -90,7 +100,12 @@
                 <a-row style="width: 500px">
                   <template v-for="(item,index) in defColumns">
                     <template>
-                      <a-col :span="8">
+                      <a-col :span="8" v-if="purchaseBySaleFlag">
+                        <a-checkbox :value="item.dataIndex">
+                          <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                        </a-checkbox>
+                      </a-col>
+                      <a-col :span="8" v-if="!purchaseBySaleFlag && item.dataIndex!=='linkNumber'">
                         <a-checkbox :value="item.dataIndex">
                           <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
                         </a-checkbox>
@@ -186,6 +201,8 @@
           subType: "采购订单",
           organId: "",
           depotId: "",
+          linkApply: "",
+          linkNumber: "",
           creator: "",
           status: "",
           remark: ""

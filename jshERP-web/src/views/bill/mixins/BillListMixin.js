@@ -13,6 +13,8 @@ export const BillListMixin = {
       checkFlag: true,
       /* 单据Excel是否开启 */
       isShowExcel: false,
+      //以销定购的场景开关
+      purchaseBySaleFlag: false,
       waitTotal: 0,
       dateFormat: 'YYYY-MM-DD',
       billExcelUrl: '',
@@ -135,6 +137,7 @@ export const BillListMixin = {
           let multiBillType = res.data.multiBillType
           let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
+          this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
           this.inOutManageFlag = res.data.inOutManageFlag==='1'?true:false
         }
       })
@@ -211,7 +214,20 @@ export const BillListMixin = {
         this.settingDataIndex = this.defDataIndex
       }
       this.columns = this.defColumns.filter(item => {
-        return this.settingDataIndex.includes(item.dataIndex)
+        if(this.purchaseBySaleFlag) {
+          //以销定购-开启
+          return this.settingDataIndex.includes(item.dataIndex)
+        } else {
+          //以销定购-关闭
+          if(this.prefixNo === 'CGDD') {
+            //采购订单只显示除了关联订单之外的列
+            if(item.dataIndex!=='linkNumber') {
+              return this.settingDataIndex.includes(item.dataIndex)
+            }
+          } else {
+            return this.settingDataIndex.includes(item.dataIndex)
+          }
+        }
       })
     },
     //列设置更改事件
