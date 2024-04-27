@@ -1636,7 +1636,8 @@ public class DepotHeadService {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
             String [] depotArray = getDepotArray("其它");
-            String [] creatorArray = getCreatorArray();
+            //给仓管可以看全部的单据（此时可以通过分配仓库去控制权限）
+            String [] creatorArray = null;
             String [] subTypeArray = StringUtil.isNotEmpty(subType) ? subType.split(",") : null;
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             Map<Long,String> accountMap = accountService.getAccountMap();
@@ -1682,7 +1683,8 @@ public class DepotHeadService {
         Long result=null;
         try{
             String [] depotArray = getDepotArray("其它");
-            String [] creatorArray = getCreatorArray();
+            //给仓管可以看全部的单据（此时可以通过分配仓库去控制权限）
+            String [] creatorArray = null;
             String [] subTypeArray = StringUtil.isNotEmpty(subType) ? subType.split(",") : null;
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
