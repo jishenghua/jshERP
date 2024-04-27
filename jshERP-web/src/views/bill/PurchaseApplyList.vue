@@ -197,12 +197,7 @@
             align:"center", width: 180,
             scopedSlots: { customRender: 'action' },
           },
-          { title: '单据编号', dataIndex: 'number',width:180,
-            customRender:function (text,record,index) {
-              text = record.linkNumber?text+"[转]":text
-              return text
-            }
-          },
+          { title: '单据编号', dataIndex: 'number',width:180},
           { title: '商品信息', dataIndex: 'materialsList',width:320, ellipsis:true},
           { title: '单据日期', dataIndex: 'operTimeStr',width:185},
           { title: '操作员', dataIndex: 'userName',width:120, ellipsis:true},
