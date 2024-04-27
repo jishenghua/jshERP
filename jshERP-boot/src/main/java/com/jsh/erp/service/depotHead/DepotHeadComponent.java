@@ -37,6 +37,7 @@ public class DepotHeadComponent implements ICommonQuery {
         String status = StringUtil.getInfo(search, "status");
         String purchaseStatus = StringUtil.getInfo(search, "purchaseStatus");
         String number = StringUtil.getInfo(search, "number");
+        String linkApply = StringUtil.getInfo(search, "linkApply");
         String linkNumber = StringUtil.getInfo(search, "linkNumber");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
@@ -46,7 +47,7 @@ public class DepotHeadComponent implements ICommonQuery {
         Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
         Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
         String remark = StringUtil.getInfo(search, "remark");
-        return depotHeadService.select(type, subType, hasDebt, status, purchaseStatus, number, linkNumber,
+        return depotHeadService.select(type, subType, hasDebt, status, purchaseStatus, number, linkApply, linkNumber,
                 beginTime, endTime, materialParam, organId, creator, depotId, accountId, remark, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -59,6 +60,7 @@ public class DepotHeadComponent implements ICommonQuery {
         String status = StringUtil.getInfo(search, "status");
         String purchaseStatus = StringUtil.getInfo(search, "purchaseStatus");
         String number = StringUtil.getInfo(search, "number");
+        String linkApply = StringUtil.getInfo(search, "linkApply");
         String linkNumber = StringUtil.getInfo(search, "linkNumber");
         String beginTime = StringUtil.getInfo(search, "beginTime");
         String endTime = StringUtil.getInfo(search, "endTime");
@@ -68,7 +70,7 @@ public class DepotHeadComponent implements ICommonQuery {
         Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
         Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
         String remark = StringUtil.getInfo(search, "remark");
-        return depotHeadService.countDepotHead(type, subType, hasDebt, status, purchaseStatus, number, linkNumber,
+        return depotHeadService.countDepotHead(type, subType, hasDebt, status, purchaseStatus, number, linkApply, linkNumber,
                 beginTime, endTime, materialParam, organId, creator, depotId, accountId, remark);
     }
 
