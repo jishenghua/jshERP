@@ -346,8 +346,8 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initSupplier()
-        this.initAccount()
+        this.initSupplier(0)
+        this.initAccount(0)
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {

@@ -330,9 +330,9 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initRetail()
+        this.initRetail(0)
         this.initDepot()
-        this.initAccount()
+        this.initAccount(0)
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
@@ -364,10 +364,13 @@
       initPayTypeList() {
         this.payTypeList.push({"value":"现付", "text":"现付"})
       },
-      initAccount(){
+      initAccount(isChecked){
         getAccount({}).then((res)=>{
           if(res && res.code === 200) {
             this.accountList = res.data.accountList
+            if(isChecked && this.accountList.length>0) {
+              this.form.setFieldsValue({'accountId': this.accountList[0].id})
+            }
           }
         })
       },

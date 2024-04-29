@@ -387,9 +387,9 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initSupplier()
+        this.initSupplier(0)
         this.initDepot()
-        this.initAccount()
+        this.initAccount(0)
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

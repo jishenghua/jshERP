@@ -267,7 +267,7 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initCustomer()
+        this.initCustomer(0)
         this.initDepot()
       },
       //提交单据时整理成formData

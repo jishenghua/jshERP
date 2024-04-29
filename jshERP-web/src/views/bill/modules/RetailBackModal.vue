@@ -320,9 +320,9 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initRetail()
+        this.initRetail(0)
         this.initDepot()
-        this.initAccount()
+        this.initAccount(0)
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
@@ -351,10 +351,13 @@
           rows: JSON.stringify(detailArr),
         }
       },
-      initAccount(){
+      initAccount(isChecked){
         getAccount({}).then((res)=>{
           if(res && res.code === 200) {
             this.accountList = res.data.accountList
+            if(isChecked && this.accountList.length>0) {
+              this.form.setFieldsValue({'accountId': this.accountList[0].id})
+            }
           }
         })
       },

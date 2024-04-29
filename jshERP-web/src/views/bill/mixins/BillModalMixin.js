@@ -169,27 +169,36 @@ export const BillModalMixin = {
         }
       })
     },
-    initSupplier() {
+    initSupplier(isChecked) {
       let that = this;
       findBySelectSup({}).then((res)=>{
         if(res) {
-          that.supList = res;
+          that.supList = res
+          if(isChecked && res.length>0) {
+            that.form.setFieldsValue({'organId': res[0].id})
+          }
         }
       });
     },
-    initCustomer() {
+    initCustomer(isChecked) {
       let that = this;
       findBySelectCus({}).then((res)=>{
         if(res) {
-          that.cusList = res;
+          that.cusList = res
+          if(isChecked && res.length>0) {
+            that.form.setFieldsValue({'organId': res[0].id})
+          }
         }
       });
     },
-    initRetail() {
+    initRetail(isChecked) {
       let that = this;
       findBySelectRetail({}).then((res)=>{
         if(res) {
-          that.retailList = res;
+          that.retailList = res
+          if(isChecked && res.length>0) {
+            that.form.setFieldsValue({'organId': res[0].id})
+          }
         }
       });
     },
@@ -221,13 +230,17 @@ export const BillModalMixin = {
         }
       })
     },
-    initAccount(){
+    initAccount(isChecked){
       let that = this;
       getAccount({}).then((res)=>{
         if(res && res.code === 200) {
           let list = res.data.accountList
+          let lastId = list.length>0?list[0].id:''
           list.splice(0,0,{id: 0, name: '多账户'})
           that.accountList = list
+          if(isChecked) {
+            that.form.setFieldsValue({'accountId': lastId})
+          }
         }
       })
     },
@@ -286,13 +299,13 @@ export const BillModalMixin = {
       this.$refs.accountModalForm.disableSubmit = false;
     },
     vendorModalFormOk() {
-      this.initSupplier()
+      this.initSupplier(1)
     },
     customerModalFormOk() {
-      this.initCustomer()
+      this.initCustomer(1)
     },
     memberModalFormOk() {
-      this.initRetail()
+      this.initRetail(1)
     },
     batchSetDepotModalFormOk(depotId) {
       this.getAllTable().then(tables => {
@@ -346,7 +359,7 @@ export const BillModalMixin = {
       this.initDepot()
     },
     accountModalFormOk() {
-      this.initAccount()
+      this.initAccount(1)
     },
     onAdded(event) {
       const { row, target } = event

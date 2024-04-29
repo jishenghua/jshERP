@@ -405,10 +405,10 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initCustomer()
+        this.initCustomer(0)
         this.initSalesman()
         this.initDepot()
-        this.initAccount()
+        this.initAccount(0)
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
