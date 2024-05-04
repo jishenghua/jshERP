@@ -1571,3 +1571,11 @@ VALUES ('050203', '请购单', '0502', '/bill/purchase_apply', '/bill/PurchaseAp
 -- 给单据主表里面增加关联请购单字段
 -- --------------------------------------------------------
 alter table jsh_depot_head add link_apply varchar(50) DEFAULT NULL COMMENT '关联请购单' after link_number;
+
+-- --------------------------------------------------------
+-- 时间 2024年5月4日
+-- by jishenghua
+-- 给明细表的备注修改长度
+-- --------------------------------------------------------
+alter table jsh_depot_item change remark remark varchar(500) DEFAULT NULL COMMENT '备注';
+alter table jsh_account_item change remark remark varchar(500) DEFAULT NULL COMMENT '备注';
