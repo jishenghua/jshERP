@@ -1579,3 +1579,11 @@ alter table jsh_depot_head add link_apply varchar(50) DEFAULT NULL COMMENT '关�
 -- --------------------------------------------------------
 alter table jsh_depot_item change remark remark varchar(500) DEFAULT NULL COMMENT '备注';
 alter table jsh_account_item change remark remark varchar(500) DEFAULT NULL COMMENT '备注';
+
+-- --------------------------------------------------------
+-- 时间 2024年5月5日
+-- by jishenghua
+-- 给系统参数表增加多账户启用标记，开启后，采购订单、采购入库等单据可以进行多账户选择，升级的时候最好给老的租户进行批量设置为启用
+-- --------------------------------------------------------
+alter table jsh_system_config add multi_account_flag varchar(1) DEFAULT '0' COMMENT '多账户启用标记，0未启用，1启用' after in_out_manage_flag;
+update jsh_system_config set multi_account_flag='1' where multi_account_flag='0';
