@@ -1354,6 +1354,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andMultiAccountFlagIsNull() {
+            addCriterion("multi_account_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagIsNotNull() {
+            addCriterion("multi_account_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagEqualTo(String value) {
+            addCriterion("multi_account_flag =", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagNotEqualTo(String value) {
+            addCriterion("multi_account_flag <>", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagGreaterThan(String value) {
+            addCriterion("multi_account_flag >", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("multi_account_flag >=", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagLessThan(String value) {
+            addCriterion("multi_account_flag <", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagLessThanOrEqualTo(String value) {
+            addCriterion("multi_account_flag <=", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagLike(String value) {
+            addCriterion("multi_account_flag like", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagNotLike(String value) {
+            addCriterion("multi_account_flag not like", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagIn(List<String> values) {
+            addCriterion("multi_account_flag in", values, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagNotIn(List<String> values) {
+            addCriterion("multi_account_flag not in", values, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagBetween(String value1, String value2) {
+            addCriterion("multi_account_flag between", value1, value2, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagNotBetween(String value1, String value2) {
+            addCriterion("multi_account_flag not between", value1, value2, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

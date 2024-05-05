@@ -37,6 +37,8 @@ public class SystemConfig {
 
     private String inOutManageFlag;
 
+    private String multiAccountFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -183,6 +185,14 @@ public class SystemConfig {
 
     public void setInOutManageFlag(String inOutManageFlag) {
         this.inOutManageFlag = inOutManageFlag == null ? null : inOutManageFlag.trim();
+    }
+
+    public String getMultiAccountFlag() {
+        return multiAccountFlag;
+    }
+
+    public void setMultiAccountFlag(String multiAccountFlag) {
+        this.multiAccountFlag = multiAccountFlag == null ? null : multiAccountFlag.trim();
     }
 
     public Long getTenantId() {
