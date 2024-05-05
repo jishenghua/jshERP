@@ -116,7 +116,12 @@
               <br/>（启用后，多级审核需配置流程，开启后需刷新浏览器才能看到效果）<a-button type="link" @click="handleReload">点此刷新</a-button>
             </a-form-item>
           </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多账户">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiAccountFlagSwitch" @change="onMultiAccountChange"></a-switch>
+              （启用后，采购订单、采购入库、采购退货、销售订单、销售出库、销售退货等单据的结算账户可以进行多账户选择）
+            </a-form-item>
+          </a-col>
         </a-row>
       </a-form>
     </a-spin>
@@ -155,8 +160,8 @@
         originalMultiLevelApprovalFlag: '0', //原始多级审核状态
         multiBillTypeSelect: [], //单据类型
         originalMultiBillTypeSelect: [], //原始单据类型
-        isReadOnly: false,
-        isShowApproval: false,
+        isShowApproval: false, //是否展示多级审核
+        multiAccountFlagSwitch: false, //多账户审核
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -248,6 +253,9 @@
               if (record.multiBillType != null && record.multiBillType != '') {
                 this.multiBillTypeSelect = record.multiBillType.split(',')
                 this.originalMultiBillTypeSelect = record.multiBillType
+              }
+              if (record.multiAccountFlag != null) {
+                this.multiAccountFlagSwitch = record.multiAccountFlag == '1' ? true : false;
               }
             }
           } else {
@@ -359,6 +367,10 @@
       },
       onMultiBillTypeChange() {
         this.model.multiBillType = this.multiBillTypeSelect.join(",")
+        this.handleChange()
+      },
+      onMultiAccountChange(checked) {
+        this.model.multiAccountFlag = checked?'1':'0'
         this.handleChange()
       },
       //改变内容

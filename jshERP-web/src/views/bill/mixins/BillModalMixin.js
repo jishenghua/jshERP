@@ -236,11 +236,18 @@ export const BillModalMixin = {
         if(res && res.code === 200) {
           let list = res.data.accountList
           let lastId = list.length>0?list[0].id:''
-          list.splice(0,0,{id: 0, name: '多账户'})
-          that.accountList = list
-          if(isChecked) {
-            that.form.setFieldsValue({'accountId': lastId})
-          }
+          getCurrentSystemConfig().then((res) => {
+            if (res.code === 200 && res.data) {
+              let multiAccountFlag = res.data.multiAccountFlag
+              if(multiAccountFlag==='1') {
+                list.splice(0,0,{id: 0, name: '多账户'})
+              }
+            }
+            that.accountList = list
+            if(isChecked) {
+              that.form.setFieldsValue({'accountId': lastId})
+            }
+          })
         }
       })
     },
