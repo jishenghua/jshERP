@@ -342,8 +342,8 @@
               let listEx = []
               for(let j=0; j<list.length; j++){
                 let info = list[j];
-                if(info.preNumber !== info.finishNumber) {
-                  //去掉已经全部转换的明细
+                if(info.finishNumber < info.preNumber) {
+                  //去掉已经全部转换的明细，只加载未转换完的明细
                   listEx.push(info)
                 } else {
                   if(this.queryParam.subType === '采购' || this.queryParam.subType === '销售' || this.queryParam.subType === '零售') {
