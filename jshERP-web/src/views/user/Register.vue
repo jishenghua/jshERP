@@ -215,6 +215,8 @@
       },
 
       handleSubmit() {
+        let that = this
+        that.registerBtn = true;
         this.form.validateFields((err, values) => {
           if (!err) {
             if(values.inputCode === this.randCode) {
@@ -242,7 +244,10 @@
                     description: res.data.message || "注册失败",
                     duration: 2
                   });
+                  that.registerBtn = false
                 }
+              }).catch((err) => {
+                that.requestFailed(err);
               })
             } else {
               this.$notification['error']({
@@ -250,17 +255,12 @@
                 description: "验证码错误",
                 duration: 2
               });
+              that.registerBtn = false
             }
+          } else {
+            that.registerBtn = false
           }
         })
-      },
-      registerFailed(message) {
-        this.$notification['error']({
-          message: "注册失败",
-          description: message,
-          duration: 2,
-        });
-
       },
       requestFailed(err) {
         this.$notification['error']({
