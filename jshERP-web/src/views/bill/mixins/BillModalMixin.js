@@ -80,6 +80,7 @@ export const BillModalMixin = {
     addInit(amountNum) {
       getAction('/sequence/buildNumber').then((res) => {
         if (res && res.code === 200) {
+          this.model.defaultNumber = amountNum + res.data.defaultNumber
           this.form.setFieldsValue({'number':amountNum + res.data.defaultNumber})
         }
       })
