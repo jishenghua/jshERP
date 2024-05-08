@@ -1712,8 +1712,9 @@ public class DepotHeadService {
             }
             depotHead.setLinkNumber(oldNumber);
             //给单号重新赋值
-            depotHead.setNumber(prefixNo + sequenceService.buildOnlyNumber());
-            depotHead.setDefaultNumber(prefixNo + sequenceService.buildOnlyNumber());
+            String number = prefixNo + sequenceService.buildOnlyNumber();
+            depotHead.setNumber(number);
+            depotHead.setDefaultNumber(number);
             depotHead.setOperTime(new Date());
             depotHead.setSubType(BusinessConstants.SUB_TYPE_OTHER);
             depotHead.setChangeAmount(BigDecimal.ZERO);
