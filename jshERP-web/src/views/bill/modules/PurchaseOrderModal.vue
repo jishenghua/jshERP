@@ -191,7 +191,7 @@
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
-  import { getCurrentSystemConfig } from '@/api/api'
+  import { findBillDetailByNumber, getCurrentSystemConfig } from '@/api/api'
   import { getMpListShort, changeListFmtMinus,handleIntroJs } from "@/utils/util"
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -416,26 +416,31 @@
             info.linkId = info.id
             this.changeColumnShow(info)
           }
-          if(linkNumber.indexOf('QGD')===-1) {
-            this.$nextTick(() => {
-              this.form.setFieldsValue({
-                'linkNumber': linkNumber
-              })
-            })
-          } else {
-            //关联请购单
-            this.$nextTick(() => {
-              this.form.setFieldsValue({
-                'linkApply': linkNumber
-              })
-            })
-          }
+          //根据单号查询单据类型
+          findBillDetailByNumber({'number':linkNumber}).then((res) => {
+            if (res.code === 200) {
+              if(res.data && res.data.subType === '请购单') {
+                //关联请购单
+                this.$nextTick(() => {
+                  this.form.setFieldsValue({
+                    'linkApply': linkNumber
+                  })
+                })
+              } else {
+                this.$nextTick(() => {
+                  this.form.setFieldsValue({
+                    'linkNumber': linkNumber
+                  })
+                })
+              }
+            }
+          })
           //给优惠后金额重新赋值
           discountLastMoney = discountLastMoney?discountLastMoney:0
           this.$nextTick(() => {
             this.form.setFieldsValue({
               'discountLastMoney': discountLastMoney.toFixed(2),
-              'changeAmount': discountLastMoney
+              'changeAmount': discountLastMoney.toFixed(2)
             })
           })
           this.materialTable.dataSource = selectBillDetailRows
