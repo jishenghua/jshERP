@@ -203,6 +203,9 @@ export const FinancialModalMixin = {
     personModalFormOk() {
       this.initPerson()
     },
+    workflowModalFormOk() {
+      this.close()
+    },
     //单元值改变一个字符就触发一次
     onValueChange(event) {
       let that = this
@@ -308,7 +311,7 @@ export const FinancialModalMixin = {
         getPlatformConfigByKey({ "platformKey": "send_workflow_url" }).then((res) => {
           if (res && res.code === 200) {
             let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.billNo + '&type=2'
-            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, this.model.billNo, 2, 320)
             this.$refs.modalWorkflow.title = "发起流程"
           }
         })

@@ -14,6 +14,7 @@
       cancelText="关闭">
       <template slot="footer">
         <a-button key="back" @click="handleCancel">取消</a-button>
+        <a-button type="primary" :loading="loading" @click="handleSubmit">确认提交</a-button>
       </template>
       <a-form :form="form">
         <template>
@@ -36,6 +37,7 @@
 <script>
   import pick from 'lodash.pick'
   import {mixinDevice} from '@/utils/mixin'
+  import { postAction } from '@api/manage'
   export default {
     name: 'WorkflowIframe',
     mixins: [mixinDevice],
@@ -49,21 +51,45 @@
         height: "",
         model: {},
         form: this.$form.createForm(this),
-        loading: false
+        loading: false,
       }
     },
     created () {
     },
     methods: {
-      show(record, sendWorkflowUrl, height) {
+      show(record, sendWorkflowUrl, billNo, type, height) {
         this.height = height
         this.sendWorkflowUrl = sendWorkflowUrl
+        //单号
+        this.billNo = billNo
+        //1-进销存单据 2-财务单据 3-生产单据
+        this.bigType = type
         this.visible = true
         this.modalStyle = 'top:20%; height: 55%;'
         this.model = Object.assign({}, record)
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'id'))
         });
+      },
+      handleSubmit() {
+        const that = this
+        let formData = {}
+        formData.bigType = this.bigType
+        formData.billNo = this.billNo
+        that.loading = true
+        postAction('/api/plugin/workflow/workflowTask/add', formData).then((res)=>{
+          if(res.code === 200){
+            that.$message.success('提交成功！')
+            that.close()
+            setTimeout(function (){
+              that.$emit('ok')
+            },2000)
+          }else{
+            that.$message.warning(res.data.message)
+          }
+        }).finally(() => {
+          that.loading = false
+        })
       },
       handleCancel() {
         this.close()

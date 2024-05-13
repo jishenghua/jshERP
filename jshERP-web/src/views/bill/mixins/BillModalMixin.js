@@ -369,6 +369,9 @@ export const BillModalMixin = {
     accountModalFormOk() {
       this.initAccount(1)
     },
+    workflowModalFormOk() {
+      this.close()
+    },
     onAdded(event) {
       const { row, target } = event
       target.setValues([{rowKey: row.id, values: {operNumber:0}}])
@@ -970,7 +973,7 @@ export const BillModalMixin = {
         getPlatformConfigByKey({ "platformKey": "send_workflow_url" }).then((res) => {
           if (res && res.code === 200) {
             let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.number + '&type=1'
-            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, this.model.number, 1, 320)
             this.$refs.modalWorkflow.title = "发起流程"
           }
         })

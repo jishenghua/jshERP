@@ -92,7 +92,7 @@
     </a-spin>
     <import-item-modal ref="importItemModalForm" @ok="importItemModalFormOk"></import-item-modal>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
+    <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
   </j-modal>
 </template>
 <script>

@@ -168,7 +168,7 @@
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
+    <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
   </j-modal>
 </template>
 <script>

@@ -190,7 +190,7 @@
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
     <history-bill-list ref="historyBillListModalForm"></history-bill-list>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
+    <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
   </j-modal>
 </template>
 

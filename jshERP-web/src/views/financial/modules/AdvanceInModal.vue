@@ -100,7 +100,7 @@
       </a-form>
     </a-spin>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
+    <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
   </j-modal>
 </template>
 <script>

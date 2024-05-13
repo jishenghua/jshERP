@@ -110,7 +110,7 @@
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
     <import-item-modal ref="importItemModalForm" @ok="importItemModalFormOk"></import-item-modal>
     <wait-bill-list ref="waitBillList" @ok="waitBillListOk"></wait-bill-list>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
+    <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
   </j-modal>
 </template>
 <script>

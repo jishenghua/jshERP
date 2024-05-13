@@ -112,7 +112,7 @@
     </a-spin>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
+    <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
   </j-modal>
 </template>
 <script>
