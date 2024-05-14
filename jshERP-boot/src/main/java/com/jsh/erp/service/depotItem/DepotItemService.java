@@ -624,15 +624,21 @@ public class DepotItemService {
                 }
                 //出库时判断库存是否充足
                 if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
+                    String stockMsg = material.getName() + "-" + barCode;
                     BigDecimal stock = getCurrentStockByParam(depotItem.getDepotId(),depotItem.getMaterialId());
                     if(StringUtil.isNotEmpty(depotItem.getSku())) {
                         //对于sku商品要换个方式计算库存
                         stock = getSkuStockByParam(depotItem.getDepotId(),depotItem.getMaterialExtendId(),null,null);
                     }
+                    if(StringUtil.isNotEmpty(depotItem.getBatchNumber())) {
+                        //对于批次商品要换个方式计算库存
+                        stock = getOneBatchNumberStock(depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
+                        stockMsg += "-批号" + depotItem.getBatchNumber();
+                    }
                     BigDecimal thisBasicNumber = depotItem.getBasicNumber()==null?BigDecimal.ZERO:depotItem.getBasicNumber();
                     if(!systemConfigService.getMinusStockFlag() && stock.compareTo(thisBasicNumber)<0){
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
-                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, material.getName() + "-" + barCode));
+                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, stockMsg));
                     }
                     //出库时处理序列号
                     if(!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
@@ -1168,6 +1174,34 @@ public class DepotItemService {
             }
         }
         return reslist;
+    }
+
+    /**
+     * 查询某个批号的商品库存
+     * @param depotId
+     * @param barCode
+     * @param batchNumber
+     * @return
+     * @throws Exception
+     */
+    public BigDecimal getOneBatchNumberStock(Long depotId, String barCode, String batchNumber) throws Exception {
+        BigDecimal totalNum = BigDecimal.ZERO;
+        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+        Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
+        List<DepotItemVoBatchNumberList> list =  depotItemMapperEx.getBatchNumberList(null, null,
+                depotId, barCode, batchNumber, forceFlag, inOutManageFlag);
+        if(list!=null && list.size()>0) {
+            DepotItemVoBatchNumberList bn = list.get(0);
+            totalNum = bn.getTotalNum();
+            if(bn.getTotalNum()!=null && bn.getTotalNum().compareTo(BigDecimal.ZERO)>0) {
+                if(bn.getUnitId()!=null) {
+                    Unit unit = unitService.getUnit(bn.getUnitId());
+                    String commodityUnit = bn.getCommodityUnit();
+                    totalNum = unitService.parseStockByUnit(bn.getTotalNum(), unit, commodityUnit);
+                }
+            }
+        }
+        return totalNum;
     }
 
     public Long getCountByMaterialAndDepot(Long mId, Long depotId) {
