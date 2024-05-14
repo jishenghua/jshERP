@@ -13,6 +13,7 @@
       cancelText="关闭"
       style="top:20px;height: 95%;">
       <template slot="footer">
+        <a-button @click="exportExcel">导出</a-button>
         <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
       <!-- table区域-begin -->
@@ -97,8 +98,7 @@
                   res = '+' + res
                 }
                 return res + "[多账户]";
-              }
-              else {
+              } else {
                 if(r.changeAmount>0) {
                   return '+' + r.changeAmount
                 } else {
@@ -166,6 +166,40 @@
               that.$refs.financialDetail.title="详情";
             }
           })
+        }
+      },
+      exportExcel() {
+        let list = []
+        let head = '单据编号,类型,单位信息,金额,余额,单据日期'
+        for (let i = 0; i < this.dataSource.length; i++) {
+          let item = []
+          let ds = this.dataSource[i]
+          item.push(ds.number, ds.type, ds.supplierName, this.getRealChangeAmount(ds), ds.balance, ds.operTime)
+          list.push(item)
+        }
+        let tip = '账户流水'
+        this.handleExportXlsPost('账户流水', '账户流水', head, tip, list)
+      },
+      getRealChangeAmount(r) {
+        if (r.aList && r.amList) {
+          let aListArr = r.aList.toString().split(",");
+          let amListArr = r.amList.toString().split(",");
+          let res = 0;
+          for (let i = 0; i < aListArr.length; i++) {
+            if (aListArr[i] == r.accountId) {
+              res = amListArr[i];
+            }
+          }
+          if(res>0) {
+            res = '+' + res
+          }
+          return res + "[多账户]";
+        } else {
+          if(r.changeAmount>0) {
+            return '+' + r.changeAmount
+          } else {
+            return r.changeAmount
+          }
         }
       }
     }
