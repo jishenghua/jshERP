@@ -278,11 +278,13 @@ public class DepotItemService {
         DepotItem depotItem = new DepotItem();
         try{
             DepotHead depotHead = depotHeadService.getDepotHead(linkStr);
-            DepotItemExample example = new DepotItemExample();
-            example.createCriteria().andHeaderIdEqualTo(depotHead.getId()).andMaterialExtendIdEqualTo(meId).andIdEqualTo(linkId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-            List<DepotItem> list = depotItemMapper.selectByExample(example);
-            if(list!=null && list.size()>0) {
-                depotItem = list.get(0);
+            if(null!=depotHead && null!=depotHead.getId()) {
+                DepotItemExample example = new DepotItemExample();
+                example.createCriteria().andHeaderIdEqualTo(depotHead.getId()).andMaterialExtendIdEqualTo(meId).andIdEqualTo(linkId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                List<DepotItem> list = depotItemMapper.selectByExample(example);
+                if(list!=null && list.size()>0) {
+                    depotItem = list.get(0);
+                }
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -543,14 +545,16 @@ public class DepotItemService {
                         //在更新模式进行状态赋值
                         String unit = rowObj.get("unit").toString();
                         Long preHeaderId = depotHeadService.getDepotHead(linkStr).getId();
-                        //前一个单据的数量
-                        BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(linkStr, depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
-                        //除去此单据之外的已入库|已出库
-                        BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
-                        if(depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber)>0) {
-                            if(!systemConfigService.getOverLinkBillFlag()) {
-                                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
-                                        String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
+                        if(null!=preHeaderId) {
+                            //前一个单据的数量
+                            BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(linkStr, depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
+                            //除去此单据之外的已入库|已出库
+                            BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
+                            if (depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber) > 0) {
+                                if (!systemConfigService.getOverLinkBillFlag()) {
+                                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
+                                            String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
+                                }
                             }
                         }
                     }
