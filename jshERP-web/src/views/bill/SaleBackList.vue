@@ -86,6 +86,7 @@
                   <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
+                      <a-select-option value="9" v-if="!checkFlag">审核中</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
                       <a-select-option value="3">部分入库</a-select-option>
                       <a-select-option value="2">完成入库</a-select-option>
