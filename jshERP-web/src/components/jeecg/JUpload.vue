@@ -312,7 +312,7 @@
         console.log(file)
       },
       handlePreview(file){
-        let postfix = file.name.substring(file.name.indexOf('.'))
+        let postfix = file.name.substring(file.name.lastIndexOf('.'))
         if(postfix === '.gif' || postfix === '.jpg' || postfix === '.jpeg' || postfix === '.png' ||
           postfix === '.GIF' || postfix === '.JPG' || postfix === '.JPEG' || postfix === '.PNG') {
           this.previewImage = file.url || file.thumbUrl;
