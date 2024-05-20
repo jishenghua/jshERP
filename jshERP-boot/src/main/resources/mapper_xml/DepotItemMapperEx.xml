@@ -8,7 +8,9 @@
         <result column="material_name" jdbcType="VARCHAR" property="materialName" />
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="sub_type" jdbcType="VARCHAR" property="subType" />
-        <result column="b_num" jdbcType="BIGINT" property="bnum" />
+        <result column="b_num" jdbcType="DECIMAL" property="bnum" />
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+        <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
         <result column="depotName" jdbcType="VARCHAR" property="depotName" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
@@ -155,7 +157,7 @@
             when dh.sub_type='盘点复盘' then ifnull(di.basic_number,0)
             else 0
         end
-        as b_num,
+        as b_num, di.unit_price, di.all_price,
         (select name from jsh_depot d where d.id=di.depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depot_head dh
@@ -198,7 +200,7 @@
         union all
         --单独构造记录：调拨入库
         select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
-        ifnull(di.basic_number,0) as b_num,
+        ifnull(di.basic_number,0) as b_num, di.unit_price, di.all_price,
         (select concat(name,'[调入]') from jsh_depot d where d.id=di.another_depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depot_head dh

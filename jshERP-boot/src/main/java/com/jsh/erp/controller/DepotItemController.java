@@ -121,6 +121,8 @@ public class DepotItemController {
                 }
                 item.put("depotName", d.getDepotName()); //仓库名称
                 item.put("basicNumber", d.getBnum()); //数量
+                item.put("unitPrice", d.getUnitPrice()); //单价
+                item.put("allPrice", d.getAllPrice()); //金额
                 item.put("operTime", Tools.getCenternTime(d.getOtime())); //时间
                 dataArray.add(item);
             }

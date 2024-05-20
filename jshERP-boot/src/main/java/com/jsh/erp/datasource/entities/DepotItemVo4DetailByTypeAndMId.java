@@ -17,6 +17,10 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     private BigDecimal bnum;
 
+    private BigDecimal unitPrice;
+
+    private BigDecimal allPrice;
+
     private String depotName;
 
     private Date otime;
@@ -67,6 +71,22 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     public void setBnum(BigDecimal bnum) {
         this.bnum = bnum;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public BigDecimal getAllPrice() {
+        return allPrice;
+    }
+
+    public void setAllPrice(BigDecimal allPrice) {
+        this.allPrice = allPrice;
     }
 
     public String getDepotName() {
