@@ -53,6 +53,7 @@
         rowKey="id"
         :columns="columns"
         :dataSource="dataSource"
+        :components="handleDrag(columns)"
         :pagination="ipagination"
         :loading="loading"
         @change="handleTableChange">
@@ -112,10 +113,10 @@
             }
           },
           {
-            title: '单据编号', dataIndex: 'number', width: 100,
+            title: '单据编号', dataIndex: 'number', width: 120,
             scopedSlots: { customRender: 'numberCustomRender' },
           },
-          { title: '类型', dataIndex: 'type', width: 100},
+          { title: '类型', dataIndex: 'type', width: 80},
           { title: '条码', dataIndex: 'barCode', width: 100},
           { title: '名称', dataIndex: 'materialName', width: 200},
           { title: '仓库名称', dataIndex: 'depotName', width: 80},

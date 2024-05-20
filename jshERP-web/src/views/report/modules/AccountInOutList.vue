@@ -24,6 +24,7 @@
         rowKey="id"
         :columns="columns"
         :dataSource="dataSource"
+        :components="handleDrag(columns)"
         :pagination="ipagination"
         :loading="loading"
         @change="handleTableChange">
