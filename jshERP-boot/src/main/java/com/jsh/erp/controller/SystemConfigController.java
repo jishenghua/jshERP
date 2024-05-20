@@ -129,13 +129,12 @@ public class SystemConfigController {
         try {
             String savePath = "";
             String bizPath = request.getParameter("biz");
-            String name = request.getParameter("name");
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             MultipartFile file = multipartRequest.getFile("file");// 获取上传文件对象
             if(fileUploadType == 1) {
-                savePath = systemConfigService.uploadLocal(file, bizPath, name, request);
+                savePath = systemConfigService.uploadLocal(file, bizPath, request);
             } else if(fileUploadType == 2) {
-                savePath = systemConfigService.uploadAliOss(file, bizPath, name, request);
+                savePath = systemConfigService.uploadAliOss(file, bizPath, request);
             }
             if(StringUtil.isNotEmpty(savePath)){
                 res.code = 200;
