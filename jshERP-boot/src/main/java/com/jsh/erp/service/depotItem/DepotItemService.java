@@ -31,10 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DepotItemService {
@@ -71,6 +68,8 @@ public class DepotItemService {
     private UnitService unitService;
     @Resource
     private MaterialCurrentStockMapper materialCurrentStockMapper;
+    @Resource
+    private MaterialCurrentStockMapperEx materialCurrentStockMapperEx;
     @Resource
     private LogService logService;
 
@@ -178,7 +177,7 @@ public class DepotItemService {
     }
 
     public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(String depotIds, Boolean forceFlag, Boolean inOutManageFlag, String sku, String batchNumber,
-                                                                                      String number, String beginTime, String endTime, Long mId, int offset, int rows)throws Exception {
+                                                                                      String number, String beginTime, String endTime, Long mId, Integer offset, Integer rows)throws Exception {
         Long depotId = null;
         if(StringUtil.isNotEmpty(depotIds)) {
             depotId = Long.parseLong(depotIds);
@@ -666,6 +665,8 @@ public class DepotItemService {
                 this.insertDepotItemWithObj(depotItem);
                 //更新当前库存
                 updateCurrentStock(depotItem);
+                //更新当前成本价
+                updateCurrentUnitPrice(depotItem);
                 //更新商品的价格
                 updateMaterialExtendPrice(materialExtend.getId(), depotHead.getSubType(), depotHead.getBillType(), rowObj);
             }
@@ -1045,6 +1046,39 @@ public class DepotItemService {
         if(depotItem.getAnotherDepotId()!=null){
             updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getAnotherDepotId());
         }
+    }
+
+    /**
+     * 根据单据明细来批量更新当前成本价
+     * @param depotItem
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void updateCurrentUnitPrice(DepotItem depotItem) throws Exception {
+        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+        Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
+        List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdList(null, forceFlag, inOutManageFlag, depotItem.getSku(),
+                depotItem.getBatchNumber(), null, null, null, depotItem.getMaterialId(), null, null);
+        Collections.reverse(itemList); //倒序之后变成按时间从前往后排序
+        BigDecimal currentNumber = BigDecimal.ZERO;
+        BigDecimal currentUnitPrice = BigDecimal.ZERO;
+        BigDecimal currentAllPrice = BigDecimal.ZERO;
+        for(DepotItemVo4DetailByTypeAndMId item: itemList) {
+            //入库
+            if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(item.getType())) {
+                currentAllPrice = currentAllPrice.add(item.getAllPrice());
+                currentNumber = currentNumber.add(item.getBnum());
+                currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
+            }
+            //出库
+            if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(item.getType())) {
+                currentNumber = currentNumber.add(item.getBnum());
+                BigDecimal outNum = item.getBnum()!=null?item.getBnum():BigDecimal.ZERO;
+                //出库的数量*当前的成本单价
+                currentAllPrice = currentAllPrice.add(outNum.multiply(currentUnitPrice));
+            }
+        }
+        //更新实时库存中的当前单价
+        materialCurrentStockMapperEx.updateUnitPriceByMId(currentUnitPrice, depotItem.getMaterialId());
     }
 
     /**
