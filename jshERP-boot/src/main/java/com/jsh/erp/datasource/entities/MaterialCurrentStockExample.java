@@ -345,6 +345,66 @@ public class MaterialCurrentStockExample {
             return (Criteria) this;
         }
 
+        public Criteria andCurrentUnitPriceIsNull() {
+            addCriterion("current_unit_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceIsNotNull() {
+            addCriterion("current_unit_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceEqualTo(BigDecimal value) {
+            addCriterion("current_unit_price =", value, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceNotEqualTo(BigDecimal value) {
+            addCriterion("current_unit_price <>", value, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceGreaterThan(BigDecimal value) {
+            addCriterion("current_unit_price >", value, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("current_unit_price >=", value, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceLessThan(BigDecimal value) {
+            addCriterion("current_unit_price <", value, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("current_unit_price <=", value, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceIn(List<BigDecimal> values) {
+            addCriterion("current_unit_price in", values, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceNotIn(List<BigDecimal> values) {
+            addCriterion("current_unit_price not in", values, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("current_unit_price between", value1, value2, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentUnitPriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("current_unit_price not between", value1, value2, "currentUnitPrice");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

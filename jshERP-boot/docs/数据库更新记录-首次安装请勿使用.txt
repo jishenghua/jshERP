@@ -1587,3 +1587,12 @@ alter table jsh_account_item change remark remark varchar(500) DEFAULT NULL COMM
 -- --------------------------------------------------------
 alter table jsh_system_config add multi_account_flag varchar(1) DEFAULT '0' COMMENT '多账户启用标记，0未启用，1启用' after in_out_manage_flag;
 update jsh_system_config set multi_account_flag='1' where multi_account_flag='0';
+
+-- --------------------------------------------------------
+-- 时间 2024年5月21日
+-- by jishenghua
+-- 给系统参数表增加移动平均价标记，默认关闭，开启之后将通过移动平均来计算成本价
+-- 给实时库存表增加当前单价字段
+-- --------------------------------------------------------
+alter table jsh_system_config add move_avg_price_flag varchar(1) DEFAULT '0' COMMENT '移动平均价启用标记，0未启用，1启用' after multi_account_flag;
+alter table jsh_material_current_stock add current_unit_price decimal(24,6) DEFAULT NULL COMMENT '当前单价' after current_number;

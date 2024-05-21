@@ -1424,6 +1424,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andMoveAvgPriceFlagIsNull() {
+            addCriterion("move_avg_price_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagIsNotNull() {
+            addCriterion("move_avg_price_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagEqualTo(String value) {
+            addCriterion("move_avg_price_flag =", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagNotEqualTo(String value) {
+            addCriterion("move_avg_price_flag <>", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagGreaterThan(String value) {
+            addCriterion("move_avg_price_flag >", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("move_avg_price_flag >=", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagLessThan(String value) {
+            addCriterion("move_avg_price_flag <", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagLessThanOrEqualTo(String value) {
+            addCriterion("move_avg_price_flag <=", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagLike(String value) {
+            addCriterion("move_avg_price_flag like", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagNotLike(String value) {
+            addCriterion("move_avg_price_flag not like", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagIn(List<String> values) {
+            addCriterion("move_avg_price_flag in", values, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagNotIn(List<String> values) {
+            addCriterion("move_avg_price_flag not in", values, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagBetween(String value1, String value2) {
+            addCriterion("move_avg_price_flag between", value1, value2, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagNotBetween(String value1, String value2) {
+            addCriterion("move_avg_price_flag not between", value1, value2, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

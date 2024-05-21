@@ -21,6 +21,7 @@
     <result column="over_link_bill_flag" jdbcType="VARCHAR" property="overLinkBillFlag" />
     <result column="in_out_manage_flag" jdbcType="VARCHAR" property="inOutManageFlag" />
     <result column="multi_account_flag" jdbcType="VARCHAR" property="multiAccountFlag" />
+    <result column="move_avg_price_flag" jdbcType="VARCHAR" property="moveAvgPriceFlag" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -86,7 +87,8 @@
     id, company_name, company_contacts, company_address, company_tel, company_fax, company_post_code, 
     sale_agreement, depot_flag, customer_flag, minus_stock_flag, purchase_by_sale_flag, 
     multi_level_approval_flag, multi_bill_type, force_approval_flag, update_unit_price_flag, 
-    over_link_bill_flag, in_out_manage_flag, multi_account_flag, tenant_id, delete_flag
+    over_link_bill_flag, in_out_manage_flag, multi_account_flag, move_avg_price_flag, 
+    tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample" resultMap="BaseResultMap">
     select
@@ -126,7 +128,8 @@
       multi_level_approval_flag, multi_bill_type, 
       force_approval_flag, update_unit_price_flag, 
       over_link_bill_flag, in_out_manage_flag, multi_account_flag, 
-      tenant_id, delete_flag)
+      move_avg_price_flag, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{companyContacts,jdbcType=VARCHAR}, 
       #{companyAddress,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyFax,jdbcType=VARCHAR}, 
       #{companyPostCode,jdbcType=VARCHAR}, #{saleAgreement,jdbcType=VARCHAR}, #{depotFlag,jdbcType=VARCHAR}, 
@@ -134,7 +137,8 @@
       #{multiLevelApprovalFlag,jdbcType=VARCHAR}, #{multiBillType,jdbcType=VARCHAR}, 
       #{forceApprovalFlag,jdbcType=VARCHAR}, #{updateUnitPriceFlag,jdbcType=VARCHAR}, 
       #{overLinkBillFlag,jdbcType=VARCHAR}, #{inOutManageFlag,jdbcType=VARCHAR}, #{multiAccountFlag,jdbcType=VARCHAR}, 
-      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+      #{moveAvgPriceFlag,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
     insert into jsh_system_config
@@ -195,6 +199,9 @@
       </if>
       <if test="multiAccountFlag != null">
         multi_account_flag,
+      </if>
+      <if test="moveAvgPriceFlag != null">
+        move_avg_price_flag,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -260,6 +267,9 @@
       </if>
       <if test="multiAccountFlag != null">
         #{multiAccountFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="moveAvgPriceFlag != null">
+        #{moveAvgPriceFlag,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -335,6 +345,9 @@
       <if test="record.multiAccountFlag != null">
         multi_account_flag = #{record.multiAccountFlag,jdbcType=VARCHAR},
       </if>
+      <if test="record.moveAvgPriceFlag != null">
+        move_avg_price_flag = #{record.moveAvgPriceFlag,jdbcType=VARCHAR},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -367,6 +380,7 @@
       over_link_bill_flag = #{record.overLinkBillFlag,jdbcType=VARCHAR},
       in_out_manage_flag = #{record.inOutManageFlag,jdbcType=VARCHAR},
       multi_account_flag = #{record.multiAccountFlag,jdbcType=VARCHAR},
+      move_avg_price_flag = #{record.moveAvgPriceFlag,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -430,6 +444,9 @@
       <if test="multiAccountFlag != null">
         multi_account_flag = #{multiAccountFlag,jdbcType=VARCHAR},
       </if>
+      <if test="moveAvgPriceFlag != null">
+        move_avg_price_flag = #{moveAvgPriceFlag,jdbcType=VARCHAR},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -459,6 +476,7 @@
       over_link_bill_flag = #{overLinkBillFlag,jdbcType=VARCHAR},
       in_out_manage_flag = #{inOutManageFlag,jdbcType=VARCHAR},
       multi_account_flag = #{multiAccountFlag,jdbcType=VARCHAR},
+      move_avg_price_flag = #{moveAvgPriceFlag,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

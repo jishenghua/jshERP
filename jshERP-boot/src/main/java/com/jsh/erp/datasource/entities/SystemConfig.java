@@ -39,6 +39,8 @@ public class SystemConfig {
 
     private String multiAccountFlag;
 
+    private String moveAvgPriceFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -193,6 +195,14 @@ public class SystemConfig {
 
     public void setMultiAccountFlag(String multiAccountFlag) {
         this.multiAccountFlag = multiAccountFlag == null ? null : multiAccountFlag.trim();
+    }
+
+    public String getMoveAvgPriceFlag() {
+        return moveAvgPriceFlag;
+    }
+
+    public void setMoveAvgPriceFlag(String moveAvgPriceFlag) {
+        this.moveAvgPriceFlag = moveAvgPriceFlag == null ? null : moveAvgPriceFlag.trim();
     }
 
     public Long getTenantId() {
