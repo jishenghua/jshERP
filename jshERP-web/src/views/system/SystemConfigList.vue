@@ -112,7 +112,7 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="移动平均价">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="moveAvgPriceFlagSwitch" @change="onMoveAvgPriceChange"></a-switch>
-              （默认为关闭状态，代表成本价等于商品信息页面录入的采购价。开启之后将通过移动平均来计算成本价）
+              （默认为关闭状态，代表成本价等于商品信息页面录入的采购价。开启之后将通过移动平均来计算成本价，需到<b>商品管理</b>批量<b>修正成本</b>，请按实际业务谨慎操作）
             </a-form-item>
           </a-col>
         </a-row>

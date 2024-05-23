@@ -99,6 +99,7 @@
           <a-button v-if="btnEnableList.indexOf(3)>-1" @click="handleExportXls('商品信息')" icon="download">导出</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchEdit()" icon="edit">批量编辑</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentStock()" icon="stock">修正库存</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentUnitPrice()" icon="fund">修正成本</a-button>
           <a-popover trigger="click" placement="right">
             <template slot="content">
               <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
@@ -293,7 +294,8 @@
           importExcelUrl: "/material/importExcel",
           exportXlsUrl: "/material/exportExcel",
           batchSetStatusUrl: "/material/batchSetStatus",
-          batchSetMaterialCurrentStockUrl: "/material/batchSetMaterialCurrentStock"
+          batchSetMaterialCurrentStockUrl: "/material/batchSetMaterialCurrentStock",
+          batchSetMaterialCurrentUnitPriceUrl: "/material/batchSetMaterialCurrentUnitPrice",
         }
       }
     },
@@ -364,6 +366,35 @@
               postAction(that.url.batchSetMaterialCurrentStockUrl, {ids: ids}).then((res) => {
                 if(res.code === 200){
                   that.$message.info('修正库存成功！');
+                  that.loadData();
+                  that.onClearSelected();
+                } else {
+                  that.$message.warning(res.data.message);
+                }
+              }).finally(() => {
+                that.loading = false;
+              });
+            }
+          });
+        }
+      },
+      batchSetMaterialCurrentUnitPrice () {
+        if (this.selectedRowKeys.length <= 0) {
+          this.$message.warning('请选择一条记录！');
+        } else {
+          let ids = "";
+          for (let a = 0; a < this.selectedRowKeys.length; a++) {
+            ids += this.selectedRowKeys[a] + ",";
+          }
+          let that = this;
+          this.$confirm({
+            title: "确认操作",
+            content: "是否操作选中数据?",
+            onOk: function () {
+              that.loading = true;
+              postAction(that.url.batchSetMaterialCurrentUnitPriceUrl, {ids: ids}).then((res) => {
+                if(res.code === 200){
+                  that.$message.info('修正成本成功！');
                   that.loadData();
                   that.onClearSelected();
                 } else {
