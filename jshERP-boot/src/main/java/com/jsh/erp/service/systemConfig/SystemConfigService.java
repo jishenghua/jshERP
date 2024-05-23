@@ -508,6 +508,23 @@ public class SystemConfigService {
     }
 
     /**
+     * 获取移动平均价开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getMoveAvgPriceFlag() throws Exception {
+        boolean moveAvgPriceFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getMoveAvgPriceFlag();
+            if(("1").equals(flag)) {
+                moveAvgPriceFlag = true;
+            }
+        }
+        return moveAvgPriceFlag;
+    }
+
+    /**
      * Excel导出统一方法
      * @param title
      * @param head

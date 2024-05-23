@@ -332,6 +332,7 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            Boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
             List<Long> categoryIdList = new ArrayList<>();
             if(categoryId != null){
                 categoryIdList = materialService.getListByParentId(categoryId);
@@ -371,7 +372,11 @@ public class DepotItemController {
                     item.put("thisSum", thisSum);
                     //将小单位的库存换算为大单位的库存
                     item.put("bigUnitStock", materialService.getBigUnitStock(thisSum, diEx.getUnitId()));
-                    item.put("unitPrice", diEx.getPurchaseDecimal());
+                    if(moveAvgPriceFlag) {
+                        item.put("unitPrice", diEx.getCurrentUnitPrice());
+                    } else {
+                        item.put("unitPrice", diEx.getPurchaseDecimal());
+                    }
                     item.put("thisAllPrice", thisSum.multiply(diEx.getPurchaseDecimal()));
                     dataArray.add(item);
                 }
@@ -408,6 +413,7 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            Boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
             List<Long> categoryIdList = new ArrayList<>();
             if(categoryId != null){
                 categoryIdList = materialService.getListByParentId(categoryId);
@@ -423,7 +429,12 @@ public class DepotItemController {
                     Long mId = diEx.getMId();
                     BigDecimal thisSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,endTime);
                     thisAllStock = thisAllStock.add(thisSum);
-                    BigDecimal unitPrice = diEx.getPurchaseDecimal();
+                    BigDecimal unitPrice = null;
+                    if(moveAvgPriceFlag) {
+                        unitPrice = diEx.getCurrentUnitPrice();
+                    } else {
+                        unitPrice = diEx.getPurchaseDecimal();
+                    }
                     if(unitPrice == null) {
                         unitPrice = BigDecimal.ZERO;
                     }

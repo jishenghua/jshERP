@@ -19,9 +19,11 @@
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="mBarCode" jdbcType="VARCHAR" property="mBarCode" />
         <result column="purchaseDecimal" jdbcType="VARCHAR" property="purchaseDecimal" />
+        <result column="currentUnitPrice" jdbcType="VARCHAR" property="currentUnitPrice" />
         <result column="initialStock" jdbcType="DECIMAL" property="initialStock" />
         <result column="currentStock" jdbcType="DECIMAL" property="currentStock" />
         <result column="currentStockPrice" jdbcType="DECIMAL" property="currentStockPrice" />
+        <result column="currentStockMovePrice" jdbcType="DECIMAL" property="currentStockMovePrice" />
         <result column="currentWeight" jdbcType="DECIMAL" property="currentWeight" />
     </resultMap>
 
@@ -604,8 +606,10 @@
     <select id="getListWithStock" resultMap="ResultMapListWithStock">
         select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code mBarCode,
         ifnull(me.purchase_decimal,0) purchaseDecimal,
+        ifnull(mcs.current_unit_price,0) currentUnitPrice,
         ifnull(sum(mcs.current_number),0) currentStock,
         sum(ifnull(me.purchase_decimal, 0) * ifnull(mcs.current_number, 0)) currentStockPrice,
+        sum(ifnull(mcs.current_unit_price, 0) * ifnull(mcs.current_number, 0)) currentStockMovePrice,
         sum(ifnull(m.weight, 0) * ifnull(mcs.current_number, 0)) currentWeight
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
@@ -691,6 +695,7 @@
         select
         ifnull(sum(mcs.current_number),0) currentStock,
         sum(ifnull(me.purchase_decimal,0)*ifnull(mcs.current_number,0)) currentStockPrice,
+        sum(ifnull(mcs.current_unit_price,0)*ifnull(mcs.current_number,0)) currentStockMovePrice,
         sum(ifnull(m.weight,0)*ifnull(mcs.current_number,0)) currentWeight
         from jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'

@@ -46,6 +46,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private BigDecimal purchaseDecimal;
 
+    private BigDecimal currentUnitPrice;
+
     private String barCode;
 
     private BigDecimal weight;
@@ -220,6 +222,14 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setPurchaseDecimal(BigDecimal purchaseDecimal) {
         this.purchaseDecimal = purchaseDecimal;
+    }
+
+    public BigDecimal getCurrentUnitPrice() {
+        return currentUnitPrice;
+    }
+
+    public void setCurrentUnitPrice(BigDecimal currentUnitPrice) {
+        this.currentUnitPrice = currentUnitPrice;
     }
 
     public String getBarCode() {

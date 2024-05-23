@@ -9,6 +9,7 @@ import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.role.RoleService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -47,6 +48,9 @@ public class MaterialController {
 
     @Resource
     private DepotItemService depotItemService;
+
+    @Resource
+    private SystemConfigService systemConfigService;
 
     @Resource
     private UnitService unitService;
@@ -579,7 +583,7 @@ public class MaterialController {
      * @param depotIds
      * @param categoryId
      * @param materialParam
-     * @param mpList
+     * @param zeroStock
      * @param column
      * @param order
      * @param request
@@ -616,13 +620,18 @@ public class MaterialController {
                     depotList.add(object.getLong("id"));
                 }
             }
+            Boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
             List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam),
-                    zeroStock, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
+                    moveAvgPriceFlag, zeroStock, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
             int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam), zeroStock);
             MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam));
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock()!=null?materialVo4Unit.getCurrentStock():BigDecimal.ZERO);
-            map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice()!=null?materialVo4Unit.getCurrentStockPrice():BigDecimal.ZERO);
+            if(moveAvgPriceFlag) {
+                map.put("currentStockPrice", materialVo4Unit.getCurrentStockMovePrice()!=null?materialVo4Unit.getCurrentStockMovePrice():BigDecimal.ZERO);
+            } else {
+                map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice()!=null?materialVo4Unit.getCurrentStockPrice():BigDecimal.ZERO);
+            }
             map.put("currentWeight", materialVo4Unit.getCurrentWeight()!=null?materialVo4Unit.getCurrentWeight():BigDecimal.ZERO);
             map.put("rows", dataList);
             res.code = 200;
@@ -649,6 +658,27 @@ public class MaterialController {
         String ids = jsonObject.getString("ids");
         Map<String, Object> objectMap = new HashMap<>();
         int res = materialService.batchSetMaterialCurrentStock(ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    /**
+     * 批量设置商品当前的成本价
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/batchSetMaterialCurrentUnitPrice")
+    @ApiOperation(value = "批量设置商品当前的成本价")
+    public String batchSetMaterialCurrentUnitPrice(@RequestBody JSONObject jsonObject,
+                                               HttpServletRequest request)throws Exception {
+        String ids = jsonObject.getString("ids");
+        Map<String, Object> objectMap = new HashMap<>();
+        int res = materialService.batchSetMaterialCurrentUnitPrice(ids);
         if(res > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {

@@ -554,9 +554,11 @@ public class DepotHeadService {
                         }
                     }
                 }
-                //更新当前库存
                 for (DepotItem depotItem : list) {
+                    //更新当前库存
                     depotItemService.updateCurrentStock(depotItem);
+                    //更新当前成本价
+                    depotItemService.updateCurrentUnitPrice(depotItem);
                 }
             } else {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,

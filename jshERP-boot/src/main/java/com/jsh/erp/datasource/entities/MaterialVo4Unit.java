@@ -32,9 +32,13 @@ public class MaterialVo4Unit extends Material{
 
     private BigDecimal initialStock;
 
+    private BigDecimal currentUnitPrice;
+
     private BigDecimal currentStock;
 
     private BigDecimal currentStockPrice;
+
+    private BigDecimal currentStockMovePrice;
 
     private BigDecimal currentWeight;
 
@@ -163,6 +167,14 @@ public class MaterialVo4Unit extends Material{
         this.initialStock = initialStock;
     }
 
+    public BigDecimal getCurrentUnitPrice() {
+        return currentUnitPrice;
+    }
+
+    public void setCurrentUnitPrice(BigDecimal currentUnitPrice) {
+        this.currentUnitPrice = currentUnitPrice;
+    }
+
     public BigDecimal getCurrentStock() {
         return currentStock;
     }
@@ -177,6 +189,14 @@ public class MaterialVo4Unit extends Material{
 
     public void setCurrentStockPrice(BigDecimal currentStockPrice) {
         this.currentStockPrice = currentStockPrice;
+    }
+
+    public BigDecimal getCurrentStockMovePrice() {
+        return currentStockMovePrice;
+    }
+
+    public void setCurrentStockMovePrice(BigDecimal currentStockMovePrice) {
+        this.currentStockMovePrice = currentStockMovePrice;
     }
 
     public BigDecimal getCurrentWeight() {

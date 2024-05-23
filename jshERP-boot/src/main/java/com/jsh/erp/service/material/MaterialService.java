@@ -1277,8 +1277,9 @@ public class MaterialService {
         return materialMapperEx.getInitialStockWithMaterial(depotList);
     }
 
-    public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String position, String materialParam, Integer zeroStock,
-                                                  String column, String order, Integer offset, Integer rows) throws Exception {
+    public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String position, String materialParam,
+                                                  Boolean moveAvgPriceFlag, Integer zeroStock, String column, String order,
+                                                  Integer offset, Integer rows) throws Exception {
         Map<Long, BigDecimal> initialStockMap = new HashMap<>();
         List<MaterialInitialStockWithMaterial> initialStockList = getInitialStockWithMaterial(depotList);
         for (MaterialInitialStockWithMaterial mism: initialStockList) {
@@ -1286,6 +1287,9 @@ public class MaterialService {
         }
         List<MaterialVo4Unit> dataList = materialMapperEx.getListWithStock(depotList, idList, position, materialParam, zeroStock, column, order, offset, rows);
         for(MaterialVo4Unit item: dataList) {
+            if(moveAvgPriceFlag) {
+                item.setPurchaseDecimal(item.getCurrentUnitPrice());
+            }
             item.setUnitName(null!=item.getUnitId()?item.getUnitName() + "[多单位]":item.getUnitName());
             item.setInitialStock(null!=initialStockMap.get(item.getId())?initialStockMap.get(item.getId()):BigDecimal.ZERO);
             item.setBigUnitStock(getBigUnitStock(item.getCurrentStock(), item.getUnitId()));
@@ -1358,6 +1362,19 @@ public class MaterialService {
                 depotItemService.updateCurrentStockFun(mId, depot.getId());
                 res = 1;
             }
+        }
+        return res;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchSetMaterialCurrentUnitPrice(String ids) throws Exception {
+        int res = 0;
+        List<Long> idList = StringUtil.strToLongList(ids);
+        for(Long mId: idList) {
+            DepotItem depotItem = new DepotItem();
+            depotItem.setMaterialId(mId);
+            depotItemService.updateCurrentUnitPrice(depotItem);
+            res = 1;
         }
         return res;
     }
