@@ -1075,7 +1075,9 @@ public class DepotItemService {
                     //数量*单价  另外计算新的成本价
                     currentAllPrice = currentAllPrice.add(item.getAllPrice());
                     currentNumber = currentNumber.add(item.getBnum());
-                    currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
+                    if(currentNumber.compareTo(BigDecimal.ZERO)!=0) {
+                        currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
+                    }
                 }
             }
             //出库
@@ -1085,7 +1087,9 @@ public class DepotItemService {
                     //数量*单价  另外计算新的成本价
                     currentAllPrice = currentAllPrice.add(item.getAllPrice());
                     currentNumber = currentNumber.add(item.getBnum());
-                    currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
+                    if(currentNumber.compareTo(BigDecimal.ZERO)!=0) {
+                        currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
+                    }
                 } else {
                     currentNumber = currentNumber.add(item.getBnum());
                     BigDecimal outNum = item.getBnum()!=null?item.getBnum():BigDecimal.ZERO;

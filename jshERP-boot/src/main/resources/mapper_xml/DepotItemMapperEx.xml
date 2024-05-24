@@ -147,7 +147,7 @@
 
     <select id="findDetailByDepotIdsAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
         select tb.number, tb.bar_code, tb.material_name, tb.type, tb.sub_type, tb.b_num, tb.unit_price,
-               tb.b_num*tb.unit_price as all_price, tb.depotName, tb.oTime from
+        ifnull(tb.b_num*tb.unit_price,0) as all_price, tb.depotName, tb.oTime from
         (select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
         case
             when type='入库' then ifnull(di.basic_number,0)
