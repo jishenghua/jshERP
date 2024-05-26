@@ -126,7 +126,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="8" data-title="结算账户"
                          data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
-              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId' ]"
                         :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
