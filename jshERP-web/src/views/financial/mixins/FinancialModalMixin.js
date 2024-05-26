@@ -206,6 +206,14 @@ export const FinancialModalMixin = {
     workflowModalFormOk() {
       this.close()
     },
+    onAdded(event) {
+      let that = this
+      const { row, target } = event
+      //自动下滑到最后一行
+      setTimeout(function(){
+        that.$refs.accountDataTable.resetScrollTop((target.rows.length+1)*that.$refs.accountDataTable.rowHeight)
+      },1000)
+    },
     //单元值改变一个字符就触发一次
     onValueChange(event) {
       let that = this

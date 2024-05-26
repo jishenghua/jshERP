@@ -373,8 +373,13 @@ export const BillModalMixin = {
       this.close()
     },
     onAdded(event) {
+      let that = this
       const { row, target } = event
       target.setValues([{rowKey: row.id, values: {operNumber:0}}])
+      //自动下滑到最后一行
+      setTimeout(function(){
+        that.$refs.materialDataTable.resetScrollTop((target.rows.length+1)*that.$refs.materialDataTable.rowHeight)
+      },1000)
       if(this.currentSelectDepotId) {
         //如果单据选择过仓库，则直接从当前选择的仓库加载
         target.setValues([{rowKey: row.id, values: {depotId: this.currentSelectDepotId}}])
