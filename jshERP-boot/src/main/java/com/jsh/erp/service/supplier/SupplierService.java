@@ -554,7 +554,7 @@ public class SupplierService {
             info.code = 200;
             data.put("message", "成功");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             info.code = 500;
             data.put("message", e.getMessage());
         }

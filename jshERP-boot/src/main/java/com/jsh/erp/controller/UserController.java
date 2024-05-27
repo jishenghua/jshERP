@@ -71,7 +71,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "用户登录失败";
         }
@@ -96,7 +96,7 @@ public class UserController {
                 res.data = data;
             }
         } catch(Exception e){
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "用户登录失败";
         }
@@ -132,6 +132,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取session失败";
         }
@@ -146,6 +147,7 @@ public class UserController {
             redisService.deleteObjectBySession(request,"userId");
             redisService.deleteObjectBySession(request,"clientIp");
         } catch(Exception e){
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "退出失败";
         }
@@ -220,6 +222,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }
@@ -247,7 +250,7 @@ public class UserController {
                 }
             }
         } catch(Exception e){
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
         return dataArray;
     }
@@ -346,6 +349,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取session失败";
         }
@@ -369,6 +373,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }
@@ -395,6 +400,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }
@@ -420,6 +426,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }
@@ -476,6 +483,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }

@@ -43,13 +43,13 @@ public final class HttpClient {
             JSONObject object = JSONObject.parseObject(entity);
             return object;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             throw new RuntimeException(String.format("%s", url) + "查询出现异常");
         } finally {
             try {
                 client.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }

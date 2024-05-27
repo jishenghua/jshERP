@@ -51,7 +51,7 @@ public class MaterialAttributeController {
                 }
             }
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return dataArray;
     }
@@ -69,7 +69,7 @@ public class MaterialAttributeController {
         try {
             dataArray = materialAttributeService.getValueArrById(id);
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return dataArray;
     }

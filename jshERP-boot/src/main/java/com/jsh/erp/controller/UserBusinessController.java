@@ -52,7 +52,7 @@ public class UserBusinessController {
             res.code = 200;
             res.data = mapData;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "查询权限失败";
         }
@@ -104,7 +104,7 @@ public class UserBusinessController {
                 res.data = "成功";
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "更新权限失败";
         }

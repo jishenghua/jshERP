@@ -81,8 +81,7 @@ public abstract class ComputerInfo {
                         break;
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             }
 
             macAddressStr = sb.toString();
@@ -120,23 +119,6 @@ public abstract class ComputerInfo {
      */
     public static String getIpAddr() throws IOException {
         return InetAddress.getLocalHost().getHostAddress().toString();
-    }
-
-    /**
-     * 获取电脑唯一标识
-     *
-     * @return
-     */
-    public static String getComputerID() {
-        String id = getMacAddress();
-        if (id == null || id.equals("")) {
-            try {
-                id = getIpAddrAndName();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return computerName;
     }
 
     /**

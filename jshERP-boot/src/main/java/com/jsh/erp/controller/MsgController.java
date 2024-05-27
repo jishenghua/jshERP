@@ -46,7 +46,7 @@ public class MsgController {
             res.code = 200;
             res.data = list;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -72,7 +72,7 @@ public class MsgController {
             res.code = 200;
             res.data = "更新成功";
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -98,7 +98,7 @@ public class MsgController {
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -124,7 +124,7 @@ public class MsgController {
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -146,7 +146,7 @@ public class MsgController {
             res.code = 200;
             res.data = "操作成功!";
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }

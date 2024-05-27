@@ -839,7 +839,7 @@ public class MaterialService {
             info.code = e.getCode();
             info.data = e.getData().get("message");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             info.code = 500;
             info.data = "导入失败";
         }

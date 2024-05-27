@@ -5,6 +5,8 @@ import com.jsh.erp.service.materialProperty.MaterialPropertyService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +26,8 @@ import java.util.List;
 @Api(tags = {"商品扩展字段"})
 public class MaterialPropertyController {
 
+    private Logger logger = LoggerFactory.getLogger(MaterialPropertyController.class);
+
     @Resource
     private MaterialPropertyService materialPropertyService;
 
@@ -36,7 +40,7 @@ public class MaterialPropertyController {
             res.code = 200;
             res.data = list;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }

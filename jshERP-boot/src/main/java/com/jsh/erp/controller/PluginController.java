@@ -11,6 +11,8 @@ import com.jsh.erp.utils.ComputerInfo;
 import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,7 @@ import java.util.*;
 @RequestMapping("/plugin")
 @Api(tags = {"插件管理"})
 public class PluginController {
+    private Logger logger = LoggerFactory.getLogger(PluginController.class);
 
     @Resource
     private UserService userService;
@@ -74,7 +77,7 @@ public class PluginController {
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -96,7 +99,7 @@ public class PluginController {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return null;
         }
     }
@@ -128,7 +131,7 @@ public class PluginController {
             res.code = 200;
             res.data = map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             map.put("message", "plugin '" + id +"' stop failure. " + e.getMessage());
             res.code = 500;
             res.data = map;
@@ -162,7 +165,7 @@ public class PluginController {
             res.code = 200;
             res.data = map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             map.put("message", "plugin '" + id +"' start failure. " + e.getMessage());
             res.code = 500;
             res.data = map;
@@ -197,7 +200,7 @@ public class PluginController {
             res.code = 200;
             res.data = map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             map.put("message", "plugin '" + id +"' uninstall failure. " + e.getMessage());
             res.code = 500;
             res.data = map;
@@ -226,7 +229,7 @@ public class PluginController {
                 return "installByPath failure";
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return "installByPath failure : " + e.getMessage();
         }
     }
@@ -252,7 +255,7 @@ public class PluginController {
                 res.data = "抱歉，无操作权限！";
             }
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "导入失败";
         }
@@ -279,7 +282,7 @@ public class PluginController {
                 return "installByPath failure";
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return "uploadConfig failure : " + e.getMessage();
         }
     }
@@ -305,7 +308,7 @@ public class PluginController {
                 return "backupPlugin failure";
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             return "backupPlugin failure : " + e.getMessage();
         }
     }
@@ -323,7 +326,7 @@ public class PluginController {
             res.code = 200;
             res.data = DigestUtils.md5DigestAsHex(mac.getBytes());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -356,7 +359,7 @@ public class PluginController {
             res.code = 200;
             res.data = data;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }

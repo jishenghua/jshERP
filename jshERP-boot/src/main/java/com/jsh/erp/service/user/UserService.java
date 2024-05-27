@@ -156,7 +156,6 @@ public class UserService {
             password = Tools.md5Encryp(password);
             user.setPassword(password);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
             logger.error(">>>>>>>>>>>>>>转化MD5字符串错误 ：" + e.getMessage());
         }
         int result=0;
@@ -311,7 +310,6 @@ public class UserService {
             redisService.deleteObjectBySession(request,"userId");
             userStatus = validateUser(loginName, password);
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(">>>>>>>>>>>>>用户  " + loginName + " 登录 login 方法 访问服务层异常====", e);
             msgTip = "access service exception";
         }

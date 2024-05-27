@@ -7,6 +7,8 @@ import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,6 +29,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RequestMapping(value = "/unit")
 @Api(tags = {"单位管理"})
 public class UnitController {
+    private Logger logger = LoggerFactory.getLogger(UnitController.class);
 
     @Resource
     private UnitService unitService;
@@ -46,7 +49,7 @@ public class UnitController {
             res.code = 200;
             res.data = unitList;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
