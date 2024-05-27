@@ -56,9 +56,6 @@ public class UserController {
     private TenantService tenantService;
 
     @Resource
-    private LogService logService;
-
-    @Resource
     private RedisService redisService;
 
     private static String SUCCESS = "操作成功";
@@ -74,7 +71,6 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
             logger.error(e.getMessage());
             res.code = 500;
             res.data = "用户登录失败";
@@ -100,7 +96,6 @@ public class UserController {
                 res.data = data;
             }
         } catch(Exception e){
-            e.printStackTrace();
             logger.error(e.getMessage());
             res.code = 500;
             res.data = "用户登录失败";
@@ -137,7 +132,6 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
             res.code = 500;
             res.data = "获取session失败";
         }
@@ -152,7 +146,6 @@ public class UserController {
             redisService.deleteObjectBySession(request,"userId");
             redisService.deleteObjectBySession(request,"clientIp");
         } catch(Exception e){
-            e.printStackTrace();
             res.code = 500;
             res.data = "退出失败";
         }
@@ -227,7 +220,6 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
             res.code = 500;
             res.data = "获取失败";
         }
@@ -255,7 +247,7 @@ public class UserController {
                 }
             }
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return dataArray;
     }
@@ -354,7 +346,6 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
             res.code = 500;
             res.data = "获取session失败";
         }
@@ -378,7 +369,6 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
             res.code = 500;
             res.data = "获取失败";
         }
@@ -405,7 +395,6 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
             res.code = 500;
             res.data = "获取失败";
         }
@@ -431,7 +420,6 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch (Exception e) {
-            e.printStackTrace();
             res.code = 500;
             res.data = "获取失败";
         }
@@ -488,7 +476,6 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch (Exception e) {
-            e.printStackTrace();
             res.code = 500;
             res.data = "获取失败";
         }
