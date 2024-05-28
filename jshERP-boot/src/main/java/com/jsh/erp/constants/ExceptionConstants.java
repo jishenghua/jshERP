@@ -70,6 +70,12 @@ public class ExceptionConstants {
     //当前机构已经存在经理
     public static final int USER_LEADER_IS_EXIST_CODE = 500009;
     public static final String USER_LEADER_IS_EXIST_MSG = "抱歉，当前机构已经存在经理";
+    //验证码错误
+    public static final int USER_JCAPTCHA_ERROR_CODE = 500010;
+    public static final String USER_JCAPTCHA_ERROR_MSG = "验证码错误";
+    //验证码已失效
+    public static final int USER_JCAPTCHA_EXPIRE_CODE = 500011;
+    public static final String USER_JCAPTCHA_EXPIRE_MSG = "验证码已失效";
 
     /**
      * 角色信息

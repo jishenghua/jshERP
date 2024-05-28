@@ -218,4 +218,13 @@ public class BusinessConstants {
      * */
     //session的生命周期,秒
     public static final Long MAX_SESSION_IN_SECONDS=60*60*24*3L;
+
+    /**
+     * 验证码 redis key
+     */
+    public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
+    /**
+     * 验证码有效期（分钟）
+     */
+    public static final Integer CAPTCHA_EXPIRATION = 2;
 }

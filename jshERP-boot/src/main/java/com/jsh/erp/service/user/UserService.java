@@ -286,18 +286,41 @@ public class UserService {
     }
 
     /**
+     * 校验验证码
+     * @param code 验证码
+     * @param uuid 唯一标识
+     * @return 结果
+     */
+    public void validateCaptcha(String code, String uuid) {
+        if(StringUtil.isNotEmpty(code) && StringUtil.isNotEmpty(uuid)) {
+            code = code.trim();
+            uuid = uuid.trim();
+            String verifyKey = BusinessConstants.CAPTCHA_CODE_KEY + uuid;
+            String captcha = redisService.getCacheObject(verifyKey);
+            redisService.deleteObject(verifyKey);
+            if (captcha == null) {
+                logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_EXPIRE_CODE, ExceptionConstants.USER_JCAPTCHA_EXPIRE_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_EXPIRE_CODE, ExceptionConstants.USER_JCAPTCHA_EXPIRE_MSG);
+            }
+            if (!code.equalsIgnoreCase(captcha)) {
+                logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
+            }
+        }
+    }
+
+    /**
      * 用户登录
-     * @param userParam
+     * @param loginName
+     * @param password
      * @param request
      * @return
      * @throws Exception
      */
-    public Map<String, Object> login(User userParam, HttpServletRequest request) throws Exception {
+    public Map<String, Object> login(String loginName, String password, HttpServletRequest request) throws Exception {
         Map<String, Object> data = new HashMap<>();
         String msgTip = "";
-        User user=null;
-        String loginName = userParam.getLoginName().trim();
-        String password = userParam.getPassword().trim();
+        User user = null;
         //判断用户是否已经登录过，登录过不再处理
         Object userId = redisService.getObjectFromSessionByKey(request,"userId");
         if (userId != null) {

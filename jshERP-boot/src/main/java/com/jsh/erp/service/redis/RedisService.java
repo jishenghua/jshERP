@@ -4,6 +4,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
@@ -62,6 +63,19 @@ public class RedisService {
         }
         return obj;
     }
+
+    /**
+     * 获得缓存的基本对象。
+     *
+     * @param key 缓存键值
+     * @return 缓存键值对应的数据
+     */
+    public <T> T getCacheObject(final String key)
+    {
+        ValueOperations<String, T> operation = redisTemplate.opsForValue();
+        return operation.get(key);
+    }
+
     /**
      * @author jisheng hua
      * description:
@@ -77,6 +91,29 @@ public class RedisService {
         redisTemplate.opsForHash().put(token, key, obj.toString());
         redisTemplate.expire(token, BusinessConstants.MAX_SESSION_IN_SECONDS, TimeUnit.SECONDS);
     }
+
+    /**
+     * @author jisheng hua
+     *  description:
+     *  将信息放入session或者redis中
+     * @date: 2024/5/28 20:10
+     * @return
+     */
+    public void storageCaptchaObject(String verifyKey, String codeNum) {
+        //把验证码放到redis中
+        redisTemplate.opsForValue().set(verifyKey, codeNum, BusinessConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+    }
+
+    /**
+     * 删除单个对象
+     *
+     * @param key
+     */
+    public boolean deleteObject(final String key)
+    {
+        return redisTemplate.delete(key);
+    }
+
     /**
      * @author jisheng hua
      * description:
