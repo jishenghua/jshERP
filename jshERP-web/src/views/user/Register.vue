@@ -109,7 +109,7 @@
         systemTitle: window.SYS_TITLE,
         systemUrl: window.SYS_URL,
         form: null,
-        randCode:'',
+        uuid:'',
         randCodeImage:'',
         requestCodeSuccess:false,
         state: {
@@ -140,9 +140,9 @@
     methods: {
       handleChangeCheckCode(){
         this.currdatetime = new Date().getTime();
-        getAction(`/user/randomImage/${this.currdatetime}`).then(res=>{
+        getAction('/user/randomImage').then(res=>{
           if(res.code == 200){
-            this.randCode = res.data.codeNum;
+            this.uuid = res.data.uuid;
             this.randCodeImage = res.data.base64;
             this.requestCodeSuccess=true
           }else{
@@ -219,44 +219,40 @@
         that.registerBtn = true;
         this.form.validateFields((err, values) => {
           if (!err) {
-            if(values.inputCode === this.randCode) {
-              let register = {
-                loginName: values.username,
-                password: md5(values.password)
-              };
-              postAction("/user/registerUser", register).then((res) => {
-                if(res.code === 200){
-                  this.$notification.success({
-                    message: '提示',
-                    description: "注册成功，请使用该租户登录！",
-                    duration: 5
-                  });
-                  let that = this;
-                  setTimeout(function () {
-                    that.$router.push({ name: "login", params:{
-                        loginName: register.loginName
-                      }
-                    })
-                  },2000);
-                } else {
-                  this.$notification['error']({
-                    message: "提示",
-                    description: res.data.message || "注册失败",
-                    duration: 2
-                  });
-                  that.registerBtn = false
-                }
-              }).catch((err) => {
-                that.requestFailed(err);
-              })
-            } else {
-              this.$notification['error']({
-                message: "提示",
-                description: "验证码错误",
-                duration: 2
-              });
-              that.registerBtn = false
-            }
+            let register = {
+              loginName: values.username,
+              password: md5(values.password),
+              code: values.inputCode,
+              uuid: that.uuid
+            };
+            postAction("/user/registerUser", register).then((res) => {
+              if(res.code === 200){
+                this.$notification.success({
+                  message: '提示',
+                  description: "注册成功，请使用该租户登录！",
+                  duration: 5
+                });
+                let that = this;
+                setTimeout(function () {
+                  that.$router.push({ name: "login", params:{
+                      loginName: register.loginName
+                    }
+                  })
+                },2000);
+              } else {
+                this.$notification['error']({
+                  message: "提示",
+                  description: res.data.message || "注册失败",
+                  duration: 2
+                });
+                that.registerBtn = false
+                //验证码刷新
+                this.form.setFieldsValue({'inputCode':''})
+                this.handleChangeCheckCode()
+              }
+            }).catch((err) => {
+              that.requestFailed(err);
+            })
           } else {
             that.registerBtn = false
           }

@@ -122,7 +122,7 @@
         currentUsername:"",
         validate_status:"",
         currdatetime:'',
-        randCode:'',
+        uuid:'',
         randCodeImage:'',
         registerFlag:'',
         requestCodeSuccess:false,
@@ -176,11 +176,10 @@
         this.checked = e.target.checked
       },
       handleChangeCheckCode(){
-        this.currdatetime = new Date().getTime();
-        getAction(`/user/randomImage/${this.currdatetime}`).then(res=>{
+        getAction('/user/randomImage').then(res=>{
           if(res.code == 200){
-            this.randCode = res.data.codeNum;
-            this.randCodeImage = res.data.base64;
+            this.uuid = res.data.uuid
+            this.randCodeImage = res.data.base64
             this.requestCodeSuccess=true
           }else{
             this.$message.error(res.data)
@@ -198,31 +197,24 @@
         if (that.customActiveKey === 'tab1') {
           that.form.validateFields([ 'loginName', 'password', 'inputCode' ], { force: true }, (err, values) => {
             if (!err) {
-              if(values.inputCode === this.randCode) {
-                loginParams.loginName = values.loginName
-                loginParams.password = md5(values.password)
-                if(that.checked) {
-                  //勾选的时候进行缓存
-                  Vue.ls.set('cache_loginName', values.loginName)
-                  Vue.ls.set('cache_password', values.password)
-                } else {
-                  //没勾选的时候清缓存
-                  Vue.ls.remove('cache_loginName')
-                  Vue.ls.remove('cache_password')
-                }
-                that.Login(loginParams).then((res) => {
-                  this.departConfirm(res, loginParams.loginName)
-                }).catch((err) => {
-                  that.requestFailed(err);
-                });
+              loginParams.loginName = values.loginName
+              loginParams.password = md5(values.password)
+              loginParams.code = values.inputCode
+              loginParams.uuid = that.uuid
+              if(that.checked) {
+                //勾选的时候进行缓存
+                Vue.ls.set('cache_loginName', values.loginName)
+                Vue.ls.set('cache_password', values.password)
               } else {
-                this.$notification['error']({
-                  message: "提示",
-                  description: "验证码错误",
-                  duration: 2
-                });
-                this.loginBtn = false
+                //没勾选的时候清缓存
+                Vue.ls.remove('cache_loginName')
+                Vue.ls.remove('cache_password')
               }
+              that.Login(loginParams).then((res) => {
+                this.departConfirm(res, loginParams.loginName)
+              }).catch((err) => {
+                that.requestFailed(err);
+              })
             }else {
               that.loginBtn = false;
             }
@@ -280,10 +272,13 @@
       requestFailed (err) {
         this.$notification[ 'error' ]({
           message: '登录失败',
-          description: ((err.response || {}).data || {}).message || err.message || "请求出现错误，请稍后再试",
+          description: ((err.response || {}).data || {}).message || err.message || err.data.message || "请求出现错误，请稍后再试",
           duration: 4,
         });
         this.loginBtn = false;
+        //验证码刷新
+        this.form.setFieldsValue({'inputCode':''})
+        this.handleChangeCheckCode()
       },
       generateCode(value){
         this.verifiedCode = value.toLowerCase()
@@ -322,7 +317,7 @@
             this.requestFailed(err)
             this.Logout();
           }
-        }else{
+        } else{
           this.requestFailed(res)
           this.Logout();
         }

@@ -77,7 +77,9 @@ const user = {
             }
             commit('SET_INFO', userInfo)
             resolve(response)
-          }else{
+          } else if(response.code == 500010 || response.code == 500011){
+            resolve(response)
+          } else{
             reject(response)
           }
         }).catch(error => {
