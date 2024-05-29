@@ -319,7 +319,7 @@ public class UserController {
         ue.setUsername(ue.getLoginName());
         userService.validateCaptcha(ue.getCode(), ue.getUuid());
         userService.checkLoginName(ue); //检查登录名
-        ue = userService.registerUser(ue,manageRoleId,request);
+        userService.registerUser(ue,manageRoleId,request);
         return result;
     }
 

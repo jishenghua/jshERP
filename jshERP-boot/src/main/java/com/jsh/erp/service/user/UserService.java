@@ -306,6 +306,8 @@ public class UserService {
                 logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
                 throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
             }
+        } else {
+            //TODO 在此处判断下验证码不能为空
         }
     }
 
@@ -568,10 +570,8 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public UserEx registerUser(UserEx ue, Integer manageRoleId, HttpServletRequest request) throws Exception{
+    public void registerUser(UserEx ue, Integer manageRoleId, HttpServletRequest request) throws Exception{
         /**
-         * create by: qiankunpingtai
-         * create time: 2019/4/9 18:00
          * 多次创建事务，事物之间无法协同，应该在入口处创建一个事务以做协调
          */
         if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginName())) {
@@ -615,10 +615,6 @@ public class UserService {
             tenantObj.put("remark", ue.getRemark());
             tenantService.insertTenant(tenantObj, request);
             logger.info("===============创建租户信息完成===============");
-            if (result > 0) {
-                return ue;
-            }
-            return null;
         }
     }
 
