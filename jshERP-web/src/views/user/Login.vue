@@ -275,32 +275,32 @@
           description: ((err.response || {}).data || {}).message || err.message || err.data.message || "请求出现错误，请稍后再试",
           duration: 4,
         });
-        this.loginBtn = false;
         //验证码刷新
         this.form.setFieldsValue({'inputCode':''})
         this.handleChangeCheckCode()
+        this.loginBtn = false;
       },
       generateCode(value){
         this.verifiedCode = value.toLowerCase()
       },
       departConfirm(res, loginName){
-        if(res.code==200){
+        if(res.code === 200){
           let err = {};
-          if(res.data.msgTip == 'user can login'){
+          if(res.data.msgTip === 'user can login'){
             this.loginSuccess(res)
-          } else if(res.data.msgTip == 'user is not exist'){
+          } else if(res.data.msgTip === 'user is not exist'){
             err.message = '用户不存在';
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'user password error'){
+          } else if(res.data.msgTip === 'user password error'){
             err.message = '用户密码不正确';
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'user is black'){
+          } else if(res.data.msgTip === 'user is black'){
             err.message = '用户被禁用';
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'tenant is black'){
+          } else if(res.data.msgTip === 'tenant is black'){
             if(loginName === 'jsh') {
               err.message = 'jsh用户已停用，请注册租户进行体验！';
             } else {
@@ -308,11 +308,11 @@
             }
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'tenant is expire'){
+          } else if(res.data.msgTip === 'tenant is expire'){
             err.message = '试用期已结束，请联系客服续费';
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'access service error'){
+          } else if(res.data.msgTip === 'access service error'){
             err.message = '查询服务异常';
             this.requestFailed(err)
             this.Logout();

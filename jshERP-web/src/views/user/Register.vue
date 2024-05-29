@@ -245,10 +245,10 @@
                   description: res.data.message || "注册失败",
                   duration: 2
                 });
-                that.registerBtn = false
                 //验证码刷新
                 this.form.setFieldsValue({'inputCode':''})
                 this.handleChangeCheckCode()
+                that.registerBtn = false
               }
             }).catch((err) => {
               that.requestFailed(err);

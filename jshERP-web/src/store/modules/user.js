@@ -65,8 +65,8 @@ const user = {
     Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          if(response.code ==200){
-            if(response.data.msgTip == 'user can login'){
+          if(response.code === 200){
+            if(response.data.msgTip === 'user can login'){
               const result = response.data
               Vue.ls.set(USER_ID, result.user.id, 7 * 24 * 60 * 60 * 1000);
               Vue.ls.set(USER_LOGIN_NAME, result.user.loginName, 7 * 24 * 60 * 60 * 1000);
@@ -77,7 +77,7 @@ const user = {
             }
             commit('SET_INFO', userInfo)
             resolve(response)
-          } else if(response.code == 500010 || response.code == 500011){
+          } else if(response.code === 500010 || response.code === 500011){
             resolve(response)
           } else{
             reject(response)
