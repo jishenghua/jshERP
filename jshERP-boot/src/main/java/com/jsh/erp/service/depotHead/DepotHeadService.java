@@ -848,33 +848,34 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4StatementAccount> getStatementAccount(String beginTime, String endTime, Integer organId, String [] organArray,
-                                              String supplierType, String type, String subType, String typeBack, String subTypeBack, String billType, Integer offset, Integer rows) {
+                                                                  Integer hasDebt, String supplierType, String type, String subType, String typeBack,
+                                                                  String subTypeBack, String billType, Integer offset, Integer rows) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
-            list = depotHeadMapperEx.getStatementAccount(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType, offset, rows);
+            list = depotHeadMapperEx.getStatementAccount(beginTime, endTime, organId, organArray, hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType, offset, rows);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int getStatementAccountCount(String beginTime, String endTime, Integer organId,
-                                        String [] organArray, String supplierType, String type, String subType, String typeBack, String subTypeBack, String billType) {
+    public int getStatementAccountCount(String beginTime, String endTime, Integer organId, String [] organArray,
+                                        Integer hasDebt, String supplierType, String type, String subType, String typeBack, String subTypeBack, String billType) {
         int result = 0;
         try{
-            result = depotHeadMapperEx.getStatementAccountCount(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType);
+            result = depotHeadMapperEx.getStatementAccountCount(beginTime, endTime, organId, organArray, hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
     }
 
-    public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId,
-                                                                          String [] organArray, String supplierType,
-                                        String type, String subType, String typeBack, String subTypeBack, String billType) {
+    public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId, String [] organArray,
+                                                                          Integer hasDebt, String supplierType, String type, String subType,
+                                                                          String typeBack, String subTypeBack, String billType) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
-            list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType);
+            list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }

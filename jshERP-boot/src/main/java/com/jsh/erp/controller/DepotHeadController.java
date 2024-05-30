@@ -308,6 +308,7 @@ public class DepotHeadController {
      * @param beginTime
      * @param endTime
      * @param organId
+     * @param hasDebt 1-有欠款 0-无欠款
      * @param supplierType
      * @param request
      * @return
@@ -319,6 +320,7 @@ public class DepotHeadController {
                                                  @RequestParam("beginTime") String beginTime,
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam(value = "organId", required = false) Integer organId,
+                                                 @RequestParam(value = "hasDebt", required = false) Integer hasDebt,
                                                  @RequestParam("supplierType") String supplierType,
                                                  HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
@@ -346,9 +348,9 @@ public class DepotHeadController {
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4StatementAccount> list = depotHeadService.getStatementAccount(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType,typeBack, subTypeBack, billType, (currentPage-1)*pageSize, pageSize);
+                    hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.getStatementAccountCount(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType,typeBack, subTypeBack, billType);
+                    hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType);
             for(DepotHeadVo4StatementAccount item: list) {
                 //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
                 BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreReturnDebtMoney()).subtract(item.getPreBackMoney());
@@ -363,7 +365,7 @@ public class DepotHeadController {
             map.put("rows", list);
             map.put("total", total);
             List<DepotHeadVo4StatementAccount> totalPayList = depotHeadService.getStatementAccountTotalPay(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType, typeBack, subTypeBack, billType);
+                    hasDebt, supplierType, type, subType, typeBack, subTypeBack, billType);
             if(totalPayList.size()>0) {
                 DepotHeadVo4StatementAccount totalPayItem = totalPayList.get(0);
                 BigDecimal firstMoney = BigDecimal.ZERO;
