@@ -230,6 +230,16 @@
         <if test="accountId != null">
             and dh.account_id=#{accountId}
         </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and dh.oper_time &lt;= #{endTime}
+        </if>
         and ifnull(dh.change_amount, 0)!=0
         and ifnull(dh.delete_flag,'0') !='1'
         <!--主表收入和支出涉及的账户 -->
@@ -239,6 +249,16 @@
         where ah.type!='转账'
         <if test="accountId != null">
             and ah.account_id=#{accountId}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and ah.bill_no like #{bindNumber}
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            and ah.bill_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and ah.bill_time &lt;= #{endTime}
         </if>
         and ifnull(ah.change_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
@@ -251,6 +271,16 @@
         <if test="accountId != null">
             and ai.account_id=#{accountId}
         </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and ah.bill_no like #{bindNumber}
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            and ah.bill_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and ah.bill_time &lt;= #{endTime}
+        </if>
         and ifnull(ai.each_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
         <!--主表中转出的账户 -->
@@ -261,6 +291,16 @@
         <if test="accountId != null">
             and ah.account_id=#{accountId}
         </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and ah.bill_no like #{bindNumber}
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            and ah.bill_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and ah.bill_time &lt;= #{endTime}
+        </if>
         and ifnull(ah.change_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
         <!--明细中被转入的账户 -->
@@ -270,6 +310,16 @@
         where ah.type='转账'
         <if test="accountId != null">
             and ai.account_id=#{accountId}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and ah.bill_no like #{bindNumber}
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            and ah.bill_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and ah.bill_time &lt;= #{endTime}
         </if>
         and ifnull(ai.each_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
@@ -282,6 +332,16 @@
         <if test="accountId != null">
             <bind name="bindAccountId" value="'%'+accountId+'%'"/>
             and dh.account_id_list like #{bindAccountId}
+        </if>
+        <if test="number != null and number !=''">
+            <bind name="bindNumber" value="'%'+number+'%'"/>
+            and dh.number like #{bindNumber}
+        </if>
+        <if test="beginTime != null and beginTime !=''">
+            and dh.oper_time >= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            and dh.oper_time &lt;= #{endTime}
         </if>
         and ifnull(dh.change_amount, 0)!=0
         and ifnull(dh.delete_flag,'0') !='1'
@@ -301,6 +361,16 @@
             <if test="accountId != null">
                 and dh.account_id=#{accountId}
             </if>
+            <if test="number != null and number !=''">
+                <bind name="bindNumber" value="'%'+number+'%'"/>
+                and dh.number like #{bindNumber}
+            </if>
+            <if test="beginTime != null and beginTime !=''">
+                and dh.oper_time >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and dh.oper_time &lt;= #{endTime}
+            </if>
             and ifnull(dh.change_amount, 0)!=0
             and ifnull(dh.delete_flag,'0') !='1'
             <!--主表收入和支出涉及的账户 -->
@@ -310,6 +380,16 @@
             where ah.type!='转账'
             <if test="accountId != null">
                 and ah.account_id=#{accountId}
+            </if>
+            <if test="number != null and number !=''">
+                <bind name="bindNumber" value="'%'+number+'%'"/>
+                and ah.bill_no like #{bindNumber}
+            </if>
+            <if test="beginTime != null and beginTime !=''">
+                and ah.bill_time >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and ah.bill_time &lt;= #{endTime}
             </if>
             and ifnull(ah.change_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
@@ -322,6 +402,16 @@
             <if test="accountId != null">
                 and ai.account_id=#{accountId}
             </if>
+            <if test="number != null and number !=''">
+                <bind name="bindNumber" value="'%'+number+'%'"/>
+                and ah.bill_no like #{bindNumber}
+            </if>
+            <if test="beginTime != null and beginTime !=''">
+                and ah.bill_time >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and ah.bill_time &lt;= #{endTime}
+            </if>
             and ifnull(ai.each_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
             <!--主表中转出的账户 -->
@@ -331,6 +421,16 @@
             where ah.type='转账'
             <if test="accountId != null">
                 and ah.account_id=#{accountId}
+            </if>
+            <if test="number != null and number !=''">
+                <bind name="bindNumber" value="'%'+number+'%'"/>
+                and ah.bill_no like #{bindNumber}
+            </if>
+            <if test="beginTime != null and beginTime !=''">
+                and ah.bill_time >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and ah.bill_time &lt;= #{endTime}
             </if>
             and ifnull(ah.change_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
@@ -342,6 +442,16 @@
             <if test="accountId != null">
                 and ai.account_id=#{accountId}
             </if>
+            <if test="number != null and number !=''">
+                <bind name="bindNumber" value="'%'+number+'%'"/>
+                and ah.bill_no like #{bindNumber}
+            </if>
+            <if test="beginTime != null and beginTime !=''">
+                and ah.bill_time >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and ah.bill_time &lt;= #{endTime}
+            </if>
             and ifnull(ai.each_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
             <!--多账户的情况 -->
@@ -352,6 +462,16 @@
             <if test="accountId != null">
                 <bind name="bindAccountId" value="'%'+accountId+'%'"/>
                 and dh.account_id_list like #{bindAccountId}
+            </if>
+            <if test="number != null and number !=''">
+                <bind name="bindNumber" value="'%'+number+'%'"/>
+                and dh.number like #{bindNumber}
+            </if>
+            <if test="beginTime != null and beginTime !=''">
+                and dh.oper_time >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime !=''">
+                and dh.oper_time &lt;= #{endTime}
             </if>
             and ifnull(dh.change_amount, 0)!=0
             and ifnull(dh.delete_flag,'0') !='1'

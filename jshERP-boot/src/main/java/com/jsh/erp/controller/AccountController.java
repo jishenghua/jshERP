@@ -108,12 +108,17 @@ public class AccountController {
                                                  @RequestParam("pageSize") Integer pageSize,
                                                  @RequestParam("accountId") Long accountId,
                                                  @RequestParam("initialAmount") BigDecimal initialAmount,
+                                                 @RequestParam(value = "number",required = false) String number,
+                                                 @RequestParam(value = "beginTime",required = false) String beginTime,
+                                                 @RequestParam(value = "endTime",required = false) String endTime,
                                                  HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<AccountVo4InOutList> dataList = accountService.findAccountInOutList(accountId, (currentPage-1)*pageSize, pageSize);
-            int total = accountService.findAccountInOutListCount(accountId);
+            List<AccountVo4InOutList> dataList = accountService.findAccountInOutList(accountId, StringUtil.toNull(number),
+                    beginTime, endTime, (currentPage-1)*pageSize, pageSize);
+            int total = accountService.findAccountInOutListCount(accountId, StringUtil.toNull(number),
+                    beginTime, endTime);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -122,11 +127,11 @@ public class AccountController {
                 for (AccountVo4InOutList aEx : dataList) {
                     String type = aEx.getType().replace("其它", "");
                     aEx.setType(type);
-                    String endTime = aEx.getOperTime();
-                    BigDecimal balance = accountService.getAccountSum(accountId, null, endTime, forceFlag)
-                            .add(accountService.getAccountSumByHead(accountId, null, endTime, forceFlag))
-                            .add(accountService.getAccountSumByDetail(accountId, null, endTime, forceFlag))
-                            .add(accountService.getManyAccountSum(accountId, null, endTime, forceFlag)).add(initialAmount);
+                    String operTime = aEx.getOperTime();
+                    BigDecimal balance = accountService.getAccountSum(accountId, null, operTime, forceFlag)
+                            .add(accountService.getAccountSumByHead(accountId, null, operTime, forceFlag))
+                            .add(accountService.getAccountSumByDetail(accountId, null, operTime, forceFlag))
+                            .add(accountService.getManyAccountSum(accountId, null, operTime, forceFlag)).add(initialAmount);
                     aEx.setBalance(balance);
                     aEx.setAccountId(accountId);
                     dataArray.add(aEx);
