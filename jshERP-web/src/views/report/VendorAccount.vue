@@ -28,11 +28,15 @@
                   />
                 </a-form-item>
               </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <span class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
                   <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
                 </span>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -40,6 +44,16 @@
                   {{firstTotal}} {{lastTotal}}
                 </a-form-item>
               </a-col>
+              <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="欠款情况" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select v-model="queryParam.hasDebt">
+                      <a-select-option value="1">有欠款</a-select-option>
+                      <a-select-option value="0">无欠款</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
             </a-row>
           </a-form>
         </div>
@@ -120,6 +134,7 @@
         queryParam: {
           supplierType: "供应商",
           organId: '',
+          hasDebt: '1',
           beginTime: getPrevMonthFormatDate(3),
           endTime: getFormatDate(),
           createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())],
