@@ -13,9 +13,38 @@
       cancelText="关闭"
       style="top:20px;height: 95%;">
       <template slot="footer">
-        <a-button @click="exportExcel">导出</a-button>
         <a-button key="back" @click="handleCancel">取消</a-button>
       </template>
+      <!-- 查询区域 -->
+      <div class="table-page-search-wrapper">
+        <!-- 搜索区域 -->
+        <a-form layout="inline" @keyup.enter.native="searchQuery">
+          <a-row :gutter="24">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="单据日期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                <a-range-picker
+                  style="width:100%"
+                  v-model="queryParam.createTimeRange"
+                  format="YYYY-MM-DD"
+                  :placeholder="['开始时间', '结束时间']"
+                  @change="onDateChange"
+                  @ok="onDateOk"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-button type="primary" @click="searchQuery">查询</a-button>
+              <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
+              <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
       <!-- table区域-begin -->
       <a-table
         bordered
@@ -60,10 +89,15 @@
         visible: false,
         disableMixinCreated: false,
         toFromType: '',
+        currentAccountId: '',
+        currentInitialAmount: '',
         // 查询条件
         queryParam: {
           accountId:'',
-          initialAmount:''
+          initialAmount:'',
+          number: '',
+          beginTime: '',
+          endTime: '',
         },
         tabKey: "1",
         // 表头
@@ -130,12 +164,16 @@
       getQueryParams() {
         let param = Object.assign({}, this.queryParam, this.isorter);
         param.field = this.getQueryField();
+        param.accountId = this.currentAccountId
+        param.initialAmount = this.currentInitialAmount
         param.currentPage = this.ipagination.current;
         param.pageSize = this.ipagination.pageSize;
         return param;
       },
       show(record) {
         this.model = Object.assign({}, record);
+        this.currentAccountId = record.id
+        this.currentInitialAmount = record.initialAmount
         this.visible = true;
         this.queryParam.accountId = record.id
         this.queryParam.initialAmount = record.initialAmount
@@ -147,6 +185,13 @@
       },
       handleCancel () {
         this.close()
+      },
+      onDateChange: function (value, dateString) {
+        this.queryParam.beginTime=dateString[0];
+        this.queryParam.endTime=dateString[1];
+      },
+      onDateOk(value) {
+        console.log(value);
       },
       myHandleDetail(record) {
         let that = this
