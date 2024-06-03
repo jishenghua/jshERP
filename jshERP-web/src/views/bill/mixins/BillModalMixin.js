@@ -40,6 +40,7 @@ export const BillModalMixin = {
       minWidth: 1100,
       isCanCheck: true,
       isTenant: false,
+      billPrintFlag: false,
       /* 原始审核是否开启 */
       checkFlag: true,
       validatorRules:{
@@ -985,6 +986,29 @@ export const BillModalMixin = {
       } else {
         this.$message.warning('请先保存单据后再提交流程！');
       }
+    },
+    //三联打印预览
+    handlePrint(billType) {
+      if(this.model.id) {
+        getPlatformConfigByKey({"platformKey": "bill_print_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
+            let billPrintHeight = this.materialTable.dataSource.length*50 + 600
+            this.$refs.modalPrint.show(this.model, billPrintUrl, billPrintHeight)
+            this.$refs.modalPrint.title = billType + "-三联打印预览"
+          }
+        })
+      } else {
+        this.$message.warning('请先保存单据后再打印！');
+      }
+    },
+    //加载平台配置信息
+    initPlatform() {
+      getPlatformConfigByKey({"platformKey": "bill_print_flag"}).then((res)=> {
+        if (res && res.code === 200) {
+          this.billPrintFlag = res.data.platformValue==='1'?true:false
+        }
+      })
     }
   }
 }

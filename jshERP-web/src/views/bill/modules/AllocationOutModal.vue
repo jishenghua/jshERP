@@ -11,6 +11,7 @@
     style="top:20px;height: 95%;">
     <template slot="footer">
       <a-button @click="handleCancel">取消</a-button>
+      <a-button v-if="billPrintFlag" @click="handlePrint('调拨出库')">三联打印预览</a-button>
       <a-button v-if="checkFlag && isCanCheck" :loading="confirmLoading" @click="handleOkAndCheck">保存并审核</a-button>
       <a-button type="primary" :loading="confirmLoading" @click="handleOk">保存</a-button>
       <!--发起多级审核-->
@@ -86,6 +87,7 @@
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
     <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
+    <bill-print-iframe ref="modalPrint"></bill-print-iframe>
   </j-modal>
 </template>
 <script>
@@ -93,6 +95,7 @@
   import DepotModal from '../../system/modules/DepotModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
   import WorkflowIframe from '@/components/tools/WorkflowIframe'
+  import BillPrintIframe from '../dialog/BillPrintIframe'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -107,6 +110,7 @@
       DepotModal,
       BatchSetDepot,
       WorkflowIframe,
+      BillPrintIframe,
       JUpload,
       JDate
     },
@@ -217,6 +221,7 @@
         }
         this.initSystemConfig()
         this.initDepot()
+        this.initPlatform()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
