@@ -377,7 +377,11 @@ public class DepotItemController {
                     } else {
                         item.put("unitPrice", diEx.getPurchaseDecimal());
                     }
-                    item.put("thisAllPrice", thisSum.multiply(diEx.getPurchaseDecimal()));
+                    if(moveAvgPriceFlag) {
+                        item.put("thisAllPrice", thisSum.multiply(diEx.getCurrentUnitPrice()));
+                    } else {
+                        item.put("thisAllPrice", thisSum.multiply(diEx.getPurchaseDecimal()));
+                    }
                     dataArray.add(item);
                 }
             }
