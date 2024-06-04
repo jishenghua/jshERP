@@ -1289,6 +1289,7 @@ public class MaterialService {
         for(MaterialVo4Unit item: dataList) {
             if(moveAvgPriceFlag) {
                 item.setPurchaseDecimal(item.getCurrentUnitPrice());
+                item.setCurrentStockPrice(item.getCurrentStockMovePrice());
             }
             item.setUnitName(null!=item.getUnitId()?item.getUnitName() + "[多单位]":item.getUnitName());
             item.setInitialStock(null!=initialStockMap.get(item.getId())?initialStockMap.get(item.getId()):BigDecimal.ZERO);
