@@ -151,11 +151,11 @@
         (select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
         case
             when type='入库' then ifnull(di.basic_number,0)
-            when type='出库' then 0-di.basic_number
+            when type='出库' then 0-ifnull(di.basic_number,0)
             when dh.sub_type='组装单' and di.material_type='组合件' then ifnull(di.basic_number,0)
-            when dh.sub_type='组装单' and di.material_type='普通子件' then 0-di.basic_number
+            when dh.sub_type='组装单' and di.material_type='普通子件' then 0-ifnull(di.basic_number,0)
             when dh.sub_type='拆卸单' and di.material_type='普通子件' then ifnull(di.basic_number,0)
-            when dh.sub_type='拆卸单' and di.material_type='组合件' then 0-di.basic_number
+            when dh.sub_type='拆卸单' and di.material_type='组合件' then 0-ifnull(di.basic_number,0)
             when dh.sub_type='盘点复盘' then ifnull(di.basic_number,0)
             else 0
         end
