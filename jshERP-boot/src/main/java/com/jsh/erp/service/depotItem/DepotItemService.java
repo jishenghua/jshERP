@@ -578,7 +578,10 @@ public class DepotItemService {
                     BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType()) ||
                     BusinessConstants.SUB_TYPE_RETAIL.equals(depotHead.getSubType()) ||
                     BusinessConstants.SUB_TYPE_RETAIL_RETURN.equals(depotHead.getSubType())) {
-                    depotItem.setPurchaseUnitPrice(materialExtend.getPurchaseDecimal());
+                    boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
+                    BigDecimal currentUnitPrice = materialCurrentStockMapperEx.getCurrentUnitPriceByMId(materialExtend.getMaterialId());
+                    BigDecimal unitPrice = moveAvgPriceFlag? currentUnitPrice: materialExtend.getPurchaseDecimal();
+                    depotItem.setPurchaseUnitPrice(unitPrice);
                     if(StringUtil.isNotEmpty(depotItem.getBatchNumber())) {
                         depotItem.setPurchaseUnitPrice(getDepotItemByBatchNumber(depotItem.getMaterialExtendId(),depotItem.getBatchNumber()).getUnitPrice());
                     }

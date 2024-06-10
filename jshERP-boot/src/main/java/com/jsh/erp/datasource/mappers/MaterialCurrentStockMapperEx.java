@@ -17,4 +17,6 @@ public interface MaterialCurrentStockMapperEx {
     void updateUnitPriceByMId(
             @Param("currentUnitPrice") BigDecimal currentUnitPrice,
             @Param("materialId") Long materialId);
+
+    BigDecimal getCurrentUnitPriceByMId(@Param("materialId") Long materialId);
 }
