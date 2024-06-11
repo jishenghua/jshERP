@@ -115,15 +115,15 @@ public class AccountController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<AccountVo4InOutList> dataList = accountService.findAccountInOutList(accountId, StringUtil.toNull(number),
-                    beginTime, endTime, (currentPage-1)*pageSize, pageSize);
+                    beginTime, endTime, forceFlag, (currentPage-1)*pageSize, pageSize);
             int total = accountService.findAccountInOutListCount(accountId, StringUtil.toNull(number),
-                    beginTime, endTime);
+                    beginTime, endTime, forceFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if (null != dataList) {
-                Boolean forceFlag = systemConfigService.getForceApprovalFlag();
                 for (AccountVo4InOutList aEx : dataList) {
                     String type = aEx.getType().replace("其它", "");
                     aEx.setType(type);

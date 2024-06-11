@@ -87,7 +87,7 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
@@ -143,7 +143,7 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
@@ -160,7 +160,7 @@
                 and dh.oper_time &lt;= #{endTime}
             </if>
             <if test="forceFlag">
-                and dh.status = '1'
+                and (dh.status = '1' or dh.status = '2' or dh.status = '3')
             </if>
             and ifnull(dh.delete_flag,'0') !='1') accountSum,
             (select ifnull(sum(ah.change_amount),0) from jsh_account_head ah
@@ -217,7 +217,7 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
     </select>
@@ -240,6 +240,9 @@
         <if test="endTime != null and endTime !=''">
             and dh.oper_time &lt;= #{endTime}
         </if>
+        <if test="forceFlag">
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
+        </if>
         and ifnull(dh.change_amount, 0)!=0
         and ifnull(dh.delete_flag,'0') !='1'
         <!--主表收入和支出涉及的账户 -->
@@ -259,6 +262,9 @@
         </if>
         <if test="endTime != null and endTime !=''">
             and ah.bill_time &lt;= #{endTime}
+        </if>
+        <if test="forceFlag">
+            and ah.status = '1'
         </if>
         and ifnull(ah.change_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
@@ -281,6 +287,9 @@
         <if test="endTime != null and endTime !=''">
             and ah.bill_time &lt;= #{endTime}
         </if>
+        <if test="forceFlag">
+            and ah.status = '1'
+        </if>
         and ifnull(ai.each_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
         <!--主表中转出的账户 -->
@@ -301,6 +310,9 @@
         <if test="endTime != null and endTime !=''">
             and ah.bill_time &lt;= #{endTime}
         </if>
+        <if test="forceFlag">
+            and ah.status = '1'
+        </if>
         and ifnull(ah.change_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
         <!--明细中被转入的账户 -->
@@ -320,6 +332,9 @@
         </if>
         <if test="endTime != null and endTime !=''">
             and ah.bill_time &lt;= #{endTime}
+        </if>
+        <if test="forceFlag">
+            and ah.status = '1'
         </if>
         and ifnull(ai.each_amount, 0)!=0
         and ifnull(ah.delete_flag,'0') !='1'
@@ -342,6 +357,9 @@
         </if>
         <if test="endTime != null and endTime !=''">
             and dh.oper_time &lt;= #{endTime}
+        </if>
+        <if test="forceFlag">
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(dh.change_amount, 0)!=0
         and ifnull(dh.delete_flag,'0') !='1'
@@ -371,6 +389,9 @@
             <if test="endTime != null and endTime !=''">
                 and dh.oper_time &lt;= #{endTime}
             </if>
+            <if test="forceFlag">
+                and (dh.status = '1' or dh.status = '2' or dh.status = '3')
+            </if>
             and ifnull(dh.change_amount, 0)!=0
             and ifnull(dh.delete_flag,'0') !='1'
             <!--主表收入和支出涉及的账户 -->
@@ -390,6 +411,9 @@
             </if>
             <if test="endTime != null and endTime !=''">
                 and ah.bill_time &lt;= #{endTime}
+            </if>
+            <if test="forceFlag">
+                and ah.status = '1'
             </if>
             and ifnull(ah.change_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
@@ -412,6 +436,9 @@
             <if test="endTime != null and endTime !=''">
                 and ah.bill_time &lt;= #{endTime}
             </if>
+            <if test="forceFlag">
+                and ah.status = '1'
+            </if>
             and ifnull(ai.each_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
             <!--主表中转出的账户 -->
@@ -431,6 +458,9 @@
             </if>
             <if test="endTime != null and endTime !=''">
                 and ah.bill_time &lt;= #{endTime}
+            </if>
+            <if test="forceFlag">
+                and ah.status = '1'
             </if>
             and ifnull(ah.change_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
@@ -452,6 +482,9 @@
             <if test="endTime != null and endTime !=''">
                 and ah.bill_time &lt;= #{endTime}
             </if>
+            <if test="forceFlag">
+                and ah.status = '1'
+            </if>
             and ifnull(ai.each_amount, 0)!=0
             and ifnull(ah.delete_flag,'0') !='1'
             <!--多账户的情况 -->
@@ -472,6 +505,9 @@
             </if>
             <if test="endTime != null and endTime !=''">
                 and dh.oper_time &lt;= #{endTime}
+            </if>
+            <if test="forceFlag">
+                and (dh.status = '1' or dh.status = '2' or dh.status = '3')
             </if>
             and ifnull(dh.change_amount, 0)!=0
             and ifnull(dh.delete_flag,'0') !='1'

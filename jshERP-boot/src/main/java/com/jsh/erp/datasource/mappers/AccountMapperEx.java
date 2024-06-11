@@ -72,6 +72,7 @@ public interface AccountMapperEx {
             @Param("number") String number,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
@@ -79,7 +80,8 @@ public interface AccountMapperEx {
             @Param("accountId") Long accountId,
             @Param("number") String number,
             @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime);
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag);
 
     int batchDeleteAccountByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 

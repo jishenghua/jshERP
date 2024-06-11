@@ -378,20 +378,20 @@ public class AccountService {
     }
 
     public List<AccountVo4InOutList> findAccountInOutList(Long accountId, String number, String beginTime, String endTime,
-                                                          Integer offset, Integer rows) throws Exception{
+                                                          Boolean forceFlag, Integer offset, Integer rows) throws Exception{
         List<AccountVo4InOutList> list=null;
         try{
-            list = accountMapperEx.findAccountInOutList(accountId, number, beginTime, endTime, offset, rows);
+            list = accountMapperEx.findAccountInOutList(accountId, number, beginTime, endTime, forceFlag, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findAccountInOutListCount(Long accountId, String number, String beginTime, String endTime) throws Exception{
+    public int findAccountInOutListCount(Long accountId, String number, String beginTime, String endTime, Boolean forceFlag) throws Exception{
         int result=0;
         try{
-            result = accountMapperEx.findAccountInOutListCount(accountId, number, beginTime, endTime);
+            result = accountMapperEx.findAccountInOutListCount(accountId, number, beginTime, endTime, forceFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
