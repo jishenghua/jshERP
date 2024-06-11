@@ -157,7 +157,7 @@
       },
       showAccountInOutList(record) {
         this.$refs.accountInOutList.show(record);
-        this.$refs.accountInOutList.title = "查看账户流水";
+        this.$refs.accountInOutList.title = "查看账户流水-" + record.name;
         this.$refs.accountInOutList.disableSubmit = false;
       },
       exportExcel() {
