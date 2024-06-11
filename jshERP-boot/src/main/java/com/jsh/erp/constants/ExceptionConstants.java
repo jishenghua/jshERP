@@ -78,7 +78,7 @@ public class ExceptionConstants {
     public static final String USER_JCAPTCHA_EXPIRE_MSG = "验证码已失效";
     //验证码不能为空
     public static final int USER_JCAPTCHA_EMPTY_CODE = 500012;
-    public static final String USER_JCAPTCHA_EMPTY_MSG = "验证码不能为空，建议下载最新版本";
+    public static final String USER_JCAPTCHA_EMPTY_MSG = "验证码不能为空";
 
     /**
      * 角色信息
