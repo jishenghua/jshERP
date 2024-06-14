@@ -551,7 +551,7 @@ public class DepotItemService {
                             BigDecimal preNumber = getPreItemByHeaderIdAndMaterial(linkStr, depotItem.getMaterialExtendId(), depotItem.getLinkId()).getOperNumber();
                             //除去此单据之外的已入库|已出库
                             BigDecimal realFinishNumber = getRealFinishNumber(currentSubType, depotItem.getMaterialExtendId(), depotItem.getLinkId(), preHeaderId, headerId, unitInfo, unit);
-                            if (depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber) > 0) {
+                            if (preNumber!=null && depotItem.getOperNumber().add(realFinishNumber).compareTo(preNumber) > 0) {
                                 if (!systemConfigService.getOverLinkBillFlag()) {
                                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_CODE,
                                             String.format(ExceptionConstants.DEPOT_HEAD_NUMBER_NEED_EDIT_FAILED_MSG, barCode));
