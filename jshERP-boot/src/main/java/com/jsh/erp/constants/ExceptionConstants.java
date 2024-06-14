@@ -462,6 +462,9 @@ public class ExceptionConstants {
     //单据明细-单据中存在批号，需要到新增界面关联单据
     public static final int DEPOT_ITEM_EXIST_BATCH_NUMBER_FAILED_CODE = 9000006;
     public static final String DEPOT_ITEM_EXIST_BATCH_NUMBER_FAILED_MSG = "抱歉，单据:%s里面存在批号，需要到新增界面关联单据";
+    //原关联单据已被修改，请重新关联
+    public static final int DEPOT_ITEM_PRE_BILL_IS_CHANGE_CODE = 9000007;
+    public static final String DEPOT_ITEM_PRE_BILL_IS_CHANGE_MSG = "抱歉，原关联单据已被修改，请重新关联";
 
     /**
      *  财务信息
