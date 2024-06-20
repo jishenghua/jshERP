@@ -5,6 +5,7 @@ const getBuyAndSaleStatistics = (params)=>getAction("/depotHead/getBuyAndSaleSta
 const buyOrSalePrice = (params)=>getAction("/depotItem/buyOrSalePrice",params);
 //租户管理
 const checkTenant = (params)=>getAction("/tenant/checkIsNameExist",params);
+const addTenant = (params)=>postAction("/tenant/add",params);
 const editTenant = (params)=>putAction("/tenant/update",params);
 //角色管理
 const addRole = (params)=>postAction("/role/add",params);
@@ -116,6 +117,7 @@ export {
   getBuyAndSaleStatistics,
   buyOrSalePrice,
   checkTenant,
+  addTenant,
   editTenant,
   addRole,
   editRole,
