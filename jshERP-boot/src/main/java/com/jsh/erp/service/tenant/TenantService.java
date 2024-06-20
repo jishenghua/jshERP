@@ -44,11 +44,8 @@ public class TenantService {
     @Resource
     private LogService logService;
 
-    @Value("${tenant.userNumLimit}")
-    private Integer userNumLimit;
-
-    @Value("${tenant.tryDayLimit}")
-    private Integer tryDayLimit;
+    @Value("${manage.roleId}")
+    private Integer manageRoleId;
 
     public Tenant getTenant(long id)throws Exception {
         Tenant result=null;
@@ -103,18 +100,14 @@ public class TenantService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertTenant(JSONObject obj, HttpServletRequest request)throws Exception {
-        Tenant tenant = JSONObject.parseObject(obj.toJSONString(), Tenant.class);
-        int result=0;
+        UserEx ue = JSONObject.parseObject(obj.toJSONString(), UserEx.class);
+        int result = 0;
         try{
-            tenant.setCreateTime(new Date());
-            if(tenant.getUserNumLimit()==null) {
-                tenant.setUserNumLimit(userNumLimit); //默认用户限制数量
-            }
-            if(tenant.getExpireTime()==null) {
-                tenant.setExpireTime(Tools.addDays(new Date(), tryDayLimit)); //租户允许试用的天数
-            }
-            result = tenantMapper.insertSelective(tenant);
-        }catch(Exception e){
+            ue.setUsername(ue.getLoginName());
+            userService.checkLoginName(ue); //检查登录名
+            userService.registerUser(ue,manageRoleId,request);
+            result = 1;
+        } catch(Exception e){
             JshException.writeFail(logger, e);
         }
         return result;

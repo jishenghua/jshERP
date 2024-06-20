@@ -1,6 +1,7 @@
 package com.jsh.erp.service.user;
 
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.mappers.TenantMapper;
 import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.platformConfig.PlatformConfigService;
@@ -43,7 +44,8 @@ public class UserService {
 
     @Resource
     private UserMapper userMapper;
-
+    @Resource
+    private TenantMapper tenantMapper;
     @Resource
     private UserMapperEx userMapperEx;
     @Resource
@@ -64,6 +66,12 @@ public class UserService {
     private PlatformConfigService platformConfigService;
     @Resource
     private RedisService redisService;
+
+    @Value("${tenant.userNumLimit}")
+    private Integer userNumLimit;
+
+    @Value("${tenant.tryDayLimit}")
+    private Integer tryDayLimit;
 
     public User getUser(long id)throws Exception {
         User result=null;
@@ -585,9 +593,8 @@ public class UserService {
                 ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
             }
             ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
-            int result=0;
             try{
-                result= userMapper.insertSelective(ue);
+                userMapper.insertSelective(ue);
                 Long userId = getIdByLoginName(ue.getLoginName());
                 ue.setId(userId);
             }catch(Exception e){
@@ -614,7 +621,15 @@ public class UserService {
             tenantObj.put("userNumLimit", ue.getUserNumLimit());
             tenantObj.put("expireTime", ue.getExpireTime());
             tenantObj.put("remark", ue.getRemark());
-            tenantService.insertTenant(tenantObj, request);
+            Tenant tenant = JSONObject.parseObject(tenantObj.toJSONString(), Tenant.class);
+            tenant.setCreateTime(new Date());
+            if(tenant.getUserNumLimit()==null) {
+                tenant.setUserNumLimit(userNumLimit); //默认用户限制数量
+            }
+            if(tenant.getExpireTime()==null) {
+                tenant.setExpireTime(Tools.addDays(new Date(), tryDayLimit)); //租户允许试用的天数
+            }
+            tenantMapper.insertSelective(tenant);
             logger.info("===============创建租户信息完成===============");
         }
     }
