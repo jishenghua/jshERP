@@ -7,29 +7,20 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
-              <a-col :md="4" :sm="24">
-                <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select
-                    mode="multiple" :maxTagCount="1"
-                    optionFilterProp="children"
-                    showSearch style="width: 100%"
-                    placeholder="请选择仓库"
-                    v-model="depotSelected">
-                    <a-select-option v-for="(depot,index) in depotList" :key="index" :value="depot.id">
-                      {{ depot.depotName }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="4" :sm="24">
-                <a-form-item label="月份" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-month-picker placeholder="请选择月份" :default-value="moment(currentMonth, monthFormat)"
-                        style="width:100%" :format="monthFormat" @change="onChange"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="4" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="库存周期" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-range-picker
+                    style="width: 100%"
+                    v-model="queryParam.createTimeRange"
+                    format="YYYY-MM-DD"
+                    :placeholder="['开始时间', '结束时间']"
+                    @change="onDateChange"
+                  />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -45,11 +36,25 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item>
-                  <span>本月总结存：{{totalStockStr}}，总结存金额：{{totalCountMoneyStr}}</span>
+                  <span>本期总结存：{{totalStockStr}}，总结存金额：{{totalCountMoneyStr}}</span>
                 </a-form-item>
               </a-col>
               <template v-if="toggleSearchStatus">
-                <a-col :md="4" :sm="24">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select
+                      mode="multiple" :maxTagCount="1"
+                      optionFilterProp="children"
+                      showSearch style="width: 100%"
+                      placeholder="请选择仓库"
+                      v-model="depotSelected">
+                      <a-select-option v-for="(depot,index) in depotList" :key="index" :value="depot.id">
+                        {{ depot.depotName }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
                                    :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
@@ -107,7 +112,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
-  import { getMpListShort } from "@/utils/util"
+  import { getFormatDate, getMpListShort, getPrevMonthFormatDate } from '@/utils/util'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -131,7 +136,9 @@
         },
         queryParam: {
           depotId:'',
-          monthTime: moment().format('YYYY-MM'),
+          beginTime: getPrevMonthFormatDate(1),
+          endTime: getFormatDate(),
+          createTimeRange: [moment(getPrevMonthFormatDate(1)), moment(getFormatDate())],
           materialParam:'',
           categoryId:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
@@ -160,17 +167,17 @@
           {title: '扩展信息', dataIndex: 'materialOther', width: 80, ellipsis:true},
           {title: '单位', dataIndex: 'unitName', width: 60, ellipsis:true},
           {title: '成本价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
-          {title: '上月结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum, width: 80},
+          {title: '上期结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum, width: 80},
           {title: '入库数量', dataIndex: 'inSum', sorter: (a, b) => a.inSum - b.inSum, width: 60},
           {title: '出库数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 60},
-          {title: '本月结存数量', dataIndex: 'thisSum', sorter: (a, b) => a.thisSum - b.thisSum, width: 80,
+          {title: '本期结存数量', dataIndex: 'thisSum', sorter: (a, b) => a.thisSum - b.thisSum, width: 80,
             scopedSlots: { customRender: 'customRenderStock' }
           },
           {title: '结存金额', dataIndex: 'thisAllPrice', sorter: (a, b) => a.thisAllPrice - b.thisAllPrice, width: 60}
         ],
         url: {
-          list: "/depotItem/findByAll",
-          totalCountMoney: "/depotItem/totalCountMoney",
+          list: "/depotItem/getInOutStock",
+          totalCountMoney: "/depotItem/getInOutStockCountMoney",
           exportXlsUrl: "/depotItem/exportExcel"
         }
       }
@@ -192,6 +199,13 @@
         param.currentPage = this.ipagination.current;
         param.pageSize = this.ipagination.pageSize-1;
         return param;
+      },
+      onDateChange: function (value, dateString) {
+        this.queryParam.beginTime=dateString[0]
+        this.queryParam.endTime=dateString[1]
+        if(dateString[0] && dateString[1]) {
+          this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+        }
       },
       getDepotData() {
         getAction('/depot/findDepotByCurrentUser').then((res)=>{
@@ -243,7 +257,7 @@
       },
       exportExcel() {
         let list = []
-        let head = '条码,名称,规格,型号,扩展信息,单位,成本价,上月结存数量,入库数量,出库数量,本月结存数量,结存金额'
+        let head = '条码,名称,规格,型号,扩展信息,单位,成本价,上期结存数量,入库数量,出库数量,本期结存数量,结存金额'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
@@ -251,7 +265,7 @@
             ds.prevSum, ds.inSum, ds.outSum, ds.thisSum, ds.thisAllPrice)
           list.push(item)
         }
-        let tip = '月份：' + this.queryParam.monthTime
+        let tip = '库存周期：' + this.queryParam.beginTime + '~' + this.queryParam.endTime
         this.handleExportXlsPost('进销存统计', '进销存统计', head, tip, list)
       }
     }
