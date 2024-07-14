@@ -343,7 +343,7 @@
         order by di.header_id desc, di.id asc
     </select>
 
-    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
+    <select id="getInOutStock" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.unit_id, u.name unit_name,
@@ -376,7 +376,7 @@
         </if>
     </select>
 
-    <select id="findByAllCount" resultType="java.lang.Integer">
+    <select id="getInOutStockCount" resultType="java.lang.Integer">
         select count(1) from (select m.id
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'

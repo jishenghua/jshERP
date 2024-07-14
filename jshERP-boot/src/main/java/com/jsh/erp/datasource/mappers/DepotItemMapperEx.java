@@ -60,14 +60,14 @@ public interface DepotItemMapperEx {
     List<DepotItemVo4WithInfoEx> getBillDetailListByIds(
             @Param("idList") List<Long> idList);
 
-    List<DepotItemVo4WithInfoEx> findByAll(
+    List<DepotItemVo4WithInfoEx> getInOutStock(
             @Param("materialParam") String materialParam,
             @Param("categoryIdList") List<Long> categoryIdList,
             @Param("endTime") String endTime,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int findByAllCount(
+    int getInOutStockCount(
             @Param("materialParam") String materialParam,
             @Param("categoryIdList") List<Long> categoryIdList,
             @Param("endTime") String endTime);

@@ -301,20 +301,20 @@ public class DepotItemService {
         return list;
     }
 
-    public List<DepotItemVo4WithInfoEx> findByAll(String materialParam, List<Long> categoryIdList, String endTime, Integer offset, Integer rows)throws Exception {
+    public List<DepotItemVo4WithInfoEx> getInOutStock(String materialParam, List<Long> categoryIdList, String endTime, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.findByAll(materialParam, categoryIdList, endTime, offset, rows);
+            list = depotItemMapperEx.getInOutStock(materialParam, categoryIdList, endTime, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findByAllCount(String materialParam, List<Long> categoryIdList, String endTime)throws Exception {
+    public int getInOutStockCount(String materialParam, List<Long> categoryIdList, String endTime)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.findByAllCount(materialParam, categoryIdList, endTime);
+            result = depotItemMapperEx.getInOutStockCount(materialParam, categoryIdList, endTime);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
