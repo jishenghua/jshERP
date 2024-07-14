@@ -248,8 +248,8 @@
         })
       },
       searchQuery() {
-        if(this.queryParam.monthTime == ''){
-          this.$message.warning('请选择月份！')
+        if(this.queryParam.beginTime === '' || this.queryParam.endTime === ''){
+          this.$message.warning('请选择库存周期！')
         } else {
           this.loadData(1);
           this.getTotalCountMoney();
