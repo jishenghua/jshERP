@@ -14,6 +14,7 @@
 
       <span v-if="device === 'desktop'" class="company-name">{{ companyName }}</span>
       <span v-else>{{ systemTitle }}</span>
+      <span class="change-title" v-if="isShowChange">华夏ERP正式更名为管伊佳ERP，请尽快使用新网址：<a href="https://cloud.gyjerp.com" target="_blank">https://cloud.gyjerp.com</a></span>
 
       <user-menu :theme="theme" @searchGlobalHeader="searchGlobalHeader" />
     </div>
@@ -87,6 +88,7 @@
         headerBarFixed: false,
         systemTitle: window.SYS_TITLE,
         companyName: '',
+        isShowChange: false,
         //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
         topMenuStyle: {
           headerIndexLeft: {},
@@ -121,6 +123,11 @@
     },
     created () {
       this.initSystemConfig()
+      if(window.location.host === 'cloud.huaxiaerp.vip' || window.location.host === 'cloud.huaxiaerp.com') {
+        this.isShowChange = true
+      } else {
+        this.isShowChange = false
+      }
     },
     methods: {
       handleScroll() {
@@ -226,6 +233,18 @@
   .company-name {
     font-size:16px;
     padding-left:16px
+  }
+
+  .change-title {
+    font-size:14px;
+    padding-left:16px;
+    color:yellow;
+  }
+
+  .change-title a {
+    font-size:14px;
+    color:yellow;
+    text-decoration:underline;
   }
 
   /* update_end author:scott date:20190220 for: 缩小首页布局顶部的高度*/
