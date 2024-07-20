@@ -93,7 +93,7 @@
     },
     created () {
       let host = window.location.host
-      if(host === 'cloud.huaxiaerp.vip' || host === 'cloud.huaxiaerp.com') {
+      if(host === 'cloud.gyjerp.com' || host === 'cloud.huaxiaerp.vip' || host === 'cloud.huaxiaerp.com') {
         this.isShowRight = true
       } else {
         this.isShowRight = false
