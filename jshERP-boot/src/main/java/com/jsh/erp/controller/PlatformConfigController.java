@@ -22,7 +22,7 @@ import java.util.Map;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author ji|sheng|hua 华夏erp QQ7827-18920
+ * @author ji|sheng|hua 管伊佳erp QQ7827-18920
  */
 @RestController
 @RequestMapping(value = "/platformConfig")

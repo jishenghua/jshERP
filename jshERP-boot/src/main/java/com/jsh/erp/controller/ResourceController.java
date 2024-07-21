@@ -20,7 +20,7 @@ import java.util.Map;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * by jishenghua 2018-9-12 23:58:10 华夏erp
+ * by jishenghua 2018-9-12 23:58:10 管伊佳erp
  */
 @RestController
 @Api(tags = {"资源接口"})
