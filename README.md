@@ -1,16 +1,16 @@
 # 项目总述
 * 很多人说管伊佳ERP（原名：华夏ERP，英文名：jshERP）是目前人气领先的国产ERP系统
 * 虽然目前只有进销存+财务+生产的功能，但后面将会推出ERP的全部功能，有兴趣请帮点一下 **Star** 哦
-* **官网地址：http://www.huaxiaerp.com  商务或技术交流，请联系QQ：752718920 微信：shenhua861584**
+* **官网地址：http://www.gyjerp.com  商务或技术交流，请联系QQ：752718920 微信：shenhua861584**
 
 # 网络版介绍
 * 推荐使用网络版（158元1年）淘宝链接：https://item.taobao.com/item.htm?id=674169489573
-* 平台地址：http://cloud.huaxiaerp.com 欢迎大家注册租户进行使用
+* 平台地址：http://cloud.gyjerp.com 欢迎大家注册租户进行使用
 * 网络版手机端请扫描下方二维码
 
-![输入图片说明](https://cloud.huaxiaerp.com/static/android-code.png)
-![输入图片说明](https://cloud.huaxiaerp.com/static/iphone-code.png)
-![输入图片说明](https://cloud.huaxiaerp.com/static/weixin-code.png)
+![输入图片说明](https://cloud.gyjerp.com/static/android-code.png)
+![输入图片说明](https://cloud.gyjerp.com/static/iphone-code.png)
+![输入图片说明](https://cloud.gyjerp.com/static/weixin-code.png)
 
 # 定制和插件
 * 如有ERP私人定制需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
@@ -48,11 +48,11 @@
 * 操作系统：Windows、Linux等
 
 # 配套资料
-* 需要用户手册请访问这里 https://www.huaxiaerp.com/thread-393-1-1.html
+* 需要用户手册请访问这里 https://www.gyjerp.com/thread-393-1-1.html
 * 喜欢视频教程可以看这里 https://space.bilibili.com/540003552/channel/series 
 * 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw  提取码:814g
 * 不会打包的小伙伴，请下载此打包后的文件 https://share.weiyun.com/NDJNLhry 密码：vd3aig
-* 不会部署的小伙伴，请参考部署教程 http://www.huaxiaerp.com/thread-177-1-1.html
+* 不会部署的小伙伴，请参考部署教程 http://www.gyjerp.com/thread-177-1-1.html
 * 部署后登录系统的默认租户账号：jsh，默认超管账户：admin，默认密码均为：123456
 
 # 开源说明
@@ -82,6 +82,6 @@
 
 # 如何支持
 * 开源不易，坚持更难！如果您觉得管伊佳ERP不错，不用请作者喝咖啡。
-* 您可以将我们的云平台地址：https://cloud.huaxiaerp.com 发给您的家人或朋友，只要是开店的、办厂的、做批发的都可以用得上。
+* 您可以将我们的云平台地址：https://cloud.gyjerp.com 发给您的家人或朋友，只要是开店的、办厂的、做批发的都可以用得上。
 * 您可以到我们自营的拼多多商城进行支持：https://mobile.pinduoduo.com/mall_page.html?mall_id=375313371
 * 以上将是对我们开源最大的支持！在此表示感谢！
