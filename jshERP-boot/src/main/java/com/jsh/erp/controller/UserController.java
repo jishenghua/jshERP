@@ -37,7 +37,7 @@ import java.util.UUID;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author ji_sheng_hua 华夏erp
+ * @author ji_sheng_hua 管伊佳erp
  */
 @RestController
 @RequestMapping(value = "/user")
