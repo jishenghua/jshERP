@@ -712,9 +712,9 @@ CREATE TABLE `jsh_platform_config` (
 -- ----------------------------
 -- Records of jsh_platform_config
 -- ----------------------------
-INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '华夏ERP');
+INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '管伊佳ERP');
 INSERT INTO `jsh_platform_config` VALUES ('2', 'activation_code', '激活码', '');
-INSERT INTO `jsh_platform_config` VALUES ('3', 'platform_url', '官方网站', 'http://www.huaxiaerp.com/');
+INSERT INTO `jsh_platform_config` VALUES ('3', 'platform_url', '官方网站', 'http://www.gyjerp.com/');
 INSERT INTO `jsh_platform_config` VALUES ('4', 'bill_print_flag', '三联打印启用标记', '0');
 INSERT INTO `jsh_platform_config` VALUES ('5', 'bill_print_url', '三联打印地址', '');
 INSERT INTO `jsh_platform_config` VALUES ('6', 'pay_fee_url', '租户续费地址', '');

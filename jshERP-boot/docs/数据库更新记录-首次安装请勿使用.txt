@@ -1037,7 +1037,7 @@ CREATE TABLE `jsh_platform_config` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='平台参数';
 
-INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '华夏ERP');
+INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '管伊佳ERP');
 INSERT INTO `jsh_platform_config` VALUES ('2', 'activation_code', '激活码', null);
 
 -- --------------------------------------------------------
