@@ -492,6 +492,8 @@ public class DepotItemController {
             if(categoryId != null){
                 categoryIdList = materialService.getListByParentId(categoryId);
             }
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<Long> depotList = parseListByDepotIds(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getInOutStock(StringUtil.toNull(materialParam),
                     categoryIdList, endTime,(currentPage-1)*pageSize, pageSize);
@@ -575,6 +577,7 @@ public class DepotItemController {
             if(categoryId != null){
                 categoryIdList = materialService.getListByParentId(categoryId);
             }
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<Long> depotList = parseListByDepotIds(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getInOutStock(StringUtil.toNull(materialParam),
                     categoryIdList, endTime, null, null);
