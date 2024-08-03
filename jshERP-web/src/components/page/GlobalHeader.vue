@@ -15,7 +15,7 @@
       <span v-if="device === 'desktop'" class="company-name">{{ companyName }}</span>
       <span v-else>{{ systemTitle }}</span>
       <span class="change-title" v-if="isShowChange">华夏ERP正式更名为管伊佳ERP，请尽快使用新网址：<a href="https://cloud.gyjerp.com" target="_blank">https://cloud.gyjerp.com</a></span>
-
+      <jump-info ref="jumpModal"></jump-info>
       <user-menu :theme="theme" @searchGlobalHeader="searchGlobalHeader" />
     </div>
     <!-- 顶部导航栏模式 -->
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+  import JumpInfo from './JumpInfo'
   import UserMenu from '../tools/UserMenu'
   import SMenu from '../menu/'
   import Logo from '../tools/Logo'
@@ -52,6 +53,7 @@
   export default {
     name: 'GlobalHeader',
     components: {
+      JumpInfo,
       UserMenu,
       SMenu,
       Logo
@@ -119,6 +121,9 @@
       if (this.mode === 'topmenu') {
         this.buildTopMenuStyle()
       }
+      if(window.location.host === 'cloud.huaxiaerp.vip' || window.location.host === 'cloud.huaxiaerp.com') {
+        this.showJump()
+      }
       //update-end--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
     },
     created () {
@@ -130,6 +135,9 @@
       }
     },
     methods: {
+      showJump() {
+        this.$refs.jumpModal.handleShow()
+      },
       handleScroll() {
         if (this.autoHideHeader) {
           let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
