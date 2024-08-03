@@ -49,6 +49,7 @@
 
 # 配套资料
 * 需要用户手册请访问这里 https://www.gyjerp.com/thread-393-1-1.html
+* 需要接口文档请查看这里 http://www.gyjerp.com/thread-428-1-1.html
 * 喜欢视频教程可以看这里 https://space.bilibili.com/540003552/channel/series 
 * 为方便大家搭建运行环境，分享了下载地址 https://pan.baidu.com/s/1jlild9uyGdQ7H2yaMx76zw  提取码:814g
 * 不会打包的小伙伴，请下载此打包后的文件 https://share.weiyun.com/NDJNLhry 密码：vd3aig
