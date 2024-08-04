@@ -23,7 +23,7 @@
         <a-form :form="form" id="batchSetDepot">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库名称">
             <a-select placeholder="请选择仓库" v-decorator="[ 'depotId', validatorRules.depotId ]" showSearch optionFilterProp="children">
-              <a-select-option v-for="(depot,index) in depotList" :value="depot.id">
+              <a-select-option v-for="(depot,index) in depotList" :value="depot.id" :key="index">
                 {{ depot.depotName }}
               </a-select-option>
             </a-select>
