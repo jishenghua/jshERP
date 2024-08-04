@@ -35,9 +35,9 @@ Overview
 npm install -g yarn
 ```
 
-- 配淘宝源（速度快）
+- 配镜像源（速度快）
 ```
-yarn config set registry https://registry.npm.taobao.org
+yarn config set registry https://registry.npmmirror.com
 ```
 
 - 安装依赖
