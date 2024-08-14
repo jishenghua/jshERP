@@ -436,6 +436,9 @@ public class ExceptionConstants {
     //单据录入-关联请购单号和关联订单号不能同时录入
     public static final int DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_CODE = 8500029;
     public static final String DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_MSG = "抱歉，关联请购单号和关联订单号不能同时录入";
+    //单据录入-单据最新状态不能进行批量操作
+    public static final int DEPOT_ITEM_EXIST_NEW_STATUS_FAILED_CODE = 8500030;
+    public static final String DEPOT_ITEM_EXIST_NEW_STATUS_FAILED_MSG = "抱歉，单据:%s最新状态不能进行批量操作";
 
     /**
      *  单据明细信息

@@ -1711,6 +1711,12 @@ public class DepotHeadService {
             String prefixNo = BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())?"QTRK":"QTCK";
             //关联单据单号
             String oldNumber = depotHead.getNumber();
+            //校验单据最新状态不能进行批量操作
+            if("0".equals(depotHead.getStatus()) || "2".equals(depotHead.getStatus()) || "9".equals(depotHead.getStatus())) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_NEW_STATUS_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_ITEM_EXIST_NEW_STATUS_FAILED_MSG, oldNumber, depotHead.getType()));
+            }
+            //校验是否是部分入库或者部分出库
             if("3".equals(depotHead.getStatus())) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_MSG, oldNumber, depotHead.getType()));
