@@ -108,6 +108,32 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
+            <span slot="customTitle">
+              <a-popover trigger="click" placement="right">
+                <template slot="content">
+                  <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
+                    <a-row style="width: 500px">
+                      <template v-for="(item,index) in defColumns">
+                        <template>
+                          <a-col :span="8">
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex==='rowIndex'" disabled></a-checkbox>
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex!=='rowIndex'">
+                              <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                            </a-checkbox>
+                          </a-col>
+                        </template>
+                      </template>
+                    </a-row>
+                    <a-row style="padding-top: 10px;">
+                      <a-col>
+                        恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                      </a-col>
+                    </a-row>
+                  </a-checkbox-group>
+                </template>
+                <a-icon type="setting" />
+              </a-popover>
+            </span>
             <span slot="numberCustomRender" slot-scope="text, record">
               <a @click="myHandleDetail(record)">{{record.number}}</a>
             </span>
@@ -187,10 +213,14 @@
         operNumberTotalStr: '0',
         allPriceTotalStr: '0',
         tabKey: "1",
-        // 表头
-        columns: [
+        pageName: 'outDetail',
+        // 默认索引
+        defDataIndex:['rowIndex','number','barCode','mname','standard','model','mUnit','operNumber', 'unitPrice','allPrice',
+          'taxRate','taxMoney','sname','dname','operTime','newRemark'],
+        // 默认列
+        defColumns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
+            dataIndex: 'rowIndex', width:40, align:"center", slots: { title: 'customTitle' },
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
@@ -204,6 +234,7 @@
           {title: '规格', dataIndex: 'standard', width: 60, ellipsis:true},
           {title: '型号', dataIndex: 'model', width: 60, ellipsis:true},
           {title: '单位', dataIndex: 'mUnit', width: 50, ellipsis:true},
+          {title: '多属性', dataIndex: 'sku', width: 100, ellipsis:true},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber, width: 60},
           {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
           {title: '金额', dataIndex: 'allPrice', sorter: (a, b) => a.allPrice - b.allPrice, width: 60},
@@ -224,6 +255,7 @@
       this.initSupplier()
       this.initUser()
       this.loadAllOrgaData()
+      this.initColumnsSetting()
     },
     methods: {
       moment,
@@ -311,11 +343,11 @@
       },
       exportExcel() {
         let list = []
-        let head = '单据编号,条码,名称,规格,型号,单位,数量,单价,金额,税率(%),税额,往来单位,仓库,出库日期,备注'
+        let head = '单据编号,条码,名称,规格,型号,单位,多属性,数量,单价,金额,税率(%),税额,往来单位,仓库,出库日期,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.number, ds.barCode, ds.mname, ds.standard, ds.model, ds.mUnit, ds.operNumber, ds.unitPrice,
+          item.push(ds.number, ds.barCode, ds.mname, ds.standard, ds.model, ds.mUnit, ds.sku, ds.operNumber, ds.unitPrice,
             ds.allPrice, ds.taxRate, ds.taxMoney, ds.sname, ds.dname, ds.operTime, ds.newRemark)
           list.push(item)
         }

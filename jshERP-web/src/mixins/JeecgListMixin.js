@@ -25,6 +25,10 @@ export const JeecgListMixin = {
       queryParam: {},
       /* 数据源 */
       dataSource:[],
+      // 实际列
+      columns:[],
+      // 实际索引
+      settingDataIndex:[],
       /* 分页参数 */
       ipagination:{
         current: 1,
@@ -286,6 +290,31 @@ export const JeecgListMixin = {
     handleDetail:function(record, type, prefixNo){
       this.$refs.modalDetail.show(record, type, prefixNo);
       this.$refs.modalDetail.title=type+"-详情";
+    },
+    //加载初始化列
+    initColumnsSetting(){
+      let columnsStr = Vue.ls.get(this.pageName)
+      if(columnsStr && columnsStr.indexOf(',')>-1) {
+        this.settingDataIndex = columnsStr.split(',')
+      } else {
+        this.settingDataIndex = this.defDataIndex
+      }
+      this.columns = this.defColumns.filter(item => {
+        return this.settingDataIndex.includes(item.dataIndex)
+      })
+    },
+    //列设置更改事件
+    onColChange (checkedValues) {
+      this.columns = this.defColumns.filter(item => {
+        return checkedValues.includes(item.dataIndex)
+      })
+      let columnsStr = checkedValues.join()
+      Vue.ls.set(this.pageName, columnsStr)
+    },
+    //恢复默认
+    handleRestDefault() {
+      Vue.ls.remove(this.pageName)
+      this.initColumnsSetting()
     },
     /* 导出 */
     handleExportXls2(){
