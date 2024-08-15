@@ -19,6 +19,7 @@
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
         <result column="unitPrice" jdbcType="DECIMAL" property="unitPrice" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
         <result column="operNumber" jdbcType="DECIMAL" property="operNumber" />
         <result column="allPrice" jdbcType="DECIMAL" property="allPrice" />
         <result column="taxRate" jdbcType="DECIMAL" property="taxRate" />
@@ -293,7 +294,7 @@
     </select>
 
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit,
+        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit, di.sku,
         di.oper_number operNumber,di.all_price allPrice, ifnull(di.tax_rate,0) taxRate, ifnull(di.tax_money,0) taxMoney, ifnull(di.tax_last_money,0) taxLastMoney,
         s.supplier sname,d.dname dname, date_format(dh.oper_time, '%Y-%m-%d') operTime, concat(dh.sub_type,dh.type) as newType,
         concat_ws('  ',dh.remark,di.remark) as newRemark

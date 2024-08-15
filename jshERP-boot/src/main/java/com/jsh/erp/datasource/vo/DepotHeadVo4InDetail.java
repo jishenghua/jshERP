@@ -18,6 +18,8 @@ public class DepotHeadVo4InDetail {
 
     private BigDecimal unitPrice;
 
+    private String sku;
+
     private String mUnit;
 
     private String newRemark;
@@ -88,6 +90,14 @@ public class DepotHeadVo4InDetail {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public String getmUnit() {
