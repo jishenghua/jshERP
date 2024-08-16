@@ -71,10 +71,37 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
+            <span slot="customTitle">
+              <a-popover trigger="click" placement="right">
+                <template slot="content">
+                  <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
+                    <a-row style="width: 600px">
+                      <template v-for="(item,index) in defColumns">
+                        <template>
+                          <a-col :span="6">
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex==='rowIndex'" disabled></a-checkbox>
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex!=='rowIndex'">
+                              <j-ellipsis :value="item.title" v-if="item.dataIndex!=='allNeed'" :length="10"></j-ellipsis>
+                              <j-ellipsis value="期末应收" v-if="item.dataIndex==='allNeed'" :length="10"></j-ellipsis>
+                            </a-checkbox>
+                          </a-col>
+                        </template>
+                      </template>
+                    </a-row>
+                    <a-row style="padding-top: 10px;">
+                      <a-col>
+                        恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                      </a-col>
+                    </a-row>
+                  </a-checkbox-group>
+                </template>
+                <a-icon type="setting" />
+              </a-popover>
+            </span>
             <span slot="action" slot-scope="text, record">
               <a @click="showDebtAccountList(record)">{{record.id?'详情':''}}</a>
             </span>
-            <span slot="customTitle">
+            <span slot="allNeedTitle">
               期末应收
               <a-tooltip title="期末应收=期初应收+本期欠款-本期收款">
                 <a-icon type="question-circle" />
@@ -147,10 +174,13 @@
         firstTotal: '',
         lastTotal: '',
         tabKey: "1",
-        // 表头
-        columns: [
+        pageName: 'customerAccount',
+        // 默认索引
+        defDataIndex:['rowIndex','action','supplier','contacts','telephone','phoneNum','email','preNeed','debtMoney','backMoney','allNeed'],
+        // 默认列
+        defColumns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
+            dataIndex: 'rowIndex', width:40, align:"center", slots: { title: 'customTitle' },
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
@@ -167,7 +197,7 @@
           {title: '本期欠款', dataIndex: 'debtMoney', sorter: (a, b) => a.debtMoney - b.debtMoney, width: 80},
           {title: '本期收款', dataIndex: 'backMoney', sorter: (a, b) => a.backMoney - b.backMoney, width: 80},
           {dataIndex: 'allNeed', sorter: (a, b) => a.allNeed - b.allNeed, width: 80,
-            slots: { title: 'customTitle' }
+            slots: { title: 'allNeedTitle' }
           }
         ],
         url: {
@@ -177,6 +207,7 @@
     },
     created () {
       this.initSupplier()
+      this.initColumnsSetting()
     },
     methods: {
       getQueryParams() {

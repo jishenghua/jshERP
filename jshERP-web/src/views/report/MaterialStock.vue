@@ -81,25 +81,51 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
-              <span slot="action" slot-scope="text, record">
-                <a @click="showMaterialInOutList(record)">{{record.id?'流水':''}}</a>
-              </span>
-              <template slot="customBarCode" slot-scope="text, record">
-                <div :style="record.imgName?'float:left;line-height:30px':'float:left;'">{{record.mBarCode}}</div>
-                <a-popover placement="right" trigger="click">
-                  <template slot="content">
-                    <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
-                  </template>
-                  <div class="item-info" v-if="record.imgName">
-                    <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" />
-                  </div>
-                </a-popover>
-              </template>
-              <template slot="customRenderStock" slot-scope="text, record">
-                <a-tooltip :title="record.bigUnitStock">
-                  {{text}}
-                </a-tooltip>
-              </template>
+            <span slot="customTitle">
+              <a-popover trigger="click" placement="right">
+                <template slot="content">
+                  <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
+                    <a-row style="width: 600px">
+                      <template v-for="(item,index) in defColumns">
+                        <template>
+                          <a-col :span="6">
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex==='rowIndex'" disabled></a-checkbox>
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex!=='rowIndex'">
+                              <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                            </a-checkbox>
+                          </a-col>
+                        </template>
+                      </template>
+                    </a-row>
+                    <a-row style="padding-top: 10px;">
+                      <a-col>
+                        恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                      </a-col>
+                    </a-row>
+                  </a-checkbox-group>
+                </template>
+                <a-icon type="setting" />
+              </a-popover>
+            </span>
+            <span slot="action" slot-scope="text, record">
+              <a @click="showMaterialInOutList(record)">{{record.id?'流水':''}}</a>
+            </span>
+            <template slot="customBarCode" slot-scope="text, record">
+              <div :style="record.imgName?'float:left;line-height:30px':'float:left;'">{{record.mBarCode}}</div>
+              <a-popover placement="right" trigger="click">
+                <template slot="content">
+                  <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
+                </template>
+                <div class="item-info" v-if="record.imgName">
+                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" />
+                </div>
+              </a-popover>
+            </template>
+            <template slot="customRenderStock" slot-scope="text, record">
+              <a-tooltip :title="record.bigUnitStock">
+                {{text}}
+              </a-tooltip>
+            </template>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
             <a-col :md="24" :sm="24">
@@ -168,10 +194,14 @@
         currentStock: '',
         currentStockPrice: '',
         currentWeight: '',
-        // 表头
-        columns: [
+        pageName: 'materialStock',
+        // 默认索引
+        defDataIndex:['rowIndex','action','mBarCode','name','standard','model','color','categoryName', 'position','unitName',
+          'purchaseDecimal','initialStock','currentStock','currentStockPrice','currentWeight'],
+        // 默认列
+        defColumns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
+            dataIndex: 'rowIndex', width:40, align:"center", slots: { title: 'customTitle' },
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
@@ -205,6 +235,7 @@
     created() {
       this.getDepotData()
       this.loadTreeData()
+      this.initColumnsSetting()
     },
     methods: {
       moment,

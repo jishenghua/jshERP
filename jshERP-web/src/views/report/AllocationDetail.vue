@@ -107,6 +107,32 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
+            <span slot="customTitle">
+              <a-popover trigger="click" placement="right">
+                <template slot="content">
+                  <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
+                    <a-row style="width: 600px">
+                      <template v-for="(item,index) in defColumns">
+                        <template>
+                          <a-col :span="6">
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex==='rowIndex'" disabled></a-checkbox>
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex!=='rowIndex'">
+                              <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                            </a-checkbox>
+                          </a-col>
+                        </template>
+                      </template>
+                    </a-row>
+                    <a-row style="padding-top: 10px;">
+                      <a-col>
+                        恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                      </a-col>
+                    </a-row>
+                  </a-checkbox-group>
+                </template>
+                <a-icon type="setting" />
+              </a-popover>
+            </span>
             <span slot="numberCustomRender" slot-scope="text, record">
               <a @click="myHandleDetail(record)">{{record.number}}</a>
             </span>
@@ -185,10 +211,13 @@
         operNumberTotalStr: '0',
         allPriceTotalStr: '0',
         tabKey: "1",
-        // 表头
-        columns: [
+        pageName: 'allocationDetail',
+        // 默认索引
+        defDataIndex:['rowIndex','number','barCode','mname','standard','model','mUnit','operNumber','unitPrice','allPrice','dname','sname','operTime','newRemark'],
+        // 默认列
+        defColumns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:40, align:"center",
+            dataIndex: 'rowIndex', width:40, align:"center", slots: { title: 'customTitle' },
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
@@ -219,6 +248,7 @@
       this.getDepotData()
       this.initSupplier()
       this.loadAllOrgaData()
+      this.initColumnsSetting()
     },
     methods: {
       moment,

@@ -112,10 +112,10 @@
               <a-popover trigger="click" placement="right">
                 <template slot="content">
                   <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
-                    <a-row style="width: 500px">
+                    <a-row style="width: 600px">
                       <template v-for="(item,index) in defColumns">
                         <template>
-                          <a-col :span="8">
+                          <a-col :span="6">
                             <a-checkbox :value="item.dataIndex" v-if="item.dataIndex==='rowIndex'" disabled></a-checkbox>
                             <a-checkbox :value="item.dataIndex" v-if="item.dataIndex!=='rowIndex'">
                               <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
