@@ -41,6 +41,8 @@ public class SystemConfig {
 
     private String moveAvgPriceFlag;
 
+    private String auditPrintFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -203,6 +205,14 @@ public class SystemConfig {
 
     public void setMoveAvgPriceFlag(String moveAvgPriceFlag) {
         this.moveAvgPriceFlag = moveAvgPriceFlag == null ? null : moveAvgPriceFlag.trim();
+    }
+
+    public String getAuditPrintFlag() {
+        return auditPrintFlag;
+    }
+
+    public void setAuditPrintFlag(String auditPrintFlag) {
+        this.auditPrintFlag = auditPrintFlag == null ? null : auditPrintFlag.trim();
     }
 
     public Long getTenantId() {

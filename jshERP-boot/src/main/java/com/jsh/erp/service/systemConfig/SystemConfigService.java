@@ -508,20 +508,20 @@ public class SystemConfigService {
     }
 
     /**
-     * 获取移动平均价开关
+     * 获取先审核后打印开关
      * @return
      * @throws Exception
      */
-    public boolean getMoveAvgPriceFlag() throws Exception {
-        boolean moveAvgPriceFlag = false;
+    public boolean getAuditPrintFlag() throws Exception {
+        boolean auditPrintFlag = false;
         List<SystemConfig> list = getSystemConfig();
         if(list.size()>0) {
-            String flag = list.get(0).getMoveAvgPriceFlag();
+            String flag = list.get(0).getAuditPrintFlag();
             if(("1").equals(flag)) {
-                moveAvgPriceFlag = true;
+                auditPrintFlag = true;
             }
         }
-        return moveAvgPriceFlag;
+        return auditPrintFlag;
     }
 
     /**

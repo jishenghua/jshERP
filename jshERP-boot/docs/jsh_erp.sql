@@ -872,6 +872,7 @@ CREATE TABLE `jsh_system_config` (
   `in_out_manage_flag` varchar(1) DEFAULT '0' COMMENT '出入库管理启用标记，0未启用，1启用',
   `multi_account_flag` varchar(1) DEFAULT '0' COMMENT '多账户启用标记，0未启用，1启用',
   `move_avg_price_flag` varchar(1) DEFAULT '0' COMMENT '移动平均价启用标记，0未启用，1启用',
+  `audit_print_flag` varchar(1) DEFAULT '0' COMMENT '先审核后打印启用标记，0未启用，1启用',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
@@ -880,7 +881,7 @@ CREATE TABLE `jsh_system_config` (
 -- ----------------------------
 -- Records of jsh_system_config
 -- ----------------------------
-INSERT INTO `jsh_system_config` VALUES ('11', '公司test', '小李', '地址1', '12345678', null, null, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '0', '', '0', '1', '0', '0', '0', '0', '63', '0');
+INSERT INTO `jsh_system_config` VALUES ('11', '公司test', '小李', '地址1', '12345678', null, null, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '0', '', '0', '1', '0', '0', '0', '0', '0', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_tenant

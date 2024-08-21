@@ -1494,6 +1494,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andAuditPrintFlagIsNull() {
+            addCriterion("audit_print_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagIsNotNull() {
+            addCriterion("audit_print_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagEqualTo(String value) {
+            addCriterion("audit_print_flag =", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagNotEqualTo(String value) {
+            addCriterion("audit_print_flag <>", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagGreaterThan(String value) {
+            addCriterion("audit_print_flag >", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("audit_print_flag >=", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagLessThan(String value) {
+            addCriterion("audit_print_flag <", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagLessThanOrEqualTo(String value) {
+            addCriterion("audit_print_flag <=", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagLike(String value) {
+            addCriterion("audit_print_flag like", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagNotLike(String value) {
+            addCriterion("audit_print_flag not like", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagIn(List<String> values) {
+            addCriterion("audit_print_flag in", values, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagNotIn(List<String> values) {
+            addCriterion("audit_print_flag not in", values, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagBetween(String value1, String value2) {
+            addCriterion("audit_print_flag between", value1, value2, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagNotBetween(String value1, String value2) {
+            addCriterion("audit_print_flag not between", value1, value2, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

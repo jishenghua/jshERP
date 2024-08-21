@@ -116,8 +116,14 @@
             </a-form-item>
           </a-col>
         </a-row>
-        <a-row class="form-row" :gutter="24" v-if="isShowApproval">
+        <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="先审核后打印">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="auditPrintFlagSwitch" @change="onAuditPrintChange"></a-switch>
+              （启用后，零售、采购、销售、仓库、盘点、财务管理大菜单下的单据，都需要先审核之后才能进行打印）
+            </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24" v-if="isShowApproval">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
               <a-select placeholder="请选择流程类型" v-model="multiBillTypeSelect" style="width:400px;padding-left:10px"
@@ -129,8 +135,6 @@
               </a-select>
               <br/>（启用后，多级审核需配置流程，开启后需刷新浏览器才能看到效果）<a-button type="link" @click="handleReload">点此刷新</a-button>
             </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
           </a-col>
         </a-row>
       </a-form>
@@ -173,6 +177,7 @@
         isShowApproval: false, //是否展示多级审核
         multiAccountFlagSwitch: false, //多账户
         moveAvgPriceFlagSwitch: false, //移动平均价
+        auditPrintFlagSwitch: false, //先审核后打印
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -270,6 +275,9 @@
               }
               if (record.moveAvgPriceFlag != null) {
                 this.moveAvgPriceFlagSwitch = record.moveAvgPriceFlag == '1' ? true : false;
+              }
+              if (record.auditPrintFlag != null) {
+                this.auditPrintFlagSwitch = record.auditPrintFlag == '1' ? true : false;
               }
             }
           } else {
@@ -389,6 +397,10 @@
       },
       onMoveAvgPriceChange(checked) {
         this.model.moveAvgPriceFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onAuditPrintChange(checked) {
+        this.model.auditPrintFlag = checked?'1':'0'
         this.handleChange()
       },
       //改变内容
