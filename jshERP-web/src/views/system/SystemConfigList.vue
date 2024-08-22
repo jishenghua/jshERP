@@ -120,7 +120,7 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="先审核后打印">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="auditPrintFlagSwitch" @change="onAuditPrintChange"></a-switch>
-              （启用后，零售、采购、销售、仓库、盘点、财务管理大菜单下的单据，都需要先审核之后才能进行打印）
+              （启用后，零售管理、采购管理、销售管理和仓库管理下的单据，都需要先审核之后才能进行打印）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24" v-if="isShowApproval">

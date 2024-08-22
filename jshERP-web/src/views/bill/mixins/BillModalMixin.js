@@ -41,6 +41,8 @@ export const BillModalMixin = {
       isCanCheck: true,
       isTenant: false,
       billPrintFlag: false,
+      /* 是否显示打印按钮 */
+      isShowPrintBtn: true,
       /* 原始审核是否开启 */
       checkFlag: true,
       validatorRules:{
@@ -168,6 +170,15 @@ export const BillModalMixin = {
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
           this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
           this.inOutManageFlag = res.data.inOutManageFlag==='1'?true:false
+          if(res.data.auditPrintFlag==='1') {
+            if(this.model.status === '0' || this.model.status === '9') {
+              this.isShowPrintBtn = false
+            } else {
+              this.isShowPrintBtn = true
+            }
+          } else {
+            this.isShowPrintBtn = true
+          }
         }
       })
     },

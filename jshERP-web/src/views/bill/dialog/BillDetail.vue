@@ -10,23 +10,26 @@
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp">
     <template slot="footer">
-      <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
-      <!--此处为解决缓存问题-->
-      <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
-      <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
-      <a-button v-if="billType === '请购单'" v-print="'#purchaseApplyPrint'">普通打印</a-button>
-      <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'">普通打印</a-button>
-      <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'">普通打印</a-button>
-      <a-button v-if="billType === '采购退货出库'" v-print="'#purchaseBackPrint'">普通打印</a-button>
-      <a-button v-if="billType === '销售订单'" v-print="'#saleOrderPrint'">普通打印</a-button>
-      <a-button v-if="billType === '销售出库'" v-print="'#saleOutPrint'">普通打印</a-button>
-      <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'">普通打印</a-button>
-      <a-button v-if="billType === '其它入库'" v-print="'#otherInPrint'">普通打印</a-button>
-      <a-button v-if="billType === '其它出库'" v-print="'#otherOutPrint'">普通打印</a-button>
-      <a-button v-if="billType === '调拨出库'" v-print="'#allocationOutPrint'">普通打印</a-button>
-      <a-button v-if="billType === '组装单'" v-print="'#assemblePrint'">普通打印</a-button>
-      <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'">普通打印</a-button>
-      <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
+      <!--打印-->
+      <template v-if="isShowPrintBtn">
+        <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
+        <!--此处为解决缓存问题-->
+        <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
+        <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
+        <a-button v-if="billType === '请购单'" v-print="'#purchaseApplyPrint'">普通打印</a-button>
+        <a-button v-if="billType === '采购订单'" v-print="'#purchaseOrderPrint'">普通打印</a-button>
+        <a-button v-if="billType === '采购入库'" v-print="'#purchaseInPrint'">普通打印</a-button>
+        <a-button v-if="billType === '采购退货出库'" v-print="'#purchaseBackPrint'">普通打印</a-button>
+        <a-button v-if="billType === '销售订单'" v-print="'#saleOrderPrint'">普通打印</a-button>
+        <a-button v-if="billType === '销售出库'" v-print="'#saleOutPrint'">普通打印</a-button>
+        <a-button v-if="billType === '销售退货入库'" v-print="'#saleBackPrint'">普通打印</a-button>
+        <a-button v-if="billType === '其它入库'" v-print="'#otherInPrint'">普通打印</a-button>
+        <a-button v-if="billType === '其它出库'" v-print="'#otherOutPrint'">普通打印</a-button>
+        <a-button v-if="billType === '调拨出库'" v-print="'#allocationOutPrint'">普通打印</a-button>
+        <a-button v-if="billType === '组装单'" v-print="'#assemblePrint'">普通打印</a-button>
+        <a-button v-if="billType === '拆卸单'" v-print="'#disassemblePrint'">普通打印</a-button>
+        <a-button v-if="billType === '盘点复盘'" v-print="'#stockCheckReplayPrint'">普通打印</a-button>
+      </template>
       <!--导出Excel-->
       <a-button v-if="billType === '零售出库'||billType === '零售退货入库'" @click="retailExportExcel()">导出</a-button>
       <a-button v-if="billType === '请购单'" @click="applyExportExcel()">导出</a-button>
@@ -1209,6 +1212,8 @@
         financialBillNoList: [],
         /* 原始反审核是否开启 */
         checkFlag: true,
+        /* 是否显示打印按钮 */
+        isShowPrintBtn: true,
         tableWidth: {
           'width': '1500px'
         },
@@ -1679,6 +1684,15 @@
             let multiBillType = res.data.multiBillType
             let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
             this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
+            if(res.data.auditPrintFlag==='1') {
+              if(this.model.status === '0' || this.model.status === '9') {
+                this.isShowPrintBtn = false
+              } else {
+                this.isShowPrintBtn = true
+              }
+            } else {
+              this.isShowPrintBtn = true
+            }
           }
         })
       },
