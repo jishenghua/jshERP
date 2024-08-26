@@ -209,31 +209,6 @@ public class UserController {
     }
 
     /**
-     * 获取全部用户数据列表
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/getAllList")
-    @ApiOperation(value = "获取全部用户数据列表")
-    public BaseResponseInfo getAllList(HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            List<User> dataList = userService.getUser();
-            if(dataList!=null) {
-                data.put("userList", dataList);
-            }
-            res.code = 200;
-            res.data = data;
-        } catch(Exception e){
-            logger.error(e.getMessage(), e);
-            res.code = 500;
-            res.data = "获取失败";
-        }
-        return res;
-    }
-
-    /**
      * 用户列表，用于用户下拉框
      * @param request
      * @return
