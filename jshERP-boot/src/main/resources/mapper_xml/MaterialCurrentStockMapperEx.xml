@@ -31,4 +31,15 @@
         select ifnull(mcs.current_unit_price,0) as current_unit_price from jsh_material_current_stock mcs where mcs.material_id=#{materialId} limit 1
     </select>
 
+    <update id="batchDeleteByDepots">
+        update jsh_material_current_stock
+        set delete_flag='1'
+        where 1=1
+        and depot_id in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
 </mapper>

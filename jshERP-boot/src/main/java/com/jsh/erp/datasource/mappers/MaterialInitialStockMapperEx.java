@@ -13,4 +13,5 @@ public interface MaterialInitialStockMapperEx {
 
     List<MaterialInitialStock> getListExceptZero();
 
+    void batchDeleteByDepots(@Param("ids") String ids[]);
 }

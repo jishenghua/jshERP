@@ -19,4 +19,6 @@ public interface MaterialCurrentStockMapperEx {
             @Param("materialId") Long materialId);
 
     BigDecimal getCurrentUnitPriceByMId(@Param("materialId") Long materialId);
+
+    void batchDeleteByDepots(@Param("ids") String ids[]);
 }
