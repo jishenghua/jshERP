@@ -96,12 +96,16 @@ public class UserService {
         return list;
     }
 
-    public List<User> getUser()throws Exception {
-        UserExample example = new UserExample();
-        example.createCriteria().andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+    public List<User> getUser(HttpServletRequest request) throws Exception {
         List<User> list=null;
         try{
-            list=userMapper.selectByExample(example);
+            //先校验是否登录，然后才能查询用户数据
+            Long userId = this.getUserId(request);
+            if(userId!=null) {
+                UserExample example = new UserExample();
+                example.createCriteria().andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+                list = userMapper.selectByExample(example);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -110,28 +114,33 @@ public class UserService {
 
     public List<UserEx> select(String userName, String loginName, int offset, int rows)throws Exception {
         List<UserEx> list=null;
-        try{
-            list=userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
-            for(UserEx ue: list){
-                String userType = "";
-                if (ue.getId().equals(ue.getTenantId())) {
-                    userType = "租户";
-                } else if(ue.getTenantId() == null){
-                    userType = "超管";
-                } else {
-                    userType = "普通";
+        try {
+            //先校验是否登录，然后才能查询用户数据
+            HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+            Long userId = this.getUserId(request);
+            if(userId!=null) {
+                list = userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
+                for (UserEx ue : list) {
+                    String userType = "";
+                    if (ue.getId().equals(ue.getTenantId())) {
+                        userType = "租户";
+                    } else if (ue.getTenantId() == null) {
+                        userType = "超管";
+                    } else {
+                        userType = "普通";
+                    }
+                    ue.setUserType(userType);
+                    //是否经理
+                    String leaderFlagStr = "";
+                    if ("1".equals(ue.getLeaderFlag())) {
+                        leaderFlagStr = "是";
+                    } else {
+                        leaderFlagStr = "否";
+                    }
+                    ue.setLeaderFlagStr(leaderFlagStr);
                 }
-                ue.setUserType(userType);
-                //是否经理
-                String leaderFlagStr = "";
-                if("1".equals(ue.getLeaderFlag())) {
-                    leaderFlagStr = "是";
-                } else {
-                    leaderFlagStr = "否";
-                }
-                ue.setLeaderFlagStr(leaderFlagStr);
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
@@ -875,7 +884,7 @@ public class UserService {
         //选中的用户的数量
         int selectUserSize = list.size();
         //查询启用状态的用户的数量
-        int enableUserSize = getUser().size();
+        int enableUserSize = getUser(request).size();
         User userInfo = userService.getCurrentUser();
         Tenant tenant = tenantService.getTenantByTenantId(userInfo.getTenantId());
         if(tenant!=null) {

@@ -219,7 +219,7 @@ public class UserController {
     public JSONArray getUserList(HttpServletRequest request)throws Exception {
         JSONArray dataArray = new JSONArray();
         try {
-            List<User> dataList = userService.getUser();
+            List<User> dataList = userService.getUser(request);
             if (null != dataList) {
                 for (User user : dataList) {
                     JSONObject item = new JSONObject();
@@ -476,7 +476,7 @@ public class UserController {
             Long userId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userId").toString());
             User user = userService.getUser(userId);
             //获取当前用户数
-            int userCurrentNum = userService.getUser().size();
+            int userCurrentNum = userService.getUser(request).size();
             Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
             if(tenant.getExpireTime()!=null && tenant.getExpireTime().getTime()<System.currentTimeMillis()){
                 //租户已经过期，移除token
