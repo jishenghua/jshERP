@@ -71,12 +71,6 @@ CREATE TABLE `jsh_account_head` (
 -- ----------------------------
 -- Records of jsh_account_head
 -- ----------------------------
-INSERT INTO `jsh_account_head` VALUES ('118', '收入', '58', '16', '63', '55.000000', null, '55.000000', '17', 'SR00000000643', '2021-06-02 00:24:49', null, null, '1', '0', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('119', '支出', '68', '16', '63', '-66.000000', null, '-66.000000', '17', 'ZC00000000644', '2021-06-02 00:25:01', null, null, '0', '0', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('122', '转账', null, '17', '63', '-11.000000', null, '-11.000000', '17', 'ZZ00000000647', '2021-06-02 00:25:32', null, null, '0', '0', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('124', '收预付款', '60', '17', '63', '80.000000', '0.000000', '80.000000', null, 'SYF00000000649', '2021-07-06 23:43:48', null, null, '0', '0', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('125', '收款', '58', '17', '63', '10.000000', '0.000000', '10.000000', '17', 'SK00000000653', '2021-07-06 23:46:38', null, null, '0', '0', '63', '0');
-INSERT INTO `jsh_account_head` VALUES ('126', '付款', '57', '17', '63', '-50.000000', '0.000000', '-50.000000', '17', 'FK00000000654', '2021-07-06 23:47:23', null, null, '0', '0', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_account_item
@@ -103,12 +97,6 @@ CREATE TABLE `jsh_account_item` (
 -- ----------------------------
 -- Records of jsh_account_item
 -- ----------------------------
-INSERT INTO `jsh_account_item` VALUES ('143', '118', null, '23', null, null, null, '55.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('144', '119', null, '21', null, null, null, '66.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('147', '122', '17', null, null, null, null, '11.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('149', '124', '17', null, null, null, null, '80.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('150', '125', null, null, '272', '20.000000', '0.000000', '10.000000', '', '63', '0');
-INSERT INTO `jsh_account_item` VALUES ('151', '126', null, null, '271', '60.000000', '0.000000', '-50.000000', '', '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot
@@ -183,23 +171,6 @@ CREATE TABLE `jsh_depot_head` (
 -- ----------------------------
 -- Records of jsh_depot_head
 -- ----------------------------
-INSERT INTO `jsh_depot_head` VALUES ('258', '其它', '采购订单', 'CGDD00000000630', 'CGDD00000000630', '2021-06-02 00:21:54', '2021-06-02 00:21:44', '57', '63', null, null, null, '-110.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, '2', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('259', '入库', '采购', 'CGRK00000000631', 'CGRK00000000631', '2021-06-02 00:22:23', '2021-06-02 00:22:05', '57', '63', '17', '-110.000000', null, '-110.000000', '现付', null, null, null, null, '', '', '0.000000', '0.000000', '110.000000', '0.000000', null, '0', '0', '0', 'CGDD00000000630', null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('260', '出库', '采购退货', 'CGTH00000000632', 'CGTH00000000632', '2021-06-02 00:22:35', '2021-06-02 00:22:26', '57', '63', '17', '22.000000', null, '22.000000', '现付', null, null, null, null, null, null, '0.000000', '0.000000', '22.000000', '0.000000', null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('261', '其它', '销售订单', 'XSDD00000000633', 'XSDD00000000633', '2021-06-02 00:22:48', '2021-06-02 00:22:39', '58', '63', null, null, null, '44.000000', '现付', null, null, null, '', null, null, null, null, null, null, null, '2', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('262', '出库', '销售', 'XSCK00000000634', 'XSCK00000000634', '2021-06-02 00:23:03', '2021-06-02 00:22:54', '58', '63', '17', '44.000000', null, '44.000000', '现付', null, null, null, '', '', '', '0.000000', '0.000000', '44.000000', '0.000000', null, '0', '0', '0', 'XSDD00000000633', null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('263', '入库', '销售退货', 'XSTH00000000635', 'XSTH00000000635', '2021-06-02 00:23:12', '2021-06-02 00:23:05', '71', '63', '17', '-22.000000', null, '-22.000000', '现付', null, null, null, '', '', '', '0.000000', '0.000000', '22.000000', '0.000000', null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('264', '出库', '零售', 'LSCK00000000636', 'LSCK00000000636', '2021-06-02 00:23:21', '2021-06-02 00:23:14', '60', '63', '17', '22.000000', null, '22.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('265', '入库', '零售退货', 'LSTH00000000637', 'LSTH00000000637', '2021-06-02 00:23:29', '2021-06-02 00:23:23', '60', '63', '17', '-22.000000', null, '-22.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('266', '入库', '其它', 'QTRK00000000638', 'QTRK00000000638', '2021-06-02 00:23:48', '2021-06-02 00:23:36', '57', '63', null, null, null, '-55.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, '1', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('267', '出库', '其它', 'QTCK00000000639', 'QTCK00000000639', '2021-06-02 00:23:59', '2021-06-02 00:23:50', '58', '63', null, null, null, '30.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('268', '出库', '调拨', 'DBCK00000000640', 'DBCK00000000640', '2021-06-02 00:24:09', '2021-06-02 00:24:00', null, '63', null, null, null, '11.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('269', '其它', '组装单', 'ZZD00000000641', 'ZZD00000000641', '2021-06-02 00:24:29', '2021-06-02 00:24:11', null, '63', null, null, null, '0.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('270', '其它', '拆卸单', 'CXD00000000642', 'CXD00000000642', '2021-06-02 00:24:45', '2021-06-02 00:24:32', null, '63', null, null, null, '0.000000', '现付', null, null, null, null, null, null, null, null, null, null, null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('271', '入库', '采购', 'CGRK00000000651', 'CGRK00000000651', '2021-07-06 23:45:20', '2021-07-06 23:44:45', '57', '63', '17', '-20.000000', null, '-80.000000', '现付', null, null, null, null, '', '', '0.000000', '0.000000', '80.000000', '0.000000', null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('272', '出库', '销售', 'XSCK00000000652', 'XSCK00000000652', '2021-07-06 23:46:07', '2021-07-06 23:45:24', '58', '63', '17', '8.000000', null, '28.000000', '现付', null, null, null, '', '', '', '0.000000', '0.000000', '28.000000', '0.000000', null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('273', '入库', '采购', 'CGRK00000000658', 'CGRK00000000658', '2021-07-28 00:58:12', '2021-07-28 00:58:02', '57', '63', '17', '-60.000000', null, '-60.000000', '现付', null, null, null, null, '', '', '0.000000', '0.000000', '60.000000', '0.000000', null, '0', '0', '0', null, null, '63', '0');
-INSERT INTO `jsh_depot_head` VALUES ('276', '其它', '请购单', 'QGD00000000671', 'QGD00000000671', '2024-04-22 22:35:25', '2024-04-22 22:35:06', null, '63', null, null, null, null, '现付', null, null, '', null, null, null, null, null, null, null, null, '0', '0', '0', null, null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_depot_item
@@ -241,25 +212,6 @@ CREATE TABLE `jsh_depot_item` (
 -- ----------------------------
 -- Records of jsh_depot_item
 -- ----------------------------
-INSERT INTO `jsh_depot_item` VALUES ('312', '258', '588', '10', '个', null, '10.000000', '10.000000', '11.000000', null, null, '110.000000', null, '14', null, null, null, null, null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('313', '259', '588', '10', '个', null, '10.000000', '10.000000', '11.000000', null, null, '110.000000', null, '14', null, null, '0.000000', '110.000000', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('314', '260', '588', '10', '个', null, '2.000000', '2.000000', '11.000000', null, '11.000000', '22.000000', null, '14', null, '0.000000', '0.000000', '22.000000', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('315', '261', '588', '10', '个', null, '2.000000', '2.000000', '22.000000', null, null, '44.000000', null, '14', null, null, null, null, null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('316', '262', '588', '10', '个', null, '2.000000', '2.000000', '22.000000', null, null, '44.000000', null, '14', null, null, '0.000000', '44.000000', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('317', '263', '588', '10', '个', null, '1.000000', '1.000000', '22.000000', null, '22.000000', '22.000000', null, '14', null, '0.000000', '0.000000', '22.000000', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('318', '264', '588', '10', '个', null, '1.000000', '1.000000', '22.000000', null, null, '22.000000', null, '14', null, null, null, null, null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('319', '265', '588', '10', '个', null, '1.000000', '1.000000', '22.000000', null, null, '22.000000', null, '14', null, null, null, null, null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('320', '266', '568', '2', '个', null, '5.000000', '5.000000', '11.000000', null, null, '55.000000', null, '14', null, null, null, null, null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('321', '267', '568', '2', '个', null, '2.000000', '2.000000', '15.000000', null, null, '30.000000', null, '14', null, null, null, null, null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('322', '268', '568', '2', '个', null, '1.000000', '1.000000', '11.000000', null, null, '11.000000', null, '14', '15', null, null, null, null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('323', '269', '588', '10', '个', null, '1.000000', '1.000000', '0.000000', null, null, '0.000000', null, '14', null, null, null, null, '组合件', null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('324', '269', '568', '2', '个', null, '1.000000', '1.000000', '0.000000', null, null, '0.000000', null, '14', null, null, null, null, '普通子件', null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('325', '270', '588', '10', '个', null, '1.000000', '1.000000', '0.000000', null, null, '0.000000', null, '14', null, null, null, null, '组合件', null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('326', '270', '568', '2', '个', null, '1.000000', '1.000000', '0.000000', null, null, '0.000000', null, '14', null, null, null, null, '普通子件', null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('327', '271', '570', '4', '个', null, '10.000000', '10.000000', '8.000000', null, '8.000000', '80.000000', null, '14', null, '0.000000', '0.000000', '80.000000', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('328', '272', '570', '4', '个', null, '2.000000', '2.000000', '14.000000', null, '14.000000', '28.000000', null, '14', null, '0.000000', '0.000000', '28.000000', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('330', '273', '619', '37', '件', '橙色,L', '5.000000', '5.000000', '12.000000', null, '12.000000', '60.000000', null, '14', null, '0.000000', '0.000000', '60.000000', null, null, null, null, null, '63', '0');
-INSERT INTO `jsh_depot_item` VALUES ('333', '276', '588', '10', '个', null, '20.000000', '20.000000', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_function
