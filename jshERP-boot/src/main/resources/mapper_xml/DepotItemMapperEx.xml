@@ -253,7 +253,7 @@
         <if test="inOutManageFlag">
             and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
         </if>
-        <if test="depotIdArray != null">
+        <if test="depotIdArray != null and depotIdArray.length>0">
             and di.depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
@@ -284,7 +284,7 @@
         select dh.number from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
         where dh.type='出库' and dh.sub_type='调拨'
-        <if test="depotIdArray != null">
+        <if test="depotIdArray != null and depotIdArray.length>0">
             and di.another_depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
