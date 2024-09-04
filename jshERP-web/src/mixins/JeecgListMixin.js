@@ -94,20 +94,21 @@ export const JeecgListMixin = {
       }
       //加载数据 若传入参数1则加载第一页的内容
       if (arg === 1) {
-        this.ipagination.current = 1;
+        this.ipagination.current = 1
       }
-      var params = this.getQueryParams();//查询条件
-      this.loading = true;
+      let params = this.getQueryParams() //查询条件
+      this.loading = true
       getAction(this.url.list, params).then((res) => {
         if (res.code===200) {
-          this.dataSource = res.data.rows;
-          this.ipagination.total = res.data.total;
+          this.dataSource = res.data.rows
+          this.ipagination.total = res.data.total
           this.tableAddTotalRow(this.columns, this.dataSource)
         }
         if(res.code===510){
           this.$message.warning(res.data)
         }
-        this.loading = false;
+        this.loading = false
+        this.onClearSelected()
       })
     },
     initDictConfig(){
@@ -153,8 +154,8 @@ export const JeecgListMixin = {
       this.selectionRows = selectionRows;
     },
     onClearSelected() {
-      this.selectedRowKeys = [];
-      this.selectionRows = [];
+      this.selectedRowKeys = []
+      this.selectionRows = []
     },
     searchQuery() {
       this.loadData(1);
@@ -187,8 +188,7 @@ export const JeecgListMixin = {
             that.loading = true;
             postAction(that.url.batchSetStatusUrl, {status: status, ids: ids}).then((res) => {
               if(res.code === 200){
-                that.loadData();
-                that.onClearSelected();
+                that.loadData()
               } else {
                 that.$message.warning(res.data.message);
               }
@@ -220,8 +220,7 @@ export const JeecgListMixin = {
             that.loading = true;
             deleteAction(that.url.deleteBatch, {ids: ids}).then((res) => {
               if(res.code === 200){
-                that.loadData();
-                that.onClearSelected();
+                that.loadData()
               } else {
                 that.$message.warning(res.data.message);
               }
