@@ -222,11 +222,20 @@
         }
       },
       loginSuccess (res) {
+        let that = this
         this.$router.push({ path: "/dashboard/analysis" })
         this.$notification.success({
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`,
-        });
+        })
+        if(res.data.pwdSimple) {
+          setTimeout(function () {
+            that.$notification.warning({
+              message: '友情提醒',
+              description: '密码过于简单，请尽快修改',
+            })
+          },3000)
+        }
         if(res.data && res.data.user) {
           if(res.data.user.loginName === 'admin'){
             let desc = 'admin只是平台运维用户，真正的管理员是租户(测试账号为jsh），admin不能编辑任何业务数据，只能配置平台菜单和创建租户'
