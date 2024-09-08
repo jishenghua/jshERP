@@ -390,6 +390,11 @@ public class UserService {
         }
         data.put("msgTip", msgTip);
         if(user!=null){
+            //校验下密码是不是过于简单
+            boolean pwdSimple = false;
+            if(user.getPassword().equals(Tools.md5Encryp(BusinessConstants.USER_DEFAULT_PASSWORD))) {
+                pwdSimple = true;
+            }
             user.setPassword(null);
             redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
             logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
@@ -397,6 +402,7 @@ public class UserService {
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             data.put("token", token);
             data.put("user", user);
+            data.put("pwdSimple", pwdSimple);
         }
         return data;
     }

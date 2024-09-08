@@ -469,7 +469,7 @@ public class UserController {
      */
     @GetMapping(value = "/infoWithTenant")
     @ApiOperation(value = "获取当前用户的用户数量和租户信息")
-    public BaseResponseInfo randomImage(HttpServletRequest request){
+    public BaseResponseInfo infoWithTenant(HttpServletRequest request){
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             Map<String, Object> data = new HashMap<>();
