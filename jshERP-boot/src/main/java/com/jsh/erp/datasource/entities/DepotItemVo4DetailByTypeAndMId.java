@@ -21,6 +21,8 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     private BigDecimal allPrice;
 
+    private String materialUnit;
+
     private String depotName;
 
     private Date otime;
@@ -87,6 +89,14 @@ public class DepotItemVo4DetailByTypeAndMId {
 
     public void setAllPrice(BigDecimal allPrice) {
         this.allPrice = allPrice;
+    }
+
+    public String getMaterialUnit() {
+        return materialUnit;
+    }
+
+    public void setMaterialUnit(String materialUnit) {
+        this.materialUnit = materialUnit;
     }
 
     public String getDepotName() {

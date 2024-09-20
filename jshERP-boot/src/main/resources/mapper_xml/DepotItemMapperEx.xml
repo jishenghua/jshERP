@@ -11,6 +11,7 @@
         <result column="b_num" jdbcType="DECIMAL" property="bnum" />
         <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
         <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
+        <result column="material_unit" jdbcType="VARCHAR" property="materialUnit" />
         <result column="depotName" jdbcType="VARCHAR" property="depotName" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
@@ -147,7 +148,7 @@
 
     <select id="findDetailByDepotIdsAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
         select tb.number, tb.bar_code, tb.material_name, tb.type, tb.sub_type, tb.b_num, tb.unit_price,
-        ifnull(tb.b_num*tb.unit_price,0) as all_price, tb.depotName, tb.oTime from
+        ifnull(tb.b_num*tb.unit_price,0) as all_price, tb.material_unit, tb.depotName, tb.oTime from
         (select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
         case
             when type='入库' then ifnull(di.basic_number,0)
@@ -159,7 +160,7 @@
             when dh.sub_type='盘点复盘' then ifnull(di.basic_number,0)
             else 0
         end
-        as b_num, di.unit_price,
+        as b_num, di.unit_price, di.material_unit,
         (select name from jsh_depot d where d.id=di.depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depot_head dh
@@ -202,7 +203,7 @@
         union all
         --单独构造记录：调拨入库
         select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
-        ifnull(di.basic_number,0) as b_num, di.unit_price,
+        ifnull(di.basic_number,0) as b_num, di.unit_price, di.material_unit,
         (select concat(name,'[调入]') from jsh_depot d where d.id=di.another_depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depot_head dh

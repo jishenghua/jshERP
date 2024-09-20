@@ -585,6 +585,7 @@ public class DepotItemService {
                     BusinessConstants.SUB_TYPE_RETAIL_RETURN.equals(depotHead.getSubType())) {
                     boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
                     BigDecimal currentUnitPrice = materialCurrentStockMapperEx.getCurrentUnitPriceByMId(materialExtend.getMaterialId());
+                    currentUnitPrice = unitService.parseUnitPriceByUnit(currentUnitPrice, unitInfo, depotItem.getMaterialUnit());
                     BigDecimal unitPrice = moveAvgPriceFlag? currentUnitPrice: materialExtend.getPurchaseDecimal();
                     depotItem.setPurchaseUnitPrice(unitPrice);
                     if(StringUtil.isNotEmpty(depotItem.getBatchNumber())) {
@@ -1066,6 +1067,8 @@ public class DepotItemService {
     public void updateCurrentUnitPrice(DepotItem depotItem) throws Exception {
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
+        //查询计量单位信息
+        Unit unitInfo = materialService.findUnit(depotItem.getMaterialId());
         List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdList(null, forceFlag, inOutManageFlag, depotItem.getSku(),
                 depotItem.getBatchNumber(), null, null, null, depotItem.getMaterialId(), null, null);
         Collections.reverse(itemList); //倒序之后变成按时间从前往后排序
@@ -1083,7 +1086,8 @@ public class DepotItemService {
                     currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
                 } else {
                     //数量*单价  另外计算新的成本价
-                    currentAllPrice = currentAllPrice.add(item.getAllPrice());
+                    BigDecimal allPrice = unitService.parseAllPriceByUnit(item.getAllPrice(), unitInfo, item.getMaterialUnit());
+                    currentAllPrice = currentAllPrice.add(allPrice);
                     currentNumber = currentNumber.add(basicNumber);
                     if(currentNumber.compareTo(BigDecimal.ZERO)!=0) {
                         currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
@@ -1095,7 +1099,8 @@ public class DepotItemService {
                 //采购退货
                 if(BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(item.getSubType())) {
                     //数量*单价  另外计算新的成本价
-                    currentAllPrice = currentAllPrice.add(item.getAllPrice());
+                    BigDecimal allPrice = unitService.parseAllPriceByUnit(item.getAllPrice(), unitInfo, item.getMaterialUnit());
+                    currentAllPrice = currentAllPrice.add(allPrice);
                     currentNumber = currentNumber.add(basicNumber);
                     if(currentNumber.compareTo(BigDecimal.ZERO)!=0) {
                         currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
