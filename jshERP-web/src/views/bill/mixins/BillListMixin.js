@@ -74,7 +74,8 @@ export const BillListMixin = {
       this.$refs.modalForm.disableSubmit = false;
       //开启明细的编辑模式
       this.$refs.modalForm.rowCanEdit = true
-      this.$refs.modalForm.materialTable.columns[1].type = FormTypes.popupJsh
+      let columnIndex = record.subType === '组装单' || record.subType === '拆卸单'?2:1
+      this.$refs.modalForm.materialTable.columns[columnIndex].type = FormTypes.popupJsh
     },
     myHandleEdit(record) {
       if(record.status === '0') {
