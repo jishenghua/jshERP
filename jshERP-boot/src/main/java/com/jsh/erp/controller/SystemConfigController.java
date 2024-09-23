@@ -129,19 +129,24 @@ public class SystemConfigController {
         try {
             String savePath = "";
             String bizPath = request.getParameter("biz");
-            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-            MultipartFile file = multipartRequest.getFile("file");// 获取上传文件对象
-            if(fileUploadType == 1) {
-                savePath = systemConfigService.uploadLocal(file, bizPath, request);
-            } else if(fileUploadType == 2) {
-                savePath = systemConfigService.uploadAliOss(file, bizPath, request);
-            }
-            if(StringUtil.isNotEmpty(savePath)){
-                res.code = 200;
-                res.data = savePath;
-            }else {
-                res.code = 500;
-                res.data = "上传失败！";
+            if ("bill".equals(bizPath) || "financial".equals(bizPath) || "material".equals(bizPath)) {
+                MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+                MultipartFile file = multipartRequest.getFile("file");// 获取上传文件对象
+                if(fileUploadType == 1) {
+                    savePath = systemConfigService.uploadLocal(file, bizPath, request);
+                } else if(fileUploadType == 2) {
+                    savePath = systemConfigService.uploadAliOss(file, bizPath, request);
+                }
+                if(StringUtil.isNotEmpty(savePath)){
+                    res.code = 200;
+                    res.data = savePath;
+                }else {
+                    res.code = 500;
+                    res.data = "上传失败！";
+                }
+            } else {
+                res.code = 505;
+                res.data = "文件分类错误！";
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
