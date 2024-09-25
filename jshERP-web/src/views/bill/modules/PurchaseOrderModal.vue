@@ -31,7 +31,7 @@
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                  <div v-if="quickBtn.vendor" style="padding: 4px 8px; cursor: pointer;"
                        @mousedown="e => e.preventDefault()" @click="addSupplier"><a-icon type="plus" /> 新增供应商</div>
                 </div>
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
@@ -139,7 +139,7 @@
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                  <div v-if="quickBtn.account" style="padding: 4px 8px; cursor: pointer;"
                        @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
                 </div>
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
@@ -353,6 +353,7 @@
         this.initSupplier(0)
         this.initAccount(0)
         this.initPlatform()
+        this.initQuickBtn()
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {

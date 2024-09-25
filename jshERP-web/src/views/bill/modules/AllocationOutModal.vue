@@ -64,8 +64,8 @@
             <a-icon type="down" @click="handleBatchSetDepot" />
           </template>
           <template #depotAdd>
-            <a-divider v-if="isTenant" style="margin: 4px 0;" />
-            <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;" @click="addDepot"><a-icon type="plus" /> 新增仓库</div>
+            <a-divider v-if="quickBtn.depot" style="margin: 4px 0;" />
+            <div v-if="quickBtn.depot" style="padding: 4px 8px; cursor: pointer;" @click="addDepot"><a-icon type="plus" /> 新增仓库</div>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">
@@ -222,6 +222,7 @@
         this.initSystemConfig()
         this.initDepot()
         this.initPlatform()
+        this.initQuickBtn()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

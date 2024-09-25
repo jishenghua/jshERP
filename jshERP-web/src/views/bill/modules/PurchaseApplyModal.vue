@@ -241,6 +241,7 @@
         }
         this.initSystemConfig()
         this.initPlatform()
+        this.initQuickBtn()
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {

@@ -39,7 +39,13 @@ export const BillModalMixin = {
       billStatus: '0',
       minWidth: 1100,
       isCanCheck: true,
-      isTenant: false,
+      quickBtn: {
+        vendor: false,
+        customer: false,
+        member: false,
+        account: false,
+        depot: false
+      },
       billPrintFlag: false,
       /* 是否显示打印按钮 */
       isShowPrintBtn: true,
@@ -68,8 +74,6 @@ export const BillModalMixin = {
     };
   },
   created () {
-    let userInfo = Vue.ls.get(USER_INFO)
-    this.isTenant = userInfo.id === userInfo.tenantId? true:false
     let realScreenWidth = window.screen.width
     this.width = realScreenWidth<1500?'1200px':'1550px'
     this.minWidth = realScreenWidth<1500?1150:1500
@@ -1020,6 +1024,21 @@ export const BillModalMixin = {
           this.billPrintFlag = res.data.platformValue==='1'?true:false
         }
       })
+    },
+    //加载快捷按钮：供应商、客户、会员、结算账户、仓库
+    initQuickBtn() {
+      let btnStrList = Vue.ls.get('winBtnStrList') //按钮功能列表 JSON字符串
+      if (btnStrList) {
+        for (let i = 0; i < btnStrList.length; i++) {
+          if (btnStrList[i].btnStr) {
+            this.quickBtn.vendor = btnStrList[i].url === '/system/vendor'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.vendor
+            this.quickBtn.customer = btnStrList[i].url === '/system/customer'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.customer
+            this.quickBtn.member = btnStrList[i].url === '/system/member'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.member
+            this.quickBtn.account = btnStrList[i].url === '/system/account'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.account
+            this.quickBtn.depot = btnStrList[i].url === '/system/depot'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.depot
+          }
+        }
+      }
     }
   }
 }

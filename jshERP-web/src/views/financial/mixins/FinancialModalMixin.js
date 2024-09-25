@@ -17,7 +17,9 @@ export const FinancialModalMixin = {
       accountList: [],
       billStatus: '0',
       isCanCheck: true,
-      isTenant: false,
+      quickBtn: {
+        person: false
+      },
       /* 原始审核是否开启 */
       checkFlag: true,
       spans: {
@@ -36,8 +38,6 @@ export const FinancialModalMixin = {
     };
   },
   created () {
-    let userInfo = Vue.ls.get(USER_INFO)
-    this.isTenant = userInfo.id === userInfo.tenantId? true:false
     let realScreenWidth = window.screen.width
     this.width = realScreenWidth<1500?'1200px':'1550px'
     this.minWidth = realScreenWidth<1500?1150:1500
@@ -327,5 +327,19 @@ export const FinancialModalMixin = {
         this.$message.warning('请先保存单据后再提交流程！');
       }
     },
+    //加载快捷按钮：供应商、客户、结算账户、经手人
+    initQuickBtn() {
+      let btnStrList = Vue.ls.get('winBtnStrList') //按钮功能列表 JSON字符串
+      if (btnStrList) {
+        for (let i = 0; i < btnStrList.length; i++) {
+          if (btnStrList[i].btnStr) {
+            this.quickBtn.vendor = btnStrList[i].url === '/system/vendor'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.vendor
+            this.quickBtn.customer = btnStrList[i].url === '/system/customer'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.customer
+            this.quickBtn.account = btnStrList[i].url === '/system/account'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.account
+            this.quickBtn.person = btnStrList[i].url === '/system/person'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.person
+          }
+        }
+      }
+    }
   }
 }

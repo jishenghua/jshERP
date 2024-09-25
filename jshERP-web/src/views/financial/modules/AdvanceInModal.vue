@@ -46,7 +46,7 @@
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                  <div v-if="quickBtn.person" style="padding: 4px 8px; cursor: pointer;"
                        @mousedown="e => e.preventDefault()" @click="addPerson"><a-icon type="plus" /> 新增经手人</div>
                 </div>
                 <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
@@ -207,6 +207,7 @@
         this.initRetail()
         this.initPerson()
         this.initDetailAccount()
+        this.initQuickBtn()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
