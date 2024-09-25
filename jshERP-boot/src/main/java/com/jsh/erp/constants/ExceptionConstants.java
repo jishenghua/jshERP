@@ -491,6 +491,9 @@ public class ExceptionConstants {
     //财务信息录入-单据编号已经存在
     public static final int ACCOUNT_HEAD_BILL_NO_EXIST_CODE = 9500005;
     public static final String ACCOUNT_HEAD_BILL_NO_EXIST_MSG = "抱歉，单据编号已经存在";
+    //财务信息录入-付款账户和明细中的账户重复
+    public static final int ACCOUNT_HEAD_ACCOUNT_REPEAT_CODE = 9500006;
+    public static final String ACCOUNT_HEAD_ACCOUNT_REPEAT_MSG = "抱歉，付款账户:%s和明细中的账户重复";
     /**
      *  财务明细信息
      * type = 100

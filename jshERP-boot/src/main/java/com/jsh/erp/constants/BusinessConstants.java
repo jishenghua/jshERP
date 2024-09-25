@@ -104,10 +104,11 @@ public class BusinessConstants {
     public static final String BILL_TYPE_PRODUCE_IN = "生产入库";
     /**
      * 财务单据分类
-     * 收款、付款
+     * 收款、付款、转账
      * */
     public static final String TYPE_MONEY_IN = "收款";
     public static final String TYPE_MONEY_OUT = "付款";
+    public static final String TYPE_GIRO = "转账";
     /**
      * 批量插入sql时最大的数据条数
      * */

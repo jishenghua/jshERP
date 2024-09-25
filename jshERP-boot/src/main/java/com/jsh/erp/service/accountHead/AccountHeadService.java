@@ -1,5 +1,6 @@
 package com.jsh.erp.service.accountHead;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
@@ -7,6 +8,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.AccountHeadMapper;
 import com.jsh.erp.datasource.mappers.AccountHeadMapperEx;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
+import com.jsh.erp.datasource.mappers.AccountMapper;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.accountItem.AccountItemService;
@@ -45,8 +47,6 @@ public class AccountHeadService {
     @Resource
     private AccountItemService accountItemService;
     @Resource
-    private DepotHeadService depotHeadService;
-    @Resource
     private UserService userService;
     @Resource
     private SupplierService supplierService;
@@ -54,6 +54,8 @@ public class AccountHeadService {
     private LogService logService;
     @Resource
     private AccountItemMapperEx accountItemMapperEx;
+    @Resource
+    private AccountMapper accountMapper;
 
     public AccountHead getAccountHead(long id) throws Exception {
         AccountHead result=null;
@@ -296,6 +298,23 @@ public class AccountHeadService {
         if(checkIsBillNoExist(0L, accountHead.getBillNo())>0) {
             throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_BILL_NO_EXIST_CODE,
                     String.format(ExceptionConstants.ACCOUNT_HEAD_BILL_NO_EXIST_MSG));
+        }
+        //校验付款账户和明细中的账户重复（转账单据）
+        if(BusinessConstants.TYPE_GIRO.equals(accountHead.getType())) {
+            JSONArray rowArr = JSONArray.parseArray(rows);
+            if (null != rowArr && rowArr.size()>0) {
+                for (int i = 0; i < rowArr.size(); i++) {
+                    JSONObject object = JSONObject.parseObject(rowArr.getString(i));
+                    if (object.get("accountId") != null && !object.get("accountId").equals("")) {
+                        Long accoutId = object.getLong("accountId");
+                        String accountName = accountMapper.selectByPrimaryKey(accoutId).getName();
+                        if(accoutId.equals(accountHead.getAccountId())) {
+                            throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_ACCOUNT_REPEAT_CODE,
+                                    String.format(ExceptionConstants.ACCOUNT_HEAD_ACCOUNT_REPEAT_MSG, accountName));
+                        }
+                    }
+                }
+            }
         }
         User userInfo=userService.getCurrentUser();
         accountHead.setCreator(userInfo==null?null:userInfo.getId());
