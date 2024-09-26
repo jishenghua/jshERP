@@ -505,6 +505,146 @@ public class MaterialExample {
             return (Criteria) this;
         }
 
+        public Criteria andBrandIsNull() {
+            addCriterion("brand is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandIsNotNull() {
+            addCriterion("brand is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandEqualTo(String value) {
+            addCriterion("brand =", value, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNotEqualTo(String value) {
+            addCriterion("brand <>", value, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandGreaterThan(String value) {
+            addCriterion("brand >", value, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandGreaterThanOrEqualTo(String value) {
+            addCriterion("brand >=", value, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandLessThan(String value) {
+            addCriterion("brand <", value, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandLessThanOrEqualTo(String value) {
+            addCriterion("brand <=", value, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandLike(String value) {
+            addCriterion("brand like", value, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNotLike(String value) {
+            addCriterion("brand not like", value, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandIn(List<String> values) {
+            addCriterion("brand in", values, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNotIn(List<String> values) {
+            addCriterion("brand not in", values, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandBetween(String value1, String value2) {
+            addCriterion("brand between", value1, value2, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNotBetween(String value1, String value2) {
+            addCriterion("brand not between", value1, value2, "brand");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicIsNull() {
+            addCriterion("mnemonic is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicIsNotNull() {
+            addCriterion("mnemonic is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicEqualTo(String value) {
+            addCriterion("mnemonic =", value, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicNotEqualTo(String value) {
+            addCriterion("mnemonic <>", value, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicGreaterThan(String value) {
+            addCriterion("mnemonic >", value, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicGreaterThanOrEqualTo(String value) {
+            addCriterion("mnemonic >=", value, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicLessThan(String value) {
+            addCriterion("mnemonic <", value, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicLessThanOrEqualTo(String value) {
+            addCriterion("mnemonic <=", value, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicLike(String value) {
+            addCriterion("mnemonic like", value, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicNotLike(String value) {
+            addCriterion("mnemonic not like", value, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicIn(List<String> values) {
+            addCriterion("mnemonic in", values, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicNotIn(List<String> values) {
+            addCriterion("mnemonic not in", values, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicBetween(String value1, String value2) {
+            addCriterion("mnemonic between", value1, value2, "mnemonic");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnemonicNotBetween(String value1, String value2) {
+            addCriterion("mnemonic not between", value1, value2, "mnemonic");
+            return (Criteria) this;
+        }
+
         public Criteria andColorIsNull() {
             addCriterion("color is null");
             return (Criteria) this;

@@ -1603,3 +1603,11 @@ alter table jsh_material_current_stock add current_unit_price decimal(24,6) DEFA
 -- 给系统参数表增加先审核后打印启用标记，启用后，零售、采购、销售等单据，都需要先审核之后才能进行打印
 -- --------------------------------------------------------
 alter table jsh_system_config add audit_print_flag varchar(1) DEFAULT '0' COMMENT '先审核后打印启用标记，0未启用，1启用' after move_avg_price_flag;
+
+-- --------------------------------------------------------
+-- 时间 2024年9月27日
+-- by jishenghua
+-- 给商品表增加品牌、助记码字段
+-- --------------------------------------------------------
+alter table jsh_material add brand varchar(100) DEFAULT NULL COMMENT '品牌' after standard;
+alter table jsh_material add mnemonic varchar(100) DEFAULT NULL COMMENT '助记码' after brand;
