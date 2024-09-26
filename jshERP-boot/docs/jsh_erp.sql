@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2024-04-22 22:39:11
+Date: 2024-09-27 00:47:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -358,6 +358,8 @@ CREATE TABLE `jsh_material` (
   `mfrs` varchar(50) DEFAULT NULL COMMENT '制造商',
   `model` varchar(100) DEFAULT NULL COMMENT '型号',
   `standard` varchar(100) DEFAULT NULL COMMENT '规格',
+  `brand` varchar(100) DEFAULT NULL COMMENT '品牌',
+  `mnemonic` varchar(100) DEFAULT NULL COMMENT '助记码',
   `color` varchar(50) DEFAULT NULL COMMENT '颜色',
   `unit` varchar(50) DEFAULT NULL COMMENT '单位-单个',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
@@ -382,15 +384,15 @@ CREATE TABLE `jsh_material` (
 -- ----------------------------
 -- Records of jsh_material
 -- ----------------------------
-INSERT INTO `jsh_material` VALUES ('568', '17', '商品1', '制1', 'sp1', '', '', '个', '', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
-INSERT INTO `jsh_material` VALUES ('569', '17', '商品2', '', 'sp2', '', '', '只', '', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
-INSERT INTO `jsh_material` VALUES ('570', '17', '商品3', '', 'sp3', '', '', '个', '', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
-INSERT INTO `jsh_material` VALUES ('577', null, '商品8', '', 'sp8', '', '', '', '', null, '15', null, null, '', '', '', '', '0', '0', null, '63', '0');
-INSERT INTO `jsh_material` VALUES ('579', '21', '商品17', '', 'sp17', '', '', '', '', null, '15', null, null, '', '', '', '', '0', '0', null, '63', '0');
-INSERT INTO `jsh_material` VALUES ('586', '17', '序列号商品测试', '', 'xlh123', '', '', '个', '', null, null, null, null, '', '', '', '', '1', '0', null, '63', '0');
-INSERT INTO `jsh_material` VALUES ('587', '17', '商品test1', '南通中远', '', 'test1', '', '个', '', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
-INSERT INTO `jsh_material` VALUES ('588', '21', '商品200', 'fafda', 'weqwe', '300ml', '红色', '个', 'aaaabbbbb', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
-INSERT INTO `jsh_material` VALUES ('619', null, '衣服', null, null, null, null, '件', null, '', null, null, null, '', null, null, null, '0', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('568', '17', '商品1', '制1', 'sp1', '', null, null, '', '个', '', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('569', '17', '商品2', '', 'sp2', '', null, null, '', '只', '', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('570', '17', '商品3', '', 'sp3', '', null, null, '', '个', '', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('577', null, '商品8', '', 'sp8', '', null, null, '', '', '', null, '15', null, null, '', '', '', '', '0', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('579', '21', '商品17', '', 'sp17', '', null, null, '', '', '', null, '15', null, null, '', '', '', '', '0', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('586', '17', '序列号商品测试', '', 'xlh123', '', null, null, '', '个', '', null, null, null, null, '', '', '', '', '1', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('587', '17', '商品test1', '南通中远', '', 'test1', null, null, '', '个', '', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('588', '21', '商品200', 'fafda', 'weqwe', '300ml', null, null, '红色', '个', 'aaaabbbbb', null, null, null, null, '', '', '', '', '0', '0', null, '63', '0');
+INSERT INTO `jsh_material` VALUES ('619', null, '衣服', null, null, null, null, null, null, '件', null, '', null, null, null, '', null, null, null, '0', '0', null, '63', '0');
 
 -- ----------------------------
 -- Table structure for jsh_material_attribute
