@@ -234,6 +234,7 @@
                           <div slot="dropdownRender" slot-scope="menu">
                             <v-nodes :vnodes="menu" />
                             <slot name="depotAdd" v-if="col.key === 'depotId'" :target="getVM()"/>
+                            <slot name="inOutItemAdd" v-if="col.key === 'inOutItemId'" :target="getVM()"/>
                           </div>
                           <!--<template v-for="(opt,optKey) in col.options">-->
                           <!--<a-select-option :value="opt.value" :key="optKey">{{ opt.title }}</a-select-option>-->

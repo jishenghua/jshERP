@@ -67,7 +67,12 @@
           :rowSelection="true"
           :actionButton="true"
           @added="onAdded"
-          @valueChange="onValueChange" />
+          @valueChange="onValueChange">
+          <template #inOutItemAdd>
+            <a-divider v-if="quickBtn.inOutItem" style="margin: 4px 0;" />
+            <div v-if="quickBtn.inOutItem" style="padding: 4px 8px; cursor: pointer;" @click="addInOutItem('in')"><a-icon type="plus" /> 新增收支项目</div>
+          </template>
+        </j-editable-table>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
@@ -114,6 +119,7 @@
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
     <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
+    <in-out-item-modal ref="inOutItemModalForm" @ok="inOutItemModalFormOk('in')"></in-out-item-modal>
   </j-modal>
 </template>
 <script>
@@ -121,6 +127,7 @@
   import AccountModal from '../../system/modules/AccountModal'
   import PersonModal from '../../system/modules/PersonModal'
   import WorkflowIframe from '@/components/tools/WorkflowIframe'
+  import InOutItemModal from '../../system/modules/InOutItemModal'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { FinancialModalMixin } from '../mixins/FinancialModalMixin'
@@ -133,6 +140,7 @@
       AccountModal,
       PersonModal,
       WorkflowIframe,
+      InOutItemModal,
       JUpload,
       JDate,
       VNodes: {

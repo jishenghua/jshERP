@@ -18,7 +18,11 @@ export const FinancialModalMixin = {
       billStatus: '0',
       isCanCheck: true,
       quickBtn: {
-        person: false
+        vendor: false,
+        customer: false,
+        account: false,
+        person: false,
+        inOutItem: false
       },
       /* 原始审核是否开启 */
       checkFlag: true,
@@ -191,6 +195,11 @@ export const FinancialModalMixin = {
       this.$refs.personModalForm.title = "新增经手人";
       this.$refs.personModalForm.disableSubmit = false;
     },
+    addInOutItem(type) {
+      this.$refs.inOutItemModalForm.add(type);
+      this.$refs.inOutItemModalForm.title = "新增收支项目";
+      this.$refs.inOutItemModalForm.disableSubmit = false;
+    },
     vendorModalFormOk() {
       this.initSupplier()
     },
@@ -202,6 +211,9 @@ export const FinancialModalMixin = {
     },
     personModalFormOk() {
       this.initPerson()
+    },
+    inOutItemModalFormOk(type) {
+      this.initInOutItem(type)
     },
     workflowModalFormOk() {
       this.close()
@@ -337,6 +349,7 @@ export const FinancialModalMixin = {
             this.quickBtn.customer = btnStrList[i].url === '/system/customer'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.customer
             this.quickBtn.account = btnStrList[i].url === '/system/account'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.account
             this.quickBtn.person = btnStrList[i].url === '/system/person'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.person
+            this.quickBtn.inOutItem = btnStrList[i].url === '/system/in_out_item'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.inOutItem
           }
         }
       }
