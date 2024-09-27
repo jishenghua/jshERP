@@ -21,7 +21,7 @@
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称" data-step="1" data-title="名称" data-intro="名称必填，可以重复">
-                  <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name ]"/>
+                  <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name ]" @change="handleNameChange" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -70,14 +70,14 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="品牌" data-step="5" data-title="品牌"
-                             data-intro="请填写商品的品牌">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="品牌" data-step="6" data-title="品牌"
+                             data-intro="请填写商品的品牌，方便区别不同品牌的商品">
                   <a-input placeholder="请输入品牌" v-decorator.trim="[ 'brand' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="助记码" data-step="5" data-title="助记码"
-                             data-intro="请填写商品的助记码">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="助记码" data-step="7" data-title="助记码"
+                             data-intro="请填写商品的助记码，助记码是商品名称的首字母缩写">
                   <a-input placeholder="请输入助记码" v-decorator.trim="[ 'mnemonic' ]" />
                 </a-form-item>
               </a-col>
@@ -92,13 +92,13 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="6" data-title="基础重量"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="9" data-title="基础重量"
                   data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">
                   <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="7" data-title="保质期"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="10" data-title="保质期"
                   data-intro="保质期指的是商品的保质期(天)，主要针对带生产日期的，此类商品一般有批号">
                   <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
                 </a-form-item>
@@ -110,7 +110,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="制造商" data-step="5" data-title="制造商"
+                <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 4 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="制造商" data-step="12" data-title="制造商"
                              data-intro="请填写商品的制造商，一般适用于制造行业">
                   <a-input placeholder="请输入制造商" v-decorator.trim="[ 'mfrs' ]" />
                 </a-form-item>
@@ -118,7 +118,7 @@
             </a-row>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="9" data-title="序列号"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="13" data-title="序列号"
                   data-intro="此处是商品的序列号开关，如果选择了有，则在采购入库单据需要录入该商品的序列号，在销售出库单据需要选择该商品的序列号进行出库">
                   <a-tooltip title="如果选择为有，则在采购入库单需要录入该商品的序列号">
                     <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
@@ -129,7 +129,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="10" data-title="批号"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="批号" data-step="14" data-title="批号"
                   data-intro="此处是商品的批号开关，如果选择了有，则在采购入库单据需要录入该商品的批号和有效期，在销售出库单据需要选择该商品的批号进行出库">
                   <a-tooltip title="如果选择为有，则在采购入库单需要录入该商品的批号和有效期">
                     <a-select placeholder="有无批号" v-decorator="[ 'enableBatchNumber' ]">
@@ -140,7 +140,7 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24" v-if="!model.id">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="12" data-title="多属性"
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多属性" data-step="15" data-title="多属性"
                   data-intro="多属性是针对的sku商品（比如服装、鞋帽行业），此处开关如果启用就可以在下方进行多sku的配置，配置具体的颜色、尺码之类的组合">
                   <a-tooltip title="多属性针对服装、鞋帽等行业，需要先录入单位才能激活此处输入框">
                     <a-tag class="tag-info" v-if="!manySkuStatus">需要先录入单位才能激活</a-tag>
@@ -220,13 +220,6 @@
             </a-row>
           </a-tab-pane>
           <a-tab-pane key="2" tab="扩展信息" forceRender>
-            <a-row v-if="mpShort.mfrs.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.mfrs.name">
-                  <a-input v-decorator.trim="[ 'mfrs' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
             <a-row v-if="mpShort.otherField1.enabled" class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">
@@ -304,6 +297,7 @@
     getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
   import { removeByVal, autoJumpNextInput, handleIntroJs } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
+  import Pinyin from 'chinese-to-pinyin'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -496,7 +490,7 @@
           }, 5)
         }
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color',
+          this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color', 'brand', 'mnemonic',
             'categoryId','enableSerialNumber','enableBatchNumber','position','expiryNum','weight','remark','mfrs','otherField1','otherField2','otherField3'))
           autoJumpNextInput('materialHeadModal')
           autoJumpNextInput('materialDetailModal')
@@ -1111,6 +1105,23 @@
             this.mpShort.otherField3.name = mpList[i].anotherName
             this.mpShort.otherField3.enabled = mpList[i].enabled
           }
+        }
+      },
+      handleNameChange(e) {
+        if(e.target.value) {
+          let pyArr = []
+          e.target.value.split("").forEach(w => {
+            w = w.trim()
+            if (w) {
+              if (/[\u4e00-\u9fa5]/.test(w)) {
+                let py = Pinyin(w, {removeTone: true, keepRest: true}).trim()
+                pyArr.push(py.substring(0, 1))
+              } else {
+                pyArr.push(w)
+              }
+            }
+          })
+          this.form.setFieldsValue({'mnemonic':pyArr.join("")})
         }
       },
       onlyUnitOnChange(e) {

@@ -17,7 +17,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="关键词" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、规格、型号查询" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="请输入条码、名称、规格、型号、助记码查询" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -258,6 +258,8 @@
           {title: '规格', dataIndex: 'standard', width: 120},
           {title: '型号', dataIndex: 'model', width: 120},
           {title: '颜色', dataIndex: 'color', width: 70, ellipsis:true},
+          {title: '品牌', dataIndex: 'brand', width: 100, ellipsis:true},
+          {title: '助记码', dataIndex: 'mnemonic', width: 80, ellipsis:true},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
           {title: '单位', dataIndex: 'unit', width: 100, ellipsis:true,
@@ -274,6 +276,7 @@
           },
           {title: '基础重量', dataIndex: 'weight', width: 80},
           {title: '保质期', dataIndex: 'expiryNum', width: 60},
+          {title: '制造商', dataIndex: 'mfrs', width: 120, ellipsis:true},
           {title: '库存', dataIndex: 'stock', width: 80,
             scopedSlots: { customRender: 'customRenderStock' }
           },
