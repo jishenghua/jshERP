@@ -48,7 +48,7 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.mnemonic like #{bindKey})
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
@@ -107,7 +107,7 @@
         and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.mnemonic like #{bindKey})
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
@@ -170,6 +170,12 @@
             </if>
             <if test="standard != null">
                 standard,
+            </if>
+            <if test="brand != null">
+                brand,
+            </if>
+            <if test="mnemonic != null">
+                mnemonic,
             </if>
             <if test="color != null">
                 color,
@@ -238,6 +244,12 @@
             </if>
             <if test="standard != null">
                 #{standard,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="mnemonic != null">
+                #{mnemonic,jdbcType=VARCHAR},
             </if>
             <if test="color != null">
                 #{color,jdbcType=VARCHAR},

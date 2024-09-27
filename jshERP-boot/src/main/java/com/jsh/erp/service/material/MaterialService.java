@@ -1337,9 +1337,6 @@ public class MaterialService {
     public String getMaterialOtherByParam(String[] mpArr, MaterialVo4Unit m) {
         String materialOther = "";
         for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("制造商")) {
-                materialOther = materialOther + ((m.getMfrs() == null || m.getMfrs().equals("")) ? "" : "(" + m.getMfrs() + ")");
-            }
             if (mpArr[i].equals("自定义1")) {
                 materialOther = materialOther + ((m.getOtherField1() == null || m.getOtherField1().equals("")) ? "" : "(" + m.getOtherField1() + ")");
             }
