@@ -74,11 +74,7 @@ public class UserBusinessController {
                                    HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         Long id = userBusinessService.checkIsValueExist(type, keyId);
-        if(id != null) {
-            objectMap.put("id", id);
-        } else {
-            objectMap.put("id", null);
-        }
+        objectMap.put("id", id);
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 
