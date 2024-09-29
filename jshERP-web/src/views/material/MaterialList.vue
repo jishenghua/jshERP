@@ -17,12 +17,12 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="关键词" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、规格、型号、助记码查询" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="请输入条码、名称、助记码查询" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="颜色" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入颜色查询" v-model="queryParam.color"></a-input>
+                <a-form-item label="规格" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入规格查询" v-model="queryParam.standard"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -36,6 +36,26 @@
                 </a-col>
               </span>
               <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="型号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入型号查询" v-model="queryParam.model"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="颜色" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入颜色查询" v-model="queryParam.color"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="品牌" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入品牌查询" v-model="queryParam.brand"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="制造商" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入制造商查询" v-model="queryParam.mfrs"></a-input>
+                  </a-form-item>
+                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择状态" v-model="queryParam.enabled">
@@ -222,7 +242,11 @@
         queryParam: {
           categoryId:'',
           materialParam:'',
+          standard:'',
+          model:'',
           color:'',
+          brand:'',
+          mfrs:'',
           materialOther:'',
           weight:'',
           expiryNum:'',
