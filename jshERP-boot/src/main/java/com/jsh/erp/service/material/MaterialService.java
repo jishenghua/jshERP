@@ -115,9 +115,10 @@ public class MaterialService {
         return list;
     }
 
-    public List<MaterialVo4Unit> select(String materialParam, String color, String materialOther, String weight, String expiryNum,
-                                        String enableSerialNumber, String enableBatchNumber, String position, String enabled,
-                                        String remark, String categoryId, String mpList, int offset, int rows)
+    public List<MaterialVo4Unit> select(String materialParam, String standard, String model, String color, String brand, String mfrs,
+                                        String materialOther, String weight, String expiryNum, String enableSerialNumber,
+                                        String enableBatchNumber, String position, String enabled, String remark, String categoryId,
+                                        String mpList, int offset, int rows)
             throws Exception{
         String[] mpArr = new String[]{};
         if(StringUtil.isNotEmpty(mpList)){
@@ -130,7 +131,7 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            list= materialMapperEx.selectByConditionMaterial(materialParam, color, materialOther, weight, expiryNum,
+            list= materialMapperEx.selectByConditionMaterial(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
                     enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList, offset, rows);
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
@@ -151,16 +152,17 @@ public class MaterialService {
         return resList;
     }
 
-    public Long countMaterial(String materialParam, String color, String materialOther, String weight, String expiryNum,
-                              String enableSerialNumber, String enableBatchNumber, String position, String enabled,
-                              String remark, String categoryId,String mpList)throws Exception {
+    public Long countMaterial(String materialParam, String standard, String model, String color, String brand, String mfrs,
+                              String materialOther, String weight, String expiryNum, String enableSerialNumber,
+                              String enableBatchNumber, String position, String enabled, String remark, String categoryId,
+                              String mpList)throws Exception {
         Long result =null;
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
-            result= materialMapperEx.countsByMaterial(materialParam, color, materialOther, weight, expiryNum,
+            result= materialMapperEx.countsByMaterial(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
                     enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList);
         }catch(Exception e){
             JshException.readFail(logger, e);

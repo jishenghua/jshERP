@@ -48,16 +48,31 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.mnemonic like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey})
+        </if>
+        <if test="standard != null and standard !=''">
+            <bind name="bindStandard" value="'%'+standard+'%'"/>
+            and m.standard like #{bindStandard}
+        </if>
+        <if test="model != null and model !=''">
+            <bind name="bindModel" value="'%'+model+'%'"/>
+            and m.model like #{bindModel}
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
         </if>
+        <if test="brand != null and brand !=''">
+            <bind name="bindBrand" value="'%'+brand+'%'"/>
+            and m.brand like #{bindBrand}
+        </if>
+        <if test="mfrs != null and mfrs !=''">
+            <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
+            and m.mfrs like #{bindMfrs}
+        </if>
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
-            and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
-                or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+            and (m.other_field1 like #{bindOther} or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -109,14 +124,29 @@
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.mnemonic like #{bindKey})
         </if>
+        <if test="standard != null and standard !=''">
+            <bind name="bindStandard" value="'%'+standard+'%'"/>
+            and m.standard like #{bindStandard}
+        </if>
+        <if test="model != null and model !=''">
+            <bind name="bindModel" value="'%'+model+'%'"/>
+            and m.model like #{bindModel}
+        </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
         </if>
+        <if test="brand != null and brand !=''">
+            <bind name="bindBrand" value="'%'+brand+'%'"/>
+            and m.brand like #{bindBrand}
+        </if>
+        <if test="mfrs != null and mfrs !=''">
+            <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
+            and m.mfrs like #{bindMfrs}
+        </if>
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
-            and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
-            or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+            and (m.other_field1 like #{bindOther} or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
