@@ -240,7 +240,7 @@
         },
         // 查询条件
         queryParam: {
-          categoryId:'',
+          categoryId: undefined,
           materialParam:'',
           standard:'',
           model:'',
@@ -250,9 +250,9 @@
           materialOther:'',
           weight:'',
           expiryNum:'',
-          enabled: '',
-          enableSerialNumber:'',
-          enableBatchNumber:'',
+          enabled: undefined,
+          enableSerialNumber: undefined,
+          enableBatchNumber: undefined,
           position: '',
           remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
