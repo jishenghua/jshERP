@@ -211,8 +211,12 @@ public class MaterialController {
     @ApiOperation(value = "查找商品信息")
     public JSONObject findBySelect(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                   @RequestParam(value = "q", required = false) String q,
+                                  @RequestParam(value = "standardOrModel", required = false) String standardOrModel,
                                   @RequestParam(value = "mpList", required = false) String mpList,
                                   @RequestParam(value = "depotId", required = false) Long depotId,
+                                  @RequestParam(value = "color", required = false) String color,
+                                  @RequestParam(value = "brand", required = false) String brand,
+                                  @RequestParam(value = "mfrs", required = false) String mfrs,
                                   @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
                                   @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
                                   @RequestParam("page") Integer currentPage,
@@ -224,10 +228,10 @@ public class MaterialController {
             if(StringUtil.isNotEmpty(mpList)){
                 mpArr= mpList.split(",");
             }
-            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, enableSerialNumber,
-                    enableBatchNumber, (currentPage-1)*pageSize, pageSize);
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, enableSerialNumber,
-                    enableBatchNumber);
+            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, standardOrModel,
+                    color, brand, mfrs, enableSerialNumber, enableBatchNumber, (currentPage-1)*pageSize, pageSize);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, standardOrModel,
+                    color, brand, mfrs, enableSerialNumber, enableBatchNumber);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
@@ -258,10 +262,13 @@ public class MaterialController {
                     }
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
+                    item.put("mnemonic", material.getMnemonic());
                     item.put("categoryName", material.getCategoryName());
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
                     item.put("color", material.getColor());
+                    item.put("brand", material.getBrand());
+                    item.put("mfrs", material.getMfrs());
                     item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
                     item.put("enableSerialNumber", material.getEnableSerialNumber());

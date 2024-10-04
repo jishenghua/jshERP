@@ -67,6 +67,10 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("idList") List<Long> idList,
                                                   @Param("q") String q,
+                                                  @Param("standardOrModel") String standardOrModel,
+                                                  @Param("color") String color,
+                                                  @Param("brand") String brand,
+                                                  @Param("mfrs") String mfrs,
                                                   @Param("enableSerialNumber") String enableSerialNumber,
                                                   @Param("enableBatchNumber") String enableBatchNumber,
                                                   @Param("offset") Integer offset,
@@ -74,6 +78,10 @@ public interface MaterialMapperEx {
 
     int findBySelectWithBarCodeCount(@Param("idList") List<Long> idList,
                                      @Param("q") String q,
+                                     @Param("standardOrModel") String standardOrModel,
+                                     @Param("color") String color,
+                                     @Param("brand") String brand,
+                                     @Param("mfrs") String mfrs,
                                      @Param("enableSerialNumber") String enableSerialNumber,
                                      @Param("enableBatchNumber") String enableBatchNumber);
 
