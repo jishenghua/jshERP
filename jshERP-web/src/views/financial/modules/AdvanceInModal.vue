@@ -6,6 +6,7 @@
     :confirmLoading="confirmLoading"
     :keyboard="false"
     :forceRender="true"
+    fullscreen
     switchFullscreen
     @cancel="handleCancel"
     style="top:20px;height: 95%;">

@@ -7,6 +7,7 @@
     :keyboard="false"
     :forceRender="true"
     v-bind:prefixNo="prefixNo"
+    fullscreen
     switchHelp
     switchFullscreen
     @cancel="handleCancel"

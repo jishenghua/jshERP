@@ -5,6 +5,7 @@
     :visible="visible"
     :confirmLoading="confirmLoading"
     v-bind:prefixNo="prefixNo"
+    fullscreen
     switchHelp
     switchFullscreen
     @cancel="handleCancel"
