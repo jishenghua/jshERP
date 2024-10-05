@@ -7,6 +7,8 @@
     :keyboard="false"
     :forceRender="true"
     :style="modalStyle"
+    fullscreen
+    switchFullscreen
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp">
     <template slot="footer">
@@ -1215,10 +1217,10 @@
         /* 是否显示打印按钮 */
         isShowPrintBtn: true,
         tableWidth: {
-          'width': '1500px'
+          'width': '1700px'
         },
         tableWidthRetail: {
-          'width': '1150px'
+          'width': '1200px'
         },
         labelCol: {
           xs: { span: 24 },
@@ -1246,6 +1248,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1267,6 +1271,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1287,6 +1293,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1300,6 +1308,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1320,6 +1330,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1345,6 +1357,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1369,6 +1383,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1389,6 +1405,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1414,6 +1432,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1439,6 +1459,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1460,6 +1482,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1481,6 +1505,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '调入仓库', dataIndex: 'anotherDepotName'},
@@ -1501,6 +1527,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1518,6 +1546,8 @@
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
           { title: '颜色', dataIndex: 'color'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1533,6 +1563,8 @@
           { title: '名称', dataIndex: 'name'},
           { title: '规格', dataIndex: 'standard'},
           { title: '型号', dataIndex: 'model'},
+          { title: '品牌', dataIndex: 'brand'},
+          { title: '制造商', dataIndex: 'mfrs'},
           { title: '扩展信息', dataIndex: 'materialOther'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
@@ -1546,12 +1578,12 @@
     },
     created () {
       let realScreenWidth = window.screen.width
-      this.width = realScreenWidth<1500?'1200px':'1550px'
+      this.width = realScreenWidth<1500?'1200px':'1600px'
       this.tableWidth = {
-        'width': realScreenWidth<1500?'1150px':'1500px'
+        'width': realScreenWidth<1500?'1150px':'1700px'
       }
       this.tableWidthRetail = {
-        'width': realScreenWidth<1500?'800px':'1100px'
+        'width': realScreenWidth<1500?'800px':'1200px'
       }
     },
     methods: {
@@ -1608,6 +1640,12 @@
           if(ds[i].position) {
             needAddkeywords.push('position')
           }
+          if(ds[i].brand) {
+            needAddkeywords.push('brand')
+          }
+          if(ds[i].mfrs) {
+            needAddkeywords.push('mfrs')
+          }
         }
         let currentCol = [{title:'#',dataIndex:'',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}}]
         if(record.status === '3') {
@@ -1637,7 +1675,7 @@
         } else {
           for(let i=0; i<this.defColumns.length; i++){
             //移除列
-            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position']
+            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position','brand','mfrs']
             if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
               let info = {}
               info.title = this.defColumns[i].title
