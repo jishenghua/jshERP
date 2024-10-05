@@ -56,6 +56,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private String imgName;
 
+    private String brand;
+
     public Long getMId() {
         return MId;
     }
@@ -262,5 +264,13 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setImgName(String imgName) {
         this.imgName = imgName;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

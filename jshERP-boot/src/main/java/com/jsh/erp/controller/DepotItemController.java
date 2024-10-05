@@ -225,6 +225,8 @@ public class DepotItemController {
                     item.put("standard", diEx.getMStandard());
                     item.put("model", diEx.getMModel());
                     item.put("color", diEx.getMColor());
+                    item.put("brand", diEx.getBrand());
+                    item.put("mfrs", diEx.getMMfrs());
                     item.put("materialOther", depotItemService.getOtherInfo(mpArr, diEx));
                     BigDecimal stock;
                     Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息

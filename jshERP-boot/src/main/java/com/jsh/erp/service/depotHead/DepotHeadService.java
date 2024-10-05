@@ -1447,10 +1447,10 @@ public class DepotHeadService {
                 String sheetTwoStr = "";
                 if ("采购".equals(subType)) {
                     twoTip = "供应商单据明细";
-                    sheetTwoStr = "供应商,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
+                    sheetTwoStr = "供应商,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,品牌,制造商,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
                 } else if ("销售".equals(subType)) {
                     twoTip = "客户单据明细";
-                    sheetTwoStr = "客户,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
+                    sheetTwoStr = "客户,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,品牌,制造商,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
                 }
                 if (StringUtil.isNotEmpty(beginTime) && StringUtil.isNotEmpty(endTime)) {
                     twoTip = twoTip + "（" + beginTime + "至" + endTime + "）";
@@ -1470,21 +1470,23 @@ public class DepotHeadService {
                     objs[6] = diEx.getMStandard();
                     objs[7] = diEx.getMModel();
                     objs[8] = diEx.getMColor();
-                    objs[9] = depotItemService.getOtherInfo(mpArr, diEx);
-                    objs[10] = diEx.getMaterialUnit();
-                    objs[11] = diEx.getSnList();
-                    objs[12] = diEx.getBatchNumber();
-                    objs[13] = Tools.parseDateToStr(diEx.getExpirationDate());
-                    objs[14] = diEx.getSku();
-                    objs[15] = parseDecimalToStr(diEx.getOperNumber(), 2);
-                    objs[16] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request), 2);
-                    objs[17] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getAllPrice(), billCategory, priceLimit, request), 2);
-                    objs[18] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxRate(), billCategory, priceLimit, request), 2);
-                    objs[19] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxMoney(), billCategory, priceLimit, request), 2);
-                    objs[20] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxLastMoney(), billCategory, priceLimit, request), 2);
+                    objs[9] = diEx.getBrand();
+                    objs[10] = diEx.getMMfrs();
+                    objs[11] = depotItemService.getOtherInfo(mpArr, diEx);
+                    objs[12] = diEx.getMaterialUnit();
+                    objs[13] = diEx.getSnList();
+                    objs[14] = diEx.getBatchNumber();
+                    objs[15] = Tools.parseDateToStr(diEx.getExpirationDate());
+                    objs[16] = diEx.getSku();
+                    objs[17] = parseDecimalToStr(diEx.getOperNumber(), 2);
+                    objs[18] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request), 2);
+                    objs[19] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getAllPrice(), billCategory, priceLimit, request), 2);
+                    objs[20] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxRate(), billCategory, priceLimit, request), 2);
+                    objs[21] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxMoney(), billCategory, priceLimit, request), 2);
+                    objs[22] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxLastMoney(), billCategory, priceLimit, request), 2);
                     BigDecimal allWeight = diEx.getBasicNumber() == null || diEx.getWeight() == null ? BigDecimal.ZERO : diEx.getBasicNumber().multiply(diEx.getWeight());
-                    objs[21] = parseDecimalToStr(allWeight, 2);
-                    objs[22] = diEx.getRemark();
+                    objs[23] = parseDecimalToStr(allWeight, 2);
+                    objs[24] = diEx.getRemark();
                     billDetail.add(objs);
                 }
                 ExcelUtils.exportObjectsManySheet(wtwb, twoTip, sheetTwoArr, "单据明细", 1, billDetail);
