@@ -280,7 +280,7 @@
           this.getDepotByCurrentUser()
           this.getSelectBillRows();
           this.selectType = 'detail'
-          this.title = "选择单据明细"
+          this.title = "请选择单据明细"
           if(this.selectBillRows && this.selectBillRows.length>0) {
             let record = this.selectBillRows[0]
             this.linkNumber = record.number

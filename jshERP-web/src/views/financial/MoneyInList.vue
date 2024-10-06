@@ -27,7 +27,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select placeholder="选择客户" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                  <a-select placeholder="请选择客户" showSearch optionFilterProp="children" v-model="queryParam.organId">
                     <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
                       {{ item.supplier }}
                     </a-select-option>
@@ -47,7 +47,7 @@
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                    <a-select placeholder="请选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
                         {{ item.userName }}
                       </a-select-option>
@@ -56,7 +56,7 @@
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="财务人员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择财务人员" showSearch optionFilterProp="children" v-model="queryParam.handsPersonId">
+                    <a-select placeholder="请选择财务人员" showSearch optionFilterProp="children" v-model="queryParam.handsPersonId">
                       <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                         {{ item.name }}
                       </a-select-option>
@@ -65,7 +65,7 @@
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="收款账户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择收款账户" showSearch optionFilterProp="children" v-model="queryParam.accountId">
+                    <a-select placeholder="请选择收款账户" showSearch optionFilterProp="children" v-model="queryParam.accountId">
                       <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                         {{ item.name }}
                       </a-select-option>
@@ -74,7 +74,7 @@
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择单据状态" v-model="queryParam.status">
+                    <a-select placeholder="请选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
                       <a-select-option value="9" v-if="!checkFlag">审核中</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
@@ -178,11 +178,11 @@
           billNo: "",
           searchMaterial: "",
           type: "收款",
-          organId: "",
-          creator: "",
-          handsPersonId: "",
-          accountId: "",
-          status: "",
+          organId: undefined,
+          creator: undefined,
+          handsPersonId: undefined,
+          accountId: undefined,
+          status: undefined,
           remark: "",
           number: ""
         },

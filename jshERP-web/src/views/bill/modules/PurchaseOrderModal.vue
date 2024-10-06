@@ -27,7 +27,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商" data-step="1" data-title="供应商"
               data-intro="供应商必须选择，如果发现需要选择的供应商尚未录入，可以在下拉框中点击新增供应商进行录入">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
+              <a-select placeholder="请选择供应商" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -135,7 +135,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户" data-step="8" data-title="结算账户"
                          data-intro="如果在下拉框中选择多账户，则可以通过多个结算账户进行结算">
-              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId' ]"
+              <a-select style="width:185px;" placeholder="请选择结算账户" v-decorator="[ 'accountId' ]"
                         :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -396,11 +396,11 @@
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.purchaseShow('其它', '销售订单', '客户', "1,3","0,3")
-        this.$refs.linkBillList.title = "选择销售订单"
+        this.$refs.linkBillList.title = "请选择销售订单"
       },
       onSearchLinkApply() {
         this.$refs.linkBillList.purchaseShow('其它', '请购单', '客户', "1,3")
-        this.$refs.linkBillList.title = "选择请购单"
+        this.$refs.linkBillList.title = "请选择请购单"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId) {
         this.rowCanEdit = false

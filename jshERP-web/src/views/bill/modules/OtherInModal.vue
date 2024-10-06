@@ -23,7 +23,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId' ]" :disabled="!rowCanEdit"
+              <a-select placeholder="请选择供应商" v-decorator="[ 'organId' ]" :disabled="!rowCanEdit"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -304,7 +304,7 @@
       },
       onSearchLinkNumber() {
         this.$refs.waitBillList.show('入库', '采购,销售退货', "1,3")
-        this.$refs.waitBillList.title = "选择采购入库或销售退货"
+        this.$refs.waitBillList.title = "请选择采购入库或销售退货"
       },
       waitBillListOk(selectBillDetailRows, linkNumber, remark) {
         this.rowCanEdit = false

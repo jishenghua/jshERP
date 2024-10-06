@@ -23,7 +23,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
-              <a-select placeholder="选择会员卡号" v-decorator="[ 'organId' ]" :disabled="!rowCanEdit"
+              <a-select placeholder="请选择会员卡号" v-decorator="[ 'organId' ]" :disabled="!rowCanEdit"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
@@ -130,7 +130,7 @@
                 <a-col :lg="24" :md="6" :sm="6">
                   <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <span slot="label" style="font-size: 20px;line-height:20px">付款账户</span>
-                    <a-select placeholder="选择付款账户" style="font-size:20px;" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
+                    <a-select placeholder="请选择付款账户" style="font-size:20px;" v-decorator="[ 'accountId', validatorRules.accountId ]" :dropdownMatchSelectWidth="false">
                       <div slot="dropdownRender" slot-scope="menu">
                         <v-nodes :vnodes="menu" />
                         <a-divider style="margin: 4px 0;" />
@@ -385,7 +385,7 @@
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('出库', '零售', '会员', "1")
-        this.$refs.linkBillList.title = "选择零售出库"
+        this.$refs.linkBillList.title = "请选择零售出库"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false
