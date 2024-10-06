@@ -21,9 +21,9 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="5" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号/颜色" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/助记码/规格/型号/颜色/品牌/制造商" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24" >
@@ -37,7 +37,7 @@
                   </a>
                 </span>
               </a-col>
-              <a-col :md="8" :sm="24">
+              <a-col :md="7" :sm="24">
                 <a-form-item>
                   <span>总库存：{{currentStock}}，总库存金额：{{currentStockPrice}}，总重量：{{currentWeight}}</span>
                 </a-form-item>
@@ -50,7 +50,7 @@
                     </a-tree-select>
                   </a-form-item>
                 </a-col>
-                <a-col :md="5" :sm="24">
+                <a-col :md="6" :sm="24">
                   <a-form-item label="仓位货架" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input style="width: 100%" placeholder="请输入仓位货架查询" v-model="queryParam.position"></a-input>
                   </a-form-item>
@@ -178,7 +178,7 @@
         },
         // 查询条件
         queryParam: {
-          categoryId:'',
+          categoryId: undefined,
           materialParam:'',
           position:'',
           zeroStock: '0',

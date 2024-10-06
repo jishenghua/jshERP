@@ -9,7 +9,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select placeholder="选择客户" v-model="queryParam.organId"
+                  <a-select placeholder="请选择客户" v-model="queryParam.organId"
                     :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
                     <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                       {{ item.supplier }}
@@ -160,7 +160,7 @@
         // 查询条件
         queryParam: {
           supplierType: "客户",
-          organId: '',
+          organId: undefined,
           hasDebt: '1',
           beginTime: getPrevMonthFormatDate(3),
           endTime: getFormatDate(),

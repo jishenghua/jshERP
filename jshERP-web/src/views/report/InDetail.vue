@@ -9,7 +9,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/助记码/规格/型号/颜色/品牌/制造商" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -47,7 +47,7 @@
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="往来单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择往来单位" v-model="queryParam.organId"
+                    <a-select placeholder="请选择往来单位" v-model="queryParam.organId"
                               :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
                       <a-select-option v-for="(item,index) in organList" :key="index" :value="item.id">
                         {{ item.supplier }}
@@ -71,7 +71,7 @@
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择操作员" showSearch allow-clear optionFilterProp="children" v-model="queryParam.creator">
+                    <a-select placeholder="请选择操作员" showSearch allow-clear optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
                         {{ item.userName }}
                       </a-select-option>
@@ -190,16 +190,16 @@
         },
         // 查询条件
         queryParam: {
-          organId: '',
+          organId: undefined,
           number: '',
           materialParam:'',
-          depotId: '',
+          depotId: undefined,
           beginTime: getPrevMonthFormatDate(3),
           endTime: getFormatDate(),
           createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())],
           type: "入库",
-          creator: "",
-          organizationId: '',
+          creator: undefined,
+          organizationId: undefined,
           remark: '',
         },
         ipagination:{

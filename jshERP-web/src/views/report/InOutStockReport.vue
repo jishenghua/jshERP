@@ -9,7 +9,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/助记码/规格/型号/颜色/品牌/制造商" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -161,12 +161,12 @@
           offset: 1
         },
         queryParam: {
-          depotId:'',
+          depotId: undefined,
           beginTime: getPrevMonthFormatDate(1),
           endTime: getFormatDate(),
           createTimeRange: [moment(getPrevMonthFormatDate(1)), moment(getFormatDate())],
           materialParam:'',
-          categoryId:'',
+          categoryId: undefined,
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
         ipagination:{
@@ -207,8 +207,7 @@
         ],
         url: {
           list: "/depotItem/getInOutStock",
-          totalCountMoney: "/depotItem/getInOutStockCountMoney",
-          exportXlsUrl: "/depotItem/exportExcel"
+          totalCountMoney: "/depotItem/getInOutStockCountMoney"
         }
       }
     },

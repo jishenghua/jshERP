@@ -9,7 +9,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="条码/名称/助记码/规格/型号/颜色/品牌/制造商" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -42,7 +42,7 @@
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择客户" v-model="queryParam.organId"
+                    <a-select placeholder="请选择客户" v-model="queryParam.organId"
                               :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
                       <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
                         {{ item.supplier }}
@@ -167,9 +167,9 @@
           beginTime: getPrevMonthFormatDate(3),
           endTime: getFormatDate(),
           createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())],
-          organId: '',
-          depotId: '',
-          organizationId: '',
+          organId: undefined,
+          depotId: undefined,
+          organizationId: undefined,
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
         },
         ipagination:{
