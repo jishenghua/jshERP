@@ -7,6 +7,8 @@
     :keyboard="false"
     :forceRender="true"
     :style="modalStyle"
+    fullscreen
+    switchFullscreen
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp">
     <template slot="footer">
