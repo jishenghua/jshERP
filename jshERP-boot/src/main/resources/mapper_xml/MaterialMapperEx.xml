@@ -709,7 +709,7 @@
             and m.position like #{bindPosition}
         </if>
         <if test="materialParam != null">
-            <bind name="bindParam" value="'%'+materialParam+'%'"/>
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
             or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
@@ -756,7 +756,7 @@
             and m.position like #{bindPosition}
         </if>
         <if test="materialParam != null">
-            <bind name="bindParam" value="'%'+materialParam+'%'"/>
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
             or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
@@ -799,8 +799,10 @@
             and m.position like #{bindPosition}
         </if>
         <if test="materialParam != null">
-            <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam})
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>
