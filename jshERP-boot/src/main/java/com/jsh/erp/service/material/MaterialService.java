@@ -492,7 +492,7 @@ public class MaterialService {
         for(MaterialExtend me: otherDataList) {
             otherMaterialMap.put(me.getMaterialId(), me);
         }
-        String nameStr = "名称*,规格,型号,颜色,类别,基础重量(kg),保质期(天),基本单位*,副单位,基本条码*,副条码,比例,多属性," +
+        String nameStr = "名称*,规格,型号,颜色,品牌,类别,基础重量(kg),保质期(天),基本单位*,副单位,基本条码*,副条码,比例,多属性," +
                 "采购价,零售价,销售价,最低售价,状态*,序列号,批号,仓位货架,制造商,自定义1,自定义2,自定义3,备注";
         List<String> nameList = StringUtil.strToStringList(nameStr);
         //仓库列表
@@ -520,30 +520,31 @@ public class MaterialService {
                 objs[1] = m.getStandard();
                 objs[2] = m.getModel();
                 objs[3] = m.getColor();
-                objs[4] = m.getCategoryName();
-                objs[5] = m.getWeight() == null ? "" : m.getWeight().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[6] = m.getExpiryNum() == null ? "" : m.getExpiryNum().toString();
-                objs[7] = m.getCommodityUnit();
-                objs[8] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getCommodityUnit();
-                objs[9] = m.getmBarCode();
-                objs[10] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getBarCode();
-                objs[11] = m.getRatio() == null ? "" : m.getRatio().toString();
-                objs[12] = m.getSku();
-                objs[13] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[14] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[15] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[16] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[17] = m.getEnabled() ? "1" : "0";
-                objs[18] = m.getEnableSerialNumber();
-                objs[19] = m.getEnableBatchNumber();
-                objs[20] = m.getPosition();
-                objs[21] = m.getMfrs();
-                objs[22] = m.getOtherField1();
-                objs[23] = m.getOtherField2();
-                objs[24] = m.getOtherField3();
-                objs[25] = m.getRemark();
+                objs[4] = m.getBrand();
+                objs[5] = m.getCategoryName();
+                objs[6] = m.getWeight() == null ? "" : m.getWeight().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[7] = m.getExpiryNum() == null ? "" : m.getExpiryNum().toString();
+                objs[8] = m.getCommodityUnit();
+                objs[9] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getCommodityUnit();
+                objs[10] = m.getmBarCode();
+                objs[11] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getBarCode();
+                objs[12] = m.getRatio() == null ? "" : m.getRatio().toString();
+                objs[13] = m.getSku();
+                objs[14] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[15] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[16] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[17] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[18] = m.getEnabled() ? "1" : "0";
+                objs[19] = m.getEnableSerialNumber();
+                objs[20] = m.getEnableBatchNumber();
+                objs[21] = m.getPosition();
+                objs[22] = m.getMfrs();
+                objs[23] = m.getOtherField1();
+                objs[24] = m.getOtherField2();
+                objs[25] = m.getOtherField3();
+                objs[26] = m.getRemark();
                 //仓库期初库存
-                int i = 26;
+                int i = 27;
                 for(Depot depot: depotList) {
                     BigDecimal number = misMap.get(m.getId() + "_" + depot.getId());
                     objs[i] = number == null ? "0" : number.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
@@ -589,10 +590,11 @@ public class MaterialService {
                 String standard = ExcelUtils.getContent(src, i, 1); //规格
                 String model = ExcelUtils.getContent(src, i, 2); //型号
                 String color = ExcelUtils.getContent(src, i, 3); //颜色
-                String categoryName = ExcelUtils.getContent(src, i, 4); //类别
-                String weight = ExcelUtils.getContent(src, i, 5); //基础重量(kg)
-                String expiryNum = ExcelUtils.getContent(src, i, 6); //保质期(天)
-                String unit = ExcelUtils.getContent(src, i, 7); //基本单位
+                String brand = ExcelUtils.getContent(src, i, 4); //品牌
+                String categoryName = ExcelUtils.getContent(src, i, 5); //类别
+                String weight = ExcelUtils.getContent(src, i, 6); //基础重量(kg)
+                String expiryNum = ExcelUtils.getContent(src, i, 7); //保质期(天)
+                String unit = ExcelUtils.getContent(src, i, 8); //基本单位
                 //名称为空
                 if(StringUtil.isEmpty(name)) {
                     throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NAME_EMPTY_CODE,
@@ -623,6 +625,7 @@ public class MaterialService {
                 m.setStandard(standard);
                 m.setModel(model);
                 m.setColor(color);
+                m.setBrand(brand);
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
                 if(null!=categoryId){
                     m.setCategoryId(categoryId);
@@ -643,24 +646,24 @@ public class MaterialService {
                     }
                     m.setExpiryNum(Integer.parseInt(expiryNum));
                 }
-                String manyUnit = ExcelUtils.getContent(src, i, 8); //副单位
-                String barCode = ExcelUtils.getContent(src, i, 9); //基础条码
-                String manyBarCode = ExcelUtils.getContent(src, i, 10); //副条码
-                String ratio = ExcelUtils.getContent(src, i, 11); //比例
-                String sku = ExcelUtils.getContent(src, i, 12); //多属性
-                String purchaseDecimal = ExcelUtils.getContent(src, i, 13); //采购价
-                String commodityDecimal = ExcelUtils.getContent(src, i, 14); //零售价
-                String wholesaleDecimal = ExcelUtils.getContent(src, i, 15); //销售价
-                String lowDecimal = ExcelUtils.getContent(src, i, 16); //最低售价
-                String enabled = ExcelUtils.getContent(src, i, 17); //状态
-                String enableSerialNumber = ExcelUtils.getContent(src, i, 18); //序列号
-                String enableBatchNumber = ExcelUtils.getContent(src, i, 19); //批号
-                String position = ExcelUtils.getContent(src, i, 20); //仓位货架
-                String mfrs = ExcelUtils.getContent(src, i, 21); //制造商
-                String otherField1 = ExcelUtils.getContent(src, i, 22); //自定义1
-                String otherField2 = ExcelUtils.getContent(src, i, 23); //自定义2
-                String otherField3 = ExcelUtils.getContent(src, i, 24); //自定义3
-                String remark = ExcelUtils.getContent(src, i, 25); //备注
+                String manyUnit = ExcelUtils.getContent(src, i, 9); //副单位
+                String barCode = ExcelUtils.getContent(src, i, 10); //基础条码
+                String manyBarCode = ExcelUtils.getContent(src, i, 11); //副条码
+                String ratio = ExcelUtils.getContent(src, i, 12); //比例
+                String sku = ExcelUtils.getContent(src, i, 13); //多属性
+                String purchaseDecimal = ExcelUtils.getContent(src, i, 14); //采购价
+                String commodityDecimal = ExcelUtils.getContent(src, i, 15); //零售价
+                String wholesaleDecimal = ExcelUtils.getContent(src, i, 16); //销售价
+                String lowDecimal = ExcelUtils.getContent(src, i, 17); //最低售价
+                String enabled = ExcelUtils.getContent(src, i, 18); //状态
+                String enableSerialNumber = ExcelUtils.getContent(src, i, 19); //序列号
+                String enableBatchNumber = ExcelUtils.getContent(src, i, 20); //批号
+                String position = ExcelUtils.getContent(src, i, 21); //仓位货架
+                String mfrs = ExcelUtils.getContent(src, i, 22); //制造商
+                String otherField1 = ExcelUtils.getContent(src, i, 23); //自定义1
+                String otherField2 = ExcelUtils.getContent(src, i, 24); //自定义2
+                String otherField3 = ExcelUtils.getContent(src, i, 25); //自定义3
+                String remark = ExcelUtils.getContent(src, i, 26); //备注
                 m.setPosition(StringUtil.isNotEmpty(position)?position:null);
                 m.setMfrs(StringUtil.isNotEmpty(mfrs)?mfrs:null);
                 m.setOtherField1(StringUtil.isNotEmpty(otherField1)?otherField1:null);
