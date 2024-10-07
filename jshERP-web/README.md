@@ -27,7 +27,7 @@ Overview
 
 - 安装nodeJS
 ```
-建议安装node-v16.16.0-x64版本 教程参考 https://blog.csdn.net/wuliyouMaozhi/article/details/126071233
+建议安装node-v20.17.0-x64版本 教程参考 https://blog.csdn.net/Coin_Collecter/article/details/136484312
 ```
 
 - 安装yarn
