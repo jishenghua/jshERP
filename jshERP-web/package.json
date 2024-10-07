@@ -1,6 +1,6 @@
 {
-  "name": "vue-antd-jeecg",
-  "version": "2.2.0",
+  "name": "jsh-erp-web",
+  "version": "3.3.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
