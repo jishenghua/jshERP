@@ -197,6 +197,9 @@
           {title: '名称', dataIndex: 'mName', width: 120, ellipsis:true},
           {title: '规格', dataIndex: 'standard', width: 100, ellipsis:true},
           {title: '型号', dataIndex: 'model', width: 100, ellipsis:true},
+          {title: '颜色', dataIndex: 'color', width: 60, ellipsis:true},
+          {title: '品牌', dataIndex: 'brand', width: 100, ellipsis:true},
+          {title: '制造商', dataIndex: 'mfrs', width: 100, ellipsis:true},
           {title: '类别', dataIndex: 'categoryName', width: 120, ellipsis:true},
           {title: '单位', dataIndex: 'materialUnit', width: 120, ellipsis:true},
           {title: '入库数量', dataIndex: 'numSum', sorter: (a, b) => a.numSum - b.numSum, width: 120},
@@ -284,11 +287,11 @@
       },
       exportExcel() {
         let list = []
-        let head = '条码,名称,规格,型号,类别,单位,入库数量,入库金额'
+        let head = '条码,名称,规格,型号,颜色,品牌,制造商,类别,单位,入库数量,入库金额'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.barCode, ds.mName, ds.standard, ds.model, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum)
+          item.push(ds.barCode, ds.mName, ds.standard, ds.model, ds.color, ds.brand, ds.mfrs, ds.categoryName, ds.materialUnit, ds.numSum, ds.priceSum)
           list.push(item)
         }
         let tip = '单据日期：' + this.queryParam.beginTime + '~' + this.queryParam.endTime

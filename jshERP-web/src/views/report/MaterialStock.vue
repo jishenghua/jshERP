@@ -208,7 +208,7 @@
           {title: '库存流水', dataIndex: 'action', align:"center", width: 60,
             scopedSlots: { customRender: 'action' }
           },
-          {title: '图片', dataIndex: 'pic', width: 40, scopedSlots: { customRender: 'customPic' }},
+          {title: '图片', dataIndex: 'pic', width: 45, scopedSlots: { customRender: 'customPic' }},
           {title: '条码', dataIndex: 'mBarCode', width: 100, sorter: (a, b) => a.mBarCode - b.mBarCode},
           {title: '名称', dataIndex: 'name', width: 140, ellipsis:true},
           {title: '规格', dataIndex: 'standard', width: 100, ellipsis:true},
@@ -316,11 +316,11 @@
       },
       exportExcel() {
         let list = []
-        let head = '条码,名称,规格,型号,颜色,类别,单位,成本价,初始库存,库存,库存金额,重量'
+        let head = '条码,名称,规格,型号,颜色,品牌,制造商,类别,单位,成本价,初始库存,库存,库存金额,重量'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.categoryName, ds.unitName,
+          item.push(ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.brand, ds.mfrs, ds.categoryName, ds.unitName,
             ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice, ds.currentWeight)
           list.push(item)
         }

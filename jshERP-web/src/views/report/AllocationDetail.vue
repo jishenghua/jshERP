@@ -230,6 +230,9 @@
           {title: '名称', dataIndex: 'mname', width: 120, ellipsis:true},
           {title: '规格', dataIndex: 'standard', width: 60, ellipsis:true},
           {title: '型号', dataIndex: 'model', width: 60, ellipsis:true},
+          {title: '颜色', dataIndex: 'color', width: 40, ellipsis:true},
+          {title: '品牌', dataIndex: 'brand', width: 60, ellipsis:true},
+          {title: '制造商', dataIndex: 'mfrs', width: 60, ellipsis:true},
           {title: '单位', dataIndex: 'mUnit', width: 60, ellipsis:true},
           {title: '数量', dataIndex: 'operNumber', sorter: (a, b) => a.operNumber - b.operNumber, width: 60},
           {title: '单价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
@@ -329,11 +332,11 @@
       },
       exportExcel() {
         let list = []
-        let head = '单据编号,条码,名称,规格,型号,单位,数量,单价,金额,调出仓库,调入仓库,调拨日期,备注'
+        let head = '单据编号,条码,名称,规格,型号,颜色,品牌,制造商,单位,数量,单价,金额,调出仓库,调入仓库,调拨日期,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.number, ds.barCode, ds.mname, ds.standard, ds.model, ds.mUnit, ds.operNumber,
+          item.push(ds.number, ds.barCode, ds.mname, ds.standard, ds.model, ds.color, ds.brand, ds.mfrs, ds.mUnit, ds.operNumber,
             ds.unitPrice, ds.allPrice, ds.dname, ds.sname, ds.operTime, ds.newRemark)
           list.push(item)
         }
