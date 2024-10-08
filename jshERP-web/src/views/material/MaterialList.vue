@@ -171,7 +171,7 @@
                 <template slot="content">
                   <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
                 </template>
-                <div style="width:52px;height:52px;" v-if="record.imgName">
+                <div class="item-info" v-if="record.imgName">
                   <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" />
                 </div>
               </a-popover>
@@ -276,7 +276,7 @@
             width: 100,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '图片', dataIndex: 'pic', width: 65, scopedSlots: { customRender: 'customPic' }},
+          {title: '图片', dataIndex: 'pic', width: 60, scopedSlots: { customRender: 'customPic' }},
           {title: '条码', dataIndex: 'mBarCode', width: 120},
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '规格', dataIndex: 'standard', width: 120},
@@ -486,6 +486,12 @@
   @import '~@assets/less/common.less'
 </style>
 <style>
+  .item-info {
+    float:left;
+    width:38px;
+    height:38px;
+    margin-left:6px
+  }
   .item-img {
     cursor:pointer;
     position: static;

@@ -110,8 +110,7 @@
             <span slot="action" slot-scope="text, record">
               <a @click="showMaterialInOutList(record)">{{record.id?'流水':''}}</a>
             </span>
-            <template slot="customBarCode" slot-scope="text, record">
-              <div :style="record.imgName?'float:left;line-height:30px':'float:left;'">{{record.mBarCode}}</div>
+            <template slot="customPic" slot-scope="text, record">
               <a-popover placement="right" trigger="click">
                 <template slot="content">
                   <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
@@ -209,9 +208,8 @@
           {title: '库存流水', dataIndex: 'action', align:"center", width: 60,
             scopedSlots: { customRender: 'action' }
           },
-          {title: '条码', dataIndex: 'mBarCode', width: 100, sorter: (a, b) => a.mBarCode - b.mBarCode,
-            scopedSlots: { customRender: 'customBarCode' }
-          },
+          {title: '图片', dataIndex: 'pic', width: 40, scopedSlots: { customRender: 'customPic' }},
+          {title: '条码', dataIndex: 'mBarCode', width: 100, sorter: (a, b) => a.mBarCode - b.mBarCode},
           {title: '名称', dataIndex: 'name', width: 140, ellipsis:true},
           {title: '规格', dataIndex: 'standard', width: 100, ellipsis:true},
           {title: '型号', dataIndex: 'model', width: 100, ellipsis:true},
@@ -339,9 +337,9 @@
 <style scoped>
   .item-info {
     float:left;
-    width:30px;
-    height:30px;
-    margin-left:8px
+    width:38px;
+    height:38px;
+    margin-left:6px
   }
   .item-img {
     cursor:pointer;
