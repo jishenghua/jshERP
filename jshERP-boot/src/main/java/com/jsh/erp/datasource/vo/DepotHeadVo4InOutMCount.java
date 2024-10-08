@@ -14,6 +14,12 @@ public class DepotHeadVo4InOutMCount {
 
     private String standard;
 
+    private String color;
+
+    private String brand;
+
+    private String mfrs;
+
     private String categoryName;
 
     private String materialUnit;
@@ -62,6 +68,30 @@ public class DepotHeadVo4InOutMCount {
 
     public void setStandard(String standard) {
         this.standard = standard;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getMfrs() {
+        return mfrs;
+    }
+
+    public void setMfrs(String mfrs) {
+        this.mfrs = mfrs;
     }
 
     public String getCategoryName() {

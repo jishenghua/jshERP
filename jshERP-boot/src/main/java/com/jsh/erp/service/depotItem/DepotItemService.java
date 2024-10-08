@@ -321,22 +321,22 @@ public class DepotItemService {
         return result;
     }
 
-    public List<DepotItemVo4WithInfoEx> getListWithBugOrSale(String materialParam, String billType,
+    public List<DepotItemVo4WithInfoEx> getListWithBuyOrSale(String materialParam, String billType,
                      String beginTime, String endTime, String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.getListWithBugOrSale(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, offset, rows);
+            list = depotItemMapperEx.getListWithBuyOrSale(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int getListWithBugOrSaleCount(String materialParam, String billType,
+    public int getListWithBuyOrSaleCount(String materialParam, String billType,
                      String beginTime, String endTime, String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.getListWithBugOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            result = depotItemMapperEx.getListWithBuyOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

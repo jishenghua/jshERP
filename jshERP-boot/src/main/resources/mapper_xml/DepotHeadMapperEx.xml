@@ -18,6 +18,9 @@
         <result column="mname" jdbcType="VARCHAR" property="mname" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
+        <result column="color" jdbcType="VARCHAR" property="color" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
+        <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
         <result column="unitPrice" jdbcType="DECIMAL" property="unitPrice" />
         <result column="sku" jdbcType="VARCHAR" property="sku" />
         <result column="operNumber" jdbcType="DECIMAL" property="operNumber" />
@@ -37,6 +40,9 @@
         <result column="mName" jdbcType="VARCHAR" property="mName" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
+        <result column="color" jdbcType="VARCHAR" property="color" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
+        <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="materialUnit" jdbcType="VARCHAR" property="materialUnit" />
         <result column="numSum" jdbcType="DECIMAL" property="numSum" />
@@ -293,7 +299,7 @@
     </select>
 
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit, di.sku,
+        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,m.color,m.brand,m.mfrs,di.unit_price unitPrice,di.material_unit as mUnit, di.sku,
         di.oper_number operNumber,di.all_price allPrice, ifnull(di.tax_rate,0) taxRate, ifnull(di.tax_money,0) taxMoney, ifnull(di.tax_last_money,0) taxLastMoney,
         s.supplier sname,d.dname dname, date_format(dh.oper_time, '%Y-%m-%d') operTime, concat(dh.sub_type,dh.type) as newType,
         concat_ws('  ',dh.remark,di.remark) as newRemark
@@ -489,7 +495,8 @@
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
-        select di.material_id materialId, me.bar_code barCode, m.name mName,m.model,m.standard,mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
+        select di.material_id materialId, me.bar_code barCode, m.name mName,m.model,m.standard,m.color,m.brand,m.mfrs,
+               mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
         sum(di.basic_number) numSum,
         sum(di.all_price) priceSum
         from jsh_depot_head dh
@@ -687,7 +694,7 @@
     </select>
 
     <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit,
+        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,m.color,m.brand,m.mfrs,di.unit_price unitPrice,di.material_unit as mUnit,
                di.oper_number operNumber,di.all_price allPrice,sname, d.dName dname,date_format(dh.oper_time, '%Y-%m-%d') operTime,
                concat(dh.sub_type,dh.type) as newType, concat_ws('  ',dh.remark,di.remark) as newRemark
         from jsh_depot_head dh

@@ -72,7 +72,7 @@ public interface DepotItemMapperEx {
             @Param("categoryIdList") List<Long> categoryIdList,
             @Param("endTime") String endTime);
 
-    List<DepotItemVo4WithInfoEx> getListWithBugOrSale(
+    List<DepotItemVo4WithInfoEx> getListWithBuyOrSale(
             @Param("materialParam") String materialParam,
             @Param("billType") String billType,
             @Param("beginTime") String beginTime,
@@ -85,7 +85,7 @@ public interface DepotItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int getListWithBugOrSaleCount(
+    int getListWithBuyOrSaleCount(
             @Param("materialParam") String materialParam,
             @Param("billType") String billType,
             @Param("beginTime") String beginTime,

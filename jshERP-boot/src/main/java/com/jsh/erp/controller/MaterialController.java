@@ -228,10 +228,11 @@ public class MaterialController {
             if(StringUtil.isNotEmpty(mpList)){
                 mpArr= mpList.split(",");
             }
-            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, standardOrModel,
-                    color, brand, mfrs, enableSerialNumber, enableBatchNumber, (currentPage-1)*pageSize, pageSize);
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, standardOrModel,
-                    color, brand, mfrs, enableSerialNumber, enableBatchNumber);
+            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, StringUtil.toNull(standardOrModel),
+                    StringUtil.toNull(color), StringUtil.toNull(brand), StringUtil.toNull(mfrs), enableSerialNumber, enableBatchNumber,
+                    (currentPage-1)*pageSize, pageSize);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, StringUtil.toNull(standardOrModel),
+                    StringUtil.toNull(color), StringUtil.toNull(brand), StringUtil.toNull(mfrs), enableSerialNumber, enableBatchNumber);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
