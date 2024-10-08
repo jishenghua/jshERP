@@ -1580,10 +1580,10 @@
       let realScreenWidth = window.screen.width
       this.width = realScreenWidth<1500?'1200px':'1600px'
       this.tableWidth = {
-        'width': realScreenWidth<1500?'1150px':'1700px'
+        'width': '100%'
       }
       this.tableWidthRetail = {
-        'width': realScreenWidth<1500?'800px':'1200px'
+        'width': '100%'
       }
     },
     methods: {
