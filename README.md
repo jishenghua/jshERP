@@ -35,7 +35,7 @@
 * IDE: IntelliJ IDEA 2019.2+和JetBrains WebStorm 2019.3+
 * DB: Mysql 5.7.33
 * JDK: JDK 1.8
-* Node: Node 16.16.0
+* Node: Node 20.17.0
 * Maven: Maven 3.2.3+
 * Redis: 6.2.1
 * Nginx: 1.12.2 
