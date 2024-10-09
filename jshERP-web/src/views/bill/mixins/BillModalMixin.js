@@ -606,6 +606,8 @@ export const BillModalMixin = {
         standard: mInfo.standard,
         model: mInfo.model,
         color: mInfo.color,
+        brand: mInfo.brand,
+        mfrs: mInfo.mfrs,
         materialOther: mInfo.materialOther,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
@@ -621,6 +623,8 @@ export const BillModalMixin = {
     changeColumnHide() {
       this.changeFormTypes(this.materialTable.columns, 'model', 0)
       this.changeFormTypes(this.materialTable.columns, 'color', 0)
+      this.changeFormTypes(this.materialTable.columns, 'brand', 0)
+      this.changeFormTypes(this.materialTable.columns, 'mfrs', 0)
       this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
       this.changeFormTypes(this.materialTable.columns, 'sku', 0)
     },
@@ -631,6 +635,12 @@ export const BillModalMixin = {
       }
       if(info.color) {
         this.changeFormTypes(this.materialTable.columns, 'color', 1)
+      }
+      if(info.brand) {
+        this.changeFormTypes(this.materialTable.columns, 'brand', 1)
+      }
+      if(info.mfrs) {
+        this.changeFormTypes(this.materialTable.columns, 'mfrs', 1)
       }
       if(info.materialOther) {
         this.changeFormTypes(this.materialTable.columns, 'materialOther', 1)

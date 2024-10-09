@@ -166,6 +166,8 @@
             { title: '规格', key: 'standard', width: '9%', type: FormTypes.normal },
             { title: '型号', key: 'model', width: '9%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '6%', type: FormTypes.normal },
+            { title: '品牌', key: 'brand', width: '6%', type: FormTypes.normal },
+            { title: '制造商', key: 'mfrs', width: '6%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '6%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '6%', type: FormTypes.normal },
             { title: '多属性', key: 'sku', width: '10%', type: FormTypes.normal },
