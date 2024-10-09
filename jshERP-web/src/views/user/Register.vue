@@ -35,8 +35,9 @@
 
       <a-row :gutter="0">
         <a-col :span="14">
-          <a-form-item fieldDecoratorId="inputCode">
-            <!--20200510 cfm: 为方便测试，不输入验证码可： default-value="xxxx"-->
+          <a-form-item
+            fieldDecoratorId="inputCode"
+            :fieldDecoratorOptions="{rules: [{ required: true, message: '验证码不能为空'}, { validator: this.handleInputCode}], validateTrigger: ['change', 'blur'], validateFirst: true}">
             <a-input
               size="large"
               type="text"
@@ -190,7 +191,7 @@
           if (level === 0) {
             this.state.percent = 10
           }
-          callback(new Error('密码强度不够'))
+          callback(new Error('强度不够!'))
         }
       },
 
@@ -198,10 +199,10 @@
         let password = this.form.getFieldValue('password')
         //console.log('value', value)
         if (value === undefined) {
-          callback(new Error('请输入密码'))
+          callback(new Error('请输入密码!'))
         }
         if (value && password && value.trim() !== password.trim()) {
-          callback(new Error('两次密码不一致'))
+          callback(new Error('两次密码不一致!'))
         }
         callback()
       },
@@ -212,6 +213,10 @@
           return;
         }
         this.state.passwordLevelChecked = false
+      },
+
+      handleInputCode(rule, value, callback) {
+        callback()
       },
 
       handleSubmit() {

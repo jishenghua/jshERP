@@ -27,7 +27,7 @@
         <a-col :span="14">
           <a-form-item>
             <a-input
-              v-decorator="['inputCode']"
+              v-decorator="['inputCode',{initialValue:'', rules: validatorRules.inputCode.rules}]"
               size="large"
               type="text"
               default-value=""
@@ -111,7 +111,8 @@
         },
         validatorRules:{
           loginName:{rules: [{ required: true, message: '请输入用户名!'},{validator: this.handleLoginName}]},
-          password:{rules: [{ required: true, message: '请输入密码!',validator: 'click'}]}
+          password:{rules: [{ required: true, message: '请输入密码!',validator: 'click'}]},
+          inputCode:{rules: [{ required: true, message: '请输入验证码!',validator: 'click'}]}
         },
         verifiedCode:"",
         inputCodeContent:"", //20200510 cfm: 为方便测试，不输入验证码可 ""-->"xxxx"
