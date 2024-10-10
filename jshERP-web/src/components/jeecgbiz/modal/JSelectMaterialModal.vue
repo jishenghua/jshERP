@@ -23,7 +23,7 @@
               </a-col>
               <a-col :md="6" :sm="8">
                 <a-form-item label="规格型号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input ref="material" placeholder="请输入规格、型号" v-model="queryParam.standardOrModel"></a-input>
+                  <a-input placeholder="请输入规格、型号" v-model="queryParam.standardOrModel"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
@@ -52,12 +52,12 @@
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="8">
                   <a-form-item label="颜色" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                    <a-input ref="material" placeholder="请输入颜色" v-model="queryParam.color"></a-input>
+                    <a-input placeholder="请输入颜色" v-model="queryParam.color"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="8">
                   <a-form-item label="品牌" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                    <a-input ref="material" placeholder="请输入品牌" v-model="queryParam.brand"></a-input>
+                    <a-input placeholder="请输入品牌" v-model="queryParam.brand"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="8">
@@ -69,7 +69,7 @@
                 </a-col>
                 <a-col :md="6" :sm="8">
                   <a-form-item label="制造商" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                    <a-input ref="material" placeholder="请输入制造商" v-model="queryParam.mfrs"></a-input>
+                    <a-input placeholder="请输入制造商" v-model="queryParam.mfrs"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
