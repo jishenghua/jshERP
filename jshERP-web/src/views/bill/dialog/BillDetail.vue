@@ -4,7 +4,6 @@
     :width="width"
     :visible="visible"
     :maskClosable="false"
-    :keyboard="false"
     :forceRender="true"
     :style="modalStyle"
     fullscreen
@@ -13,6 +12,7 @@
     wrapClassName="ant-modal-cust-warp">
     <template slot="footer">
       <!--打印-->
+      <a-button key="back" @click="handleCancel">取消(ESC)</a-button>
       <template v-if="isShowPrintBtn">
         <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
         <!--此处为解决缓存问题-->
@@ -44,7 +44,6 @@
       <a-button v-if="billType === '盘点复盘'" @click="stockCheckReplayExportExcel()">导出</a-button>
       <!--反审核-->
       <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
-      <a-button key="back" @click="handleCancel">取消</a-button>
     </template>
     <a-form :form="form">
       <!--零售出库-->
