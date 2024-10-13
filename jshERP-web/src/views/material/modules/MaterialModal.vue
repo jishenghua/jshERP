@@ -78,8 +78,8 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="助记码" data-step="7" data-title="助记码"
-                             data-intro="请填写商品的助记码，助记码是商品名称的首字母缩写">
-                  <a-input placeholder="请输入助记码" v-decorator.trim="[ 'mnemonic' ]" />
+                             data-intro="助记码自动生成，助记码是商品名称的首字母缩写">
+                  <a-input placeholder="" v-decorator.trim="[ 'mnemonic' ]" :readOnly="true" />
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">

@@ -19,6 +19,7 @@ import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ExcelUtils;
+import com.jsh.erp.utils.PinYinUtil;
 import com.jsh.erp.utils.StringUtil;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -626,6 +627,8 @@ public class MaterialService {
                 m.setModel(model);
                 m.setColor(color);
                 m.setBrand(brand);
+                //通过名称生成助记码
+                m.setMnemonic(PinYinUtil.getFirstLettersLo(name));
                 Long categoryId = materialCategoryService.getCategoryIdByName(categoryName);
                 if(null!=categoryId){
                     m.setCategoryId(categoryId);
