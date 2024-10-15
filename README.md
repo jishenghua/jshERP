@@ -8,9 +8,9 @@
 * 平台地址：http://cloud.gyjerp.com 欢迎大家注册租户进行使用
 * 网络版手机端请扫描下方二维码
 
-![输入图片说明](jshERP-web/public/static/android-code.png)
-![输入图片说明](jshERP-web/public/static/iphone-code.png)
-![输入图片说明](jshERP-web/public/static/weixin-code.png)
+![输入图片说明](https://cloud.gyjerp.com/static/android-code.png)
+![输入图片说明](https://cloud.gyjerp.com/static/iphone-code.png)
+![输入图片说明](https://cloud.gyjerp.com/static/weixin-code.png)
 
 # 定制和插件
 * 如有ERP私人定制需求，请将需求整理成文档，发给邮箱： **752718920@qq.com** ，我会及时回复哒
