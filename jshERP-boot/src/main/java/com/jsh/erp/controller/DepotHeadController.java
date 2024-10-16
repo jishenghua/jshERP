@@ -12,8 +12,8 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +49,9 @@ public class DepotHeadController {
 
     @Resource
     private SystemConfigService systemConfigService;
+
+    @Resource
+    private UserService userService;
 
     /**
      * 批量设置状态-审核或者反审核
@@ -484,14 +487,17 @@ public class DepotHeadController {
     public BaseResponseInfo getBuyAndSaleStatistics(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
-            String monthFirstDay = Tools.firstDayOfMonth(Tools.getCurrentMonth()) + BusinessConstants.DAY_FIRST_TIME;
-            String yesterdayBegin = Tools.getYesterday() + BusinessConstants.DAY_FIRST_TIME;
-            String yesterdayEnd = Tools.getYesterday() + BusinessConstants.DAY_LAST_TIME;
-            String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
-            String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
-            Map<String, Object> map = depotHeadService.getBuyAndSaleStatistics(today, monthFirstDay,
-                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, request);
+            Map<String, Object> map = new HashMap<>();
+            String loginName = userService.getCurrentUser().getLoginName();
+            if(!"admin".equals(loginName)) {
+                String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
+                String monthFirstDay = Tools.firstDayOfMonth(Tools.getCurrentMonth()) + BusinessConstants.DAY_FIRST_TIME;
+                String yesterdayBegin = Tools.getYesterday() + BusinessConstants.DAY_FIRST_TIME;
+                String yesterdayEnd = Tools.getYesterday() + BusinessConstants.DAY_LAST_TIME;
+                String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
+                String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
+                map = depotHeadService.getBuyAndSaleStatistics(today, monthFirstDay, yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, request);
+            }
             res.code = 200;
             res.data = map;
         } catch(Exception e){
