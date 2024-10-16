@@ -219,9 +219,9 @@
         })
         buyOrSalePrice().then(res=>{
           if(res.code === 200){
-            this.buyPriceData = res.data.buyPriceList;
-            this.salePriceData = res.data.salePriceList;
-            this.retailPriceData = res.data.retailPriceList;
+            this.buyPriceData = res.data.buyPriceList
+            this.salePriceData = res.data.salePriceList
+            this.retailPriceData = res.data.retailPriceList
           }
         })
         getPlatformConfigByKey({"platformKey": "pay_fee_url"}).then((res)=> {
@@ -271,7 +271,7 @@
       },
       showWeixinSpan() {
         let host = window.location.host
-        if(host === 'cloud.gyjerp.com' || host === 'cloud.huaxiaerp.vip' || host === 'cloud.huaxiaerp.com') {
+        if(host === 'cloud.gyjerp.com') {
           return true
         } else {
           return false
