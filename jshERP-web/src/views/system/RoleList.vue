@@ -50,7 +50,7 @@
             <span slot="action" slot-scope="text, record">
               <a @click="handleSetFunction(record)">分配功能</a>
               <a-divider type="vertical" />
-              <a @click="handleSetPushBtn(record.id)">分配按钮</a>
+              <a @click="handleSetPushBtn(record.id, record.name)">分配按钮</a>
               <a-divider type="vertical" />
               <a @click="handleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
@@ -115,6 +115,7 @@
         roleModalVisible: false,
         roleFunctionModalVisible: false,
         currentRoleId: '',
+		currentRoleName: '',
         labelCol: {
           span: 5
         },
@@ -181,12 +182,20 @@
     methods: {
       handleSetFunction(record) {
         this.$refs.roleFunctionModal.edit(record);
-        this.$refs.roleFunctionModal.title = "分配功能【分配之后请继续分配按钮】";
+        if(record.name){
+          this.$refs.roleFunctionModal.title = "为角色<" + record.name + ">分配功能【分配之后请继续分配按钮】";
+        }else{
+          this.$refs.roleFunctionModal.title = "分配功能【分配之后请继续分配按钮】";
+        }
         this.$refs.roleFunctionModal.disableSubmit = false;
       },
-      handleSetPushBtn(roleId) {
+      handleSetPushBtn(roleId,name) {
         this.$refs.rolePushBtnModal.edit(roleId);
-        this.$refs.rolePushBtnModal.title = "分配按钮";
+        if(name){
+          this.$refs.rolePushBtnModal.title = "为角色<" + name + ">分配按钮";
+        }else{
+          this.$refs.rolePushBtnModal.title = "分配按钮";
+        }
         this.$refs.rolePushBtnModal.disableSubmit = false;
       },
       roleModalFormOk() {
@@ -194,11 +203,12 @@
         this.loadData()
         this.roleModalVisible = true
       },
-      roleFunctionModalFormOk(id) {
+      roleFunctionModalFormOk(id,name) {
         //重载列表
         this.loadData()
         this.roleFunctionModalVisible = true
         this.currentRoleId = id
+		this.currentRoleName = name
       },
       handleRoleTip(record) {
         if(record) {
@@ -209,7 +219,7 @@
       handleRoleFunctionTip() {
         if(this.currentRoleId) {
           this.roleFunctionModalVisible = false
-          this.handleSetPushBtn(this.currentRoleId)
+          this.handleSetPushBtn(this.currentRoleId, this.currentRoleName)
         }
       },
       handleAdd: function () {

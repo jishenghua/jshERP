@@ -115,13 +115,14 @@
             checkUserBusiness({'type': 'RoleFunctions','keyId': this.roleId}).then((res)=>{
               if(res.data && res.data.id) {
                 formData.id=res.data.id
+				formData.name=res.data.name
                 obj=editUserBusiness(formData);
               } else {
                 obj=addUserBusiness(formData);
               }
               obj.then((res)=>{
                 if(res.code === 200){
-                  that.$emit('ok', this.roleId);
+                  that.$emit('ok', this.roleId, this.model.name);
                 }else{
                   that.$message.warning(res.data.message);
                 }
