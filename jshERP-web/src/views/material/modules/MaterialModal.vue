@@ -264,7 +264,7 @@
             <batch-set-stock-modal ref="stockModalForm" @ok="batchSetStockModalFormOk"></batch-set-stock-modal>
           </a-tab-pane>
           <a-tab-pane key="4" tab="图片信息" forceRender>
-            <a-row class="form-row" :gutter="24">
+            <a-row class="form-row" :gutter="24" style="padding-top:20px">
               <a-col :lg="18" :md="18" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片信息">
                   <j-image-upload v-model="fileList" bizPath="material" text="上传" isMultiple></j-image-upload>

@@ -17,12 +17,12 @@
           <a-form layout="inline" @keyup.enter.native="onSearch">
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
-                <a-form-item label="条码名称" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input ref="material" placeholder="条码、名称、助记码" v-model="queryParam.q"></a-input>
+                <a-form-item label="关键词" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input ref="material" placeholder="请输入条码、名称、助记码等查询" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
-                <a-form-item label="规格型号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                <a-form-item label="规格型号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入规格、型号" v-model="queryParam.standardOrModel"></a-input>
                 </a-form-item>
               </a-col>
@@ -81,7 +81,7 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="批号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-form-item label="批号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                     <a-select placeholder="有无批号" v-model="queryParam.enableBatchNumber">
                       <a-select-option value="1">有</a-select-option>
                       <a-select-option value="0">无</a-select-option>
