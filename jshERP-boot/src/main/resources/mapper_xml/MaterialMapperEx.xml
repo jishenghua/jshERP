@@ -380,7 +380,8 @@
         where m.enabled=1 and me.id is not null
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
         </if>
         <if test="standardOrModel != null and standardOrModel !=''">
             <bind name="bindStandardOrModel" value="'%'+standardOrModel+'%'"/>
@@ -424,7 +425,8 @@
         where m.enabled=1 and me.id is not null
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
         </if>
         <if test="standardOrModel != null and standardOrModel !=''">
             <bind name="bindStandardOrModel" value="'%'+standardOrModel+'%'"/>
