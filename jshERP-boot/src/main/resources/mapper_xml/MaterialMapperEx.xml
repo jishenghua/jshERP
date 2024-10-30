@@ -363,7 +363,7 @@
         where m.enabled=1 and me.id is not null
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.mnemonic like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc, me.default_flag desc, me.id asc
