@@ -48,7 +48,8 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
         </if>
         <if test="standard != null and standard !=''">
             <bind name="bindStandard" value="'%'+standard+'%'"/>
@@ -122,7 +123,8 @@
         and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.mnemonic like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
         </if>
         <if test="standard != null and standard !=''">
             <bind name="bindStandard" value="'%'+standard+'%'"/>
