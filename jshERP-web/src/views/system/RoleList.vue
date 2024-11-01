@@ -181,12 +181,12 @@
     methods: {
       handleSetFunction(record) {
         this.$refs.roleFunctionModal.edit(record);
-        this.$refs.roleFunctionModal.title = record.name + "-分配功能【分配之后请继续分配按钮】";
+        this.$refs.roleFunctionModal.title = "分配功能给：" + record.name + "【分配之后请继续分配按钮】"
         this.$refs.roleFunctionModal.disableSubmit = false;
       },
       handleSetPushBtn(roleId, roleName) {
         this.$refs.rolePushBtnModal.edit(roleId);
-        this.$refs.rolePushBtnModal.title = roleName + "-分配按钮";
+        this.$refs.rolePushBtnModal.title = "分配按钮给：" + roleName
         this.$refs.rolePushBtnModal.disableSubmit = false;
       },
       roleModalFormOk() {
