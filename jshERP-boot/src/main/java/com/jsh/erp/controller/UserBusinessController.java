@@ -1,9 +1,7 @@
 package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.datasource.entities.Role;
 import com.jsh.erp.datasource.entities.UserBusiness;
-import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
@@ -11,7 +9,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -33,9 +30,6 @@ public class UserBusinessController {
 
     @Resource
     private UserBusinessService userBusinessService;
-
-    @Resource
-    private RoleService roleService;
 
     /**
      * 获取信息
@@ -81,12 +75,6 @@ public class UserBusinessController {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         Long id = userBusinessService.checkIsValueExist(type, keyId);
         objectMap.put("id", id);
-        if("RoleFunctions".equals(type)){
-            List<Role> roles = roleService.getRoleListByIds(keyId);
-            if(!CollectionUtils.isEmpty(roles)){
-                objectMap.put("name", roles.get(0).getName());
-            }
-        }
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 
