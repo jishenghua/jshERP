@@ -880,7 +880,7 @@ public class MaterialService {
     private Map<Long, BigDecimal> getStockMapCache(Sheet src, int depotCount, Map<String, Long> depotMap, int i) throws Exception {
         Map<Long, BigDecimal> stockMap = new HashMap<>();
         for(int j = 1; j<= depotCount; j++) {
-            int col = 25 + j;
+            int col = 26 + j;
             if(col < src.getColumns()){
                 String depotName = ExcelUtils.getContent(src, 1, col); //获取仓库名称
                 if(StringUtil.isNotEmpty(depotName)) {
