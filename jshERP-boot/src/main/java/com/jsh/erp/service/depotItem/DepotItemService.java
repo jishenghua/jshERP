@@ -1111,6 +1111,10 @@ public class DepotItemService {
                     currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
                 }
             }
+            //防止单价金额溢出
+            if(currentUnitPrice.compareTo(BigDecimal.valueOf(100000000))>0 || currentUnitPrice.compareTo(BigDecimal.valueOf(-100000000))<0) {
+                currentUnitPrice = BigDecimal.ZERO;
+            }
         }
         //更新实时库存中的当前单价
         materialCurrentStockMapperEx.updateUnitPriceByMId(currentUnitPrice, depotItem.getMaterialId());
