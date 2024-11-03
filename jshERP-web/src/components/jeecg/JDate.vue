@@ -7,6 +7,7 @@
     :showTime="showTime"
     :format="dateFormat"
     :getCalendarContainer="getCalendarContainer"
+    style="width:100%"
   />
 </template>
 <script>
