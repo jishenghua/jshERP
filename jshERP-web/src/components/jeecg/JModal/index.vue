@@ -198,24 +198,24 @@
 
       height: 100vh;
 
-      & .ant-modal-content {
+       >.ant-modal-content {
         height: 100vh;
         border-radius: 0;
 
-        & .ant-modal-body {
+         >.ant-modal-body {
           /* title 和 footer 各占 55px */
           height: calc(100% - 55px - 55px);
           overflow: auto;
         }
       }
 
-      &.no-title, &.no-footer {
+      >.no-title, &.no-footer {
         .ant-modal-body {
           height: calc(100% - 55px);
         }
       }
 
-      &.no-title.no-footer {
+      >.no-title.no-footer {
         .ant-modal-body {
           height: 100%;
         }
