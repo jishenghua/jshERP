@@ -9,7 +9,7 @@
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="条码/名称/规格/型号" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="请输入条码、名称、助记码、规格、型号等信息" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -17,7 +17,6 @@
                   <a-range-picker
                     style="width: 100%"
                     v-model="queryParam.createTimeRange"
-                    :default-value="defaultTimeStr"
                     format="YYYY-MM-DD"
                     :placeholder="['开始时间', '结束时间']"
                     @change="onDateChange"
@@ -43,7 +42,7 @@
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择客户" v-model="queryParam.organId"
+                    <a-select placeholder="请选择客户" v-model="queryParam.organId"
                               :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
                       <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
                         {{ item.supplier }}
@@ -90,6 +89,32 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
+            <span slot="customTitle">
+              <a-popover trigger="click" placement="right">
+                <template slot="content">
+                  <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
+                    <a-row style="width: 600px">
+                      <template v-for="(item,index) in defColumns">
+                        <template>
+                          <a-col :span="6">
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex==='rowIndex'" disabled></a-checkbox>
+                            <a-checkbox :value="item.dataIndex" v-if="item.dataIndex!=='rowIndex'">
+                              <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                            </a-checkbox>
+                          </a-col>
+                        </template>
+                      </template>
+                    </a-row>
+                    <a-row style="padding-top: 10px;">
+                      <a-col>
+                        恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                      </a-col>
+                    </a-row>
+                  </a-checkbox-group>
+                </template>
+                <a-icon type="setting" />
+              </a-popover>
+            </span>
           </a-table>
           <a-row :gutter="24" style="margin-top: 8px;text-align:right;">
             <a-col :md="24" :sm="24">
@@ -116,7 +141,7 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatYear, getMpListShort } from "@/utils/util"
+  import { getNowFormatYear, getMpListShort, getPrevMonthFormatDate, getFormatDate } from '@/utils/util'
   import {getAction} from '@/api/manage'
   import {findBySelectCus, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -139,29 +164,31 @@
         },
         queryParam: {
           materialParam:'',
-          beginTime: getNowFormatYear() + '-01-01',
-          endTime: moment().format('YYYY-MM-DD'),
-          organId: '',
-          depotId: '',
-          organizationId: '',
+          beginTime: getPrevMonthFormatDate(3),
+          endTime: getFormatDate(),
+          createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())],
+          organId: undefined,
+          depotId: undefined,
+          organizationId: undefined,
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),
         },
         ipagination:{
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
-        dateFormat: 'YYYY-MM-DD',
-        currentDay: moment().format('YYYY-MM-DD'),
-        defaultTimeStr: '',
         cusList: [],
         depotList: [],
         orgaTree: [],
         realityPriceTotal: '',
         tabKey: "1",
-        // 表头
-        columns: [
+        pageName: 'saleOutReport',
+        // 默认索引
+        defDataIndex:['rowIndex','barCode','materialName','materialStandard','materialModel','materialOther','materialUnit',
+          'outSum','outSumPrice','inSum','inSumPrice','outInSumPrice'],
+        // 默认列
+        defColumns: [
           {
-            title: '#', dataIndex: 'rowIndex', width:60, align:"center",
+            dataIndex: 'rowIndex', width:60, align:"center", slots: { title: 'customTitle' },
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
@@ -170,6 +197,9 @@
           {title: '名称', dataIndex: 'materialName', width: 160, ellipsis:true},
           {title: '规格', dataIndex: 'materialStandard', width: 80, ellipsis:true},
           {title: '型号', dataIndex: 'materialModel', width: 80, ellipsis:true},
+          {title: '颜色', dataIndex: 'materialColor', width: 60, ellipsis:true},
+          {title: '品牌', dataIndex: 'materialBrand', width: 80, ellipsis:true},
+          {title: '制造商', dataIndex: 'materialMfrs', width: 80, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 150, ellipsis:true},
           {title: '单位', dataIndex: 'materialUnit', width: 80, ellipsis:true},
           {title: '销售数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 80},
@@ -187,7 +217,7 @@
       this.initCustomer()
       this.getDepotData()
       this.loadAllOrgaData()
-      this.defaultTimeStr = [moment(getNowFormatYear() + '-01-01', this.dateFormat), moment(this.currentDay, this.dateFormat)]
+      this.initColumnsSetting()
     },
     methods: {
       moment,
@@ -202,9 +232,11 @@
         return param;
       },
       onDateChange: function (value, dateString) {
-        console.log(dateString[0],dateString[1]);
-        this.queryParam.beginTime=dateString[0];
-        this.queryParam.endTime=dateString[1];
+        this.queryParam.beginTime=dateString[0]
+        this.queryParam.endTime=dateString[1]
+        if(dateString[0] && dateString[1]) {
+          this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+        }
       },
       loadData(arg) {
         //加载数据 若传入参数1则加载第一页的内容
@@ -261,11 +293,12 @@
       },
       exportExcel() {
         let list = []
-        let head = '条码,名称,规格,型号,扩展信息,单位,销售数量,销售金额,退货数量,退货金额,实际销售金额'
+        let head = '条码,名称,规格,型号,颜色,品牌,制造商,扩展信息,单位,销售数量,销售金额,退货数量,退货金额,实际销售金额'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialOther, ds.materialUnit, ds.outSum,
+          item.push(ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialColor, ds.materialBrand,
+            ds.materialMfrs, ds.materialOther, ds.materialUnit, ds.outSum,
             ds.outSumPrice, ds.inSum, ds.inSumPrice, ds.outInSumPrice)
           list.push(item)
         }

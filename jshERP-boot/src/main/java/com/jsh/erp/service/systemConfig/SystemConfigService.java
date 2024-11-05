@@ -177,13 +177,16 @@ public class SystemConfigService {
      * 本地文件上传
      * @param mf 文件
      * @param bizPath  自定义路径
-     * @param name  自定义文件名
      * @return
      */
-    public String uploadLocal(MultipartFile mf, String bizPath, String name, HttpServletRequest request) throws Exception {
+    public String uploadLocal(MultipartFile mf, String bizPath, HttpServletRequest request) throws Exception {
         try {
             if(StringUtil.isEmpty(bizPath)){
                 bizPath = "";
+            }
+            // Validate bizPath to prevent directory traversal
+            if (bizPath.contains("..") || bizPath.contains("/")) {
+                throw new IllegalArgumentException("Invalid bizPath");
             }
             String token = request.getHeader("X-Access-Token");
             Long tenantId = Tools.getTenantIdByToken(token);
@@ -196,28 +199,30 @@ public class SystemConfigService {
             }
             String orgName = mf.getOriginalFilename();// 获取文件名
             orgName = FileUtils.getFileName(orgName);
-            if(orgName.contains(".")){
-                if(StringUtil.isNotEmpty(name)) {
-                    fileName = name.substring(0, name.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
-                } else {
-                    fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+
+            // Validate file extension to allow only specific types
+            String[] allowedExtensions = {".gif", ".jpg", ".jpeg", ".png", ".pdf", ".txt",".doc",".docx",".xls",".xlsx",
+                    ".ppt",".pptx",".zip",".rar",".mp3",".mp4",".avi"};
+            boolean isValidExtension = false;
+            for (String ext : allowedExtensions) {
+                if (orgName.toLowerCase().endsWith(ext)) {
+                    isValidExtension = true;
+                    break;
                 }
+            }
+            if (!isValidExtension) {
+                throw new IllegalArgumentException("Invalid file type");
+            }
+
+            if(orgName.contains(".")){
+                fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
             }else{
                 fileName = orgName+ "_" + System.currentTimeMillis();
             }
             String savePath = file.getPath() + File.separator + fileName;
             File savefile = new File(savePath);
             FileCopyUtils.copy(mf.getBytes(), savefile);
-            // 保存缩略图
-            // String fileUrl = getFileUrlLocal(bizPath + File.separator + fileName);
-            // InputStream imgInputStream = new BufferedInputStream(new FileInputStream(fileUrl));
-            // BufferedImage smallImage = getImageMini(imgInputStream, 80);
-            // int index = fileName.lastIndexOf(".");
-            // String ext = fileName.substring(index + 1);
-            // String smallUrl = filePath + "-small" + File.separator + bizPath + File.separator + fileName;
-            // FileUtils.createFile(smallUrl);
-            // File saveSmallFile = new File(smallUrl);
-            // ImageIO.write(smallImage, ext, saveSmallFile);
+
             // 返回路径
             String dbpath = null;
             if(StringUtil.isNotEmpty(bizPath)){
@@ -239,12 +244,15 @@ public class SystemConfigService {
      * 阿里Oss文件上传
      * @param mf 文件
      * @param bizPath  自定义路径
-     * @param name  自定义文件名
      * @return
      */
-    public String uploadAliOss(MultipartFile mf, String bizPath, String name, HttpServletRequest request) throws Exception {
+    public String uploadAliOss(MultipartFile mf, String bizPath, HttpServletRequest request) throws Exception {
         if(StringUtil.isEmpty(bizPath)){
             bizPath = "";
+        }
+        // Validate bizPath to prevent directory traversal
+        if (bizPath.contains("..") || bizPath.contains("/")) {
+            throw new IllegalArgumentException("Invalid bizPath");
         }
         String token = request.getHeader("X-Access-Token");
         Long tenantId = Tools.getTenantIdByToken(token);
@@ -257,12 +265,23 @@ public class SystemConfigService {
         String fileName = "";
         String orgName = mf.getOriginalFilename();// 获取文件名
         orgName = FileUtils.getFileName(orgName);
-        if(orgName.contains(".")){
-            if(StringUtil.isNotEmpty(name)) {
-                fileName = name.substring(0, name.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
-            } else {
-                fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+
+        // Validate file extension to allow only specific types
+        String[] allowedExtensions = {".gif", ".jpg", ".jpeg", ".png", ".pdf", ".txt",".doc",".docx",".xls",".xlsx",
+                ".ppt",".pptx",".zip",".rar",".mp3",".mp4",".avi"};
+        boolean isValidExtension = false;
+        for (String ext : allowedExtensions) {
+            if (orgName.toLowerCase().endsWith(ext)) {
+                isValidExtension = true;
+                break;
             }
+        }
+        if (!isValidExtension) {
+            throw new IllegalArgumentException("Invalid file type");
+        }
+
+        if(orgName.contains(".")){
+            fileName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
         }else{
             fileName = orgName+ "_" + System.currentTimeMillis();
         }
@@ -486,6 +505,23 @@ public class SystemConfigService {
             }
         }
         return inOutManageFlag;
+    }
+
+    /**
+     * 获取移动平均价开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getMoveAvgPriceFlag() throws Exception {
+        boolean moveAvgPriceFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getMoveAvgPriceFlag();
+            if(("1").equals(flag)) {
+                moveAvgPriceFlag = true;
+            }
+        }
+        return moveAvgPriceFlag;
     }
 
     /**

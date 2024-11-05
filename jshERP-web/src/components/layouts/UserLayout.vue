@@ -66,7 +66,6 @@
         <a-button key="back" @click="handleMiniProgramCancel">取消</a-button>
       </template>
       <div class="platform-modal"><img src="/static/weixin-code.png" style="width:200px;" /></div>
-      <div style="text-align:center"><b>管伊佳ERP</b>为华夏ERP旗下产品</div>
     </a-modal>
   </div>
 </template>
@@ -97,7 +96,7 @@
     },
     created () {
       let host = window.location.host
-      if(host === 'cloud.huaxiaerp.vip' || host === 'cloud.huaxiaerp.com') {
+      if(host === 'cloud.gyjerp.com') {
         this.isShowRight = true
       } else {
         this.isShowRight = false

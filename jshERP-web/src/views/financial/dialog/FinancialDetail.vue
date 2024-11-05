@@ -4,22 +4,23 @@
     :width="width"
     :visible="visible"
     :maskClosable="false"
-    :keyboard="false"
     :forceRender="true"
     :style="modalStyle"
+    fullscreen
+    switchFullscreen
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp">
     <template slot="footer">
+      <a-button key="back" @click="handleCancel">取消(ESC)</a-button>
       <!--此处为解决缓存问题-->
-      <a-button v-if="financialType === '收预付款'" v-print="'#advanceInPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '转账'" v-print="'#giroPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '收入'" v-print="'#itemInPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '支出'" v-print="'#itemOutPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '收款'" v-print="'#moneyInPrint'" ghost type="primary">打印</a-button>
-      <a-button v-if="financialType === '付款'" v-print="'#moneyOutPrint'" ghost type="primary">打印</a-button>
+      <a-button v-if="financialType === '收预付款'" v-print="'#advanceInPrint'">打印</a-button>
+      <a-button v-if="financialType === '转账'" v-print="'#giroPrint'">打印</a-button>
+      <a-button v-if="financialType === '收入'" v-print="'#itemInPrint'">打印</a-button>
+      <a-button v-if="financialType === '支出'" v-print="'#itemOutPrint'">打印</a-button>
+      <a-button v-if="financialType === '收款'" v-print="'#moneyInPrint'">打印</a-button>
+      <a-button v-if="financialType === '付款'" v-print="'#moneyOutPrint'">打印</a-button>
       <!--反审核-->
       <a-button v-if="checkFlag && isCanBackCheck && model.status==='1'" @click="handleBackCheck()">反审核</a-button>
-      <a-button key="back" @click="handleCancel">取消</a-button>
     </template>
     <a-form :form="form">
       <!--收预付款-->

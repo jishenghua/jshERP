@@ -55,7 +55,7 @@ public class InOutItemController {
             }
             res = dataArray.toJSONString();
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res = "获取数据失败";
         }
         return res;

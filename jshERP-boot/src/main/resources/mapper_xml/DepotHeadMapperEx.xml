@@ -18,7 +18,11 @@
         <result column="mname" jdbcType="VARCHAR" property="mname" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
+        <result column="color" jdbcType="VARCHAR" property="color" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
+        <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
         <result column="unitPrice" jdbcType="DECIMAL" property="unitPrice" />
+        <result column="sku" jdbcType="VARCHAR" property="sku" />
         <result column="operNumber" jdbcType="DECIMAL" property="operNumber" />
         <result column="allPrice" jdbcType="DECIMAL" property="allPrice" />
         <result column="taxRate" jdbcType="DECIMAL" property="taxRate" />
@@ -36,6 +40,9 @@
         <result column="mName" jdbcType="VARCHAR" property="mName" />
         <result column="model" jdbcType="VARCHAR" property="model" />
         <result column="standard" jdbcType="VARCHAR" property="standard" />
+        <result column="color" jdbcType="VARCHAR" property="color" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
+        <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="materialUnit" jdbcType="VARCHAR" property="materialUnit" />
         <result column="numSum" jdbcType="DECIMAL" property="numSum" />
@@ -84,6 +91,10 @@
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
         </if>
+        <if test="linkApply != null">
+            <bind name="bindLinkApply" value="'%'+linkApply+'%'"/>
+            and dh.link_apply like #{bindLinkApply}
+        </if>
         <if test="linkNumber != null">
             <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
             and dh.link_number like #{bindLinkNumber}
@@ -96,9 +107,8 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like
-            #{bindKey}
-            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="organId != null">
@@ -192,6 +202,10 @@
             <bind name="bindNumber" value="'%'+number+'%'"/>
             and dh.number like #{bindNumber}
         </if>
+        <if test="linkApply != null">
+            <bind name="bindLinkApply" value="'%'+linkApply+'%'"/>
+            and dh.link_apply like #{bindLinkApply}
+        </if>
         <if test="linkNumber != null">
             <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
             and dh.link_number like #{bindLinkNumber}
@@ -204,8 +218,8 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
-            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.other_field1 like #{bindKey}
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="organId != null">
@@ -285,7 +299,7 @@
     </select>
 
     <select id="findInOutDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit,
+        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,m.color,m.brand,m.mfrs,di.unit_price unitPrice,di.material_unit as mUnit, di.sku,
         di.oper_number operNumber,di.all_price allPrice, ifnull(di.tax_rate,0) taxRate, ifnull(di.tax_money,0) taxMoney, ifnull(di.tax_last_money,0) taxLastMoney,
         s.supplier sname,d.dname dname, date_format(dh.oper_time, '%Y-%m-%d') operTime, concat(dh.sub_type,dh.type) as newType,
         concat_ws('  ',dh.remark,di.remark) as newRemark
@@ -334,7 +348,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="creator != null">
             and dh.creator=#{creator}
@@ -403,7 +419,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="creator != null">
             and dh.creator=#{creator}
@@ -477,7 +495,8 @@
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
-        select di.material_id materialId, me.bar_code barCode, m.name mName,m.model,m.standard,mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
+        select di.material_id materialId, me.bar_code barCode, m.name mName,m.model,m.standard,m.color,m.brand,m.mfrs,
+               mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
         sum(di.basic_number) numSum,
         sum(di.all_price) priceSum
         from jsh_depot_head dh
@@ -528,7 +547,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="forceFlag">
             and (dh.status = '1' or dh.status = '2' or dh.status = '3')
@@ -597,7 +618,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="forceFlag">
             and (dh.status = '1' or dh.status = '2' or dh.status = '3')
@@ -671,7 +694,7 @@
     </select>
 
     <select id="findAllocationDetail" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
-        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,di.unit_price unitPrice,di.material_unit as mUnit,
+        select dh.number,me.bar_code barCode, m.name mname,m.model,m.standard,m.color,m.brand,m.mfrs,di.unit_price unitPrice,di.material_unit as mUnit,
                di.oper_number operNumber,di.all_price allPrice,sname, d.dName dname,date_format(dh.oper_time, '%Y-%m-%d') operTime,
                concat(dh.sub_type,dh.type) as newType, concat_ws('  ',dh.remark,di.remark) as newRemark
         from jsh_depot_head dh
@@ -713,7 +736,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -770,7 +795,9 @@
         </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or dh.remark like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
@@ -892,7 +919,12 @@
             )
         </if>
         and ifnull(s.delete_flag,'0') !='1') tb
-        where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+        <if test="hasDebt == 1">
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+        </if>
+        <if test="hasDebt == 0">
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney=0
+        </if>
         order by begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -962,7 +994,12 @@
             )
         </if>
         and ifnull(s.delete_flag,'0') !='1') tb
-        where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+        <if test="hasDebt == 1">
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+        </if>
+        <if test="hasDebt == 0">
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney=0
+        </if>
     </select>
 
     <select id="getStatementAccountTotalPay" resultType="com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount">
@@ -1022,7 +1059,12 @@
             )
         </if>
         and ifnull(s.delete_flag,'0') !='1') tb
-        where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+        <if test="hasDebt == 1">
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+        </if>
+        <if test="hasDebt == 0">
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney=0
+        </if>
     </select>
 
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
@@ -1086,26 +1128,12 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
-    <select id="getBuyAndSaleBasicStatistics" resultType="java.math.BigDecimal">
-        select
-        ifnull(sum(discount_last_money),0) from
-        (select distinct dh.id, dh.discount_last_money
+    <select id="getBuyAndSaleStatisticsList" resultType="com.jsh.erp.datasource.vo.InOutPriceVo">
+        select distinct dh.id, dh.discount_last_money, dh.total_price, dh.type, dh.sub_type, dh.oper_time
         from jsh_depot_head dh
-        left join jsh_depot_item di on dh.id = di.header_id
-        where 1=1
-        and di.id is not null
-        <if test="type != null">
-            and dh.type=#{type}
-        </if>
-        <if test="subType != null">
-            and dh.sub_type=#{subType}
-        </if>
-        <if test="hasSupplier == 1">
-            and dh.organ_id is not null
-        </if>
-        <if test="hasSupplier == 0">
-            and dh.organ_id is null
-        </if>
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where di.id is not null
+        and (dh.type='入库' or dh.type='出库')
         <if test="beginTime != null">
             and dh.oper_time >= #{beginTime}
         </if>
@@ -1123,41 +1151,6 @@
             )
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag,'0') !='1') tb
-    </select>
-
-    <select id="getBuyAndSaleRetailStatistics" resultType="java.math.BigDecimal">
-        select
-        ifnull(sum(total_price),0) from
-        (select distinct dh.id, dh.total_price
-        from jsh_depot_head dh
-        left join jsh_depot_item di on dh.id = di.header_id
-        where 1=1
-        and di.id is not null
-        <if test="type != null">
-            and dh.type=#{type}
-        </if>
-        <if test="subType != null">
-            and dh.sub_type=#{subType}
-        </if>
-        <if test="beginTime != null">
-            and dh.oper_time >= #{beginTime}
-        </if>
-        <if test="endTime != null">
-            and dh.oper_time &lt;= #{endTime}
-        </if>
-        <if test="forceFlag">
-            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
-        </if>
-        <if test="creatorArray != null">
-            and dh.creator in (
-            <foreach collection="creatorArray" item="creator" separator=",">
-                #{creator}
-            </foreach>
-            )
-        </if>
-        and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag,'0') !='1') tb
     </select>
 
     <select id="debtList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">

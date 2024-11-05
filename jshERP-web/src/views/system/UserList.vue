@@ -187,12 +187,12 @@
       },
       btnSetDepot(record) {
         this.$refs.userDepotModal.edit(record);
-        this.$refs.userDepotModal.title = "分配仓库";
+        this.$refs.userDepotModal.title = "分配仓库给：" + record.username
         this.$refs.userDepotModal.disableSubmit = false;
       },
       btnSetCustomer(record) {
         this.$refs.userCustomerModal.edit(record);
-        this.$refs.userCustomerModal.title = "分配客户";
+        this.$refs.userCustomerModal.title = "分配客户给：" + record.username
         this.$refs.userCustomerModal.disableSubmit = false;
       },
     }

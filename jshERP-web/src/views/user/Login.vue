@@ -27,7 +27,7 @@
         <a-col :span="14">
           <a-form-item>
             <a-input
-              v-decorator="['inputCode']"
+              v-decorator="['inputCode',{initialValue:'', rules: validatorRules.inputCode.rules}]"
               size="large"
               type="text"
               default-value=""
@@ -111,7 +111,8 @@
         },
         validatorRules:{
           loginName:{rules: [{ required: true, message: '请输入用户名!'},{validator: this.handleLoginName}]},
-          password:{rules: [{ required: true, message: '请输入密码!',validator: 'click'}]}
+          password:{rules: [{ required: true, message: '请输入密码!',validator: 'click'}]},
+          inputCode:{rules: [{ required: true, message: '请输入验证码!',validator: 'click'}]}
         },
         verifiedCode:"",
         inputCodeContent:"", //20200510 cfm: 为方便测试，不输入验证码可 ""-->"xxxx"
@@ -122,7 +123,7 @@
         currentUsername:"",
         validate_status:"",
         currdatetime:'',
-        randCode:'',
+        uuid:'',
         randCodeImage:'',
         registerFlag:'',
         requestCodeSuccess:false,
@@ -176,11 +177,10 @@
         this.checked = e.target.checked
       },
       handleChangeCheckCode(){
-        this.currdatetime = new Date().getTime();
-        getAction(`/user/randomImage/${this.currdatetime}`).then(res=>{
+        getAction('/user/randomImage').then(res=>{
           if(res.code == 200){
-            this.randCode = res.data.codeNum;
-            this.randCodeImage = res.data.base64;
+            this.uuid = res.data.uuid
+            this.randCodeImage = res.data.base64
             this.requestCodeSuccess=true
           }else{
             this.$message.error(res.data)
@@ -198,31 +198,24 @@
         if (that.customActiveKey === 'tab1') {
           that.form.validateFields([ 'loginName', 'password', 'inputCode' ], { force: true }, (err, values) => {
             if (!err) {
-              if(values.inputCode === this.randCode) {
-                loginParams.loginName = values.loginName
-                loginParams.password = md5(values.password)
-                if(that.checked) {
-                  //勾选的时候进行缓存
-                  Vue.ls.set('cache_loginName', values.loginName)
-                  Vue.ls.set('cache_password', values.password)
-                } else {
-                  //没勾选的时候清缓存
-                  Vue.ls.remove('cache_loginName')
-                  Vue.ls.remove('cache_password')
-                }
-                that.Login(loginParams).then((res) => {
-                  this.departConfirm(res, loginParams.loginName)
-                }).catch((err) => {
-                  that.requestFailed(err);
-                });
+              loginParams.loginName = values.loginName
+              loginParams.password = md5(values.password)
+              loginParams.code = values.inputCode
+              loginParams.uuid = that.uuid
+              if(that.checked) {
+                //勾选的时候进行缓存
+                Vue.ls.set('cache_loginName', values.loginName)
+                Vue.ls.set('cache_password', values.password)
               } else {
-                this.$notification['error']({
-                  message: "提示",
-                  description: "验证码错误",
-                  duration: 2
-                });
-                this.loginBtn = false
+                //没勾选的时候清缓存
+                Vue.ls.remove('cache_loginName')
+                Vue.ls.remove('cache_password')
               }
+              that.Login(loginParams).then((res) => {
+                this.departConfirm(res, loginParams.loginName)
+              }).catch((err) => {
+                that.requestFailed(err);
+              })
             }else {
               that.loginBtn = false;
             }
@@ -230,11 +223,20 @@
         }
       },
       loginSuccess (res) {
+        let that = this
         this.$router.push({ path: "/dashboard/analysis" })
         this.$notification.success({
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`,
-        });
+        })
+        if(res.data.pwdSimple) {
+          setTimeout(function () {
+            that.$notification.warning({
+              message: '友情提醒',
+              description: '密码过于简单，请尽快修改',
+            })
+          },3000)
+        }
         if(res.data && res.data.user) {
           if(res.data.user.loginName === 'admin'){
             let desc = 'admin只是平台运维用户，真正的管理员是租户(测试账号为jsh），admin不能编辑任何业务数据，只能配置平台菜单和创建租户'
@@ -280,32 +282,35 @@
       requestFailed (err) {
         this.$notification[ 'error' ]({
           message: '登录失败',
-          description: ((err.response || {}).data || {}).message || err.message || "请求出现错误，请稍后再试",
+          description: ((err.response || {}).data || {}).message || err.message || err.data.message || "请求出现错误，请稍后再试",
           duration: 4,
         });
+        //验证码刷新
+        this.form.setFieldsValue({'inputCode':''})
+        this.handleChangeCheckCode()
         this.loginBtn = false;
       },
       generateCode(value){
         this.verifiedCode = value.toLowerCase()
       },
       departConfirm(res, loginName){
-        if(res.code==200){
+        if(res.code === 200){
           let err = {};
-          if(res.data.msgTip == 'user can login'){
+          if(res.data.msgTip === 'user can login'){
             this.loginSuccess(res)
-          } else if(res.data.msgTip == 'user is not exist'){
+          } else if(res.data.msgTip === 'user is not exist'){
             err.message = '用户不存在';
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'user password error'){
+          } else if(res.data.msgTip === 'user password error'){
             err.message = '用户密码不正确';
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'user is black'){
+          } else if(res.data.msgTip === 'user is black'){
             err.message = '用户被禁用';
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'tenant is black'){
+          } else if(res.data.msgTip === 'tenant is black'){
             if(loginName === 'jsh') {
               err.message = 'jsh用户已停用，请注册租户进行体验！';
             } else {
@@ -313,16 +318,16 @@
             }
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'tenant is expire'){
+          } else if(res.data.msgTip === 'tenant is expire'){
             err.message = '试用期已结束，请联系客服续费';
             this.requestFailed(err)
             this.Logout();
-          } else if(res.data.msgTip == 'access service error'){
+          } else if(res.data.msgTip === 'access service error'){
             err.message = '查询服务异常';
             this.requestFailed(err)
             this.Logout();
           }
-        }else{
+        } else{
           this.requestFailed(res)
           this.Logout();
         }

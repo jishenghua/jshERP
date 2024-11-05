@@ -37,6 +37,12 @@ public class SystemConfig {
 
     private String inOutManageFlag;
 
+    private String multiAccountFlag;
+
+    private String moveAvgPriceFlag;
+
+    private String auditPrintFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -183,6 +189,30 @@ public class SystemConfig {
 
     public void setInOutManageFlag(String inOutManageFlag) {
         this.inOutManageFlag = inOutManageFlag == null ? null : inOutManageFlag.trim();
+    }
+
+    public String getMultiAccountFlag() {
+        return multiAccountFlag;
+    }
+
+    public void setMultiAccountFlag(String multiAccountFlag) {
+        this.multiAccountFlag = multiAccountFlag == null ? null : multiAccountFlag.trim();
+    }
+
+    public String getMoveAvgPriceFlag() {
+        return moveAvgPriceFlag;
+    }
+
+    public void setMoveAvgPriceFlag(String moveAvgPriceFlag) {
+        this.moveAvgPriceFlag = moveAvgPriceFlag == null ? null : moveAvgPriceFlag.trim();
+    }
+
+    public String getAuditPrintFlag() {
+        return auditPrintFlag;
+    }
+
+    public void setAuditPrintFlag(String auditPrintFlag) {
+        this.auditPrintFlag = auditPrintFlag == null ? null : auditPrintFlag.trim();
     }
 
     public Long getTenantId() {

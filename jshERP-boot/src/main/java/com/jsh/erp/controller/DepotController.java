@@ -63,7 +63,7 @@ public class DepotController {
             res.code = 200;
             res.data = depotList;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -113,7 +113,7 @@ public class DepotController {
             outer.put("children", dataArray);
             arr.add(outer);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return arr;
     }
@@ -133,7 +133,7 @@ public class DepotController {
             res.code = 200;
             res.data = arr;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -196,7 +196,7 @@ public class DepotController {
             res.code = 200;
             res.data = depotList;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }

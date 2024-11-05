@@ -213,7 +213,7 @@ public class FunctionController {
             }
             arr.add(outer);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return arr;
     }
@@ -295,7 +295,7 @@ public class FunctionController {
                 res.data = outer;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }

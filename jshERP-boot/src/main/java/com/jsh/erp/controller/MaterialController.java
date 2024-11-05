@@ -9,6 +9,7 @@ import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.role.RoleService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -47,6 +48,9 @@ public class MaterialController {
 
     @Resource
     private DepotItemService depotItemService;
+
+    @Resource
+    private SystemConfigService systemConfigService;
 
     @Resource
     private UnitService unitService;
@@ -137,7 +141,7 @@ public class MaterialController {
             res.code = 200;
             res.data = list;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -167,7 +171,7 @@ public class MaterialController {
             res.code = 200;
             res.data = mu;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -190,7 +194,7 @@ public class MaterialController {
             res.code = 200;
             res.data = arr;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -207,8 +211,12 @@ public class MaterialController {
     @ApiOperation(value = "查找商品信息")
     public JSONObject findBySelect(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                   @RequestParam(value = "q", required = false) String q,
+                                  @RequestParam(value = "standardOrModel", required = false) String standardOrModel,
                                   @RequestParam(value = "mpList", required = false) String mpList,
                                   @RequestParam(value = "depotId", required = false) Long depotId,
+                                  @RequestParam(value = "color", required = false) String color,
+                                  @RequestParam(value = "brand", required = false) String brand,
+                                  @RequestParam(value = "mfrs", required = false) String mfrs,
                                   @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
                                   @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
                                   @RequestParam("page") Integer currentPage,
@@ -220,10 +228,11 @@ public class MaterialController {
             if(StringUtil.isNotEmpty(mpList)){
                 mpArr= mpList.split(",");
             }
-            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, enableSerialNumber,
-                    enableBatchNumber, (currentPage-1)*pageSize, pageSize);
-            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, enableSerialNumber,
-                    enableBatchNumber);
+            List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, StringUtil.toNull(standardOrModel),
+                    StringUtil.toNull(color), StringUtil.toNull(brand), StringUtil.toNull(mfrs), enableSerialNumber, enableBatchNumber,
+                    (currentPage-1)*pageSize, pageSize);
+            int total = materialService.findBySelectWithBarCodeCount(categoryId, q, StringUtil.toNull(standardOrModel),
+                    StringUtil.toNull(color), StringUtil.toNull(brand), StringUtil.toNull(mfrs), enableSerialNumber, enableBatchNumber);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
@@ -254,10 +263,13 @@ public class MaterialController {
                     }
                     item.put("mBarCode", material.getmBarCode());
                     item.put("name", material.getName());
+                    item.put("mnemonic", material.getMnemonic());
                     item.put("categoryName", material.getCategoryName());
                     item.put("standard", material.getStandard());
                     item.put("model", material.getModel());
                     item.put("color", material.getColor());
+                    item.put("brand", material.getBrand());
+                    item.put("mfrs", material.getMfrs());
                     item.put("unit", material.getCommodityUnit() + ratioStr);
                     item.put("sku", material.getSku());
                     item.put("enableSerialNumber", material.getEnableSerialNumber());
@@ -287,7 +299,7 @@ public class MaterialController {
             }
             object.put("rows", dataArray);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return object;
     }
@@ -334,7 +346,7 @@ public class MaterialController {
                 item.put("unit", material.getUnit() + ratio);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return item;
     }
@@ -374,7 +386,7 @@ public class MaterialController {
                     StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
                     StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), response);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -393,7 +405,7 @@ public class MaterialController {
         try {
             res = materialService.importExcel(file, request);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return res;
     }
@@ -423,7 +435,7 @@ public class MaterialController {
             object.put("rows", list);
             object.put("total", count);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return object;
     }
@@ -463,7 +475,7 @@ public class MaterialController {
                 arr.add(item);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return arr;
     }
@@ -545,7 +557,7 @@ public class MaterialController {
             res.code = 200;
             res.data = list;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -579,7 +591,7 @@ public class MaterialController {
      * @param depotIds
      * @param categoryId
      * @param materialParam
-     * @param mpList
+     * @param zeroStock
      * @param column
      * @param order
      * @param request
@@ -616,19 +628,24 @@ public class MaterialController {
                     depotList.add(object.getLong("id"));
                 }
             }
+            Boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
             List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam),
-                    zeroStock, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
+                    moveAvgPriceFlag, zeroStock, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
             int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam), zeroStock);
             MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam));
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock()!=null?materialVo4Unit.getCurrentStock():BigDecimal.ZERO);
-            map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice()!=null?materialVo4Unit.getCurrentStockPrice():BigDecimal.ZERO);
+            if(moveAvgPriceFlag) {
+                map.put("currentStockPrice", materialVo4Unit.getCurrentStockMovePrice()!=null?materialVo4Unit.getCurrentStockMovePrice():BigDecimal.ZERO);
+            } else {
+                map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice()!=null?materialVo4Unit.getCurrentStockPrice():BigDecimal.ZERO);
+            }
             map.put("currentWeight", materialVo4Unit.getCurrentWeight()!=null?materialVo4Unit.getCurrentWeight():BigDecimal.ZERO);
             map.put("rows", dataList);
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -649,6 +666,27 @@ public class MaterialController {
         String ids = jsonObject.getString("ids");
         Map<String, Object> objectMap = new HashMap<>();
         int res = materialService.batchSetMaterialCurrentStock(ids);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    /**
+     * 批量设置商品当前的成本价
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/batchSetMaterialCurrentUnitPrice")
+    @ApiOperation(value = "批量设置商品当前的成本价")
+    public String batchSetMaterialCurrentUnitPrice(@RequestBody JSONObject jsonObject,
+                                               HttpServletRequest request)throws Exception {
+        String ids = jsonObject.getString("ids");
+        Map<String, Object> objectMap = new HashMap<>();
+        int res = materialService.batchSetMaterialCurrentUnitPrice(ids);
         if(res > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {

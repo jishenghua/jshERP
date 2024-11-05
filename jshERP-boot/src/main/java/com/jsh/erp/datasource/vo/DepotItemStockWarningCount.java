@@ -21,6 +21,8 @@ public class DepotItemStockWarningCount {
 
     private String MMfrs;
 
+    private String brand;
+
     private String unitName;
 
     private String MaterialOther;
@@ -105,6 +107,14 @@ public class DepotItemStockWarningCount {
 
     public void setMMfrs(String MMfrs) {
         this.MMfrs = MMfrs;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getUnitName() {

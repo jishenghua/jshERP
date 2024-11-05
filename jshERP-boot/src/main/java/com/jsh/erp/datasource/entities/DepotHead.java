@@ -62,6 +62,8 @@ public class DepotHead {
 
     private String linkNumber;
 
+    private String linkApply;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -296,6 +298,14 @@ public class DepotHead {
 
     public void setLinkNumber(String linkNumber) {
         this.linkNumber = linkNumber == null ? null : linkNumber.trim();
+    }
+
+    public String getLinkApply() {
+        return linkApply;
+    }
+
+    public void setLinkApply(String linkApply) {
+        this.linkApply = linkApply == null ? null : linkApply.trim();
     }
 
     public Long getTenantId() {

@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.mappers.DepotHeadMapperEx;
-import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
-import com.jsh.erp.datasource.mappers.DepotMapper;
-import com.jsh.erp.datasource.mappers.DepotMapperEx;
+import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
@@ -35,7 +32,6 @@ public class DepotService {
 
     @Resource
     private DepotMapper depotMapper;
-
     @Resource
     private DepotMapperEx depotMapperEx;
     @Resource
@@ -47,9 +43,11 @@ public class DepotService {
     @Resource
     private LogService logService;
     @Resource
-    private DepotHeadMapperEx depotHeadMapperEx;
-    @Resource
     private DepotItemMapperEx depotItemMapperEx;
+    @Resource
+    private MaterialInitialStockMapperEx materialInitialStockMapperEx;
+    @Resource
+    private MaterialCurrentStockMapperEx materialCurrentStockMapperEx;
 
     public Depot getDepot(long id)throws Exception {
         Depot result=null;
@@ -214,6 +212,11 @@ public class DepotService {
         User userInfo=userService.getCurrentUser();
         //校验通过执行删除操作
         try{
+            //删除仓库关联的商品的初始库存
+            materialInitialStockMapperEx.batchDeleteByDepots(idArray);
+            //删除仓库关联的商品的当前库存
+            materialCurrentStockMapperEx.batchDeleteByDepots(idArray);
+            //删除仓库
             result = depotMapperEx.batchDeleteDepotByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         }catch(Exception e){
             JshException.writeFail(logger, e);

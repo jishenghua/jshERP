@@ -244,6 +244,8 @@
             if (info.file.response.code === 200) {
               this.$message.success(info.file.response.data)
               this.loadData()
+            } else {
+              this.$message.error(info.file.response.data)
             }
           } else {
             this.$message.error(info.file.response.data);

@@ -17,15 +17,13 @@
           <a-form layout="inline" @keyup.enter.native="onSearch">
             <a-row :gutter="24">
               <a-col :md="6" :sm="8">
-                <a-form-item label="商品" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                  <a-input ref="material" placeholder="条码、名称、规格、型号、颜色" v-model="queryParam.q"></a-input>
+                <a-form-item label="关键词" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input ref="material" placeholder="请输入条码、名称、助记码等查询" v-model="queryParam.q"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
-                  <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-                                 :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
-                  </a-tree-select>
+                <a-form-item label="规格型号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入规格、型号" v-model="queryParam.standardOrModel"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="8">
@@ -39,7 +37,7 @@
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="6" :sm="24">
+                <a-col :md="6" :sm="8">
                   <a-button type="primary" @click="loadMaterialData(1)">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset(1)">重置</a-button>
                   <a-tooltip title="没查询到，决定新增商品！">
@@ -52,6 +50,28 @@
                 </a-col>
               </span>
               <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="8">
+                  <a-form-item label="颜色" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                    <a-input placeholder="请输入颜色" v-model="queryParam.color"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="8">
+                  <a-form-item label="品牌" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                    <a-input placeholder="请输入品牌" v-model="queryParam.brand"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="8">
+                  <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类别">
+                    <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                                   :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择类别">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="8">
+                  <a-form-item label="制造商" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                    <a-input placeholder="请输入制造商" v-model="queryParam.mfrs"></a-input>
+                  </a-form-item>
+                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="序列号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="有无序列号" v-model="queryParam.enableSerialNumber">
@@ -61,7 +81,7 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="批号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-form-item label="批号" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                     <a-select placeholder="有无批号" v-model="queryParam.enableBatchNumber">
                       <a-select-option value="1">有</a-select-option>
                       <a-select-option value="0">无</a-select-option>
@@ -127,10 +147,14 @@
         modalWidth: 1450,
         queryParam: {
           q: '',
-          categoryId: '',
-          depotId: '',
-          enableSerialNumber: '',
-          enableBatchNumber: ''
+          standardOrModel: '',
+          depotId: undefined,
+          color: '',
+          brand: '',
+          categoryId: undefined,
+          mfrs: '',
+          enableSerialNumber: undefined,
+          enableBatchNumber: undefined
         },
         labelCol: {
           xs: { span: 24 },
@@ -148,6 +172,8 @@
           {dataIndex: 'standard', title: '规格'},
           {dataIndex: 'model', title: '型号'},
           {dataIndex: 'color', title: '颜色'},
+          {dataIndex: 'brand', title: '品牌'},
+          {dataIndex: 'mfrs', title: '制造商'},
           {dataIndex: 'unit', title: '单位'},
           {dataIndex: 'sku', title: '多属性'},
           {dataIndex: 'stock', title: '库存'},
@@ -223,9 +249,7 @@
             if(res.total ===1) {
               if(this.queryParam.q === this.dataSource[0].mBarCode||
                 this.queryParam.q === this.dataSource[0].name||
-                this.queryParam.q === this.dataSource[0].standard||
-                this.queryParam.q === this.dataSource[0].model||
-                this.queryParam.q === this.dataSource[0].color) {
+                this.queryParam.q === this.dataSource[0].mnemonic) {
                 this.title = '选择商品【再次回车可以直接选中】'
                 this.$nextTick(() => this.$refs.material.focus());
               } else {
@@ -235,8 +259,8 @@
               this.title = '选择商品'
             }
           }
-        }).finally(() => {
           this.loading = false
+          this.onClearSelected()
         })
       },
       loadTreeData(){
@@ -256,7 +280,7 @@
       // 触发屏幕自适应
       resetScreenSize() {
         let realScreenWidth = window.screen.width
-        this.modalWidth = realScreenWidth<1600?'1200px':'1450px'
+        this.modalWidth = realScreenWidth<1600?'1300px':'1550px'
         let screenWidth = document.body.clientWidth;
         if (screenWidth < 500) {
           this.scrollTrigger = {x: 800};
@@ -368,9 +392,7 @@
         if(this.dataSource && this.dataSource.length===1) {
           if(this.queryParam.q === this.dataSource[0].mBarCode||
             this.queryParam.q === this.dataSource[0].name||
-            this.queryParam.q === this.dataSource[0].standard||
-            this.queryParam.q === this.dataSource[0].model||
-            this.queryParam.q === this.dataSource[0].color) {
+            this.queryParam.q === this.dataSource[0].mnemonic) {
             let arr = []
             arr.push(this.dataSource[0].id)
             this.selectedRowKeys = arr

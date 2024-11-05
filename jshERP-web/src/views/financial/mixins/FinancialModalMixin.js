@@ -17,7 +17,13 @@ export const FinancialModalMixin = {
       accountList: [],
       billStatus: '0',
       isCanCheck: true,
-      isTenant: false,
+      quickBtn: {
+        vendor: false,
+        customer: false,
+        account: false,
+        person: false,
+        inOutItem: false
+      },
       /* 原始审核是否开启 */
       checkFlag: true,
       spans: {
@@ -36,8 +42,6 @@ export const FinancialModalMixin = {
     };
   },
   created () {
-    let userInfo = Vue.ls.get(USER_INFO)
-    this.isTenant = userInfo.id === userInfo.tenantId? true:false
     let realScreenWidth = window.screen.width
     this.width = realScreenWidth<1500?'1200px':'1550px'
     this.minWidth = realScreenWidth<1500?1150:1500
@@ -191,6 +195,11 @@ export const FinancialModalMixin = {
       this.$refs.personModalForm.title = "新增经手人";
       this.$refs.personModalForm.disableSubmit = false;
     },
+    addInOutItem(type) {
+      this.$refs.inOutItemModalForm.add(type);
+      this.$refs.inOutItemModalForm.title = "新增收支项目";
+      this.$refs.inOutItemModalForm.disableSubmit = false;
+    },
     vendorModalFormOk() {
       this.initSupplier()
     },
@@ -202,6 +211,20 @@ export const FinancialModalMixin = {
     },
     personModalFormOk() {
       this.initPerson()
+    },
+    inOutItemModalFormOk(type) {
+      this.initInOutItem(type)
+    },
+    workflowModalFormOk() {
+      this.close()
+    },
+    onAdded(event) {
+      let that = this
+      const { row, target } = event
+      //自动下滑到最后一行
+      setTimeout(function(){
+        that.$refs.accountDataTable.resetScrollTop((target.rows.length+1)*that.$refs.accountDataTable.rowHeight)
+      },1000)
     },
     //单元值改变一个字符就触发一次
     onValueChange(event) {
@@ -308,7 +331,7 @@ export const FinancialModalMixin = {
         getPlatformConfigByKey({ "platformKey": "send_workflow_url" }).then((res) => {
           if (res && res.code === 200) {
             let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.billNo + '&type=2'
-            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, this.model.billNo, 2, 320)
             this.$refs.modalWorkflow.title = "发起流程"
           }
         })
@@ -316,5 +339,20 @@ export const FinancialModalMixin = {
         this.$message.warning('请先保存单据后再提交流程！');
       }
     },
+    //加载快捷按钮：供应商、客户、结算账户、经手人
+    initQuickBtn() {
+      let btnStrList = Vue.ls.get('winBtnStrList') //按钮功能列表 JSON字符串
+      if (btnStrList) {
+        for (let i = 0; i < btnStrList.length; i++) {
+          if (btnStrList[i].btnStr) {
+            this.quickBtn.vendor = btnStrList[i].url === '/system/vendor'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.vendor
+            this.quickBtn.customer = btnStrList[i].url === '/system/customer'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.customer
+            this.quickBtn.account = btnStrList[i].url === '/system/account'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.account
+            this.quickBtn.person = btnStrList[i].url === '/system/person'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.person
+            this.quickBtn.inOutItem = btnStrList[i].url === '/system/in_out_item'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.inOutItem
+          }
+        }
+      }
+    }
   }
 }

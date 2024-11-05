@@ -1037,7 +1037,7 @@ CREATE TABLE `jsh_platform_config` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='平台参数';
 
-INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '华夏ERP');
+INSERT INTO `jsh_platform_config` VALUES ('1', 'platform_name', '平台名称', '管伊佳ERP');
 INSERT INTO `jsh_platform_config` VALUES ('2', 'activation_code', '激活码', null);
 
 -- --------------------------------------------------------
@@ -1554,3 +1554,60 @@ alter table jsh_system_config add in_out_manage_flag varchar(1) DEFAULT '0' COMM
 -- 给序列号表里面增加入库单价字段
 -- --------------------------------------------------------
 alter table jsh_serial_number add in_price decimal(24,6) DEFAULT NULL COMMENT '入库单价' after is_sell;
+
+-- --------------------------------------------------------
+-- 时间 2024年4月19日
+-- by jishenghua
+-- 给功能表增加请购单的菜单
+-- 给角色勾选请购单的菜单
+-- --------------------------------------------------------
+INSERT INTO jsh_function
+(`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`)
+VALUES ('050203', '请购单', '0502', '/bill/purchase_apply', '/bill/PurchaseApplyList', b'0', '0330', b'1', '电脑版', '1,2,3,7', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2024年4月22日
+-- by jishenghua
+-- 给单据主表里面增加关联请购单字段
+-- --------------------------------------------------------
+alter table jsh_depot_head add link_apply varchar(50) DEFAULT NULL COMMENT '关联请购单' after link_number;
+
+-- --------------------------------------------------------
+-- 时间 2024年5月4日
+-- by jishenghua
+-- 给明细表的备注修改长度
+-- --------------------------------------------------------
+alter table jsh_depot_item change remark remark varchar(500) DEFAULT NULL COMMENT '备注';
+alter table jsh_account_item change remark remark varchar(500) DEFAULT NULL COMMENT '备注';
+
+-- --------------------------------------------------------
+-- 时间 2024年5月5日
+-- by jishenghua
+-- 给系统参数表增加多账户启用标记，开启后，采购订单、采购入库等单据可以进行多账户选择，升级的时候最好给老的租户进行批量设置为启用
+-- --------------------------------------------------------
+alter table jsh_system_config add multi_account_flag varchar(1) DEFAULT '0' COMMENT '多账户启用标记，0未启用，1启用' after in_out_manage_flag;
+update jsh_system_config set multi_account_flag='1' where multi_account_flag='0';
+
+-- --------------------------------------------------------
+-- 时间 2024年5月21日
+-- by jishenghua
+-- 给系统参数表增加移动平均价标记，默认关闭，开启之后将通过移动平均来计算成本价
+-- 给实时库存表增加当前单价字段
+-- --------------------------------------------------------
+alter table jsh_system_config add move_avg_price_flag varchar(1) DEFAULT '0' COMMENT '移动平均价启用标记，0未启用，1启用' after multi_account_flag;
+alter table jsh_material_current_stock add current_unit_price decimal(24,6) DEFAULT NULL COMMENT '当前单价' after current_number;
+
+-- --------------------------------------------------------
+-- 时间 2024年8月21日
+-- by jishenghua
+-- 给系统参数表增加先审核后打印启用标记，启用后，零售、采购、销售等单据，都需要先审核之后才能进行打印
+-- --------------------------------------------------------
+alter table jsh_system_config add audit_print_flag varchar(1) DEFAULT '0' COMMENT '先审核后打印启用标记，0未启用，1启用' after move_avg_price_flag;
+
+-- --------------------------------------------------------
+-- 时间 2024年9月27日
+-- by jishenghua
+-- 给商品表增加品牌、助记码字段
+-- --------------------------------------------------------
+alter table jsh_material add brand varchar(100) DEFAULT NULL COMMENT '品牌' after standard;
+alter table jsh_material add mnemonic varchar(100) DEFAULT NULL COMMENT '助记码' after brand;

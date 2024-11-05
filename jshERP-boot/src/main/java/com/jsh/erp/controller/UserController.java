@@ -3,13 +3,14 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Tenant;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.vo.TreeNodeEx;
 import com.jsh.erp.exception.BusinessParamCheckingException;
-import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.tenant.TenantService;
@@ -31,11 +32,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author ji_sheng_hua 华夏erp
+ * @author ji_sheng_hua 管伊佳erp
  */
 @RestController
 @RequestMapping(value = "/user")
@@ -56,9 +58,6 @@ public class UserController {
     private TenantService tenantService;
 
     @Resource
-    private LogService logService;
-
-    @Resource
     private RedisService redisService;
 
     private static String SUCCESS = "操作成功";
@@ -66,16 +65,17 @@ public class UserController {
 
     @PostMapping(value = "/login")
     @ApiOperation(value = "登录")
-    public BaseResponseInfo login(@RequestBody User userParam,
-                        HttpServletRequest request)throws Exception {
+    public BaseResponseInfo login(@RequestBody UserEx userParam, HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            Map<String, Object> data = userService.login(userParam, request);
+            userService.validateCaptcha(userParam.getCode(), userParam.getUuid());
+            Map<String, Object> data = userService.login(userParam.getLoginName().trim(), userParam.getPassword().trim(), request);
             res.code = 200;
             res.data = data;
+        } catch (BusinessRunTimeException e) {
+            throw new BusinessRunTimeException(e.getCode(), e.getMessage());
         } catch(Exception e){
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "用户登录失败";
         }
@@ -95,13 +95,12 @@ public class UserController {
                 res.data = "微信未绑定";
             } else {
                 logger.info("微信登录:" + user.getLoginName());
-                Map<String, Object> data = userService.login(user, request);
+                Map<String, Object> data = userService.login(user.getLoginName().trim(), user.getPassword().trim(), request);
                 res.code = 200;
                 res.data = data;
             }
         } catch(Exception e){
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "用户登录失败";
         }
@@ -137,7 +136,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取session失败";
         }
@@ -152,7 +151,7 @@ public class UserController {
             redisService.deleteObjectBySession(request,"userId");
             redisService.deleteObjectBySession(request,"clientIp");
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "退出失败";
         }
@@ -210,31 +209,6 @@ public class UserController {
     }
 
     /**
-     * 获取全部用户数据列表
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/getAllList")
-    @ApiOperation(value = "获取全部用户数据列表")
-    public BaseResponseInfo getAllList(HttpServletRequest request)throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            Map<String, Object> data = new HashMap<String, Object>();
-            List<User> dataList = userService.getUser();
-            if(dataList!=null) {
-                data.put("userList", dataList);
-            }
-            res.code = 200;
-            res.data = data;
-        } catch(Exception e){
-            e.printStackTrace();
-            res.code = 500;
-            res.data = "获取失败";
-        }
-        return res;
-    }
-
-    /**
      * 用户列表，用于用户下拉框
      * @param request
      * @return
@@ -245,7 +219,7 @@ public class UserController {
     public JSONArray getUserList(HttpServletRequest request)throws Exception {
         JSONArray dataArray = new JSONArray();
         try {
-            List<User> dataList = userService.getUser();
+            List<User> dataList = userService.getUser(request);
             if (null != dataList) {
                 for (User user : dataList) {
                     JSONObject item = new JSONObject();
@@ -255,7 +229,7 @@ public class UserController {
                 }
             }
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return dataArray;
     }
@@ -318,8 +292,9 @@ public class UserController {
                                HttpServletRequest request)throws Exception{
         JSONObject result = ExceptionConstants.standardSuccess();
         ue.setUsername(ue.getLoginName());
+        userService.validateCaptcha(ue.getCode(), ue.getUuid());
         userService.checkLoginName(ue); //检查登录名
-        ue = userService.registerUser(ue,manageRoleId,request);
+        userService.registerUser(ue,manageRoleId,request);
         return result;
     }
 
@@ -354,7 +329,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取session失败";
         }
@@ -378,7 +353,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }
@@ -405,7 +380,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }
@@ -413,13 +388,13 @@ public class UserController {
     }
 
     /**
-     * 获取随机校验码
+     * 获取随机校验码【后续会废弃】
      * @param response
      * @param key
      * @return
      */
     @GetMapping(value = "/randomImage/{key}")
-    @ApiOperation(value = "获取随机校验码")
+    @ApiOperation(value = "获取随机校验码【后续会废弃】")
     public BaseResponseInfo randomImage(HttpServletResponse response,@PathVariable String key){
         BaseResponseInfo res = new BaseResponseInfo();
         try {
@@ -431,7 +406,35 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
+            res.code = 500;
+            res.data = "获取失败";
+        }
+        return res;
+    }
+
+    /**
+     * 获取随机校验码
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "/randomImage")
+    @ApiOperation(value = "获取随机校验码")
+    public BaseResponseInfo randomImage(HttpServletResponse response){
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            Map<String, Object> data = new HashMap<>();
+            String uuid = UUID.randomUUID().toString().replaceAll("-", "") + "";
+            String verifyKey = BusinessConstants.CAPTCHA_CODE_KEY + uuid;
+            String codeNum = Tools.getCharAndNum(4);
+            redisService.storageCaptchaObject(verifyKey, codeNum);
+            String base64 = RandImageUtil.generate(codeNum);
+            data.put("uuid", uuid);
+            data.put("base64", base64);
+            res.code = 200;
+            res.data = data;
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }
@@ -466,14 +469,14 @@ public class UserController {
      */
     @GetMapping(value = "/infoWithTenant")
     @ApiOperation(value = "获取当前用户的用户数量和租户信息")
-    public BaseResponseInfo randomImage(HttpServletRequest request){
+    public BaseResponseInfo infoWithTenant(HttpServletRequest request){
         BaseResponseInfo res = new BaseResponseInfo();
         try {
             Map<String, Object> data = new HashMap<>();
             Long userId = Long.parseLong(redisService.getObjectFromSessionByKey(request,"userId").toString());
             User user = userService.getUser(userId);
             //获取当前用户数
-            int userCurrentNum = userService.getUser().size();
+            int userCurrentNum = userService.getUser(request).size();
             Tenant tenant = tenantService.getTenantByTenantId(user.getTenantId());
             if(tenant.getExpireTime()!=null && tenant.getExpireTime().getTime()<System.currentTimeMillis()){
                 //租户已经过期，移除token
@@ -488,7 +491,7 @@ public class UserController {
             res.code = 200;
             res.data = data;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取失败";
         }

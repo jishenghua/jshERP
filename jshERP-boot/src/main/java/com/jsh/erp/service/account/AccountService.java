@@ -377,20 +377,21 @@ public class AccountService {
         return accountSum;
     }
 
-    public List<AccountVo4InOutList> findAccountInOutList(Long accountId, Integer offset, Integer rows) throws Exception{
+    public List<AccountVo4InOutList> findAccountInOutList(Long accountId, String number, String beginTime, String endTime,
+                                                          Boolean forceFlag, Integer offset, Integer rows) throws Exception{
         List<AccountVo4InOutList> list=null;
         try{
-            list = accountMapperEx.findAccountInOutList(accountId, offset, rows);
+            list = accountMapperEx.findAccountInOutList(accountId, number, beginTime, endTime, forceFlag, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int findAccountInOutListCount(Long accountId) throws Exception{
+    public int findAccountInOutListCount(Long accountId, String number, String beginTime, String endTime, Boolean forceFlag) throws Exception{
         int result=0;
         try{
-            result = accountMapperEx.findAccountInOutListCount(accountId);
+            result = accountMapperEx.findAccountInOutListCount(accountId, number, beginTime, endTime, forceFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

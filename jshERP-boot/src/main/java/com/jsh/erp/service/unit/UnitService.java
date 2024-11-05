@@ -249,6 +249,46 @@ public class UnitService {
         return stock;
     }
 
+    /**
+     * 根据多单位的比例进行单价换算（保留两位小数）,变大
+     * @param unitPrice
+     * @param unitInfo
+     * @param materialUnit
+     * @return
+     */
+    public BigDecimal parseUnitPriceByUnit(BigDecimal unitPrice, Unit unitInfo, String materialUnit) {
+        if (materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != null && unitInfo.getRatio().compareTo(BigDecimal.ZERO) != 0) {
+            unitPrice = unitPrice.multiply(unitInfo.getRatio());
+        }
+        if (materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO) != 0) {
+            unitPrice = unitPrice.multiply(unitInfo.getRatioTwo());
+        }
+        if (materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO) != 0) {
+            unitPrice = unitPrice.multiply(unitInfo.getRatioThree());
+        }
+        return unitPrice;
+    }
+
+    /**
+     * 根据多单位的比例进行总金额换算（保留两位小数），变小
+     * @param allPrice
+     * @param unitInfo
+     * @param materialUnit
+     * @return
+     */
+    public BigDecimal parseAllPriceByUnit(BigDecimal allPrice, Unit unitInfo, String materialUnit) {
+        if (materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != null && unitInfo.getRatio().compareTo(BigDecimal.ZERO) != 0) {
+            allPrice = allPrice.divide(unitInfo.getRatio(), 2, BigDecimal.ROUND_HALF_UP);
+        }
+        if (materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO) != 0) {
+            allPrice = allPrice.divide(unitInfo.getRatioTwo(), 2, BigDecimal.ROUND_HALF_UP);
+        }
+        if (materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO) != 0) {
+            allPrice = allPrice.divide(unitInfo.getRatioThree(), 2, BigDecimal.ROUND_HALF_UP);
+        }
+        return allPrice;
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(Boolean status, String ids)throws Exception {
         logService.insertLog("计量单位",

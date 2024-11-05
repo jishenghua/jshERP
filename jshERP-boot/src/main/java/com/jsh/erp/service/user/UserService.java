@@ -1,6 +1,7 @@
 package com.jsh.erp.service.user;
 
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.mappers.TenantMapper;
 import com.jsh.erp.exception.BusinessParamCheckingException;
 import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.platformConfig.PlatformConfigService;
@@ -43,7 +44,8 @@ public class UserService {
 
     @Resource
     private UserMapper userMapper;
-
+    @Resource
+    private TenantMapper tenantMapper;
     @Resource
     private UserMapperEx userMapperEx;
     @Resource
@@ -64,6 +66,12 @@ public class UserService {
     private PlatformConfigService platformConfigService;
     @Resource
     private RedisService redisService;
+
+    @Value("${tenant.userNumLimit}")
+    private Integer userNumLimit;
+
+    @Value("${tenant.tryDayLimit}")
+    private Integer tryDayLimit;
 
     public User getUser(long id)throws Exception {
         User result=null;
@@ -88,12 +96,16 @@ public class UserService {
         return list;
     }
 
-    public List<User> getUser()throws Exception {
-        UserExample example = new UserExample();
-        example.createCriteria().andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+    public List<User> getUser(HttpServletRequest request) throws Exception {
         List<User> list=null;
         try{
-            list=userMapper.selectByExample(example);
+            //先校验是否登录，然后才能查询用户数据
+            Long userId = this.getUserId(request);
+            if(userId!=null) {
+                UserExample example = new UserExample();
+                example.createCriteria().andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+                list = userMapper.selectByExample(example);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -102,28 +114,33 @@ public class UserService {
 
     public List<UserEx> select(String userName, String loginName, int offset, int rows)throws Exception {
         List<UserEx> list=null;
-        try{
-            list=userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
-            for(UserEx ue: list){
-                String userType = "";
-                if (ue.getId().equals(ue.getTenantId())) {
-                    userType = "租户";
-                } else if(ue.getTenantId() == null){
-                    userType = "超管";
-                } else {
-                    userType = "普通";
+        try {
+            //先校验是否登录，然后才能查询用户数据
+            HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+            Long userId = this.getUserId(request);
+            if(userId!=null) {
+                list = userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
+                for (UserEx ue : list) {
+                    String userType = "";
+                    if (ue.getId().equals(ue.getTenantId())) {
+                        userType = "租户";
+                    } else if (ue.getTenantId() == null) {
+                        userType = "超管";
+                    } else {
+                        userType = "普通";
+                    }
+                    ue.setUserType(userType);
+                    //是否经理
+                    String leaderFlagStr = "";
+                    if ("1".equals(ue.getLeaderFlag())) {
+                        leaderFlagStr = "是";
+                    } else {
+                        leaderFlagStr = "否";
+                    }
+                    ue.setLeaderFlagStr(leaderFlagStr);
                 }
-                ue.setUserType(userType);
-                //是否经理
-                String leaderFlagStr = "";
-                if("1".equals(ue.getLeaderFlag())) {
-                    leaderFlagStr = "是";
-                } else {
-                    leaderFlagStr = "否";
-                }
-                ue.setLeaderFlagStr(leaderFlagStr);
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
@@ -156,7 +173,6 @@ public class UserService {
             password = Tools.md5Encryp(password);
             user.setPassword(password);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
             logger.error(">>>>>>>>>>>>>>转化MD5字符串错误 ：" + e.getMessage());
         }
         int result=0;
@@ -287,18 +303,44 @@ public class UserService {
     }
 
     /**
+     * 校验验证码
+     * @param code 验证码
+     * @param uuid 唯一标识
+     * @return 结果
+     */
+    public void validateCaptcha(String code, String uuid) {
+        if(StringUtil.isNotEmpty(code) && StringUtil.isNotEmpty(uuid)) {
+            code = code.trim();
+            uuid = uuid.trim();
+            String verifyKey = BusinessConstants.CAPTCHA_CODE_KEY + uuid;
+            String captcha = redisService.getCacheObject(verifyKey);
+            redisService.deleteObject(verifyKey);
+            if (captcha == null) {
+                logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_EXPIRE_CODE, ExceptionConstants.USER_JCAPTCHA_EXPIRE_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_EXPIRE_CODE, ExceptionConstants.USER_JCAPTCHA_EXPIRE_MSG);
+            }
+            if (!code.equalsIgnoreCase(captcha)) {
+                logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
+            }
+        } else {
+            logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_EMPTY_CODE, ExceptionConstants.USER_JCAPTCHA_EMPTY_MSG);
+            throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_EMPTY_CODE, ExceptionConstants.USER_JCAPTCHA_EMPTY_MSG);
+        }
+    }
+
+    /**
      * 用户登录
-     * @param userParam
+     * @param loginName
+     * @param password
      * @param request
      * @return
      * @throws Exception
      */
-    public Map<String, Object> login(User userParam, HttpServletRequest request) throws Exception {
+    public Map<String, Object> login(String loginName, String password, HttpServletRequest request) throws Exception {
         Map<String, Object> data = new HashMap<>();
         String msgTip = "";
-        User user=null;
-        String loginName = userParam.getLoginName().trim();
-        String password = userParam.getPassword().trim();
+        User user = null;
         //判断用户是否已经登录过，登录过不再处理
         Object userId = redisService.getObjectFromSessionByKey(request,"userId");
         if (userId != null) {
@@ -311,7 +353,6 @@ public class UserService {
             redisService.deleteObjectBySession(request,"userId");
             userStatus = validateUser(loginName, password);
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(">>>>>>>>>>>>>用户  " + loginName + " 登录 login 方法 访问服务层异常====", e);
             msgTip = "access service exception";
         }
@@ -349,6 +390,11 @@ public class UserService {
         }
         data.put("msgTip", msgTip);
         if(user!=null){
+            //校验下密码是不是过于简单
+            boolean pwdSimple = false;
+            if(user.getPassword().equals(Tools.md5Encryp(BusinessConstants.USER_DEFAULT_PASSWORD))) {
+                pwdSimple = true;
+            }
             user.setPassword(null);
             redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
             logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
@@ -356,6 +402,7 @@ public class UserService {
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             data.put("token", token);
             data.put("user", user);
+            data.put("pwdSimple", pwdSimple);
         }
         return data;
     }
@@ -547,10 +594,8 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public UserEx registerUser(UserEx ue, Integer manageRoleId, HttpServletRequest request) throws Exception{
+    public void registerUser(UserEx ue, Integer manageRoleId, HttpServletRequest request) throws Exception{
         /**
-         * create by: qiankunpingtai
-         * create time: 2019/4/9 18:00
          * 多次创建事务，事物之间无法协同，应该在入口处创建一个事务以做协调
          */
         if(BusinessConstants.DEFAULT_MANAGER.equals(ue.getLoginName())) {
@@ -563,9 +608,8 @@ public class UserService {
                 ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);
             }
             ue.setStatus(BusinessConstants.USER_STATUS_NORMAL);
-            int result=0;
             try{
-                result= userMapper.insertSelective(ue);
+                userMapper.insertSelective(ue);
                 Long userId = getIdByLoginName(ue.getLoginName());
                 ue.setId(userId);
             }catch(Exception e){
@@ -592,12 +636,16 @@ public class UserService {
             tenantObj.put("userNumLimit", ue.getUserNumLimit());
             tenantObj.put("expireTime", ue.getExpireTime());
             tenantObj.put("remark", ue.getRemark());
-            tenantService.insertTenant(tenantObj, request);
-            logger.info("===============创建租户信息完成===============");
-            if (result > 0) {
-                return ue;
+            Tenant tenant = JSONObject.parseObject(tenantObj.toJSONString(), Tenant.class);
+            tenant.setCreateTime(new Date());
+            if(tenant.getUserNumLimit()==null) {
+                tenant.setUserNumLimit(userNumLimit); //默认用户限制数量
             }
-            return null;
+            if(tenant.getExpireTime()==null) {
+                tenant.setExpireTime(Tools.addDays(new Date(), tryDayLimit)); //租户允许试用的天数
+            }
+            tenantMapper.insertSelective(tenant);
+            logger.info("===============创建租户信息完成===============");
         }
     }
 
@@ -842,7 +890,7 @@ public class UserService {
         //选中的用户的数量
         int selectUserSize = list.size();
         //查询启用状态的用户的数量
-        int enableUserSize = getUser().size();
+        int enableUserSize = getUser(request).size();
         User userInfo = userService.getCurrentUser();
         Tenant tenant = tenantService.getTenantByTenantId(userInfo.getTenantId());
         if(tenant!=null) {

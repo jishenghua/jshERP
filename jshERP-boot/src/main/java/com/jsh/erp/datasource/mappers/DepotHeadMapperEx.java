@@ -23,6 +23,7 @@ public interface DepotHeadMapperEx {
             @Param("statusArray") String[] statusArray,
             @Param("purchaseStatusArray") String[] purchaseStatusArray,
             @Param("number") String number,
+            @Param("linkApply") String linkApply,
             @Param("linkNumber") String linkNumber,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -45,6 +46,7 @@ public interface DepotHeadMapperEx {
             @Param("statusArray") String[] statusArray,
             @Param("purchaseStatusArray") String[] purchaseStatusArray,
             @Param("number") String number,
+            @Param("linkApply") String linkApply,
             @Param("linkNumber") String linkNumber,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
@@ -197,6 +199,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("organId") Integer organId,
             @Param("organArray") String[] organArray,
+            @Param("hasDebt") Integer hasDebt,
             @Param("supplierType") String supplierType,
             @Param("type") String type,
             @Param("subType") String subType,
@@ -211,6 +214,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("organId") Integer organId,
             @Param("organArray") String[] organArray,
+            @Param("hasDebt") Integer hasDebt,
             @Param("supplierType") String supplierType,
             @Param("type") String type,
             @Param("subType") String subType,
@@ -223,6 +227,7 @@ public interface DepotHeadMapperEx {
             @Param("endTime") String endTime,
             @Param("organId") Integer organId,
             @Param("organArray") String[] organArray,
+            @Param("hasDebt") Integer hasDebt,
             @Param("supplierType") String supplierType,
             @Param("type") String type,
             @Param("subType") String subType,
@@ -241,18 +246,7 @@ public interface DepotHeadMapperEx {
 
     List<DepotHead> getDepotHeadListByCreator(@Param("creatorArray") String[] creatorArray);
 
-    BigDecimal getBuyAndSaleBasicStatistics(
-            @Param("type") String type,
-            @Param("subType") String subType,
-            @Param("hasSupplier") Integer hasSupplier,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("creatorArray") String[] creatorArray,
-            @Param("forceFlag") Boolean forceFlag);
-
-    BigDecimal getBuyAndSaleRetailStatistics(
-            @Param("type") String type,
-            @Param("subType") String subType,
+    List<InOutPriceVo> getBuyAndSaleStatisticsList(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,

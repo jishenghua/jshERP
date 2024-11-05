@@ -6,6 +6,8 @@ public class MaterialVoSearch {
 
     private String name;
 
+    private String mnemonic;
+
     private String standard;
 
     private String model;
@@ -28,6 +30,14 @@ public class MaterialVoSearch {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMnemonic() {
+        return mnemonic;
+    }
+
+    public void setMnemonic(String mnemonic) {
+        this.mnemonic = mnemonic;
     }
 
     public String getStandard() {

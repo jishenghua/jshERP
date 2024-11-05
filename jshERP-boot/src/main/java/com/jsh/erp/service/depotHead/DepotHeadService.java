@@ -113,7 +113,7 @@ public class DepotHeadService {
         return list;
     }
 
-    public List<DepotHeadVo4List> select(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
+    public List<DepotHeadVo4List> select(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkApply, String linkNumber,
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
@@ -132,8 +132,9 @@ public class DepotHeadService {
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
-                 materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
+            List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt,
+                    statusArray, purchaseStatusArray, number, linkApply, linkNumber, beginTime, endTime,
+                    materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
             if (null != list) {
                 List<Long> idList = new ArrayList<>();
                 List<String> numberList = new ArrayList<>();
@@ -166,7 +167,9 @@ public class DepotHeadService {
                         dh.setChangeAmount(BigDecimal.ZERO);
                     }
                     if(dh.getTotalPrice() != null) {
-                        dh.setTotalPrice(roleService.parseBillPriceByLimit(dh.getTotalPrice().abs(), billCategory, priceLimit, request));
+                        BigDecimal lastTotalPrice = BusinessConstants.SUB_TYPE_CHECK_ENTER.equals(dh.getSubType())||
+                                BusinessConstants.SUB_TYPE_REPLAY.equals(dh.getSubType())?dh.getTotalPrice():dh.getTotalPrice().abs();
+                        dh.setTotalPrice(roleService.parseBillPriceByLimit(lastTotalPrice, billCategory, priceLimit, request));
                     }
                     BigDecimal discountLastMoney = dh.getDiscountLastMoney()!=null?dh.getDiscountLastMoney():BigDecimal.ZERO;
                     dh.setDiscountLastMoney(roleService.parseBillPriceByLimit(discountLastMoney, billCategory, priceLimit, request));
@@ -227,7 +230,7 @@ public class DepotHeadService {
         return resList;
     }
 
-    public Long countDepotHead(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkNumber,
+    public Long countDepotHead(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkApply, String linkNumber,
            String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
         Long result=null;
         try{
@@ -240,7 +243,8 @@ public class DepotHeadService {
             creatorArray = StringUtil.isNotEmpty(purchaseStatus) ? null: creatorArray;
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, hasDebt, statusArray, purchaseStatusArray, number, linkNumber, beginTime, endTime,
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, hasDebt,
+                    statusArray, purchaseStatusArray, number, linkApply, linkNumber, beginTime, endTime,
                    materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -256,7 +260,9 @@ public class DepotHeadService {
      */
     public String[] getDepotArray(String subType) throws Exception {
         String [] depotArray = null;
-        if(!BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType) && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)) {
+        if(!BusinessConstants.SUB_TYPE_PURCHASE_APPLY.equals(subType)
+                && !BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType)
+                && !BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)) {
             String depotIds = depotService.findDepotStrByCurrentUser();
             depotArray = StringUtil.isNotEmpty(depotIds) ? depotIds.split(",") : null;
         }
@@ -506,13 +512,30 @@ public class DepotHeadService {
                         depotHeadMapper.updateByExampleSelective(dh, example);
                     }
                 }
+                //将关联的单据置为审核状态-针对请购单转采购订单的情况
+                if(StringUtil.isNotEmpty(depotHead.getLinkApply())){
+                    if(BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
+                            BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
+                        String status = BusinessConstants.BILLS_STATUS_AUDIT;
+                        //查询除当前单据之外的关联单据列表
+                        List<DepotHead> exceptCurrentList = getListByLinkApplyExceptCurrent(depotHead.getLinkApply(), depotHead.getNumber(), depotHead.getType());
+                        if(exceptCurrentList!=null && exceptCurrentList.size()>0) {
+                            status = BusinessConstants.BILLS_STATUS_SKIPING;
+                        }
+                        DepotHead dh = new DepotHead();
+                        dh.setStatus(status);
+                        DepotHeadExample example = new DepotHeadExample();
+                        example.createCriteria().andNumberEqualTo(depotHead.getLinkApply());
+                        depotHeadMapper.updateByExampleSelective(dh, example);
+                    }
+                }
                 //将关联的销售订单单据置为未采购状态-针对销售订单转采购订单的情况
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())){
                     if(BusinessConstants.DEPOTHEAD_TYPE_OTHER.equals(depotHead.getType()) &&
                             BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
                         DepotHead dh = new DepotHead();
                         //获取分批操作后单据的商品和商品数量（汇总）
-                        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), depotHead.getType());
+                        List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(depotHead.getLinkNumber(), "normal", depotHead.getType());
                         if(batchList.size()>0) {
                             dh.setPurchaseStatus(BusinessConstants.PURCHASE_STATUS_SKIPING);
                         } else {
@@ -533,9 +556,11 @@ public class DepotHeadService {
                         }
                     }
                 }
-                //更新当前库存
                 for (DepotItem depotItem : list) {
+                    //更新当前库存
                     depotItemService.updateCurrentStock(depotItem);
+                    //更新当前成本价
+                    depotItemService.updateCurrentUnitPrice(depotItem);
                 }
             } else {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
@@ -825,33 +850,34 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4StatementAccount> getStatementAccount(String beginTime, String endTime, Integer organId, String [] organArray,
-                                              String supplierType, String type, String subType, String typeBack, String subTypeBack, String billType, Integer offset, Integer rows) {
+                                                                  Integer hasDebt, String supplierType, String type, String subType, String typeBack,
+                                                                  String subTypeBack, String billType, Integer offset, Integer rows) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
-            list = depotHeadMapperEx.getStatementAccount(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType, offset, rows);
+            list = depotHeadMapperEx.getStatementAccount(beginTime, endTime, organId, organArray, hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType, offset, rows);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public int getStatementAccountCount(String beginTime, String endTime, Integer organId,
-                                        String [] organArray, String supplierType, String type, String subType, String typeBack, String subTypeBack, String billType) {
+    public int getStatementAccountCount(String beginTime, String endTime, Integer organId, String [] organArray,
+                                        Integer hasDebt, String supplierType, String type, String subType, String typeBack, String subTypeBack, String billType) {
         int result = 0;
         try{
-            result = depotHeadMapperEx.getStatementAccountCount(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType);
+            result = depotHeadMapperEx.getStatementAccountCount(beginTime, endTime, organId, organArray, hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
         return result;
     }
 
-    public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId,
-                                                                          String [] organArray, String supplierType,
-                                        String type, String subType, String typeBack, String subTypeBack, String billType) {
+    public List<DepotHeadVo4StatementAccount> getStatementAccountTotalPay(String beginTime, String endTime, Integer organId, String [] organArray,
+                                                                          Integer hasDebt, String supplierType, String type, String subType,
+                                                                          String typeBack, String subTypeBack, String billType) {
         List<DepotHeadVo4StatementAccount> list = null;
         try{
-            list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, supplierType, type, subType,typeBack, subTypeBack, billType);
+            list = depotHeadMapperEx.getStatementAccountTotalPay(beginTime, endTime, organId, organArray, hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -958,6 +984,20 @@ public class DepotHeadService {
     }
 
     /**
+     * 查询除当前单据之外的关联单据列表
+     * @param linkApply
+     * @param number
+     * @return
+     * @throws Exception
+     */
+    public List<DepotHead> getListByLinkApplyExceptCurrent(String linkApply, String number, String type)throws Exception {
+        DepotHeadExample example = new DepotHeadExample();
+        example.createCriteria().andLinkApplyEqualTo(linkApply).andNumberNotEqualTo(number).andTypeEqualTo(type)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        return depotHeadMapper.selectByExample(example);
+    }
+
+    /**
      * 根据原单号查询关联的单据列表(批量)
      * @param linkNumberList
      * @return
@@ -1001,6 +1041,11 @@ public class DepotHeadService {
         if(checkIsBillNumberExist(0L, depotHead.getNumber())>0) {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
+        }
+        //校验是否同时录入关联请购单号和关联订单号
+        if(StringUtil.isNotEmpty(depotHead.getLinkNumber()) && StringUtil.isNotEmpty(depotHead.getLinkApply())) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_CODE,
+                    String.format(ExceptionConstants.DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_MSG));
         }
         String subType = depotHead.getSubType();
         //结算账户校验
@@ -1098,7 +1143,12 @@ public class DepotHeadService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
         }
-        //校验单据状态，如何不是未审核则提示
+        //校验是否同时录入关联请购单号和关联订单号
+        if(StringUtil.isNotEmpty(depotHead.getLinkNumber()) && StringUtil.isNotEmpty(depotHead.getLinkApply())) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_CODE,
+                    String.format(ExceptionConstants.DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_MSG));
+        }
+        //校验单据状态，如果不是未审核则提示
         if(!"0".equals(getDepotHead(depotHead.getId()).getStatus())) {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_CANNOT_EDIT_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_CANNOT_EDIT_MSG));
@@ -1181,86 +1231,96 @@ public class DepotHeadService {
                                                        String yearBegin, String yearEnd, HttpServletRequest request) throws Exception {
         Long userId = userService.getUserId(request);
         String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
-        String [] creatorArray = getCreatorArray();
-        Map<String, Object> map = new HashMap<>();
-        //今日
-        BigDecimal todayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, today, getNow3(), creatorArray); //今日采购入库
-        BigDecimal todayBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, today, getNow3(), creatorArray); //今日采购退货
-        BigDecimal todaySale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, today, getNow3(), creatorArray); //今日销售出库
-        BigDecimal todaySaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, today, getNow3(), creatorArray); //今日销售退货
-        BigDecimal todayRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                today, getNow3(), creatorArray); //今日零售出库
-        BigDecimal todayRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                today, getNow3(), creatorArray); //今日零售退货
-        //本月
-        BigDecimal monthBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, monthFirstDay, getNow3(), creatorArray); //本月采购入库
-        BigDecimal monthBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, monthFirstDay, getNow3(), creatorArray); //本月采购退货
-        BigDecimal monthSale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1,monthFirstDay, getNow3(), creatorArray); //本月销售出库
-        BigDecimal monthSaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1,monthFirstDay, getNow3(), creatorArray); //本月销售退货
-        BigDecimal monthRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                monthFirstDay, getNow3(), creatorArray); //本月零售出库
-        BigDecimal monthRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                monthFirstDay, getNow3(), creatorArray); //本月零售退货
-        //昨日
-        BigDecimal yesterdayBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日采购入库
-        BigDecimal yesterdayBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日采购退货
-        BigDecimal yesterdaySale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日销售出库
-        BigDecimal yesterdaySaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, yesterdayBegin, yesterdayEnd, creatorArray); //昨日销售退货
-        BigDecimal yesterdayRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                yesterdayBegin, yesterdayEnd, creatorArray); //昨日零售出库
-        BigDecimal yesterdayRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                yesterdayBegin, yesterdayEnd, creatorArray); //昨日零售退货
-        //今年
-        BigDecimal yearBuy = getBuyAndSaleBasicStatistics("入库", "采购",
-                1, yearBegin, yearEnd, creatorArray); //今年采购入库
-        BigDecimal yearBuyBack = getBuyAndSaleBasicStatistics("出库", "采购退货",
-                1, yearBegin, yearEnd, creatorArray); //今年采购退货
-        BigDecimal yearSale = getBuyAndSaleBasicStatistics("出库", "销售",
-                1, yearBegin, yearEnd, creatorArray); //今年销售出库
-        BigDecimal yearSaleBack = getBuyAndSaleBasicStatistics("入库", "销售退货",
-                1, yearBegin, yearEnd, creatorArray); //今年销售退货
-        BigDecimal yearRetailSale = getBuyAndSaleRetailStatistics("出库", "零售",
-                yearBegin, yearEnd, creatorArray); //今年零售出库
-        BigDecimal yearRetailSaleBack = getBuyAndSaleRetailStatistics("入库", "零售退货",
-                yearBegin, yearEnd, creatorArray); //今年零售退货
-        map.put("todayBuy", roleService.parseHomePriceByLimit(todayBuy.subtract(todayBuyBack), "buy", priceLimit, "***", request));
-        map.put("todaySale", roleService.parseHomePriceByLimit(todaySale.subtract(todaySaleBack), "sale", priceLimit, "***", request));
-        map.put("todayRetailSale", roleService.parseHomePriceByLimit(todayRetailSale.subtract(todayRetailSaleBack), "retail", priceLimit, "***", request));
-        map.put("monthBuy", roleService.parseHomePriceByLimit(monthBuy.subtract(monthBuyBack), "buy", priceLimit, "***", request));
-        map.put("monthSale", roleService.parseHomePriceByLimit(monthSale.subtract(monthSaleBack), "sale", priceLimit, "***", request));
-        map.put("monthRetailSale", roleService.parseHomePriceByLimit(monthRetailSale.subtract(monthRetailSaleBack), "retail", priceLimit, "***", request));
-        map.put("yesterdayBuy", roleService.parseHomePriceByLimit(yesterdayBuy.subtract(yesterdayBuyBack), "buy", priceLimit, "***", request));
-        map.put("yesterdaySale", roleService.parseHomePriceByLimit(yesterdaySale.subtract(yesterdaySaleBack), "sale", priceLimit, "***", request));
-        map.put("yesterdayRetailSale", roleService.parseHomePriceByLimit(yesterdayRetailSale.subtract(yesterdayRetailSaleBack), "retail", priceLimit, "***", request));
-        map.put("yearBuy", roleService.parseHomePriceByLimit(yearBuy.subtract(yearBuyBack), "buy", priceLimit, "***", request));
-        map.put("yearSale", roleService.parseHomePriceByLimit(yearSale.subtract(yearSaleBack), "sale", priceLimit, "***", request));
-        map.put("yearRetailSale", roleService.parseHomePriceByLimit(yearRetailSale.subtract(yearRetailSaleBack), "retail", priceLimit, "***", request));
-        return map;
+        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+        String[] creatorArray = getCreatorArray();
+        List<InOutPriceVo> inOutPriceVoList = depotHeadMapperEx.getBuyAndSaleStatisticsList(yearBegin, yearEnd, creatorArray, forceFlag);
+
+        String[] periods = {"today", "month", "yesterday", "year"};
+        String[] types = {"Buy", "BuyBack", "Sale", "SaleBack", "RetailSale", "RetailSaleBack"};
+
+        Map<String, BigDecimal> statistics = new HashMap<>();
+
+        // 初始化 statistics Map
+        for (String period : periods) {
+            for (String type : types) {
+                statistics.put(period + type, BigDecimal.ZERO);
+            }
+        }
+
+        Date todayDate = Tools.strToDate(today);
+        Date monthFirstDate = Tools.strToDate(monthFirstDay);
+        Date yesterdayStartDate = Tools.strToDate(yesterdayBegin);
+        Date yesterdayEndDate = Tools.strToDate(yesterdayEnd);
+        Date yearStartDate = Tools.strToDate(yearBegin);
+        Date yearEndDate = Tools.strToDate(yearEnd);
+
+        for (InOutPriceVo item : inOutPriceVoList) {
+            Date operTime = item.getOperTime();
+            BigDecimal discountLastMoney = item.getDiscountLastMoney();
+            BigDecimal totalPriceAbs = item.getTotalPrice().abs();
+
+            if (isWithinRange(operTime, todayDate, Tools.strToDate(getNow3()))) {
+                updateStatistics(statistics, item, "today", discountLastMoney, totalPriceAbs);
+            }
+
+            if (isWithinRange(operTime, monthFirstDate, Tools.strToDate(getNow3()))) {
+                updateStatistics(statistics, item, "month", discountLastMoney, totalPriceAbs);
+            }
+
+            if (isWithinRange(operTime, yesterdayStartDate, yesterdayEndDate)) {
+                updateStatistics(statistics, item, "yesterday", discountLastMoney, totalPriceAbs);
+            }
+
+            if (isWithinRange(operTime, yearStartDate, yearEndDate)) {
+                updateStatistics(statistics, item, "year", discountLastMoney, totalPriceAbs);
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        for (String period : periods) {
+            result.put(period + "Buy", roleService.parseHomePriceByLimit(statistics.get(period + "Buy").subtract(statistics.get(period + "BuyBack")), "buy", priceLimit, "***", request));
+            result.put(period + "Sale", roleService.parseHomePriceByLimit(statistics.get(period + "Sale").subtract(statistics.get(period + "SaleBack")), "sale", priceLimit, "***", request));
+            result.put(period + "RetailSale", roleService.parseHomePriceByLimit(statistics.get(period + "RetailSale").subtract(statistics.get(period + "RetailSaleBack")), "retail", priceLimit, "***", request));
+        }
+
+        return result;
     }
 
-    public BigDecimal getBuyAndSaleBasicStatistics(String type, String subType, Integer hasSupplier,
-                                                   String beginTime, String endTime, String[] creatorArray) throws Exception {
-        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-        return depotHeadMapperEx.getBuyAndSaleBasicStatistics(type, subType, hasSupplier, beginTime, endTime, creatorArray, forceFlag);
+    private boolean isWithinRange(Date operTime, Date startDate, Date endDate) {
+        return operTime.compareTo(startDate) >= 0 && operTime.compareTo(endDate) <= 0;
     }
 
-    public BigDecimal getBuyAndSaleRetailStatistics(String type, String subType,
-                                                    String beginTime, String endTime, String[] creatorArray) throws Exception {
-        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-        return depotHeadMapperEx.getBuyAndSaleRetailStatistics(type, subType, beginTime, endTime, creatorArray, forceFlag).abs();
+    private void updateStatistics(Map<String, BigDecimal> statistics, InOutPriceVo item, String period, BigDecimal discountLastMoney, BigDecimal totalPriceAbs) {
+        switch (item.getType()) {
+            case "入库":
+                switch (item.getSubType()) {
+                    case "采购":
+                        statistics.put(period + "Buy", statistics.get(period + "Buy").add(discountLastMoney));
+                        break;
+                    case "销售退货":
+                        statistics.put(period + "SaleBack", statistics.get(period + "SaleBack").add(discountLastMoney));
+                        break;
+                    case "零售退货":
+                        statistics.put(period + "RetailSaleBack", statistics.get(period + "RetailSaleBack").add(totalPriceAbs));
+                        break;
+                }
+                break;
+            case "出库":
+                switch (item.getSubType()) {
+                    case "采购退货":
+                        statistics.put(period + "BuyBack", statistics.get(period + "BuyBack").add(discountLastMoney));
+                        break;
+                    case "销售":
+                        statistics.put(period + "Sale", statistics.get(period + "Sale").add(discountLastMoney));
+                        break;
+                    case "零售":
+                        statistics.put(period + "RetailSale", statistics.get(period + "RetailSale").add(totalPriceAbs));
+                        break;
+                }
+                break;
+        }
     }
+
 
     public DepotHead getDepotHead(String number)throws Exception {
         DepotHead depotHead = new DepotHead();
@@ -1387,10 +1447,10 @@ public class DepotHeadService {
                 String sheetTwoStr = "";
                 if ("采购".equals(subType)) {
                     twoTip = "供应商单据明细";
-                    sheetTwoStr = "供应商,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
+                    sheetTwoStr = "供应商,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,品牌,制造商,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
                 } else if ("销售".equals(subType)) {
                     twoTip = "客户单据明细";
-                    sheetTwoStr = "客户,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
+                    sheetTwoStr = "客户,单据编号,单据日期,仓库名称,条码,名称,规格,型号,颜色,品牌,制造商,扩展信息,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注";
                 }
                 if (StringUtil.isNotEmpty(beginTime) && StringUtil.isNotEmpty(endTime)) {
                     twoTip = twoTip + "（" + beginTime + "至" + endTime + "）";
@@ -1410,21 +1470,23 @@ public class DepotHeadService {
                     objs[6] = diEx.getMStandard();
                     objs[7] = diEx.getMModel();
                     objs[8] = diEx.getMColor();
-                    objs[9] = depotItemService.getOtherInfo(mpArr, diEx);
-                    objs[10] = diEx.getMaterialUnit();
-                    objs[11] = diEx.getSnList();
-                    objs[12] = diEx.getBatchNumber();
-                    objs[13] = Tools.parseDateToStr(diEx.getExpirationDate());
-                    objs[14] = diEx.getSku();
-                    objs[15] = parseDecimalToStr(diEx.getOperNumber(), 2);
-                    objs[16] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request), 2);
-                    objs[17] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getAllPrice(), billCategory, priceLimit, request), 2);
-                    objs[18] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxRate(), billCategory, priceLimit, request), 2);
-                    objs[19] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxMoney(), billCategory, priceLimit, request), 2);
-                    objs[20] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxLastMoney(), billCategory, priceLimit, request), 2);
+                    objs[9] = diEx.getBrand();
+                    objs[10] = diEx.getMMfrs();
+                    objs[11] = depotItemService.getOtherInfo(mpArr, diEx);
+                    objs[12] = diEx.getMaterialUnit();
+                    objs[13] = diEx.getSnList();
+                    objs[14] = diEx.getBatchNumber();
+                    objs[15] = Tools.parseDateToStr(diEx.getExpirationDate());
+                    objs[16] = diEx.getSku();
+                    objs[17] = parseDecimalToStr(diEx.getOperNumber(), 2);
+                    objs[18] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request), 2);
+                    objs[19] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getAllPrice(), billCategory, priceLimit, request), 2);
+                    objs[20] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxRate(), billCategory, priceLimit, request), 2);
+                    objs[21] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxMoney(), billCategory, priceLimit, request), 2);
+                    objs[22] = parseDecimalToStr(roleService.parseBillPriceByLimit(diEx.getTaxLastMoney(), billCategory, priceLimit, request), 2);
                     BigDecimal allWeight = diEx.getBasicNumber() == null || diEx.getWeight() == null ? BigDecimal.ZERO : diEx.getBasicNumber().multiply(diEx.getWeight());
-                    objs[21] = parseDecimalToStr(allWeight, 2);
-                    objs[22] = diEx.getRemark();
+                    objs[23] = parseDecimalToStr(allWeight, 2);
+                    objs[24] = diEx.getRemark();
                     billDetail.add(objs);
                 }
                 ExcelUtils.exportObjectsManySheet(wtwb, twoTip, sheetTwoArr, "单据明细", 1, billDetail);
@@ -1537,7 +1599,8 @@ public class DepotHeadService {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{
             String [] depotArray = getDepotArray("其它");
-            String [] creatorArray = getCreatorArray();
+            //给仓管可以看全部的单据（此时可以通过分配仓库去控制权限）
+            String [] creatorArray = null;
             String [] subTypeArray = StringUtil.isNotEmpty(subType) ? subType.split(",") : null;
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             Map<Long,String> accountMap = accountService.getAccountMap();
@@ -1583,7 +1646,8 @@ public class DepotHeadService {
         Long result=null;
         try{
             String [] depotArray = getDepotArray("其它");
-            String [] creatorArray = getCreatorArray();
+            //给仓管可以看全部的单据（此时可以通过分配仓库去控制权限）
+            String [] creatorArray = null;
             String [] subTypeArray = StringUtil.isNotEmpty(subType) ? subType.split(",") : null;
             String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
@@ -1605,14 +1669,21 @@ public class DepotHeadService {
             String prefixNo = BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())?"QTRK":"QTCK";
             //关联单据单号
             String oldNumber = depotHead.getNumber();
+            //校验单据最新状态不能进行批量操作
+            if("0".equals(depotHead.getStatus()) || "2".equals(depotHead.getStatus()) || "9".equals(depotHead.getStatus())) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_NEW_STATUS_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_ITEM_EXIST_NEW_STATUS_FAILED_MSG, oldNumber, depotHead.getType()));
+            }
+            //校验是否是部分入库或者部分出库
             if("3".equals(depotHead.getStatus())) {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_MSG, oldNumber, depotHead.getType()));
             }
             depotHead.setLinkNumber(oldNumber);
             //给单号重新赋值
-            depotHead.setNumber(prefixNo + sequenceService.buildOnlyNumber());
-            depotHead.setDefaultNumber(prefixNo + sequenceService.buildOnlyNumber());
+            String number = prefixNo + sequenceService.buildOnlyNumber();
+            depotHead.setNumber(number);
+            depotHead.setDefaultNumber(number);
             depotHead.setOperTime(new Date());
             depotHead.setSubType(BusinessConstants.SUB_TYPE_OTHER);
             depotHead.setChangeAmount(BigDecimal.ZERO);

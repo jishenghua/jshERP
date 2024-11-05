@@ -84,6 +84,29 @@ public class Tools {
     }
 
     /**
+     * 获得指定时间，格式为yyyy-MM-dd HH:mm:ss或yyyy-MM-dd
+     *
+     * @return 格式化后的日期格式
+     */
+    public static String dateToStr(Date date, String format) {
+        if(date!=null) {
+            return new SimpleDateFormat(format).format(date);
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * 将日期的字符串格式转为时间格式
+     * @param dateString
+     * @return
+     * @throws ParseException
+     */
+    public static Date strToDate(String dateString) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 日期格式
+        return formatter.parse(dateString); // 字符串转换为Date
+    }
+    /**
      * 获取指定日期格式 yyyy-MM-dd
      *
      * @return
@@ -334,21 +357,6 @@ public class Tools {
     }
 
     /**
-     * 获取用户IP地址(停用)
-     *
-     * @return 用户IP
-     * @see [类、类#方法、类#成员]
-     */
-    public static String getCurrentUserIP() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            return "127.0.0.1";
-        }
-    }
-
-    /**
      * 从Request对象中获得客户端IP，处理了HTTP代理服务器和Nginx的反向代理截取了ip
      *
      * @param request
@@ -423,37 +431,6 @@ public class Tools {
     }
 
     /**
-     * 解决导出文件中文乱码问题firefox和ie下中文乱码
-     */
-    public static String changeUnicode(String fileName, String browserType) {
-        String returnFileName = "";
-        try {
-            if (browserType.equalsIgnoreCase("MSIE")) {
-                returnFileName = URLEncoder.encode(fileName, "ISO8859-1");
-                returnFileName = returnFileName.replace(" ", "%20");
-                if (returnFileName.length() > 150) {
-                    returnFileName = new String(fileName.getBytes("GB2312"), "ISO8859-1");
-                    returnFileName = returnFileName.replace(" ", "%20");
-                }
-            } else if (browserType.equalsIgnoreCase("Firefox")) {
-                returnFileName = new String(fileName.getBytes("ISO8859-1"), "ISO8859-1");
-                returnFileName = returnFileName.replace(" ", "%20");
-            } else {
-                returnFileName = URLEncoder.encode(fileName, "ISO8859-1");
-                returnFileName = returnFileName.replace(" ", "%20");
-                if (returnFileName.length() > 150) {
-
-                    returnFileName = new String(returnFileName.getBytes("GB2312"), "ISO8859-1");
-                    returnFileName = returnFileName.replace(" ", "%20");
-                }
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return returnFileName;
-    }
-
-    /**
      * 写理财日志内容转化特殊字符
      *
      * @param str 需要转化的字符
@@ -524,23 +501,6 @@ public class Tools {
     }
 
     /**
-     * 获取中文编码，邮件附件乱码问题解决
-     *
-     * @param emailAttchmentTitle
-     * @return
-     */
-    public static String getChineseString(String emailAttchmentTitle) {
-        if (emailAttchmentTitle != null && !emailAttchmentTitle.equals("")) {
-            try {
-                return new String(emailAttchmentTitle.getBytes(), "ISO-8859-1");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-        return emailAttchmentTitle;
-    }
-
-    /**
      * 判断userTel是否合法，userTel只能是数字
      *
      * @param userTel
@@ -571,24 +531,6 @@ public class Tools {
      */
     public static String getNowTime() {
         return new SimpleDateFormat("yyyyMMddHHmmss").format(Calendar.getInstance().getTime());
-    }
-
-    /**
-     * 开打指定文件
-     *
-     * @param filePath 文件的绝对路径
-     */
-    public static void openFile(String filePath) {
-        String viewFilePath = filePath.replace("\\", "/");
-        // Runtime.getRuntime().exec("cmd /c start "+filePath);
-        // 解决路径中带空格问题
-        Runtime r = Runtime.getRuntime();
-        String[] cmdArray = new String[]{"cmd.exe", "/c", viewFilePath};
-        try {
-            r.exec(cmdArray);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -724,16 +666,6 @@ public class Tools {
         return valSb.toString();
     }
 
-//	/**
-//	 * 过滤html文件中的图片文件
-//	 * @param content
-//	 * @return
-//	 */
-//	public static String filterImg(String content)
-//	{
-//		return content.matches("/<img(?:.|\\s)*?>/g");
-//	}
-
     public static void main(String[] args) {
         String aa = "的付的反对法的发的说法";
         char[] bb = aa.toCharArray();
@@ -747,7 +679,6 @@ public class Tools {
             System.out.println(md5Encryp("admin"));
         } catch (NoSuchAlgorithmException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
         }
 
         String value = "2333";

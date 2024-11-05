@@ -46,6 +46,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     private BigDecimal purchaseDecimal;
 
+    private BigDecimal currentUnitPrice;
+
     private String barCode;
 
     private BigDecimal weight;
@@ -53,6 +55,8 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
     private String position;
 
     private String imgName;
+
+    private String brand;
 
     public Long getMId() {
         return MId;
@@ -222,6 +226,14 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
         this.purchaseDecimal = purchaseDecimal;
     }
 
+    public BigDecimal getCurrentUnitPrice() {
+        return currentUnitPrice;
+    }
+
+    public void setCurrentUnitPrice(BigDecimal currentUnitPrice) {
+        this.currentUnitPrice = currentUnitPrice;
+    }
+
     public String getBarCode() {
         return barCode;
     }
@@ -252,5 +264,13 @@ public class DepotItemVo4WithInfoEx extends DepotItem{
 
     public void setImgName(String imgName) {
         this.imgName = imgName;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

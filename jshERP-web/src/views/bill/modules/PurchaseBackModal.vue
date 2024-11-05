@@ -6,11 +6,13 @@
     :confirmLoading="confirmLoading"
     :keyboard="false"
     :forceRender="true"
+    fullscreen
     switchFullscreen
     @cancel="handleCancel"
     style="top:20px;height: 95%;">
     <template slot="footer">
       <a-button @click="handleCancel">取消</a-button>
+      <a-button v-if="billPrintFlag && isShowPrintBtn" @click="handlePrint('采购退货出库')">三联打印预览</a-button>
       <a-button v-if="checkFlag && isCanCheck" :loading="confirmLoading" @click="handleOkAndCheck">保存并审核</a-button>
       <a-button type="primary" :loading="confirmLoading" @click="handleOk">保存</a-button>
       <!--发起多级审核-->
@@ -21,12 +23,12 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="供应商">
-              <a-select placeholder="选择供应商" v-decorator="[ 'organId', validatorRules.organId ]" :disabled="!rowCanEdit"
+              <a-select placeholder="请选择供应商" v-decorator="[ 'organId', validatorRules.organId ]" :disabled="!rowCanEdit"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                  <div v-if="quickBtn.vendor" style="padding: 4px 8px; cursor: pointer;"
                        @mousedown="e => e.preventDefault()" @click="addSupplier"><a-icon type="plus" /> 新增供应商</div>
                 </div>
                 <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
@@ -42,7 +44,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" :readOnly="true"/>
+              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'number' ]" />
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -82,8 +84,8 @@
             <a-icon type="down" @click="handleBatchSetDepot" />
           </template>
           <template #depotAdd>
-            <a-divider v-if="isTenant" style="margin: 4px 0;" />
-            <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;" @click="addDepot"><a-icon type="plus" /> 新增仓库</div>
+            <a-divider v-if="quickBtn.depot" style="margin: 4px 0;" />
+            <div v-if="quickBtn.depot" style="padding: 4px 8px; cursor: pointer;" @click="addDepot"><a-icon type="plus" /> 新增仓库</div>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">
@@ -96,7 +98,7 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优惠率">
-              <a-input style="width:185px;" placeholder="请输入优惠率" v-decorator.trim="[ 'discount' ]" suffix="%" @change="onChangeDiscount"/>
+              <a-input style="width:80%;" placeholder="请输入优惠率" v-decorator.trim="[ 'discount' ]" suffix="%" @change="onChangeDiscount"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -118,12 +120,12 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="结算账户">
-              <a-select style="width:185px;" placeholder="选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+              <a-select style="width:80%;" placeholder="请选择结算账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                         :dropdownMatchSelectWidth="false" allowClear @select="selectAccount">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                  <div v-if="quickBtn.account" style="padding: 4px 8px; cursor: pointer;"
                        @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
                 </div>
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
@@ -163,7 +165,8 @@
     <depot-modal ref="depotModalForm" @ok="depotModalFormOk"></depot-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <batch-set-depot ref="batchSetDepotModalForm" @ok="batchSetDepotModalFormOk"></batch-set-depot>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
+    <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
+    <bill-print-iframe ref="modalPrint"></bill-print-iframe>
   </j-modal>
 </template>
 <script>
@@ -175,6 +178,7 @@
   import AccountModal from '../../system/modules/AccountModal'
   import BatchSetDepot from '../dialog/BatchSetDepot'
   import WorkflowIframe from '@/components/tools/WorkflowIframe'
+  import BillPrintIframe from '../dialog/BillPrintIframe'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
@@ -194,6 +198,7 @@
       AccountModal,
       BatchSetDepot,
       WorkflowIframe,
+      BillPrintIframe,
       JUpload,
       JDate,
       VNodes: {
@@ -238,6 +243,8 @@
             { title: '规格', key: 'standard', width: '9%', type: FormTypes.normal },
             { title: '型号', key: 'model', width: '9%', type: FormTypes.normal },
             { title: '颜色', key: 'color', width: '5%', type: FormTypes.normal },
+            { title: '品牌', key: 'brand', width: '6%', type: FormTypes.normal },
+            { title: '制造商', key: 'mfrs', width: '6%', type: FormTypes.normal },
             { title: '扩展信息', key: 'materialOther', width: '5%', type: FormTypes.normal },
             { title: '库存', key: 'stock', width: '5%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '4%', type: FormTypes.normal },
@@ -338,9 +345,11 @@
           this.copyAddInit(this.prefixNo)
         }
         this.initSystemConfig()
-        this.initSupplier()
+        this.initSupplier(0)
         this.initDepot()
-        this.initAccount()
+        this.initAccount(0)
+        this.initPlatform()
+        this.initQuickBtn()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {
@@ -349,7 +358,6 @@
         let detailArr = allValues.tablesValue[0].values
         billMain.type = '出库'
         billMain.subType = '采购退货'
-        billMain.defaultNumber = billMain.number
         for(let item of detailArr){
           totalPrice += item.allPrice-0
         }
@@ -375,7 +383,7 @@
       },
       onSearchLinkNumber() {
         this.$refs.linkBillList.show('入库', '采购', '供应商', "1,2,3")
-        this.$refs.linkBillList.title = "选择采购入库"
+        this.$refs.linkBillList.title = "请选择采购入库"
       },
       linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
         this.rowCanEdit = false

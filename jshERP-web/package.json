@@ -1,6 +1,6 @@
 {
-  "name": "vue-antd-jeecg",
-  "version": "2.2.0",
+  "name": "jsh-erp-web",
+  "version": "3.3.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -36,7 +36,8 @@
     "vue-router": "^3.0.1",
     "vue-splitpane": "^1.0.4",
     "vuedraggable": "^2.20.0",
-    "vuex": "^3.1.0"
+    "vuex": "^3.1.0",
+    "chinese-to-pinyin": "^1.0.2"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.2.5",

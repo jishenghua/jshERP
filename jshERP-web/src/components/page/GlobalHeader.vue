@@ -14,7 +14,7 @@
 
       <span v-if="device === 'desktop'" class="company-name">{{ companyName }}</span>
       <span v-else>{{ systemTitle }}</span>
-
+      <jump-info ref="jumpModal"></jump-info>
       <user-menu :theme="theme" @searchGlobalHeader="searchGlobalHeader" />
     </div>
     <!-- 顶部导航栏模式 -->
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+  import JumpInfo from './JumpInfo'
   import UserMenu from '../tools/UserMenu'
   import SMenu from '../menu/'
   import Logo from '../tools/Logo'
@@ -51,6 +52,7 @@
   export default {
     name: 'GlobalHeader',
     components: {
+      JumpInfo,
       UserMenu,
       SMenu,
       Logo
@@ -87,7 +89,6 @@
         headerBarFixed: false,
         systemTitle: window.SYS_TITLE,
         companyName: '',
-        //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
         topMenuStyle: {
           headerIndexLeft: {},
           topNavHeader: {},
@@ -110,19 +111,22 @@
         }
       }
     },
-    //update-end--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
     mounted() {
       window.addEventListener('scroll', this.handleScroll)
-      //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
       if (this.mode === 'topmenu') {
         this.buildTopMenuStyle()
       }
-      //update-end--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
+      if(window.location.host === 'cloud.huaxiaerp.vip' || window.location.host === 'cloud.huaxiaerp.com') {
+        this.showJump()
+      }
     },
     created () {
       this.initSystemConfig()
     },
     methods: {
+      showJump() {
+        this.$refs.jumpModal.handleShow()
+      },
       handleScroll() {
         if (this.autoHideHeader) {
           let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
@@ -138,7 +142,6 @@
       toggle() {
         this.$emit('toggle')
       },
-      //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
       buildTopMenuStyle() {
         if (this.mode === 'topmenu') {
           if (this.device === 'mobile') {
@@ -166,13 +169,11 @@
           }
         })
       },
-      //update-begin--author:sunjianlei---date:20190508------for: 顶部导航栏过长时显示更多按钮-----
     }
   }
 </script>
 
 <style lang="less" scoped>
-  /* update_begin author:scott date:20190220 for: 缩小首页布局顶部的高度*/
 
   @height: 49px;
 
@@ -229,6 +230,16 @@
     padding-left:16px
   }
 
-  /* update_end author:scott date:20190220 for: 缩小首页布局顶部的高度*/
+  .change-title {
+    font-size:14px;
+    padding-left:16px;
+    color:yellow;
+  }
+
+  .change-title a {
+    font-size:14px;
+    color:yellow;
+    text-decoration:underline;
+  }
 
 </style>

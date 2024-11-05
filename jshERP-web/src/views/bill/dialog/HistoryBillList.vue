@@ -20,7 +20,7 @@
         <!-- 搜索区域 -->
         <a-form layout="inline" @keyup.enter.native="searchQuery">
           <a-row :gutter="24">
-            <a-col :md="4" :sm="24">
+            <a-col :md="4" :sm="24" v-if="organLabel">
               <a-form-item :label="organLabel" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParam.organId" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in supplierList" :key="index" :value="item.id">
@@ -147,6 +147,7 @@
           },
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},
           { title: '操作员', dataIndex: 'userName',width:70},
+          { title: '数量', dataIndex: 'materialCount',width:50},
           { title: '金额合计', dataIndex: 'totalPrice',width:70},
           { title: '含税合计', dataIndex: 'totalTaxLastMoney',width:70,
             customRender:function (text,record,index) {
@@ -173,12 +174,32 @@
       show(type, subType, organType, organId) {
         this.queryParam.type = type
         this.queryParam.subType = subType
-        this.columns[1].title = organType
         this.organLabel = organType
         this.model = Object.assign({}, {})
         this.visible = true
+        this.initColumns(subType, organType)
         this.loadSupplier(organType, organId)
         this.loadData(1)
+      },
+      initColumns(subType, organType) {
+        for(let i=0; i<this.columns.length; i++) {
+          if (this.columns[i].dataIndex === 'organName') {
+            this.columns[i].title = organType
+          }
+        }
+        if(subType === '请购单') {
+          for(let i=0; i<this.columns.length; i++){
+            if(this.columns[i].dataIndex === 'organName') {
+              this.columns.splice(i, 1)
+            }
+            if(this.columns[i].dataIndex === 'totalPrice') {
+              this.columns.splice(i, 1)
+            }
+            if(this.columns[i].dataIndex === 'totalTaxLastMoney') {
+              this.columns.splice(i, 1)
+            }
+          }
+        }
       },
       loadSupplier(organType, organId) {
         if(organType === '供应商') {

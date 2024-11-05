@@ -35,8 +35,9 @@
 
       <a-row :gutter="0">
         <a-col :span="14">
-          <a-form-item fieldDecoratorId="inputCode">
-            <!--20200510 cfm: 为方便测试，不输入验证码可： default-value="xxxx"-->
+          <a-form-item
+            fieldDecoratorId="inputCode"
+            :fieldDecoratorOptions="{rules: [{ required: true, message: '验证码不能为空'}, { validator: this.handleInputCode}], validateTrigger: ['change', 'blur'], validateFirst: true}">
             <a-input
               size="large"
               type="text"
@@ -109,7 +110,7 @@
         systemTitle: window.SYS_TITLE,
         systemUrl: window.SYS_URL,
         form: null,
-        randCode:'',
+        uuid:'',
         randCodeImage:'',
         requestCodeSuccess:false,
         state: {
@@ -140,9 +141,9 @@
     methods: {
       handleChangeCheckCode(){
         this.currdatetime = new Date().getTime();
-        getAction(`/user/randomImage/${this.currdatetime}`).then(res=>{
+        getAction('/user/randomImage').then(res=>{
           if(res.code == 200){
-            this.randCode = res.data.codeNum;
+            this.uuid = res.data.uuid;
             this.randCodeImage = res.data.base64;
             this.requestCodeSuccess=true
           }else{
@@ -190,7 +191,7 @@
           if (level === 0) {
             this.state.percent = 10
           }
-          callback(new Error('密码强度不够'))
+          callback(new Error('强度不够!'))
         }
       },
 
@@ -198,10 +199,10 @@
         let password = this.form.getFieldValue('password')
         //console.log('value', value)
         if (value === undefined) {
-          callback(new Error('请输入密码'))
+          callback(new Error('请输入密码!'))
         }
         if (value && password && value.trim() !== password.trim()) {
-          callback(new Error('两次密码不一致'))
+          callback(new Error('两次密码不一致!'))
         }
         callback()
       },
@@ -214,53 +215,53 @@
         this.state.passwordLevelChecked = false
       },
 
+      handleInputCode(rule, value, callback) {
+        callback()
+      },
+
       handleSubmit() {
+        let that = this
+        that.registerBtn = true;
         this.form.validateFields((err, values) => {
           if (!err) {
-            if(values.inputCode === this.randCode) {
-              let register = {
-                loginName: values.username,
-                password: md5(values.password)
-              };
-              postAction("/user/registerUser", register).then((res) => {
-                if(res.code === 200){
-                  this.$notification.success({
-                    message: '提示',
-                    description: "注册成功，请使用该租户登录！",
-                    duration: 5
-                  });
-                  let that = this;
-                  setTimeout(function () {
-                    that.$router.push({ name: "login", params:{
-                        loginName: register.loginName
-                      }
-                    })
-                  },2000);
-                } else {
-                  this.$notification['error']({
-                    message: "提示",
-                    description: res.data.message || "注册失败",
-                    duration: 2
-                  });
-                }
-              })
-            } else {
-              this.$notification['error']({
-                message: "提示",
-                description: "验证码错误",
-                duration: 2
-              });
-            }
+            let register = {
+              loginName: values.username,
+              password: md5(values.password),
+              code: values.inputCode,
+              uuid: that.uuid
+            };
+            postAction("/user/registerUser", register).then((res) => {
+              if(res.code === 200){
+                this.$notification.success({
+                  message: '提示',
+                  description: "注册成功，请使用该租户登录！",
+                  duration: 5
+                });
+                let that = this;
+                setTimeout(function () {
+                  that.$router.push({ name: "login", params:{
+                      loginName: register.loginName
+                    }
+                  })
+                },2000);
+              } else {
+                this.$notification['error']({
+                  message: "提示",
+                  description: res.data.message || "注册失败",
+                  duration: 2
+                });
+                //验证码刷新
+                this.form.setFieldsValue({'inputCode':''})
+                this.handleChangeCheckCode()
+                that.registerBtn = false
+              }
+            }).catch((err) => {
+              that.requestFailed(err);
+            })
+          } else {
+            that.registerBtn = false
           }
         })
-      },
-      registerFailed(message) {
-        this.$notification['error']({
-          message: "注册失败",
-          description: message,
-          duration: 2,
-        });
-
       },
       requestFailed(err) {
         this.$notification['error']({

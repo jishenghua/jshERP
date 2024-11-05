@@ -126,7 +126,7 @@ public class SupplierService {
                     billType = "收款";
                 }
                 List<DepotHeadVo4StatementAccount> saList = depotHeadService.getStatementAccount(beginTime, endTime, supplierId, null,
-                        supplierType, inOutType, subType, typeBack, subTypeBack, billType, null, null);
+                        1, supplierType, inOutType, subType, typeBack, subTypeBack, billType, null, null);
                 if(saList.size()>0) {
                     DepotHeadVo4StatementAccount item = saList.get(0);
                     //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
@@ -554,7 +554,7 @@ public class SupplierService {
             info.code = 200;
             data.put("message", "成功");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             info.code = 500;
             data.put("message", e.getMessage());
         }

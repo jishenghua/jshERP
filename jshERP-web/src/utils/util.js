@@ -549,6 +549,24 @@ export function getBeforeFormatDate(day) {
 }
 
 /**
+ * js获取N月前的日期， 格式“yyyy-MM-dd”
+ */
+export function getPrevMonthFormatDate(monthNum) {
+  let prevMonth = new Date(); // 当前日期
+  prevMonth.setMonth(prevMonth.getMonth() - monthNum); // 设置为前一个月
+  let seperator1 = "-";
+  let month = prevMonth.getMonth() + 1;
+  let strDate = prevMonth.getDate();
+  if (month >= 1 && month <= 9) {
+    month = "0" + month;
+  }
+  if (strDate >= 0 && strDate <= 9) {
+    strDate = "0" + strDate;
+  }
+  return prevMonth.getFullYear() + seperator1 + month + seperator1 + strDate
+}
+
+/**
  * JS中根据指定值删除数组中的元素
  * @param arrylist
  * @param val

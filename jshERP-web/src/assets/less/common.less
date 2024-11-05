@@ -41,7 +41,12 @@
   margin-bottom: 12px;
 }
 /*全屏模式*/
-.ant-modal-cust-warp .fullscreen .ant-modal-body {
+.ant-modal-cust-warp .fullscreen >.ant-modal-content {
+  height: 100vh;
+  border-radius: 0;
+}
+/*全屏模式*/
+.ant-modal-cust-warp .fullscreen >.ant-modal-content >.ant-modal-body {
   padding: 24px 24px 12px 24px;
   height: calc(100% - 200px) !important;
   overflow-y: auto

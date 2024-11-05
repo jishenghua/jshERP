@@ -39,7 +39,16 @@ export const BillModalMixin = {
       billStatus: '0',
       minWidth: 1100,
       isCanCheck: true,
-      isTenant: false,
+      quickBtn: {
+        vendor: false,
+        customer: false,
+        member: false,
+        account: false,
+        depot: false
+      },
+      billPrintFlag: false,
+      /* 是否显示打印按钮 */
+      isShowPrintBtn: true,
       /* 原始审核是否开启 */
       checkFlag: true,
       validatorRules:{
@@ -65,8 +74,6 @@ export const BillModalMixin = {
     };
   },
   created () {
-    let userInfo = Vue.ls.get(USER_INFO)
-    this.isTenant = userInfo.id === userInfo.tenantId? true:false
     let realScreenWidth = window.screen.width
     this.width = realScreenWidth<1500?'1200px':'1550px'
     this.minWidth = realScreenWidth<1500?1150:1500
@@ -80,6 +87,7 @@ export const BillModalMixin = {
     addInit(amountNum) {
       getAction('/sequence/buildNumber').then((res) => {
         if (res && res.code === 200) {
+          this.model.defaultNumber = amountNum + res.data.defaultNumber
           this.form.setFieldsValue({'number':amountNum + res.data.defaultNumber})
         }
       })
@@ -166,30 +174,48 @@ export const BillModalMixin = {
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
           this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
           this.inOutManageFlag = res.data.inOutManageFlag==='1'?true:false
+          if(res.data.auditPrintFlag==='1') {
+            if(this.model.status === '0' || this.model.status === '9') {
+              this.isShowPrintBtn = false
+            } else {
+              this.isShowPrintBtn = true
+            }
+          } else {
+            this.isShowPrintBtn = true
+          }
         }
       })
     },
-    initSupplier() {
+    initSupplier(isChecked) {
       let that = this;
       findBySelectSup({}).then((res)=>{
         if(res) {
-          that.supList = res;
+          that.supList = res
+          if(isChecked && res.length>0) {
+            that.form.setFieldsValue({'organId': res[0].id})
+          }
         }
       });
     },
-    initCustomer() {
+    initCustomer(isChecked) {
       let that = this;
       findBySelectCus({}).then((res)=>{
         if(res) {
-          that.cusList = res;
+          that.cusList = res
+          if(isChecked && res.length>0) {
+            that.form.setFieldsValue({'organId': res[0].id})
+          }
         }
       });
     },
-    initRetail() {
+    initRetail(isChecked) {
       let that = this;
       findBySelectRetail({}).then((res)=>{
         if(res) {
-          that.retailList = res;
+          that.retailList = res
+          if(isChecked && res.length>0) {
+            that.form.setFieldsValue({'organId': res[0].id})
+          }
         }
       });
     },
@@ -221,13 +247,24 @@ export const BillModalMixin = {
         }
       })
     },
-    initAccount(){
+    initAccount(isChecked){
       let that = this;
       getAccount({}).then((res)=>{
         if(res && res.code === 200) {
           let list = res.data.accountList
-          list.splice(0,0,{id: 0, name: '多账户'})
-          that.accountList = list
+          let lastId = list.length>0?list[0].id:''
+          getCurrentSystemConfig().then((res) => {
+            if (res.code === 200 && res.data) {
+              let multiAccountFlag = res.data.multiAccountFlag
+              if(multiAccountFlag==='1') {
+                list.splice(0,0,{id: 0, name: '多账户'})
+              }
+            }
+            that.accountList = list
+            if(isChecked) {
+              that.form.setFieldsValue({'accountId': lastId})
+            }
+          })
         }
       })
     },
@@ -286,13 +323,13 @@ export const BillModalMixin = {
       this.$refs.accountModalForm.disableSubmit = false;
     },
     vendorModalFormOk() {
-      this.initSupplier()
+      this.initSupplier(1)
     },
     customerModalFormOk() {
-      this.initCustomer()
+      this.initCustomer(1)
     },
     memberModalFormOk() {
-      this.initRetail()
+      this.initRetail(1)
     },
     batchSetDepotModalFormOk(depotId) {
       this.getAllTable().then(tables => {
@@ -346,11 +383,19 @@ export const BillModalMixin = {
       this.initDepot()
     },
     accountModalFormOk() {
-      this.initAccount()
+      this.initAccount(1)
+    },
+    workflowModalFormOk() {
+      this.close()
     },
     onAdded(event) {
+      let that = this
       const { row, target } = event
       target.setValues([{rowKey: row.id, values: {operNumber:0}}])
+      //自动下滑到最后一行
+      setTimeout(function(){
+        that.$refs.materialDataTable.resetScrollTop((target.rows.length+1)*that.$refs.materialDataTable.rowHeight)
+      },1000)
       if(this.currentSelectDepotId) {
         //如果单据选择过仓库，则直接从当前选择的仓库加载
         target.setValues([{rowKey: row.id, values: {depotId: this.currentSelectDepotId}}])
@@ -561,6 +606,8 @@ export const BillModalMixin = {
         standard: mInfo.standard,
         model: mInfo.model,
         color: mInfo.color,
+        brand: mInfo.brand,
+        mfrs: mInfo.mfrs,
         materialOther: mInfo.materialOther,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
@@ -576,6 +623,8 @@ export const BillModalMixin = {
     changeColumnHide() {
       this.changeFormTypes(this.materialTable.columns, 'model', 0)
       this.changeFormTypes(this.materialTable.columns, 'color', 0)
+      this.changeFormTypes(this.materialTable.columns, 'brand', 0)
+      this.changeFormTypes(this.materialTable.columns, 'mfrs', 0)
       this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
       this.changeFormTypes(this.materialTable.columns, 'sku', 0)
     },
@@ -586,6 +635,12 @@ export const BillModalMixin = {
       }
       if(info.color) {
         this.changeFormTypes(this.materialTable.columns, 'color', 1)
+      }
+      if(info.brand) {
+        this.changeFormTypes(this.materialTable.columns, 'brand', 1)
+      }
+      if(info.mfrs) {
+        this.changeFormTypes(this.materialTable.columns, 'mfrs', 1)
       }
       if(info.materialOther) {
         this.changeFormTypes(this.materialTable.columns, 'materialOther', 1)
@@ -949,12 +1004,50 @@ export const BillModalMixin = {
         getPlatformConfigByKey({ "platformKey": "send_workflow_url" }).then((res) => {
           if (res && res.code === 200) {
             let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.number + '&type=1'
-            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, 320)
+            this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, this.model.number, 1, 320)
             this.$refs.modalWorkflow.title = "发起流程"
           }
         })
       } else {
         this.$message.warning('请先保存单据后再提交流程！');
+      }
+    },
+    //三联打印预览
+    handlePrint(billType) {
+      if(this.model.id) {
+        getPlatformConfigByKey({"platformKey": "bill_print_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
+            let billPrintHeight = this.materialTable.dataSource.length*50 + 600
+            this.$refs.modalPrint.show(this.model, billPrintUrl, billPrintHeight)
+            this.$refs.modalPrint.title = billType + "-三联打印预览"
+          }
+        })
+      } else {
+        this.$message.warning('请先保存单据后再打印！');
+      }
+    },
+    //加载平台配置信息
+    initPlatform() {
+      getPlatformConfigByKey({"platformKey": "bill_print_flag"}).then((res)=> {
+        if (res && res.code === 200) {
+          this.billPrintFlag = res.data.platformValue==='1'?true:false
+        }
+      })
+    },
+    //加载快捷按钮：供应商、客户、会员、结算账户、仓库
+    initQuickBtn() {
+      let btnStrList = Vue.ls.get('winBtnStrList') //按钮功能列表 JSON字符串
+      if (btnStrList) {
+        for (let i = 0; i < btnStrList.length; i++) {
+          if (btnStrList[i].btnStr) {
+            this.quickBtn.vendor = btnStrList[i].url === '/system/vendor'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.vendor
+            this.quickBtn.customer = btnStrList[i].url === '/system/customer'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.customer
+            this.quickBtn.member = btnStrList[i].url === '/system/member'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.member
+            this.quickBtn.account = btnStrList[i].url === '/system/account'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.account
+            this.quickBtn.depot = btnStrList[i].url === '/system/depot'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.depot
+          }
+        }
       }
     }
   }

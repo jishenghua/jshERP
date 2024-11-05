@@ -17,12 +17,12 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="关键词" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、规格、型号查询" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="请输入条码、名称、助记码等查询" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="颜色" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入颜色查询" v-model="queryParam.color"></a-input>
+                <a-form-item label="规格" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入规格查询" v-model="queryParam.standard"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -36,6 +36,26 @@
                 </a-col>
               </span>
               <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="型号" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入型号查询" v-model="queryParam.model"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="颜色" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入颜色查询" v-model="queryParam.color"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="品牌" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入品牌查询" v-model="queryParam.brand"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="制造商" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入制造商查询" v-model="queryParam.mfrs"></a-input>
+                  </a-form-item>
+                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择状态" v-model="queryParam.enabled">
@@ -99,6 +119,7 @@
           <a-button v-if="btnEnableList.indexOf(3)>-1" @click="handleExportXls('商品信息')" icon="download">导出</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchEdit()" icon="edit">批量编辑</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentStock()" icon="stock">修正库存</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="batchSetMaterialCurrentUnitPrice()" icon="fund">修正成本</a-button>
           <a-popover trigger="click" placement="right">
             <template slot="content">
               <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
@@ -150,7 +171,7 @@
                 <template slot="content">
                   <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
                 </template>
-                <div style="width:52px;height:52px;" v-if="record.imgName">
+                <div class="item-info" v-if="record.imgName">
                   <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" />
                 </div>
               </a-popover>
@@ -219,15 +240,19 @@
         },
         // 查询条件
         queryParam: {
-          categoryId:'',
+          categoryId: undefined,
           materialParam:'',
+          standard:'',
+          model:'',
           color:'',
+          brand:'',
+          mfrs:'',
           materialOther:'',
           weight:'',
           expiryNum:'',
-          enabled: '',
-          enableSerialNumber:'',
-          enableBatchNumber:'',
+          enabled: undefined,
+          enableSerialNumber: undefined,
+          enableBatchNumber: undefined,
           position: '',
           remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
@@ -251,12 +276,14 @@
             width: 100,
             scopedSlots: { customRender: 'action' },
           },
-          {title: '图片', dataIndex: 'pic', width: 65, scopedSlots: { customRender: 'customPic' }},
+          {title: '图片', dataIndex: 'pic', width: 60, scopedSlots: { customRender: 'customPic' }},
           {title: '条码', dataIndex: 'mBarCode', width: 120},
           {title: '名称', dataIndex: 'name', width: 160, scopedSlots: { customRender: 'customName' }},
           {title: '规格', dataIndex: 'standard', width: 120},
           {title: '型号', dataIndex: 'model', width: 120},
           {title: '颜色', dataIndex: 'color', width: 70, ellipsis:true},
+          {title: '品牌', dataIndex: 'brand', width: 100, ellipsis:true},
+          {title: '助记码', dataIndex: 'mnemonic', width: 80, ellipsis:true},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
           {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
           {title: '单位', dataIndex: 'unit', width: 100, ellipsis:true,
@@ -273,6 +300,7 @@
           },
           {title: '基础重量', dataIndex: 'weight', width: 80},
           {title: '保质期', dataIndex: 'expiryNum', width: 60},
+          {title: '制造商', dataIndex: 'mfrs', width: 120, ellipsis:true},
           {title: '库存', dataIndex: 'stock', width: 80,
             scopedSlots: { customRender: 'customRenderStock' }
           },
@@ -293,7 +321,8 @@
           importExcelUrl: "/material/importExcel",
           exportXlsUrl: "/material/exportExcel",
           batchSetStatusUrl: "/material/batchSetStatus",
-          batchSetMaterialCurrentStockUrl: "/material/batchSetMaterialCurrentStock"
+          batchSetMaterialCurrentStockUrl: "/material/batchSetMaterialCurrentStock",
+          batchSetMaterialCurrentUnitPriceUrl: "/material/batchSetMaterialCurrentUnitPrice",
         }
       }
     },
@@ -376,6 +405,35 @@
           });
         }
       },
+      batchSetMaterialCurrentUnitPrice () {
+        if (this.selectedRowKeys.length <= 0) {
+          this.$message.warning('请选择一条记录！');
+        } else {
+          let ids = "";
+          for (let a = 0; a < this.selectedRowKeys.length; a++) {
+            ids += this.selectedRowKeys[a] + ",";
+          }
+          let that = this;
+          this.$confirm({
+            title: "确认操作",
+            content: "是否操作选中数据?",
+            onOk: function () {
+              that.loading = true;
+              postAction(that.url.batchSetMaterialCurrentUnitPriceUrl, {ids: ids}).then((res) => {
+                if(res.code === 200){
+                  that.$message.info('修正成本成功！');
+                  that.loadData();
+                  that.onClearSelected();
+                } else {
+                  that.$message.warning(res.data.message);
+                }
+              }).finally(() => {
+                that.loading = false;
+              });
+            }
+          });
+        }
+      },
       batchEdit() {
         if (this.selectedRowKeys.length <= 0) {
           this.$message.warning('请选择一条记录！');
@@ -428,6 +486,12 @@
   @import '~@assets/less/common.less'
 </style>
 <style>
+  .item-info {
+    float:left;
+    width:38px;
+    height:38px;
+    margin-left:6px
+  }
   .item-img {
     cursor:pointer;
     position: static;

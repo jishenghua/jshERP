@@ -22,7 +22,7 @@ import java.util.Map;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 
 /**
- * @author ji|sheng|hua 华夏erp QQ7827-18920
+ * @author ji|sheng|hua 管伊佳erp QQ7827-18920
  */
 @RestController
 @RequestMapping(value = "/platformConfig")
@@ -47,7 +47,7 @@ public class PlatformConfigController {
             PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
             res = platformConfig.getPlatformValue();
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res = "ERP系统";
         }
         logger.info("获取平台名称：" + res);
@@ -68,7 +68,7 @@ public class PlatformConfigController {
             PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
             res = platformConfig.getPlatformValue();
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res = "#";
         }
         return res;
@@ -88,7 +88,7 @@ public class PlatformConfigController {
             PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
             res = platformConfig.getPlatformValue();
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res = "#";
         }
         return res;
@@ -131,7 +131,7 @@ public class PlatformConfigController {
             res.code = 200;
             res.data = platformConfig;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }

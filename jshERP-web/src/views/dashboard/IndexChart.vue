@@ -131,7 +131,7 @@
               <div slot="content">
                 <img src="/static/weixin.jpg" style="width:258px" />
               </div>
-              <a-button type="link" v-if="showWeixinSpan()">华夏ERP微信小程序</a-button>
+              <a-button type="link" v-if="showWeixinSpan()">管伊佳ERP微信小程序</a-button>
             </a-popover>
             &copy; 2022-2024 {{systemTitle}}
           </div>
@@ -219,9 +219,9 @@
         })
         buyOrSalePrice().then(res=>{
           if(res.code === 200){
-            this.buyPriceData = res.data.buyPriceList;
-            this.salePriceData = res.data.salePriceList;
-            this.retailPriceData = res.data.retailPriceList;
+            this.buyPriceData = res.data.buyPriceList
+            this.salePriceData = res.data.salePriceList
+            this.retailPriceData = res.data.retailPriceList
           }
         })
         getPlatformConfigByKey({"platformKey": "pay_fee_url"}).then((res)=> {
@@ -271,7 +271,7 @@
       },
       showWeixinSpan() {
         let host = window.location.host
-        if(host === 'cloud.huaxiaerp.vip' || host === 'cloud.huaxiaerp.com') {
+        if(host === 'cloud.gyjerp.com') {
           return true
         } else {
           return false

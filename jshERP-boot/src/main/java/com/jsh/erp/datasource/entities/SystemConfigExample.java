@@ -1354,6 +1354,216 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andMultiAccountFlagIsNull() {
+            addCriterion("multi_account_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagIsNotNull() {
+            addCriterion("multi_account_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagEqualTo(String value) {
+            addCriterion("multi_account_flag =", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagNotEqualTo(String value) {
+            addCriterion("multi_account_flag <>", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagGreaterThan(String value) {
+            addCriterion("multi_account_flag >", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("multi_account_flag >=", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagLessThan(String value) {
+            addCriterion("multi_account_flag <", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagLessThanOrEqualTo(String value) {
+            addCriterion("multi_account_flag <=", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagLike(String value) {
+            addCriterion("multi_account_flag like", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagNotLike(String value) {
+            addCriterion("multi_account_flag not like", value, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagIn(List<String> values) {
+            addCriterion("multi_account_flag in", values, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagNotIn(List<String> values) {
+            addCriterion("multi_account_flag not in", values, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagBetween(String value1, String value2) {
+            addCriterion("multi_account_flag between", value1, value2, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMultiAccountFlagNotBetween(String value1, String value2) {
+            addCriterion("multi_account_flag not between", value1, value2, "multiAccountFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagIsNull() {
+            addCriterion("move_avg_price_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagIsNotNull() {
+            addCriterion("move_avg_price_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagEqualTo(String value) {
+            addCriterion("move_avg_price_flag =", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagNotEqualTo(String value) {
+            addCriterion("move_avg_price_flag <>", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagGreaterThan(String value) {
+            addCriterion("move_avg_price_flag >", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("move_avg_price_flag >=", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagLessThan(String value) {
+            addCriterion("move_avg_price_flag <", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagLessThanOrEqualTo(String value) {
+            addCriterion("move_avg_price_flag <=", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagLike(String value) {
+            addCriterion("move_avg_price_flag like", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagNotLike(String value) {
+            addCriterion("move_avg_price_flag not like", value, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagIn(List<String> values) {
+            addCriterion("move_avg_price_flag in", values, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagNotIn(List<String> values) {
+            addCriterion("move_avg_price_flag not in", values, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagBetween(String value1, String value2) {
+            addCriterion("move_avg_price_flag between", value1, value2, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMoveAvgPriceFlagNotBetween(String value1, String value2) {
+            addCriterion("move_avg_price_flag not between", value1, value2, "moveAvgPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagIsNull() {
+            addCriterion("audit_print_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagIsNotNull() {
+            addCriterion("audit_print_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagEqualTo(String value) {
+            addCriterion("audit_print_flag =", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagNotEqualTo(String value) {
+            addCriterion("audit_print_flag <>", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagGreaterThan(String value) {
+            addCriterion("audit_print_flag >", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("audit_print_flag >=", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagLessThan(String value) {
+            addCriterion("audit_print_flag <", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagLessThanOrEqualTo(String value) {
+            addCriterion("audit_print_flag <=", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagLike(String value) {
+            addCriterion("audit_print_flag like", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagNotLike(String value) {
+            addCriterion("audit_print_flag not like", value, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagIn(List<String> values) {
+            addCriterion("audit_print_flag in", values, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagNotIn(List<String> values) {
+            addCriterion("audit_print_flag not in", values, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagBetween(String value1, String value2) {
+            addCriterion("audit_print_flag between", value1, value2, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditPrintFlagNotBetween(String value1, String value2) {
+            addCriterion("audit_print_flag not between", value1, value2, "auditPrintFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

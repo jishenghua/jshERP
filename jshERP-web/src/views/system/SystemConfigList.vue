@@ -102,8 +102,28 @@
             </a-form-item>
           </a-col>
         </a-row>
-        <a-row class="form-row" :gutter="24" v-if="isShowApproval">
+        <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多账户">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiAccountFlagSwitch" @change="onMultiAccountChange"></a-switch>
+              （启用后，采购订单、采购入库、采购退货、销售订单、销售出库、销售退货等单据的结算账户可以进行多账户选择）
+            </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="移动平均价">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="moveAvgPriceFlagSwitch" @change="onMoveAvgPriceChange"></a-switch>
+              （默认为关闭状态，代表成本价等于商品信息页面录入的采购价。开启之后将通过移动平均来计算成本价，需到<b>商品管理</b>批量<b>修正成本</b>，请按实际业务谨慎操作）
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="先审核后打印">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="auditPrintFlagSwitch" @change="onAuditPrintChange"></a-switch>
+              （启用后，零售管理、采购管理、销售管理和仓库管理下的单据，都需要先审核之后才能进行打印）
+            </a-form-item>
+          </a-col>
+          <a-col :lg="12" :md="12" :sm="24" v-if="isShowApproval">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
               <a-select placeholder="请选择流程类型" v-model="multiBillTypeSelect" style="width:400px;padding-left:10px"
@@ -116,7 +136,6 @@
               <br/>（启用后，多级审核需配置流程，开启后需刷新浏览器才能看到效果）<a-button type="link" @click="handleReload">点此刷新</a-button>
             </a-form-item>
           </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
         </a-row>
       </a-form>
     </a-spin>
@@ -155,8 +174,10 @@
         originalMultiLevelApprovalFlag: '0', //原始多级审核状态
         multiBillTypeSelect: [], //单据类型
         originalMultiBillTypeSelect: [], //原始单据类型
-        isReadOnly: false,
-        isShowApproval: false,
+        isShowApproval: false, //是否展示多级审核
+        multiAccountFlagSwitch: false, //多账户
+        moveAvgPriceFlagSwitch: false, //移动平均价
+        auditPrintFlagSwitch: false, //先审核后打印
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -170,6 +191,7 @@
         billTypeList: [
           { 'key': 'LSCK', 'value': '零售出库' },
           { 'key': 'LSTH', 'value': '零售退货' },
+          { 'key': 'QGD', 'value': '请购单' },
           { 'key': 'CGDD', 'value': '采购订单' },
           { 'key': 'CGRK', 'value': '采购入库' },
           { 'key': 'CGTH', 'value': '采购退货' },
@@ -247,6 +269,15 @@
               if (record.multiBillType != null && record.multiBillType != '') {
                 this.multiBillTypeSelect = record.multiBillType.split(',')
                 this.originalMultiBillTypeSelect = record.multiBillType
+              }
+              if (record.multiAccountFlag != null) {
+                this.multiAccountFlagSwitch = record.multiAccountFlag == '1' ? true : false;
+              }
+              if (record.moveAvgPriceFlag != null) {
+                this.moveAvgPriceFlagSwitch = record.moveAvgPriceFlag == '1' ? true : false;
+              }
+              if (record.auditPrintFlag != null) {
+                this.auditPrintFlagSwitch = record.auditPrintFlag == '1' ? true : false;
               }
             }
           } else {
@@ -358,6 +389,18 @@
       },
       onMultiBillTypeChange() {
         this.model.multiBillType = this.multiBillTypeSelect.join(",")
+        this.handleChange()
+      },
+      onMultiAccountChange(checked) {
+        this.model.multiAccountFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onMoveAvgPriceChange(checked) {
+        this.model.moveAvgPriceFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onAuditPrintChange(checked) {
+        this.model.auditPrintFlag = checked?'1':'0'
         this.handleChange()
       },
       //改变内容

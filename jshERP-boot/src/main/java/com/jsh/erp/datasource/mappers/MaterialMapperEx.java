@@ -19,7 +19,11 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> selectByConditionMaterial(
             @Param("materialParam") String materialParam,
+            @Param("standard") String standard,
+            @Param("model") String model,
             @Param("color") String color,
+            @Param("brand") String brand,
+            @Param("mfrs") String mfrs,
             @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
@@ -35,7 +39,11 @@ public interface MaterialMapperEx {
 
     Long countsByMaterial(
             @Param("materialParam") String materialParam,
+            @Param("standard") String standard,
+            @Param("model") String model,
             @Param("color") String color,
+            @Param("brand") String brand,
+            @Param("mfrs") String mfrs,
             @Param("materialOther") String materialOther,
             @Param("weight") String weight,
             @Param("expiryNum") String expiryNum,
@@ -59,6 +67,10 @@ public interface MaterialMapperEx {
 
     List<MaterialVo4Unit> findBySelectWithBarCode(@Param("idList") List<Long> idList,
                                                   @Param("q") String q,
+                                                  @Param("standardOrModel") String standardOrModel,
+                                                  @Param("color") String color,
+                                                  @Param("brand") String brand,
+                                                  @Param("mfrs") String mfrs,
                                                   @Param("enableSerialNumber") String enableSerialNumber,
                                                   @Param("enableBatchNumber") String enableBatchNumber,
                                                   @Param("offset") Integer offset,
@@ -66,6 +78,10 @@ public interface MaterialMapperEx {
 
     int findBySelectWithBarCodeCount(@Param("idList") List<Long> idList,
                                      @Param("q") String q,
+                                     @Param("standardOrModel") String standardOrModel,
+                                     @Param("color") String color,
+                                     @Param("brand") String brand,
+                                     @Param("mfrs") String mfrs,
                                      @Param("enableSerialNumber") String enableSerialNumber,
                                      @Param("enableBatchNumber") String enableBatchNumber);
 

@@ -27,7 +27,7 @@ Overview
 
 - 安装nodeJS
 ```
-建议安装node-v16.16.0-x64版本 教程参考 https://blog.csdn.net/wuliyouMaozhi/article/details/126071233
+建议安装node-v20.17.0-x64版本 教程参考 https://blog.csdn.net/Coin_Collecter/article/details/136484312
 ```
 
 - 安装yarn
@@ -35,9 +35,9 @@ Overview
 npm install -g yarn
 ```
 
-- 配淘宝源（速度快）
+- 配镜像源（速度快）
 ```
-yarn config set registry https://registry.npm.taobao.org
+yarn config set registry https://registry.npmmirror.com
 ```
 
 - 安装依赖

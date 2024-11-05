@@ -4,6 +4,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
+import com.jsh.erp.datasource.vo.InOutPriceVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -59,19 +60,19 @@ public interface DepotItemMapperEx {
     List<DepotItemVo4WithInfoEx> getBillDetailListByIds(
             @Param("idList") List<Long> idList);
 
-    List<DepotItemVo4WithInfoEx> findByAll(
+    List<DepotItemVo4WithInfoEx> getInOutStock(
             @Param("materialParam") String materialParam,
             @Param("categoryIdList") List<Long> categoryIdList,
             @Param("endTime") String endTime,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int findByAllCount(
+    int getInOutStockCount(
             @Param("materialParam") String materialParam,
             @Param("categoryIdList") List<Long> categoryIdList,
             @Param("endTime") String endTime);
 
-    List<DepotItemVo4WithInfoEx> getListWithBugOrSale(
+    List<DepotItemVo4WithInfoEx> getListWithBuyOrSale(
             @Param("materialParam") String materialParam,
             @Param("billType") String billType,
             @Param("beginTime") String beginTime,
@@ -84,7 +85,7 @@ public interface DepotItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
-    int getListWithBugOrSaleCount(
+    int getListWithBuyOrSaleCount(
             @Param("materialParam") String materialParam,
             @Param("billType") String billType,
             @Param("beginTime") String beginTime,
@@ -133,17 +134,7 @@ public interface DepotItemMapperEx {
             @Param("depotList") List<Long> depotList,
             @Param("forceFlag") Boolean forceFlag);
 
-    BigDecimal inOrOutPrice(
-            @Param("type") String type,
-            @Param("subType") String subType,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("creatorArray") String[] creatorArray,
-            @Param("forceFlag") Boolean forceFlag);
-
-    BigDecimal inOrOutRetailPrice(
-            @Param("type") String type,
-            @Param("subType") String subType,
+    List<InOutPriceVo> inOrOutPriceList(
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
@@ -211,13 +202,15 @@ public interface DepotItemMapperEx {
     BigDecimal getFinishNumber(
             @Param("meId") Long meId,
             @Param("linkId") Long linkId,
-            @Param("linkNumber") String linkNumber,
+            @Param("linkStr") String linkStr,
+            @Param("noType") String noType,
             @Param("goToType") String goToType);
 
     BigDecimal getRealFinishNumber(
             @Param("meId") Long meId,
             @Param("linkId") Long linkId,
-            @Param("linkNumber") String linkNumber,
+            @Param("linkStr") String linkStr,
+            @Param("linkType") String linkType,
             @Param("currentHeaderId") Long currentHeaderId,
             @Param("goToType") String goToType);
 
@@ -235,10 +228,11 @@ public interface DepotItemMapperEx {
             @Param("depotId") Long depotId);
 
     List<DepotItemVo4MaterialAndSum> getLinkBillDetailMaterialSum(
-            @Param("linkNumber") String linkNumber);
+            @Param("linkStr") String linkStr);
 
     List<DepotItemVo4MaterialAndSum> getBatchBillDetailMaterialSum(
-            @Param("linkNumber") String linkNumber,
+            @Param("linkStr") String linkStr,
+            @Param("linkType") String linkType,
             @Param("type") String type);
 
     Long getCountByMaterialAndBatchNumber(

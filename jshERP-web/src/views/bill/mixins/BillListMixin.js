@@ -3,7 +3,8 @@ import {getAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
 import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount, waitBillCount,
   getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
-import { getCheckFlag } from "@/utils/util"
+import { getCheckFlag, getFormatDate, getPrevMonthFormatDate } from '@/utils/util'
+import moment from 'moment'
 
 export const BillListMixin = {
   data () {
@@ -12,7 +13,10 @@ export const BillListMixin = {
       checkFlag: true,
       /* 单据Excel是否开启 */
       isShowExcel: false,
+      //以销定购的场景开关
+      purchaseBySaleFlag: false,
       waitTotal: 0,
+      dateFormat: 'YYYY-MM-DD',
       billExcelUrl: '',
       supList: [],
       cusList: [],
@@ -23,6 +27,11 @@ export const BillListMixin = {
       settingDataIndex:[],
       // 实际列
       columns:[],
+      queryParam: {
+        beginTime: getPrevMonthFormatDate(3),
+        endTime: getFormatDate(),
+        createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())]
+      }
     }
   },
   computed: {
@@ -65,7 +74,8 @@ export const BillListMixin = {
       this.$refs.modalForm.disableSubmit = false;
       //开启明细的编辑模式
       this.$refs.modalForm.rowCanEdit = true
-      this.$refs.modalForm.materialTable.columns[1].type = FormTypes.popupJsh
+      let columnIndex = record.subType === '组装单' || record.subType === '拆卸单'?2:1
+      this.$refs.modalForm.materialTable.columns[columnIndex].type = FormTypes.popupJsh
     },
     myHandleEdit(record) {
       if(record.status === '0') {
@@ -105,13 +115,19 @@ export const BillListMixin = {
     searchReset() {
       this.queryParam = {
         type: this.queryParam.type,
-        subType: this.queryParam.subType
+        subType: this.queryParam.subType,
+        beginTime: getPrevMonthFormatDate(3),
+        endTime: getFormatDate(),
+        createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())]
       }
       this.loadData(1);
     },
     onDateChange: function (value, dateString) {
-      this.queryParam.beginTime=dateString[0];
-      this.queryParam.endTime=dateString[1];
+      this.queryParam.beginTime=dateString[0]
+      this.queryParam.endTime=dateString[1]
+      if(dateString[0] && dateString[1]) {
+        this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+      }
     },
     onDateOk(value) {
       console.log(value);
@@ -122,6 +138,7 @@ export const BillListMixin = {
           let multiBillType = res.data.multiBillType
           let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
+          this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
           this.inOutManageFlag = res.data.inOutManageFlag==='1'?true:false
         }
       })
@@ -198,7 +215,20 @@ export const BillListMixin = {
         this.settingDataIndex = this.defDataIndex
       }
       this.columns = this.defColumns.filter(item => {
-        return this.settingDataIndex.includes(item.dataIndex)
+        if(this.purchaseBySaleFlag) {
+          //以销定购-开启
+          return this.settingDataIndex.includes(item.dataIndex)
+        } else {
+          //以销定购-关闭
+          if(this.prefixNo === 'CGDD') {
+            //采购订单只显示除了关联订单之外的列
+            if(item.dataIndex!=='linkNumber') {
+              return this.settingDataIndex.includes(item.dataIndex)
+            }
+          } else {
+            return this.settingDataIndex.includes(item.dataIndex)
+          }
+        }
       })
     },
     //列设置更改事件

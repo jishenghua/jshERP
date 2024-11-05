@@ -6,6 +6,7 @@
     :confirmLoading="confirmLoading"
     :keyboard="false"
     :forceRender="true"
+    fullscreen
     switchFullscreen
     @cancel="handleCancel"
     style="top:20px;height: 95%;">
@@ -26,17 +27,17 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'billNo' ]" :readOnly="true"/>
+              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'billNo' ]" />
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-              <a-select placeholder="选择财务人员" v-decorator="[ 'handsPersonId' ]"
+              <a-select placeholder="请选择财务人员" v-decorator="[ 'handsPersonId' ]"
                         :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                  <div v-if="quickBtn.person" style="padding: 4px 8px; cursor: pointer;"
                        @mousedown="e => e.preventDefault()" @click="addPerson"><a-icon type="plus" /> 新增经手人</div>
                 </div>
                 <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
@@ -58,6 +59,7 @@
           :rowNumber="true"
           :rowSelection="true"
           :actionButton="true"
+          @added="onAdded"
           @valueChange="onValueChange" />
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
@@ -69,12 +71,12 @@
         <a-row class="form-row" :gutter="24">
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款账户">
-              <a-select placeholder="选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
+              <a-select placeholder="请选择付款账户" v-decorator="[ 'accountId', validatorRules.accountId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="isTenant" style="padding: 4px 8px; cursor: pointer;"
+                  <div v-if="quickBtn.account" style="padding: 4px 8px; cursor: pointer;"
                        @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
                 </div>
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
@@ -85,7 +87,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="实付金额">
-              <a-input placeholder="请输入实付金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" />
+              <a-input placeholder="请输入实付金额" v-decorator.trim="[ 'changeAmount', validatorRules.changeAmount ]" :readOnly="true"/>
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -104,7 +106,7 @@
     </a-spin>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
-    <workflow-iframe ref="modalWorkflow"></workflow-iframe>
+    <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
   </j-modal>
 </template>
 <script>
@@ -217,6 +219,7 @@
         this.initPerson()
         this.initAccount()
         this.initDetailAccount()
+        this.initQuickBtn()
       },
       //提交单据时整理成formData
       classifyIntoFormData(allValues) {

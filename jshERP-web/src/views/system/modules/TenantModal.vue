@@ -44,7 +44,7 @@
 <script>
   import pick from 'lodash.pick'
   import {mixinDevice} from '@/utils/mixin'
-  import {registerUser,editTenant,checkTenant } from '@/api/api'
+  import {addTenant,editTenant,checkTenant } from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
   import md5 from 'md5'
   export default {
@@ -108,7 +108,7 @@
             let obj;
             if(!this.model.id){
               formData.password = md5('123456')
-              obj=registerUser(formData);
+              obj=addTenant(formData);
             }else{
               obj=editTenant(formData);
             }

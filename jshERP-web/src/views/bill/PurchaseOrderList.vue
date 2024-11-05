@@ -14,7 +14,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="商品信息" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入条码、名称、规格、型号、颜色、扩展信息" v-model="queryParam.materialParam"></a-input>
+                  <a-input placeholder="请输入条码、名称、助记码、规格、型号等信息" v-model="queryParam.materialParam"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
@@ -42,7 +42,7 @@
               <template v-if="toggleSearchStatus">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
+                    <a-select placeholder="请选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
                       <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                         {{ item.supplier }}
                       </a-select-option>
@@ -51,7 +51,7 @@
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
+                    <a-select placeholder="请选择操作员" showSearch optionFilterProp="children" v-model="queryParam.creator">
                       <a-select-option v-for="(item,index) in userList" :key="index" :value="item.id">
                         {{ item.userName }}
                       </a-select-option>
@@ -59,9 +59,20 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="关联请购单" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联请购单" v-model="queryParam.linkApply"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24" v-if="purchaseBySaleFlag">
+                  <a-form-item label="关联订单" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入关联订单" v-model="queryParam.linkNumber"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="单据状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="选择单据状态" v-model="queryParam.status">
+                    <a-select placeholder="请选择单据状态" v-model="queryParam.status">
                       <a-select-option value="0">未审核</a-select-option>
+                      <a-select-option value="9" v-if="!checkFlag">审核中</a-select-option>
                       <a-select-option value="1">已审核</a-select-option>
                       <a-select-option value="3">部分采购</a-select-option>
                       <a-select-option value="2">完成采购</a-select-option>
@@ -90,7 +101,12 @@
                 <a-row style="width: 500px">
                   <template v-for="(item,index) in defColumns">
                     <template>
-                      <a-col :span="8">
+                      <a-col :span="8" v-if="purchaseBySaleFlag">
+                        <a-checkbox :value="item.dataIndex">
+                          <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                        </a-checkbox>
+                      </a-col>
+                      <a-col :span="8" v-if="!purchaseBySaleFlag && item.dataIndex!=='linkNumber'">
                         <a-checkbox :value="item.dataIndex">
                           <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
                         </a-checkbox>
@@ -184,10 +200,12 @@
           materialParam: "",
           type: "其它",
           subType: "采购订单",
-          organId: "",
-          depotId: "",
-          creator: "",
-          status: "",
+          organId: undefined,
+          depotId: undefined,
+          linkApply: "",
+          linkNumber: "",
+          creator: undefined,
+          status: undefined,
           remark: ""
         },
         prefixNo: 'CGDD',
@@ -212,10 +230,12 @@
           { title: '供应商', dataIndex: 'organName',width:120, ellipsis:true},
           { title: '单据编号', dataIndex: 'number',width:160,
             customRender:function (text,record,index) {
+              text = record.linkApply?text+"[请]":text
               text = record.linkNumber?text+"[转]":text
               return text
             }
           },
+          { title: '关联请购单', dataIndex: 'linkApply',width:140},
           { title: '关联订单', dataIndex: 'linkNumber',width:140},
           { title: '商品信息', dataIndex: 'materialsList',width:220, ellipsis:true},
           { title: '单据日期', dataIndex: 'operTimeStr',width:145},

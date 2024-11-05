@@ -80,8 +80,9 @@ public class BusinessConstants {
     public static final String PURCHASE_STATUS_SKIPING = "3";
     /**
      * 出入库分类
-     *采购、采购退货、其它、零售、销售、调拨、盘点复盘等
+     * 请购单、采购、采购退货、其它、零售、销售、调拨、盘点复盘等
      * */
+    public static final String SUB_TYPE_PURCHASE_APPLY = "请购单";
     public static final String SUB_TYPE_PURCHASE_ORDER = "采购订单";
     public static final String SUB_TYPE_PURCHASE = "采购";
     public static final String SUB_TYPE_PURCHASE_RETURN = "采购退货";
@@ -103,10 +104,11 @@ public class BusinessConstants {
     public static final String BILL_TYPE_PRODUCE_IN = "生产入库";
     /**
      * 财务单据分类
-     * 收款、付款
+     * 收款、付款、转账
      * */
     public static final String TYPE_MONEY_IN = "收款";
     public static final String TYPE_MONEY_OUT = "付款";
+    public static final String TYPE_GIRO = "转账";
     /**
      * 批量插入sql时最大的数据条数
      * */
@@ -217,4 +219,13 @@ public class BusinessConstants {
      * */
     //session的生命周期,秒
     public static final Long MAX_SESSION_IN_SECONDS=60*60*24*3L;
+
+    /**
+     * 验证码 redis key
+     */
+    public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
+    /**
+     * 验证码有效期（分钟）
+     */
+    public static final Integer CAPTCHA_EXPIRATION = 2;
 }

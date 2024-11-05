@@ -16,7 +16,15 @@ public class DepotHeadVo4InDetail {
 
     private String standard;
 
+    private String color;
+
+    private String brand;
+
+    private String mfrs;
+
     private BigDecimal unitPrice;
+
+    private String sku;
 
     private String mUnit;
 
@@ -82,12 +90,44 @@ public class DepotHeadVo4InDetail {
         this.standard = standard;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getMfrs() {
+        return mfrs;
+    }
+
+    public void setMfrs(String mfrs) {
+        this.mfrs = mfrs;
+    }
+
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public String getmUnit() {

@@ -19,9 +19,11 @@
         <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
         <result column="mBarCode" jdbcType="VARCHAR" property="mBarCode" />
         <result column="purchaseDecimal" jdbcType="VARCHAR" property="purchaseDecimal" />
+        <result column="currentUnitPrice" jdbcType="VARCHAR" property="currentUnitPrice" />
         <result column="initialStock" jdbcType="DECIMAL" property="initialStock" />
         <result column="currentStock" jdbcType="DECIMAL" property="currentStock" />
         <result column="currentStockPrice" jdbcType="DECIMAL" property="currentStockPrice" />
+        <result column="currentStockMovePrice" jdbcType="DECIMAL" property="currentStockMovePrice" />
         <result column="currentWeight" jdbcType="DECIMAL" property="currentWeight" />
     </resultMap>
 
@@ -46,16 +48,32 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
+        </if>
+        <if test="standard != null and standard !=''">
+            <bind name="bindStandard" value="'%'+standard+'%'"/>
+            and m.standard like #{bindStandard}
+        </if>
+        <if test="model != null and model !=''">
+            <bind name="bindModel" value="'%'+model+'%'"/>
+            and m.model like #{bindModel}
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
         </if>
+        <if test="brand != null and brand !=''">
+            <bind name="bindBrand" value="'%'+brand+'%'"/>
+            and m.brand like #{bindBrand}
+        </if>
+        <if test="mfrs != null and mfrs !=''">
+            <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
+            and m.mfrs like #{bindMfrs}
+        </if>
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
-            and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
-                or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+            and (m.other_field1 like #{bindOther} or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -105,16 +123,32 @@
         and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
+        </if>
+        <if test="standard != null and standard !=''">
+            <bind name="bindStandard" value="'%'+standard+'%'"/>
+            and m.standard like #{bindStandard}
+        </if>
+        <if test="model != null and model !=''">
+            <bind name="bindModel" value="'%'+model+'%'"/>
+            and m.model like #{bindModel}
         </if>
         <if test="color != null and color !=''">
             <bind name="bindColor" value="'%'+color+'%'"/>
             and m.color like #{bindColor}
         </if>
+        <if test="brand != null and brand !=''">
+            <bind name="bindBrand" value="'%'+brand+'%'"/>
+            and m.brand like #{bindBrand}
+        </if>
+        <if test="mfrs != null and mfrs !=''">
+            <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
+            and m.mfrs like #{bindMfrs}
+        </if>
         <if test="materialOther != null and materialOther !=''">
             <bind name="bindOther" value="'%'+materialOther+'%'"/>
-            and (m.mfrs like #{bindOther} or m.other_field1 like #{bindOther}
-            or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+            and (m.other_field1 like #{bindOther} or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -168,6 +202,12 @@
             </if>
             <if test="standard != null">
                 standard,
+            </if>
+            <if test="brand != null">
+                brand,
+            </if>
+            <if test="mnemonic != null">
+                mnemonic,
             </if>
             <if test="color != null">
                 color,
@@ -236,6 +276,12 @@
             </if>
             <if test="standard != null">
                 #{standard,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="mnemonic != null">
+                #{mnemonic,jdbcType=VARCHAR},
             </if>
             <if test="color != null">
                 #{color,jdbcType=VARCHAR},
@@ -313,13 +359,13 @@
     </select>
 
     <select id="getMaterialByParam" resultType="com.jsh.erp.datasource.vo.MaterialVoSearch">
-        select me.bar_code, m.name, m.standard, m.model, m.color, me.commodity_unit unit
+        select me.bar_code, m.name, m.mnemonic, m.standard, m.model, m.color, me.commodity_unit unit
         from jsh_material m
         left join jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         where m.enabled=1 and me.id is not null
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.mnemonic like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc, me.default_flag desc, me.id asc
@@ -334,7 +380,24 @@
         where m.enabled=1 and me.id is not null
         <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey} or m.color like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
+        </if>
+        <if test="standardOrModel != null and standardOrModel !=''">
+            <bind name="bindStandardOrModel" value="'%'+standardOrModel+'%'"/>
+            and (m.standard like #{bindStandardOrModel} or m.model like #{bindStandardOrModel})
+        </if>
+        <if test="color != null and color !=''">
+            <bind name="bindColor" value="'%'+color+'%'"/>
+            and m.color like #{bindColor}
+        </if>
+        <if test="brand != null and brand !=''">
+            <bind name="bindBrand" value="'%'+brand+'%'"/>
+            and m.brand like #{bindBrand}
+        </if>
+        <if test="mfrs != null and mfrs !=''">
+            <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
+            and m.mfrs like #{bindMfrs}
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -360,9 +423,26 @@
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where m.enabled=1 and me.id is not null
-        <if test="q != null">
+        <if test="q != null and q !=''">
             <bind name="bindKey" value="'%'+q+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
+            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
+        </if>
+        <if test="standardOrModel != null and standardOrModel !=''">
+            <bind name="bindStandardOrModel" value="'%'+standardOrModel+'%'"/>
+            and (m.standard like #{bindStandardOrModel} or m.model like #{bindStandardOrModel})
+        </if>
+        <if test="color != null and color !=''">
+            <bind name="bindColor" value="'%'+color+'%'"/>
+            and m.color like #{bindColor}
+        </if>
+        <if test="brand != null and brand !=''">
+            <bind name="bindBrand" value="'%'+brand+'%'"/>
+            and m.brand like #{bindBrand}
+        </if>
+        <if test="mfrs != null and mfrs !=''">
+            <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
+            and m.mfrs like #{bindMfrs}
         </if>
         <if test="idList.size()>0">
             and m.category_id in
@@ -604,8 +684,10 @@
     <select id="getListWithStock" resultMap="ResultMapListWithStock">
         select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code mBarCode,
         ifnull(me.purchase_decimal,0) purchaseDecimal,
+        ifnull(mcs.current_unit_price,0) currentUnitPrice,
         ifnull(sum(mcs.current_number),0) currentStock,
         sum(ifnull(me.purchase_decimal, 0) * ifnull(mcs.current_number, 0)) currentStockPrice,
+        sum(ifnull(mcs.current_unit_price, 0) * ifnull(mcs.current_number, 0)) currentStockMovePrice,
         sum(ifnull(m.weight, 0) * ifnull(mcs.current_number, 0)) currentWeight
         FROM jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
@@ -631,8 +713,10 @@
             and m.position like #{bindPosition}
         </if>
         <if test="materialParam != null">
-            <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam} or m.color like #{bindParam})
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
@@ -676,8 +760,10 @@
             and m.position like #{bindPosition}
         </if>
         <if test="materialParam != null">
-            <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam} or m.color like #{bindParam})
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
@@ -691,6 +777,7 @@
         select
         ifnull(sum(mcs.current_number),0) currentStock,
         sum(ifnull(me.purchase_decimal,0)*ifnull(mcs.current_number,0)) currentStockPrice,
+        sum(ifnull(mcs.current_unit_price,0)*ifnull(mcs.current_number,0)) currentStockMovePrice,
         sum(ifnull(m.weight,0)*ifnull(mcs.current_number,0)) currentWeight
         from jsh_material m
         left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
@@ -716,8 +803,10 @@
             and m.position like #{bindPosition}
         </if>
         <if test="materialParam != null">
-            <bind name="bindParam" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindParam} or m.name like #{bindParam} or m.standard like #{bindParam} or m.model like #{bindParam})
+            <bind name="bindKey" value="'%'+materialParam+'%'"/>
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
     </select>

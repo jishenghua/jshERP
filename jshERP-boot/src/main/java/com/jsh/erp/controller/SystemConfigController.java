@@ -82,7 +82,7 @@ public class SystemConfigController {
                 res.data = list.get(0);
             }
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -109,7 +109,7 @@ public class SystemConfigController {
             res.code = 200;
             res.data = limit;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -129,23 +129,27 @@ public class SystemConfigController {
         try {
             String savePath = "";
             String bizPath = request.getParameter("biz");
-            String name = request.getParameter("name");
-            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-            MultipartFile file = multipartRequest.getFile("file");// 获取上传文件对象
-            if(fileUploadType == 1) {
-                savePath = systemConfigService.uploadLocal(file, bizPath, name, request);
-            } else if(fileUploadType == 2) {
-                savePath = systemConfigService.uploadAliOss(file, bizPath, name, request);
-            }
-            if(StringUtil.isNotEmpty(savePath)){
-                res.code = 200;
-                res.data = savePath;
-            }else {
-                res.code = 500;
-                res.data = "上传失败！";
+            if ("bill".equals(bizPath) || "financial".equals(bizPath) || "material".equals(bizPath)) {
+                MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+                MultipartFile file = multipartRequest.getFile("file");// 获取上传文件对象
+                if(fileUploadType == 1) {
+                    savePath = systemConfigService.uploadLocal(file, bizPath, request);
+                } else if(fileUploadType == 2) {
+                    savePath = systemConfigService.uploadAliOss(file, bizPath, request);
+                }
+                if(StringUtil.isNotEmpty(savePath)){
+                    res.code = 200;
+                    res.data = savePath;
+                }else {
+                    res.code = 500;
+                    res.data = "上传失败！";
+                }
+            } else {
+                res.code = 505;
+                res.data = "文件分类错误！";
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "上传失败！";
         }
@@ -197,10 +201,10 @@ public class SystemConfigController {
         } catch (IOException e) {
             logger.error("预览文件失败" + e.getMessage());
             response.setStatus(404);
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } catch (Exception e) {
             response.setStatus(404);
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             if (inputStream != null) {
                 try {
@@ -259,7 +263,7 @@ public class SystemConfigController {
             response.flushBuffer();
         } catch (Exception e) {
             response.setStatus(404);
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             if (outputStream != null) {
                 try {
@@ -286,7 +290,7 @@ public class SystemConfigController {
             JSONArray arr = jsonObject.getJSONArray("list");
             systemConfigService.exportExcelByParam(title, head, tip, arr, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

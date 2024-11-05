@@ -25,6 +25,10 @@ export const JeecgListMixin = {
       queryParam: {},
       /* 数据源 */
       dataSource:[],
+      // 实际列
+      columns:[],
+      // 实际索引
+      settingDataIndex:[],
       /* 分页参数 */
       ipagination:{
         current: 1,
@@ -90,20 +94,21 @@ export const JeecgListMixin = {
       }
       //加载数据 若传入参数1则加载第一页的内容
       if (arg === 1) {
-        this.ipagination.current = 1;
+        this.ipagination.current = 1
       }
-      var params = this.getQueryParams();//查询条件
-      this.loading = true;
+      let params = this.getQueryParams() //查询条件
+      this.loading = true
       getAction(this.url.list, params).then((res) => {
         if (res.code===200) {
-          this.dataSource = res.data.rows;
-          this.ipagination.total = res.data.total;
+          this.dataSource = res.data.rows
+          this.ipagination.total = res.data.total
           this.tableAddTotalRow(this.columns, this.dataSource)
         }
         if(res.code===510){
           this.$message.warning(res.data)
         }
-        this.loading = false;
+        this.loading = false
+        this.onClearSelected()
       })
     },
     initDictConfig(){
@@ -149,8 +154,8 @@ export const JeecgListMixin = {
       this.selectionRows = selectionRows;
     },
     onClearSelected() {
-      this.selectedRowKeys = [];
-      this.selectionRows = [];
+      this.selectedRowKeys = []
+      this.selectionRows = []
     },
     searchQuery() {
       this.loadData(1);
@@ -183,8 +188,7 @@ export const JeecgListMixin = {
             that.loading = true;
             postAction(that.url.batchSetStatusUrl, {status: status, ids: ids}).then((res) => {
               if(res.code === 200){
-                that.loadData();
-                that.onClearSelected();
+                that.loadData()
               } else {
                 that.$message.warning(res.data.message);
               }
@@ -216,8 +220,7 @@ export const JeecgListMixin = {
             that.loading = true;
             deleteAction(that.url.deleteBatch, {ids: ids}).then((res) => {
               if(res.code === 200){
-                that.loadData();
-                that.onClearSelected();
+                that.loadData()
               } else {
                 that.$message.warning(res.data.message);
               }
@@ -286,6 +289,31 @@ export const JeecgListMixin = {
     handleDetail:function(record, type, prefixNo){
       this.$refs.modalDetail.show(record, type, prefixNo);
       this.$refs.modalDetail.title=type+"-详情";
+    },
+    //加载初始化列
+    initColumnsSetting(){
+      let columnsStr = Vue.ls.get(this.pageName)
+      if(columnsStr && columnsStr.indexOf(',')>-1) {
+        this.settingDataIndex = columnsStr.split(',')
+      } else {
+        this.settingDataIndex = this.defDataIndex
+      }
+      this.columns = this.defColumns.filter(item => {
+        return this.settingDataIndex.includes(item.dataIndex)
+      })
+    },
+    //列设置更改事件
+    onColChange (checkedValues) {
+      this.columns = this.defColumns.filter(item => {
+        return checkedValues.includes(item.dataIndex)
+      })
+      let columnsStr = checkedValues.join()
+      Vue.ls.set(this.pageName, columnsStr)
+    },
+    //恢复默认
+    handleRestDefault() {
+      Vue.ls.remove(this.pageName)
+      this.initColumnsSetting()
     },
     /* 导出 */
     handleExportXls2(){

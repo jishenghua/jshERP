@@ -35,7 +35,11 @@ public class MaterialComponent implements ICommonQuery {
         String search = map.get(Constants.SEARCH);
         String categoryId = StringUtil.getInfo(search, "categoryId");
         String materialParam = StringUtil.getInfo(search, "materialParam");
+        String standard = StringUtil.getInfo(search, "standard");
+        String model = StringUtil.getInfo(search, "model");
         String color = StringUtil.getInfo(search, "color");
+        String brand = StringUtil.getInfo(search, "brand");
+        String mfrs = StringUtil.getInfo(search, "mfrs");
         String materialOther = StringUtil.getInfo(search, "materialOther");
         String weight = StringUtil.getInfo(search, "weight");
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
@@ -45,7 +49,7 @@ public class MaterialComponent implements ICommonQuery {
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.select(materialParam, color, materialOther, weight, expiryNum,
+        return materialService.select(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
                 enableSerialNumber, enableBatchNumber, position, enabled, remark, categoryId, mpList, QueryUtils.offset(map), QueryUtils.rows(map));
     }
 
@@ -54,7 +58,11 @@ public class MaterialComponent implements ICommonQuery {
         String search = map.get(Constants.SEARCH);
         String categoryId = StringUtil.getInfo(search, "categoryId");
         String materialParam = StringUtil.getInfo(search, "materialParam");
+        String standard = StringUtil.getInfo(search, "standard");
+        String model = StringUtil.getInfo(search, "model");
         String color = StringUtil.getInfo(search, "color");
+        String brand = StringUtil.getInfo(search, "brand");
+        String mfrs = StringUtil.getInfo(search, "mfrs");
         String materialOther = StringUtil.getInfo(search, "materialOther");
         String weight = StringUtil.getInfo(search, "weight");
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
@@ -64,7 +72,7 @@ public class MaterialComponent implements ICommonQuery {
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        return materialService.countMaterial(materialParam, color, materialOther, weight, expiryNum,
+        return materialService.countMaterial(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
                 enableSerialNumber, enableBatchNumber, position, enabled, remark, categoryId, mpList);
     }
 

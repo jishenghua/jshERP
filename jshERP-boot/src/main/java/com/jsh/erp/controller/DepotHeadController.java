@@ -12,8 +12,8 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
+import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +49,9 @@ public class DepotHeadController {
 
     @Resource
     private SystemConfigService systemConfigService;
+
+    @Resource
+    private UserService userService;
 
     /**
      * 批量设置状态-审核或者反审核
@@ -145,7 +148,7 @@ public class DepotHeadController {
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -211,7 +214,7 @@ public class DepotHeadController {
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -294,7 +297,7 @@ public class DepotHeadController {
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -308,6 +311,7 @@ public class DepotHeadController {
      * @param beginTime
      * @param endTime
      * @param organId
+     * @param hasDebt 1-有欠款 0-无欠款
      * @param supplierType
      * @param request
      * @return
@@ -319,6 +323,7 @@ public class DepotHeadController {
                                                  @RequestParam("beginTime") String beginTime,
                                                  @RequestParam("endTime") String endTime,
                                                  @RequestParam(value = "organId", required = false) Integer organId,
+                                                 @RequestParam(value = "hasDebt", required = false) Integer hasDebt,
                                                  @RequestParam("supplierType") String supplierType,
                                                  HttpServletRequest request) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
@@ -346,9 +351,9 @@ public class DepotHeadController {
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<DepotHeadVo4StatementAccount> list = depotHeadService.getStatementAccount(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType,typeBack, subTypeBack, billType, (currentPage-1)*pageSize, pageSize);
+                    hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType, (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.getStatementAccountCount(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType,typeBack, subTypeBack, billType);
+                    hasDebt, supplierType, type, subType,typeBack, subTypeBack, billType);
             for(DepotHeadVo4StatementAccount item: list) {
                 //期初 = 起始期初金额+上期欠款金额-上期退货的欠款金额-上期收付款
                 BigDecimal preNeed = item.getBeginNeed().add(item.getPreDebtMoney()).subtract(item.getPreReturnDebtMoney()).subtract(item.getPreBackMoney());
@@ -363,7 +368,7 @@ public class DepotHeadController {
             map.put("rows", list);
             map.put("total", total);
             List<DepotHeadVo4StatementAccount> totalPayList = depotHeadService.getStatementAccountTotalPay(beginTime, endTime, organId, organArray,
-                    supplierType, type, subType, typeBack, subTypeBack, billType);
+                    hasDebt, supplierType, type, subType, typeBack, subTypeBack, billType);
             if(totalPayList.size()>0) {
                 DepotHeadVo4StatementAccount totalPayItem = totalPayList.get(0);
                 BigDecimal firstMoney = BigDecimal.ZERO;
@@ -380,7 +385,7 @@ public class DepotHeadController {
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -407,7 +412,7 @@ public class DepotHeadController {
             res.code = 200;
             res.data = dhl;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -431,7 +436,7 @@ public class DepotHeadController {
             res.code = 200;
             res.data = list;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -482,18 +487,21 @@ public class DepotHeadController {
     public BaseResponseInfo getBuyAndSaleStatistics(HttpServletRequest request) {
         BaseResponseInfo res = new BaseResponseInfo();
         try {
-            String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
-            String monthFirstDay = Tools.firstDayOfMonth(Tools.getCurrentMonth()) + BusinessConstants.DAY_FIRST_TIME;
-            String yesterdayBegin = Tools.getYesterday() + BusinessConstants.DAY_FIRST_TIME;
-            String yesterdayEnd = Tools.getYesterday() + BusinessConstants.DAY_LAST_TIME;
-            String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
-            String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
-            Map<String, Object> map = depotHeadService.getBuyAndSaleStatistics(today, monthFirstDay,
-                    yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, request);
+            Map<String, Object> map = new HashMap<>();
+            String loginName = userService.getCurrentUser().getLoginName();
+            if(!"admin".equals(loginName)) {
+                String today = Tools.getNow() + BusinessConstants.DAY_FIRST_TIME;
+                String monthFirstDay = Tools.firstDayOfMonth(Tools.getCurrentMonth()) + BusinessConstants.DAY_FIRST_TIME;
+                String yesterdayBegin = Tools.getYesterday() + BusinessConstants.DAY_FIRST_TIME;
+                String yesterdayEnd = Tools.getYesterday() + BusinessConstants.DAY_LAST_TIME;
+                String yearBegin = Tools.getYearBegin() + BusinessConstants.DAY_FIRST_TIME;
+                String yearEnd = Tools.getYearEnd() + BusinessConstants.DAY_LAST_TIME;
+                map = depotHeadService.getBuyAndSaleStatistics(today, monthFirstDay, yesterdayBegin, yesterdayEnd, yearBegin, yearEnd, request);
+            }
             res.code = 200;
             res.data = map;
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -515,7 +523,7 @@ public class DepotHeadController {
             res.code = 200;
             res.data = creator;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }
@@ -588,7 +596,7 @@ public class DepotHeadController {
             depotHeadService.debtExport(organId, materialParam, number, type, subType, beginTime, endTime,
                     status, mpList, request, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

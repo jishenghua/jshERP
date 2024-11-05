@@ -8,6 +8,8 @@
     <result column="mfrs" jdbcType="VARCHAR" property="mfrs" />
     <result column="model" jdbcType="VARCHAR" property="model" />
     <result column="standard" jdbcType="VARCHAR" property="standard" />
+    <result column="brand" jdbcType="VARCHAR" property="brand" />
+    <result column="mnemonic" jdbcType="VARCHAR" property="mnemonic" />
     <result column="color" jdbcType="VARCHAR" property="color" />
     <result column="unit" jdbcType="VARCHAR" property="unit" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -84,9 +86,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, category_id, name, mfrs, model, standard, color, unit, remark, img_name, unit_id, 
-    expiry_num, weight, enabled, other_field1, other_field2, other_field3, enable_serial_number, 
-    enable_batch_number, position, tenant_id, delete_flag
+    id, category_id, name, mfrs, model, standard, brand, mnemonic, color, unit, remark, 
+    img_name, unit_id, expiry_num, weight, enabled, other_field1, other_field2, other_field3, 
+    enable_serial_number, enable_batch_number, position, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="BaseResultMap">
     select
@@ -121,20 +123,22 @@
   <insert id="insert" parameterType="com.jsh.erp.datasource.entities.Material">
     insert into jsh_material (id, category_id, name, 
       mfrs, model, standard, 
-      color, unit, remark, 
-      img_name, unit_id, expiry_num, 
-      weight, enabled, other_field1, 
-      other_field2, other_field3, enable_serial_number, 
-      enable_batch_number, position, tenant_id, 
-      delete_flag)
+      brand, mnemonic, color, 
+      unit, remark, img_name, 
+      unit_id, expiry_num, weight, 
+      enabled, other_field1, other_field2, 
+      other_field3, enable_serial_number, enable_batch_number, 
+      position, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
       #{mfrs,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, 
-      #{color,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{imgName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{expiryNum,jdbcType=INTEGER}, 
-      #{weight,jdbcType=DECIMAL}, #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, 
-      #{otherField2,jdbcType=VARCHAR}, #{otherField3,jdbcType=VARCHAR}, #{enableSerialNumber,jdbcType=VARCHAR}, 
-      #{enableBatchNumber,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
-      #{deleteFlag,jdbcType=VARCHAR})
+      #{brand,jdbcType=VARCHAR}, #{mnemonic,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, 
+      #{unit,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{imgName,jdbcType=VARCHAR}, 
+      #{unitId,jdbcType=BIGINT}, #{expiryNum,jdbcType=INTEGER}, #{weight,jdbcType=DECIMAL}, 
+      #{enabled,jdbcType=BIT}, #{otherField1,jdbcType=VARCHAR}, #{otherField2,jdbcType=VARCHAR}, 
+      #{otherField3,jdbcType=VARCHAR}, #{enableSerialNumber,jdbcType=VARCHAR}, #{enableBatchNumber,jdbcType=VARCHAR}, 
+      #{position,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.Material">
     insert into jsh_material
@@ -156,6 +160,12 @@
       </if>
       <if test="standard != null">
         standard,
+      </if>
+      <if test="brand != null">
+        brand,
+      </if>
+      <if test="mnemonic != null">
+        mnemonic,
       </if>
       <if test="color != null">
         color,
@@ -224,6 +234,12 @@
       </if>
       <if test="standard != null">
         #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="mnemonic != null">
+        #{mnemonic,jdbcType=VARCHAR},
       </if>
       <if test="color != null">
         #{color,jdbcType=VARCHAR},
@@ -302,6 +318,12 @@
       <if test="record.standard != null">
         standard = #{record.standard,jdbcType=VARCHAR},
       </if>
+      <if test="record.brand != null">
+        brand = #{record.brand,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mnemonic != null">
+        mnemonic = #{record.mnemonic,jdbcType=VARCHAR},
+      </if>
       <if test="record.color != null">
         color = #{record.color,jdbcType=VARCHAR},
       </if>
@@ -363,6 +385,8 @@
       mfrs = #{record.mfrs,jdbcType=VARCHAR},
       model = #{record.model,jdbcType=VARCHAR},
       standard = #{record.standard,jdbcType=VARCHAR},
+      brand = #{record.brand,jdbcType=VARCHAR},
+      mnemonic = #{record.mnemonic,jdbcType=VARCHAR},
       color = #{record.color,jdbcType=VARCHAR},
       unit = #{record.unit,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
@@ -400,6 +424,12 @@
       </if>
       <if test="standard != null">
         standard = #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="mnemonic != null">
+        mnemonic = #{mnemonic,jdbcType=VARCHAR},
       </if>
       <if test="color != null">
         color = #{color,jdbcType=VARCHAR},
@@ -459,6 +489,8 @@
       mfrs = #{mfrs,jdbcType=VARCHAR},
       model = #{model,jdbcType=VARCHAR},
       standard = #{standard,jdbcType=VARCHAR},
+      brand = #{brand,jdbcType=VARCHAR},
+      mnemonic = #{mnemonic,jdbcType=VARCHAR},
       color = #{color,jdbcType=VARCHAR},
       unit = #{unit,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},

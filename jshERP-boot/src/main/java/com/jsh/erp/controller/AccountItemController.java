@@ -86,7 +86,7 @@ public class AccountItemController {
             res.code = 200;
             res.data = outer;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             res.code = 500;
             res.data = "获取数据失败";
         }

@@ -70,6 +70,15 @@ public class ExceptionConstants {
     //当前机构已经存在经理
     public static final int USER_LEADER_IS_EXIST_CODE = 500009;
     public static final String USER_LEADER_IS_EXIST_MSG = "抱歉，当前机构已经存在经理";
+    //验证码错误
+    public static final int USER_JCAPTCHA_ERROR_CODE = 500010;
+    public static final String USER_JCAPTCHA_ERROR_MSG = "验证码错误";
+    //验证码已失效
+    public static final int USER_JCAPTCHA_EXPIRE_CODE = 500011;
+    public static final String USER_JCAPTCHA_EXPIRE_MSG = "验证码已失效";
+    //验证码不能为空
+    public static final int USER_JCAPTCHA_EMPTY_CODE = 500012;
+    public static final String USER_JCAPTCHA_EMPTY_MSG = "验证码不能为空";
 
     /**
      * 角色信息
@@ -424,6 +433,12 @@ public class ExceptionConstants {
     //单据录入-单据中存在部分状态，需要到新增界面关联单据
     public static final int DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_CODE = 8500028;
     public static final String DEPOT_ITEM_EXIST_PARTIALLY_STATUS_FAILED_MSG = "抱歉，单据:%s是部分%s状态，需要到新增界面关联单据";
+    //单据录入-关联请购单号和关联订单号不能同时录入
+    public static final int DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_CODE = 8500029;
+    public static final String DEPOT_ITEM_EXIST_REPEAT_NO_FAILED_MSG = "抱歉，关联请购单号和关联订单号不能同时录入";
+    //单据录入-单据最新状态不能进行批量操作
+    public static final int DEPOT_ITEM_EXIST_NEW_STATUS_FAILED_CODE = 8500030;
+    public static final String DEPOT_ITEM_EXIST_NEW_STATUS_FAILED_MSG = "抱歉，单据:%s最新状态不能进行批量操作";
 
     /**
      *  单据明细信息
@@ -450,6 +465,9 @@ public class ExceptionConstants {
     //单据明细-单据中存在批号，需要到新增界面关联单据
     public static final int DEPOT_ITEM_EXIST_BATCH_NUMBER_FAILED_CODE = 9000006;
     public static final String DEPOT_ITEM_EXIST_BATCH_NUMBER_FAILED_MSG = "抱歉，单据:%s里面存在批号，需要到新增界面关联单据";
+    //原关联单据已被修改，请重新关联
+    public static final int DEPOT_ITEM_PRE_BILL_IS_CHANGE_CODE = 9000007;
+    public static final String DEPOT_ITEM_PRE_BILL_IS_CHANGE_MSG = "抱歉，原关联单据已被修改，请重新关联";
 
     /**
      *  财务信息
@@ -473,6 +491,9 @@ public class ExceptionConstants {
     //财务信息录入-单据编号已经存在
     public static final int ACCOUNT_HEAD_BILL_NO_EXIST_CODE = 9500005;
     public static final String ACCOUNT_HEAD_BILL_NO_EXIST_MSG = "抱歉，单据编号已经存在";
+    //财务信息录入-付款账户和明细中的账户重复
+    public static final int ACCOUNT_HEAD_ACCOUNT_REPEAT_CODE = 9500006;
+    public static final String ACCOUNT_HEAD_ACCOUNT_REPEAT_MSG = "抱歉，付款账户:%s和明细中的账户重复";
     /**
      *  财务明细信息
      * type = 100

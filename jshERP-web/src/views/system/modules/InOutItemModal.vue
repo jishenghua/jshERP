@@ -26,7 +26,7 @@
             <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类型">
-            <a-select placeholder="请选择类型" v-decorator="[ 'type', validatorRules.type]">
+            <a-select placeholder="请选择类型" v-decorator="[ 'type', validatorRules.type]" :disabled="typeDisabled">
               <a-select-option value="收入">收入</a-select-option>
               <a-select-option value="支出">支出</a-select-option>
             </a-select>
@@ -55,7 +55,9 @@
         title:"操作",
         visible: false,
         model: {},
+        typeParam: '',
         isReadOnly: false,
+        typeDisabled: false,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -84,12 +86,23 @@
     created () {
     },
     methods: {
-      add () {
+      add (type) {
+        this.typeParam = type
         this.edit({});
       },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
+        if(this.typeParam) {
+          this.typeDisabled = true
+          if(this.typeParam === 'in') {
+            this.model.type = '收入'
+          } else if(this.typeParam === 'out') {
+            this.model.type = '支出'
+          }
+        } else {
+          this.typeDisabled = false
+        }
         this.visible = true;
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model,'name', 'type', 'sort', 'remark'))

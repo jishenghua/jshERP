@@ -69,11 +69,19 @@ public interface AccountMapperEx {
 
     List<AccountVo4InOutList> findAccountInOutList(
             @Param("accountId") Long accountId,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag,
             @Param("offset") Integer offset,
             @Param("rows") Integer rows);
 
     int findAccountInOutListCount(
-            @Param("accountId") Long accountId);
+            @Param("accountId") Long accountId,
+            @Param("number") String number,
+            @Param("beginTime") String beginTime,
+            @Param("endTime") String endTime,
+            @Param("forceFlag") Boolean forceFlag);
 
     int batchDeleteAccountByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
 

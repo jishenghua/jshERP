@@ -15,6 +15,10 @@ public class Material {
 
     private String standard;
 
+    private String brand;
+
+    private String mnemonic;
+
     private String color;
 
     private String unit;
@@ -93,6 +97,22 @@ public class Material {
 
     public void setStandard(String standard) {
         this.standard = standard == null ? null : standard.trim();
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand == null ? null : brand.trim();
+    }
+
+    public String getMnemonic() {
+        return mnemonic;
+    }
+
+    public void setMnemonic(String mnemonic) {
+        this.mnemonic = mnemonic == null ? null : mnemonic.trim();
     }
 
     public String getColor() {

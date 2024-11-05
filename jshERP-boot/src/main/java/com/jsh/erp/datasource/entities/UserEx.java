@@ -30,6 +30,16 @@ public class UserEx extends User{
 
     private String leaderFlagStr;
 
+    /**
+     * 验证码
+     */
+    private String code;
+
+    /**
+     * 唯一标识
+     */
+    private String uuid;
+
     public String getOrgAbr() {
         return orgAbr;
     }
@@ -108,5 +118,21 @@ public class UserEx extends User{
 
     public void setLeaderFlagStr(String leaderFlagStr) {
         this.leaderFlagStr = leaderFlagStr;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

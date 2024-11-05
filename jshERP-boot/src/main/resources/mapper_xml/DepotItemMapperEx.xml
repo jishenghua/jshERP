@@ -8,7 +8,10 @@
         <result column="material_name" jdbcType="VARCHAR" property="materialName" />
         <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="sub_type" jdbcType="VARCHAR" property="subType" />
-        <result column="b_num" jdbcType="BIGINT" property="bnum" />
+        <result column="b_num" jdbcType="DECIMAL" property="bnum" />
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+        <result column="all_price" jdbcType="DECIMAL" property="allPrice" />
+        <result column="material_unit" jdbcType="VARCHAR" property="materialUnit" />
         <result column="depotName" jdbcType="VARCHAR" property="depotName" />
         <result column="oTime" jdbcType="TIMESTAMP" property="otime" />
     </resultMap>
@@ -33,6 +36,7 @@
         <result column="MOtherField3" jdbcType="VARCHAR" property="MOtherField3" />
         <result column="enable_serial_number" jdbcType="VARCHAR" property="enableSerialNumber" />
         <result column="enable_batch_number" jdbcType="VARCHAR" property="enableBatchNumber" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
         <result column="DepotName" jdbcType="VARCHAR" property="DepotName" />
         <result column="AnotherDepotName" jdbcType="VARCHAR" property="AnotherDepotName" />
         <result column="barCode" jdbcType="VARCHAR" property="barCode" />
@@ -53,7 +57,9 @@
         <result column="unit_id" jdbcType="BIGINT" property="unitId" />
         <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
         <result column="MColor" jdbcType="VARCHAR" property="MColor" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
         <result column="purchase_decimal" jdbcType="DECIMAL" property="purchaseDecimal" />
+        <result column="currentUnitPrice" jdbcType="DECIMAL" property="currentUnitPrice" />
     </resultMap>
 
     <resultMap id="ResultStockWarningCount" type="com.jsh.erp.datasource.vo.DepotItemStockWarningCount">
@@ -63,6 +69,8 @@
         <result column="MMfrs" jdbcType="VARCHAR" property="MMfrs" />
         <result column="MModel" jdbcType="VARCHAR" property="MModel" />
         <result column="MStandard" jdbcType="VARCHAR" property="MStandard" />
+        <result column="MColor" jdbcType="VARCHAR" property="MColor" />
+        <result column="brand" jdbcType="VARCHAR" property="brand" />
         <result column="MaterialUnit" jdbcType="VARCHAR" property="MaterialUnit" />
         <result column="MOtherField1" jdbcType="VARCHAR" property="MOtherField1" />
         <result column="MOtherField2" jdbcType="VARCHAR" property="MOtherField2" />
@@ -143,19 +151,20 @@
     </select>
 
     <select id="findDetailByDepotIdsAndMaterialIdList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="DetailByTypeAndMIdResultMap">
-        select tb.* from
+        select tb.number, tb.bar_code, tb.material_name, tb.type, tb.sub_type, tb.b_num, tb.unit_price,
+        ifnull(tb.b_num*tb.unit_price,0) as all_price, tb.material_unit, tb.depotName, tb.oTime from
         (select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
         case
             when type='入库' then ifnull(di.basic_number,0)
-            when type='出库' then 0-di.basic_number
+            when type='出库' then 0-ifnull(di.basic_number,0)
             when dh.sub_type='组装单' and di.material_type='组合件' then ifnull(di.basic_number,0)
-            when dh.sub_type='组装单' and di.material_type='普通子件' then 0-di.basic_number
+            when dh.sub_type='组装单' and di.material_type='普通子件' then 0-ifnull(di.basic_number,0)
             when dh.sub_type='拆卸单' and di.material_type='普通子件' then ifnull(di.basic_number,0)
-            when dh.sub_type='拆卸单' and di.material_type='组合件' then 0-di.basic_number
+            when dh.sub_type='拆卸单' and di.material_type='组合件' then 0-ifnull(di.basic_number,0)
             when dh.sub_type='盘点复盘' then ifnull(di.basic_number,0)
             else 0
         end
-        as b_num,
+        as b_num, di.unit_price, di.material_unit,
         (select name from jsh_depot d where d.id=di.depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depot_head dh
@@ -169,7 +178,7 @@
         <if test="inOutManageFlag">
             and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
         </if>
-        <if test="depotIdArray != null">
+        <if test="depotIdArray != null and depotIdArray.length>0">
             and di.depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
@@ -198,7 +207,7 @@
         union all
         --单独构造记录：调拨入库
         select dh.number,me.bar_code,m.name material_name,dh.type,dh.sub_type,
-        ifnull(di.basic_number,0) as b_num,
+        ifnull(di.basic_number,0) as b_num, di.unit_price, di.material_unit,
         (select concat(name,'[调入]') from jsh_depot d where d.id=di.another_depot_id and ifnull(d.delete_flag,'0') !='1') as depotName,
         date_format(dh.oper_time,'%Y-%m-%d %H:%i:%S') as oTime
         from jsh_depot_head dh
@@ -206,7 +215,7 @@
         left join jsh_material m on di.material_id=m.id and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id and ifnull(me.delete_Flag,'0') !='1'
         where dh.type='出库' and dh.sub_type='调拨'
-        <if test="depotIdArray != null">
+        <if test="depotIdArray != null and depotIdArray.length>0">
             and di.another_depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
@@ -249,7 +258,7 @@
         <if test="inOutManageFlag">
             and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
         </if>
-        <if test="depotIdArray != null">
+        <if test="depotIdArray != null and depotIdArray.length>0">
             and di.depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
@@ -280,7 +289,7 @@
         select dh.number from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
         where dh.type='出库' and dh.sub_type='调拨'
-        <if test="depotIdArray != null">
+        <if test="depotIdArray != null and depotIdArray.length>0">
             and di.another_depot_id in (
             <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
             )
@@ -311,7 +320,7 @@
     <select id="getDetailList" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultWithInfoExMap">
         select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.standard MStandard,m.mfrs MMfrs,m.weight, m.position, m.img_name,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,m.enable_serial_number, m.enable_batch_number,
-        dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
+        m.brand, dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
         from jsh_depot_item di
         left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -325,7 +334,7 @@
     <select id="getBillDetailListByIds" resultType="com.jsh.erp.datasource.entities.DepotItemVo4WithInfoEx">
         select di.*,m.name MName,m.model MModel,m.unit MaterialUnit,m.color MColor,m.standard MStandard,m.mfrs MMfrs,m.weight, m.position, m.img_name,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,m.enable_serial_number, m.enable_batch_number,
-        dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
+        m.brand, dp1.name DepotName,dp2.name AnotherDepotName, me.bar_code barCode, me.purchase_decimal
         from jsh_depot_item di
         left join jsh_material m on di.material_id=m.id  and ifnull(m.delete_flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -339,19 +348,23 @@
         order by di.header_id desc, di.id asc
     </select>
 
-    <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
+    <select id="getInOutStock" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
+        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard, m.brand,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.unit_id, u.name unit_name, ifnull(me.purchase_decimal,0) purchase_decimal
+        concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.unit_id, u.name unit_name,
+        ifnull(me.purchase_decimal,0) purchase_decimal, ifnull(mcs.current_unit_price,0) currentUnitPrice
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'
         left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where 1=1 and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="categoryIdList.size()>0">
             and m.category_id in
@@ -370,7 +383,7 @@
         </if>
     </select>
 
-    <select id="findByAllCount" resultType="java.lang.Integer">
+    <select id="getInOutStockCount" resultType="java.lang.Integer">
         select count(1) from (select m.id
         from jsh_material m
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
@@ -379,7 +392,9 @@
         where 1=1 and me.default_flag=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="categoryIdList.size()>0">
             and m.category_id in
@@ -394,10 +409,10 @@
         group by m.id) cc
     </select>
 
-    <select id="getListWithBugOrSale" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
+    <select id="getListWithBuyOrSale" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, u.name unit_name
+        concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.brand, u.name unit_name
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -406,7 +421,9 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="billType =='buy'">
             and (dh.sub_type = '采购' or dh.sub_type = '采购退货')
@@ -457,7 +474,7 @@
         </if>
     </select>
 
-    <select id="getListWithBugOrSaleCount" resultType="java.lang.Integer">
+    <select id="getListWithBuyOrSaleCount" resultType="java.lang.Integer">
         select count(1) from (select m.id
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(m.delete_Flag,'0') !='1'
@@ -466,7 +483,9 @@
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="billType =='buy'">
             and (dh.sub_type = '采购' or dh.sub_type = '采购退货')
@@ -631,14 +650,12 @@
         </if>
     </select>
 
-    <select id="inOrOutPrice" resultType="java.math.BigDecimal">
-        select ifnull(sum(discount_last_money),0) as allMoney from
-        (select distinct dh.id, dh.discount_last_money
+    <select id="inOrOutPriceList" resultType="com.jsh.erp.datasource.vo.InOutPriceVo">
+        select distinct dh.id, dh.discount_last_money, dh.total_price, dh.type, dh.sub_type, dh.oper_time
         from jsh_depot_head dh
-        left join jsh_depot_item di on dh.id = di.header_id
-        where 1=1
-        and di.id is not null
-        and dh.type=#{type} and dh.sub_type=#{subType}
+        left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') != '1'
+        where di.id is not null
+        and (dh.type='入库' or dh.type='出库')
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
         <if test="forceFlag">
@@ -651,32 +668,7 @@
             </foreach>
             )
         </if>
-        and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag, '0') != '1') tb
-    </select>
-
-    <select id="inOrOutRetailPrice" resultType="java.math.BigDecimal">
-        select ifnull(sum(total_price),0) as allMoney from
-        (select distinct dh.id, dh.total_price
-        from jsh_depot_head dh
-        left join jsh_depot_item di on dh.id = di.header_id
-        where 1=1
-        and di.id is not null
-        and dh.type=#{type} and dh.sub_type=#{subType}
-        and dh.oper_time &gt;= #{beginTime}
-        and dh.oper_time &lt;= #{endTime}
-        <if test="forceFlag">
-            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
-        </if>
-        <if test="creatorArray != null">
-            and dh.creator in (
-            <foreach collection="creatorArray" item="creator" separator=",">
-                #{creator}
-            </foreach>
-            )
-        </if>
-        and ifnull(dh.delete_flag,'0') !='1'
-        and ifnull(di.delete_flag, '0') != '1') tb
+        and ifnull(dh.delete_flag,'0') != '1'
     </select>
 
     <select id="getSkuStockCheckSumByDepotList"  resultType="java.math.BigDecimal">
@@ -875,7 +867,7 @@
     </select>
 
     <select id="findStockWarningCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultStockWarningCount">
-        select m.id MId, m.name MName, me.bar_code, m.mfrs MMfrs, m.model MModel, m.standard MStandard,m.color MColor,
+        select m.id MId, m.name MName, me.bar_code, m.mfrs MMfrs, m.model MModel, m.standard MStandard,m.color MColor, m.brand,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,d.name depotName,
         m.unit MaterialUnit, u.basic_unit unit_name,mcs.current_number,
         mis.low_safe_stock, mis.high_safe_stock
@@ -893,7 +885,9 @@
             or (ifnull(mis.high_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="depotList.size()>0">
             and mis.depot_id in
@@ -924,7 +918,9 @@
             or (ifnull(mis.high_safe_stock,0)!=0 and mcs.current_number > ifnull(mis.high_safe_stock,0)))
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
+            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
+            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
+            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         <if test="depotList.size()>0">
             and mis.depot_id in
@@ -944,8 +940,13 @@
         in
         (
         select dh.id from jsh_depot_head dh
-        where
-        dh.link_number=#{linkNumber}
+        where 1=1
+        <if test="noType == 'normal'">
+            and dh.link_number=#{linkStr}
+        </if>
+        <if test="noType == 'apply'">
+            and dh.link_apply=#{linkStr}
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         <if test="goToType != null and goToType !=''">
             and dh.sub_type=#{goToType}
@@ -963,8 +964,13 @@
         (
         select dh.id from jsh_depot_head dh
         where
-        dh.link_number=#{linkNumber}
-        and dh.id!=#{currentHeaderId}
+        dh.id!=#{currentHeaderId}
+        <if test="linkType == 'normal'">
+            and dh.link_number=#{linkStr}
+        </if>
+        <if test="linkType == 'apply'">
+            and dh.link_apply=#{linkStr}
+        </if>
         and ifnull(dh.delete_flag,'0') !='1'
         <if test="goToType != null and goToType !=''">
             and dh.sub_type=#{goToType}
@@ -1017,7 +1023,7 @@
     <select id="getLinkBillDetailMaterialSum" resultMap="materialSumMap">
         select di.material_extend_id, sum(di.oper_number) oper_number from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        where dh.number=#{linkNumber}
+        where dh.number=#{linkStr}
           and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_extend_id
     </select>
@@ -1025,8 +1031,14 @@
     <select id="getBatchBillDetailMaterialSum" resultMap="materialSumMap">
         select di.material_extend_id, sum(di.oper_number) oper_number from jsh_depot_head dh
         left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        where dh.link_number=#{linkNumber} and dh.type=#{type}
-          and ifnull(dh.delete_flag,'0') !='1'
+        where dh.type=#{type}
+        <if test="linkType == 'normal'">
+            and dh.link_number=#{linkStr}
+        </if>
+        <if test="linkType == 'apply'">
+            and dh.link_apply=#{linkStr}
+        </if>
+        and ifnull(dh.delete_flag,'0') !='1'
         group by di.material_extend_id
     </select>
 
@@ -1086,4 +1098,5 @@
         order by dh.id desc, di.id desc
         limit 0,1
     </select>
+
 </mapper>
