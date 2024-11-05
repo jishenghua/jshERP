@@ -12,6 +12,7 @@
     "ant-design-vue": "1.5.2",
     "area-data": "^5.0.6",
     "axios": "^0.18.0",
+    "chinese-to-pinyin": "^1.3.1",
     "clipboard": "^2.0.4",
     "codemirror": "^5.46.0",
     "dayjs": "^1.8.0",
@@ -36,8 +37,7 @@
     "vue-router": "^3.0.1",
     "vue-splitpane": "^1.0.4",
     "vuedraggable": "^2.20.0",
-    "vuex": "^3.1.0",
-    "chinese-to-pinyin": "^1.0.2"
+    "vuex": "^3.1.0"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.2.5",
