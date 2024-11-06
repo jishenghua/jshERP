@@ -39,76 +39,91 @@
     </resultMap>
 
     <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
-        select m.*,u.name unitName, mc.name categoryName, me.bar_code,
-        me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal,me.sku
-        FROM jsh_material m
-        left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        where 1=1
-        <if test="materialParam != null and materialParam !=''">
-            <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey}
-            or m.model like #{bindKey} or m.color like #{bindKey} or m.brand like #{bindKey} or m.mfrs like #{bindKey})
+        SELECT
+        m.*,
+        MIN(u.name) AS unitName,
+        MIN(mc.name) AS categoryName,
+        MIN(me.bar_code) AS bar_code,
+        MIN(me.purchase_decimal) AS purchase_decimal,
+        MIN(me.commodity_decimal) AS commodity_decimal,
+        MIN(me.wholesale_decimal) AS wholesale_decimal,
+        MIN(me.low_decimal) AS low_decimal,
+        MIN(me.sku) AS sku
+        FROM
+        jsh_material m
+        LEFT JOIN
+        jsh_material_extend me ON m.id = me.material_id AND IFNULL(me.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_unit u ON m.unit_id = u.id AND IFNULL(u.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_material_category mc ON m.category_id = mc.id AND IFNULL(mc.delete_Flag, '0') != '1'
+        WHERE
+        1 = 1
+        <if test="materialParam != null and materialParam != ''">
+            <bind name="bindKey" value="'%' + materialParam + '%'"/>
+            AND (me.bar_code LIKE #{bindKey} OR m.name LIKE #{bindKey} OR m.mnemonic LIKE #{bindKey} OR m.standard LIKE #{bindKey}
+            OR m.model LIKE #{bindKey} OR m.color LIKE #{bindKey} OR m.brand LIKE #{bindKey} OR m.mfrs LIKE #{bindKey})
         </if>
-        <if test="standard != null and standard !=''">
-            <bind name="bindStandard" value="'%'+standard+'%'"/>
-            and m.standard like #{bindStandard}
+        <if test="standard != null and standard != ''">
+            <bind name="bindStandard" value="'%' + standard + '%'"/>
+            AND m.standard LIKE #{bindStandard}
         </if>
-        <if test="model != null and model !=''">
-            <bind name="bindModel" value="'%'+model+'%'"/>
-            and m.model like #{bindModel}
+        <if test="model != null and model != ''">
+            <bind name="bindModel" value="'%' + model + '%'"/>
+            AND m.model LIKE #{bindModel}
         </if>
-        <if test="color != null and color !=''">
-            <bind name="bindColor" value="'%'+color+'%'"/>
-            and m.color like #{bindColor}
+        <if test="color != null and color != ''">
+            <bind name="bindColor" value="'%' + color + '%'"/>
+            AND m.color LIKE #{bindColor}
         </if>
-        <if test="brand != null and brand !=''">
-            <bind name="bindBrand" value="'%'+brand+'%'"/>
-            and m.brand like #{bindBrand}
+        <if test="brand != null and brand != ''">
+            <bind name="bindBrand" value="'%' + brand + '%'"/>
+            AND m.brand LIKE #{bindBrand}
         </if>
-        <if test="mfrs != null and mfrs !=''">
-            <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
-            and m.mfrs like #{bindMfrs}
+        <if test="mfrs != null and mfrs != ''">
+            <bind name="bindMfrs" value="'%' + mfrs + '%'"/>
+            AND m.mfrs LIKE #{bindMfrs}
         </if>
-        <if test="materialOther != null and materialOther !=''">
-            <bind name="bindOther" value="'%'+materialOther+'%'"/>
-            and (m.other_field1 like #{bindOther} or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+        <if test="materialOther != null and materialOther != ''">
+            <bind name="bindOther" value="'%' + materialOther + '%'"/>
+            AND (m.other_field1 LIKE #{bindOther} OR m.other_field2 LIKE #{bindOther} OR m.other_field3 LIKE #{bindOther})
         </if>
-        <if test="weight != null and weight !=''">
-            and m.weight = #{weight}
+        <if test="weight != null and weight != ''">
+            AND m.weight = #{weight}
         </if>
-        <if test="expiryNum != null and expiryNum !=''">
-            and m.expiry_num = #{expiryNum}
+        <if test="expiryNum != null and expiryNum != ''">
+            AND m.expiry_num = #{expiryNum}
         </if>
-        <if test="enableSerialNumber != null and enableSerialNumber !=''">
-            and m.enable_serial_number = #{enableSerialNumber}
+        <if test="enableSerialNumber != null and enableSerialNumber != ''">
+            AND m.enable_serial_number = #{enableSerialNumber}
         </if>
-        <if test="enableBatchNumber != null and enableBatchNumber !=''">
-            and m.enable_batch_number = #{enableBatchNumber}
+        <if test="enableBatchNumber != null and enableBatchNumber != ''">
+            AND m.enable_batch_number = #{enableBatchNumber}
         </if>
-        <if test="position != null and position !=''">
-            <bind name="bindPosition" value="'%'+position+'%'"/>
-            and m.position like #{bindPosition}
+        <if test="position != null and position != ''">
+            <bind name="bindPosition" value="'%' + position + '%'"/>
+            AND m.position LIKE #{bindPosition}
         </if>
-        <if test="enabled != null and enabled !=''">
-            and m.enabled = #{enabled}
+        <if test="enabled != null and enabled != ''">
+            AND m.enabled = #{enabled}
         </if>
-        <if test="remark != null and remark !=''">
-            <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and m.remark like #{bindRemark}
+        <if test="remark != null and remark != ''">
+            <bind name="bindRemark" value="'%' + remark + '%'"/>
+            AND m.remark LIKE #{bindRemark}
         </if>
-        <if test="idList.size()>0">
-            and m.category_id in
+        <if test="idList.size() > 0">
+            AND m.category_id IN
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
         </if>
-        and ifnull(m.delete_flag,'0') !='1'
-        group by m.id
-        order by m.id desc
+        AND IFNULL(m.delete_flag, '0') != '1'
+        GROUP BY
+        m.id
+        ORDER BY
+        m.id DESC
         <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
+            LIMIT #{offset}, #{rows}
         </if>
     </select>
 
@@ -682,57 +697,69 @@
     </select>
 
     <select id="getListWithStock" resultMap="ResultMapListWithStock">
-        select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code mBarCode,
-        ifnull(me.purchase_decimal,0) purchaseDecimal,
-        ifnull(mcs.current_unit_price,0) currentUnitPrice,
-        ifnull(sum(mcs.current_number),0) currentStock,
-        sum(ifnull(me.purchase_decimal, 0) * ifnull(mcs.current_number, 0)) currentStockPrice,
-        sum(ifnull(mcs.current_unit_price, 0) * ifnull(mcs.current_number, 0)) currentStockMovePrice,
-        sum(ifnull(m.weight, 0) * ifnull(mcs.current_number, 0)) currentWeight
-        FROM jsh_material m
-        left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'
-        <if test="depotList.size()>0">
-            and mcs.depot_id in
+        SELECT
+        m.*,
+        MIN(me.commodity_unit) AS unitName,
+        MIN(mc.name) AS categoryName,
+        MIN(me.bar_code) AS mBarCode,
+        IFNULL(MIN(me.purchase_decimal),0) AS purchaseDecimal,
+        IFNULL(MIN(mcs.current_unit_price),0) AS currentUnitPrice,
+        IFNULL(SUM(mcs.current_number),0) AS currentStock,
+        SUM(IFNULL(me.purchase_decimal, 0) * IFNULL(mcs.current_number, 0)) AS currentStockPrice,
+        SUM(IFNULL(mcs.current_unit_price, 0) * IFNULL(mcs.current_number, 0)) AS currentStockMovePrice,
+        SUM(IFNULL(m.weight, 0) * IFNULL(mcs.current_number, 0)) AS currentWeight
+        FROM
+        jsh_material m
+        LEFT JOIN
+        jsh_material_extend me ON m.id = me.material_id AND IFNULL(me.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_material_current_stock mcs ON m.id = mcs.material_id AND IFNULL(mcs.delete_flag, '0') != '1'
+        <if test="depotList.size() > 0">
+            AND mcs.depot_id IN
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
         </if>
-        left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
-        where 1=1
-        and me.default_flag=1
-        <if test="idList.size()>0">
-            and m.category_id in
+        LEFT JOIN
+        jsh_unit u ON m.unit_id = u.id AND IFNULL(u.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_material_category mc ON m.category_id = mc.id AND IFNULL(mc.delete_Flag, '0') != '1'
+        WHERE
+        1 = 1
+        AND me.default_flag = 1
+        <if test="idList.size() > 0">
+            AND m.category_id IN
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
         </if>
-        <if test="position != null and position !=''">
-            <bind name="bindPosition" value="'%'+position+'%'"/>
-            and m.position like #{bindPosition}
+        <if test="position != null and position != ''">
+            <bind name="bindPosition" value="'%' + position + '%'"/>
+            AND m.position LIKE #{bindPosition}
         </if>
         <if test="materialParam != null">
-            <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
-            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
-            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+            <bind name="bindKey" value="'%' + materialParam + '%'"/>
+            AND (me.bar_code LIKE #{bindKey} OR m.name LIKE #{bindKey} OR m.mnemonic LIKE #{bindKey} OR m.standard LIKE #{bindKey} OR m.model LIKE #{bindKey}
+            OR m.color LIKE #{bindKey} OR m.mfrs LIKE #{bindKey} OR m.brand LIKE #{bindKey} OR m.other_field1 LIKE #{bindKey}
+            OR m.other_field2 LIKE #{bindKey} OR m.other_field3 LIKE #{bindKey})
         </if>
-        and ifnull(m.delete_flag,'0') !='1'
-        group by m.id
+        AND IFNULL(m.delete_flag, '0') != '1'
+        GROUP BY
+        m.id
         <if test="zeroStock == 0">
-            having currentStock!=0
+            HAVING currentStock != 0
         </if>
         <if test="column == 'createTime'">
-            order by m.id desc
+            ORDER BY m.id DESC
         </if>
         <if test="column != 'createTime'">
-            order by ${column} ${order}
+            ORDER BY ${column} ${order}
         </if>
         <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
+            LIMIT #{offset}, #{rows}
         </if>
     </select>
+
 
     <select id="getListWithStockCount" resultType="java.lang.Integer">
         select count(tb.id) from

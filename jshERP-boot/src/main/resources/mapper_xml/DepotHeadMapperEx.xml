@@ -495,80 +495,105 @@
     </select>
 
     <select id="findInOutMaterialCount" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultInOutMaterialCount">
-        select di.material_id materialId, me.bar_code barCode, m.name mName,m.model,m.standard,m.color,m.brand,m.mfrs,
-               mc.name categoryName,concat_ws('', m.unit, u.basic_unit) materialUnit,
-        sum(di.basic_number) numSum,
-        sum(di.all_price) priceSum
-        from jsh_depot_head dh
-        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
-        left join jsh_material m on m.id=di.material_id and ifnull(m.delete_flag,'0') !='1'
-        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
-        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_material_category mc on m.category_id=mc.Id and ifnull(mc.delete_flag,'0') !='1'
-        where me.default_flag=1
-        and (dh.type=#{type} or dh.sub_type='调拨') and dh.oper_time >=#{beginTime} and dh.oper_time &lt;=#{endTime}
+        SELECT
+        di.material_id AS materialId,
+        MIN(me.bar_code) AS barCode,
+        MIN(m.name) AS mName,
+        MIN(m.model) AS model,
+        MIN(m.standard) AS standard,
+        MIN(m.color) AS color,
+        MIN(m.brand) AS brand,
+        MIN(m.mfrs) AS mfrs,
+        MIN(mc.name) AS categoryName,
+        MIN(concat_ws('', m.unit, u.basic_unit)) AS materialUnit,
+        SUM(di.basic_number) AS numSum,
+        SUM(di.all_price) AS priceSum
+        FROM
+        jsh_depot_head dh
+        LEFT JOIN
+        jsh_depot_item di ON dh.id = di.header_id AND IFNULL(di.delete_flag, '0') != '1'
+        LEFT JOIN
+        jsh_material m ON m.id = di.material_id AND IFNULL(m.delete_flag, '0') != '1'
+        LEFT JOIN
+        jsh_unit u ON m.unit_id = u.id AND IFNULL(u.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_material_extend me ON me.material_id = m.id AND IFNULL(me.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_material_category mc ON m.category_id = mc.Id AND IFNULL(mc.delete_flag, '0') != '1'
+        WHERE
+        me.default_flag = 1
+        AND (dh.type = #{type} OR dh.sub_type = '调拨')
+        AND dh.oper_time >= #{beginTime}
+        AND dh.oper_time &lt;= #{endTime}
         <if test="oId != null">
-            and dh.organ_id = #{oId}
+            AND dh.organ_id = #{oId}
         </if>
         <if test="creatorArray != null">
-            and dh.creator in (
+            AND dh.creator IN (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
             </foreach>
             )
         </if>
-        <if test="organArray != null and organArray !=''">
-            and (dh.organ_id in (
+        <if test="organArray != null and organArray != ''">
+            AND (
+            dh.organ_id IN (
             <foreach collection="organArray" item="organId" separator=",">
                 #{organId}
             </foreach>
-            ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
+            )
+            OR dh.sub_type = '采购退货'
+            OR dh.sub_type = '零售'
+            OR dh.sub_type = '其它'
+            )
         </if>
-        <if test="depotList.size()>0">
+        <if test="depotList.size() > 0">
             <if test="type == '入库'">
-                and ((
-                dh.sub_type!='调拨' and di.depot_id in
+                AND ((
+                dh.sub_type != '调拨' AND di.depot_id IN
                 <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                     #{item}
                 </foreach>
-                ) or (
-                dh.sub_type='调拨' and di.another_depot_id in
+                ) OR (
+                dh.sub_type = '调拨' AND di.another_depot_id IN
                 <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                     #{item}
                 </foreach>
                 ))
             </if>
             <if test="type == '出库'">
-                and di.depot_id in
+                AND di.depot_id IN
                 <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                     #{item}
                 </foreach>
             </if>
         </if>
-        <if test="materialParam != null and materialParam !=''">
-            <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
-            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
-            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+        <if test="materialParam != null and materialParam != ''">
+            <bind name="bindKey" value="'%' + materialParam + '%'"/>
+            AND (me.bar_code LIKE #{bindKey} OR m.name LIKE #{bindKey} OR m.mnemonic LIKE #{bindKey} OR m.standard LIKE #{bindKey} OR m.model LIKE #{bindKey}
+            OR m.color LIKE #{bindKey} OR m.mfrs LIKE #{bindKey} OR m.brand LIKE #{bindKey} OR m.other_field1 LIKE #{bindKey}
+            OR m.other_field2 LIKE #{bindKey} OR m.other_field3 LIKE #{bindKey})
         </if>
         <if test="forceFlag">
-            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
+            AND (dh.status = '1' OR dh.status = '2' OR dh.status = '3')
         </if>
         <if test="inOutManageFlag">
-            and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
+            AND (dh.sub_type != '采购' AND dh.sub_type != '采购退货' AND dh.sub_type != '销售' AND dh.sub_type != '销售退货')
         </if>
-        and ifnull(dh.delete_flag,'0') !='1'
-        group by di.material_id
+        AND IFNULL(dh.delete_flag, '0') != '1'
+        GROUP BY
+        di.material_id
         <if test="column == 'createTime'">
-            order by materialId desc
+            ORDER BY materialId DESC
         </if>
         <if test="column != 'createTime'">
-            order by ${column} ${order}
+            ORDER BY ${column} ${order}
         </if>
         <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
+            LIMIT #{offset}, #{rows}
         </if>
     </select>
+
 
     <select id="findInOutMaterialCountTotal" resultType="java.lang.Integer">
         select count(1) from

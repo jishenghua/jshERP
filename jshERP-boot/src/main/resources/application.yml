@@ -14,7 +14,7 @@ spring:
       enabled: true
       force: true
   datasource:
-    url: jdbc:mysql://${DB_IP:172.17.0.3}:${DB_PORT:3306}/${DB_NAME:jsh_erp}?autoReconnect=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:mysql://${DB_IP:172.17.0.5}:${DB_PORT:3306}/${DB_NAME:jsh_erp}?autoReconnect=true&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     driver-class-name: org.mariadb.jdbc.Driver
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:123456}
@@ -33,7 +33,7 @@ spring:
       connection-test-query: SELECT 1
       leak-detection-threshold: 2000 # 连接泄漏检测阈值设为2秒
   redis:
-    host: ${REDIS_HOST:172.17.0.2}
+    host: ${REDIS_HOST:172.17.0.3}
     port: 6379
     password: jHWVClW8d05uqYc
   servlet:

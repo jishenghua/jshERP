@@ -349,37 +349,60 @@
     </select>
 
     <select id="getInOutStock" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard, m.brand,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.unit_id, u.name unit_name,
-        ifnull(me.purchase_decimal,0) purchase_decimal, ifnull(mcs.current_unit_price,0) currentUnitPrice
-        from jsh_material m
-        left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_material_current_stock mcs on m.id = mcs.material_id and ifnull(mcs.delete_flag,'0') !='1'
-        left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
-        left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
-        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
-        where 1=1 and me.default_flag=1
-        <if test="materialParam != null and materialParam !=''">
-            <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
-            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
-            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+        SELECT
+        m.id AS MId,
+        MIN(me.bar_code) AS barCode,
+        MIN(m.name) AS MName,
+        MIN(m.mfrs) AS MMfrs,
+        MIN(m.model) AS MModel,
+        MIN(m.standard) AS MStandard,
+        MIN(m.brand) AS brand,
+        MIN(m.other_field1) AS MOtherField1,
+        MIN(m.other_field2) AS MOtherField2,
+        MIN(m.other_field3) AS MOtherField3,
+        MIN(concat_ws('', m.unit, u.basic_unit)) AS MaterialUnit,
+        MIN(m.color) AS MColor,
+        m.unit_id,
+        MIN(u.name) AS unit_name,
+        IFNULL(MIN(me.purchase_decimal), 0) AS purchase_decimal,
+        IFNULL(MIN(mcs.current_unit_price), 0) AS currentUnitPrice
+        FROM
+        jsh_material m
+        LEFT JOIN
+        jsh_material_extend me ON me.material_id = m.id AND IFNULL(me.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_material_current_stock mcs ON m.id = mcs.material_id AND IFNULL(mcs.delete_flag, '0') != '1'
+        LEFT JOIN
+        jsh_depot_item di ON di.material_id = m.id AND IFNULL(di.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_depot_head dh ON di.header_id = dh.id AND IFNULL(dh.delete_flag, '0') != '1'
+        LEFT JOIN
+        jsh_unit u ON m.unit_id = u.id AND IFNULL(u.delete_Flag, '0') != '1'
+        WHERE
+        1 = 1
+        AND me.default_flag = 1
+        <if test="materialParam != null and materialParam != ''">
+            <bind name="bindKey" value="'%' + materialParam + '%'"/>
+            AND (me.bar_code LIKE #{bindKey} OR m.name LIKE #{bindKey} OR m.mnemonic LIKE #{bindKey} OR m.standard LIKE #{bindKey} OR m.model LIKE #{bindKey}
+            OR m.color LIKE #{bindKey} OR m.mfrs LIKE #{bindKey} OR m.brand LIKE #{bindKey} OR m.other_field1 LIKE #{bindKey}
+            OR m.other_field2 LIKE #{bindKey} OR m.other_field3 LIKE #{bindKey})
         </if>
-        <if test="categoryIdList.size()>0">
-            and m.category_id in
+        <if test="categoryIdList.size() > 0">
+            AND m.category_id IN
             <foreach collection="categoryIdList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
         </if>
         <if test="endTime != null">
-            and dh.oper_time &lt;= #{endTime}
+            AND dh.oper_time &lt;= #{endTime}
         </if>
-        and ifnull(m.delete_flag,'0') !='1'
-        group by m.id
-        order by m.id desc
+        AND IFNULL(m.delete_flag, '0') != '1'
+        GROUP BY
+        m.id
+        ORDER BY
+        m.id DESC
         <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
+            LIMIT #{offset}, #{rows}
         </if>
     </select>
 
@@ -410,67 +433,86 @@
     </select>
 
     <select id="getListWithBuyOrSale" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
-        concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.brand, u.name unit_name
-        from jsh_material m
-        left join jsh_depot_item di on di.material_id=m.id  and ifnull(di.delete_Flag,'0') !='1'
-        left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
-        left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
-        left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
-        where 1=1
+        SELECT
+        m.id AS MId,
+        MIN(me.bar_code) AS bar_code,
+        MIN(m.name) AS MName,
+        MIN(m.mfrs) AS MMfrs,
+        MIN(m.model) AS MModel,
+        MIN(m.standard) AS MStandard,
+        MIN(m.other_field1) AS MOtherField1,
+        MIN(m.other_field2) AS MOtherField2,
+        MIN(m.other_field3) AS MOtherField3,
+        MIN(concat_ws('', m.unit, u.basic_unit)) AS MaterialUnit,
+        MIN(m.color) AS MColor,
+        MIN(m.brand) AS brand,
+        MIN(u.name) AS unit_name
+        FROM
+        jsh_material m
+        LEFT JOIN
+        jsh_depot_item di ON di.material_id = m.id AND IFNULL(di.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_material_extend me ON me.id = di.material_extend_id AND IFNULL(me.delete_Flag, '0') != '1'
+        LEFT JOIN
+        jsh_depot_head dh ON di.header_id = dh.id AND IFNULL(dh.delete_flag, '0') != '1'
+        LEFT JOIN
+        jsh_unit u ON m.unit_id = u.id AND IFNULL(u.delete_Flag, '0') != '1'
+        WHERE
+        1 = 1
         <if test="materialParam != null and materialParam !=''">
-            <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
-            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
-            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
+            <bind name="bindKey" value="'%' + materialParam + '%'"/>
+            AND (me.bar_code LIKE #{bindKey} OR m.name LIKE #{bindKey} OR m.mnemonic LIKE #{bindKey} OR m.standard LIKE #{bindKey} OR m.model LIKE #{bindKey}
+            OR m.color LIKE #{bindKey} OR m.mfrs LIKE #{bindKey} OR m.brand LIKE #{bindKey} OR m.other_field1 LIKE #{bindKey}
+            OR m.other_field2 LIKE #{bindKey} OR m.other_field3 LIKE #{bindKey})
         </if>
         <if test="billType =='buy'">
-            and (dh.sub_type = '采购' or dh.sub_type = '采购退货')
+            AND (dh.sub_type = '采购' OR dh.sub_type = '采购退货')
         </if>
         <if test="billType =='sale'">
-            and (dh.sub_type = '销售' or dh.sub_type = '销售退货')
+            AND (dh.sub_type = '销售' OR dh.sub_type = '销售退货')
         </if>
         <if test="billType =='retail'">
-            and (dh.sub_type = '零售' or dh.sub_type = '零售退货')
+            AND (dh.sub_type = '零售' OR dh.sub_type = '零售退货')
         </if>
         <if test="beginTime != null">
-            and dh.oper_time >= #{beginTime}
+            AND dh.oper_time >= #{beginTime}
         </if>
         <if test="endTime != null">
-            and dh.oper_time &lt;= #{endTime}
+            AND dh.oper_time &lt;= #{endTime}
         </if>
         <if test="creatorArray != null">
-            and dh.creator in (
+            AND dh.creator IN (
             <foreach collection="creatorArray" item="creator" separator=",">
                 #{creator}
             </foreach>
             )
         </if>
         <if test="organId != null">
-            and dh.organ_id = #{organId}
+            AND dh.organ_id = #{organId}
         </if>
         <if test="organArray != null and organArray !=''">
-            and dh.organ_id in (
+            AND dh.organ_id IN (
             <foreach collection="organArray" item="organId" separator=",">
                 #{organId}
             </foreach>
             )
         </if>
-        <if test="depotList.size()>0">
-            and di.depot_id in
+        <if test="depotList.size() > 0">
+            AND di.depot_id IN
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
         </if>
         <if test="forceFlag">
-            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
+            AND (dh.status = '1' OR dh.status = '2' OR dh.status = '3')
         </if>
-        and ifnull(m.delete_flag,'0') !='1'
-        group by m.id
-        order by m.id desc
+        AND IFNULL(m.delete_flag, '0') != '1'
+        GROUP BY
+        m.id
+        ORDER BY
+        m.id DESC
         <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
+            LIMIT #{offset}, #{rows}
         </if>
     </select>
 
