@@ -264,6 +264,7 @@
             { title: '价税合计', key: 'taxLastMoney', width: '7%', type: FormTypes.inputNumber, statistics: true },
             { title: '备注', key: 'remark', width: '6%', type: FormTypes.input },
             { title: '关联id', key: 'linkId', width: '5%', type: FormTypes.hidden },
+            { title: '是否再次编辑', key: 'isEdit', width: '5%', type: FormTypes.hidden },
           ]
         },
         confirmLoading: false,

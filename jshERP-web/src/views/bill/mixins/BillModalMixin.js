@@ -128,6 +128,7 @@ export const BillModalMixin = {
           tab.dataSource = res.data.rows
           for(let i=0; i<tab.dataSource.length; i++){
             let info = tab.dataSource[i]
+            info.isEdit = this.model.id?1:0
             this.changeColumnShow(info)
           }
           typeof success === 'function' ? success(res) : ''
@@ -519,9 +520,12 @@ export const BillModalMixin = {
         case "batchNumber":
           batchNumber = value
           let depotItemId = ''
-          let rowId = row.id
-          if(rowId.length<=19) {
-            depotItemId = rowId-0
+          if(this.model.id) {
+            //只有在保存之后的编辑页面下才获取明细id
+            let rowId = row.id
+            if(rowId.length<=19) {
+              depotItemId = rowId-0
+            }
           }
           getBatchNumberList({name:'', depotItemId: depotItemId, depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
             if (res && res.code === 200) {

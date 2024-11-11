@@ -131,9 +131,13 @@
       loadData(arg) {
         if(this.rows) {
           if(JSON.parse(this.rows).depotId && JSON.parse(this.rows).barCode ){
-            let depotItemId = JSON.parse(this.rows).id
-            if(depotItemId.length<=19) {
-              this.queryParam.depotItemId = depotItemId-0
+            let isEdit = JSON.parse(this.rows).isEdit
+            if(isEdit) {
+              //只有在保存之后的编辑页面下才获取明细id
+              let depotItemId = JSON.parse(this.rows).id
+              if (depotItemId.length <= 19) {
+                this.queryParam.depotItemId = depotItemId-0
+              }
             }
             this.queryParam.depotId = JSON.parse(this.rows).depotId-0
             this.queryParam.barCode = JSON.parse(this.rows).barCode
@@ -176,9 +180,13 @@
           if(this.rows) {
             this.queryParam.name=''
             if(JSON.parse(this.rows).depotId && JSON.parse(this.rows).barCode ){
-              let depotItemId = JSON.parse(this.rows).id
-              if(depotItemId.length<=19) {
-                this.queryParam.depotItemId = depotItemId-0
+              let isEdit = JSON.parse(this.rows).isEdit
+              if(isEdit) {
+                //只有在保存之后的编辑页面下才获取明细id
+                let depotItemId = JSON.parse(this.rows).id
+                if(depotItemId.length<=19) {
+                  this.queryParam.depotItemId = depotItemId-0
+                }
               }
               this.queryParam.depotId = JSON.parse(this.rows).depotId-0
               this.queryParam.barCode = JSON.parse(this.rows).barCode
