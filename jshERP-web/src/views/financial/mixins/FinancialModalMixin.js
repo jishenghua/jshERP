@@ -46,12 +46,27 @@ export const FinancialModalMixin = {
     this.width = realScreenWidth<1500?'1200px':'1550px'
     this.minWidth = realScreenWidth<1500?1150:1500
   },
+  mounted() {
+    document.getElementById(this.prefixNo).addEventListener('keydown', this.handleOkKey)
+  },
+  beforeDestroy() {
+    document.getElementById(this.prefixNo).removeEventListener('keydown', this.handleOkKey)
+  },
   computed: {
     readOnly: function() {
       return this.action !== "add" && this.action !== "edit";
     }
   },
   methods: {
+    // 快捷键
+    handleOkKey(e) {
+      const key = window.event.keyCode ? window.event.keyCode : window.event.which
+      if (key === 83 && e.ctrlKey) {
+        //保存 CTRL+S
+        this.handleOk()
+        e.preventDefault()
+      }
+    },
     addInit(amountNum) {
       getAction('/sequence/buildNumber').then((res) => {
         if (res && res.code === 200) {
