@@ -14,6 +14,7 @@ import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.PinYinUtil;
 import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -712,5 +713,25 @@ public class MaterialController {
         } else {
             return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
         }
+    }
+
+    /**
+     * 转换名称为拼音
+     * @param jsonObject
+     */
+    @PostMapping(value = "/changeNameToPinYin")
+    @ApiOperation(value = "转换名称为拼音")
+    public BaseResponseInfo changeNameToPinYin(@RequestBody JSONObject jsonObject)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            String name = jsonObject.getString("name");
+            res.code = 200;
+            res.data = PinYinUtil.getFirstLettersLo(name);
+        } catch(Exception e){
+            logger.error(e.getMessage(), e);
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
     }
 }
