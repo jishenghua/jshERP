@@ -295,10 +295,9 @@
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList,
-    getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
+    getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList, changeNameToPinYin } from '@/api/api'
   import { removeByVal, autoJumpNextInput, handleIntroJs } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
-  import Pinyin from 'chinese-to-pinyin'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
@@ -346,6 +345,7 @@
         manySkuSelected: 0,
         model: {},
         showOkFlag: true,
+        setTimeFlag: null,
         labelCol: {
           xs: { span: 24 },
           sm: { span: 8 },
@@ -1109,20 +1109,22 @@
         }
       },
       handleNameChange(e) {
+        let that = this
         if(e.target.value) {
-          let pyArr = []
-          e.target.value.split("").forEach(w => {
-            w = w.trim()
-            if (w) {
-              if (/[\u4e00-\u9fa5]/.test(w)) {
-                let py = Pinyin(w, {removeTone: true, keepRest: true}).trim()
-                pyArr.push(py.substring(0, 1))
+          if(this.setTimeFlag != null){
+            clearTimeout(this.setTimeFlag)
+          }
+          this.setTimeFlag = setTimeout(()=>{
+            changeNameToPinYin({name: e.target.value}).then((res) => {
+              if (res && res.code === 200) {
+                that.form.setFieldsValue({'mnemonic':res.data})
               } else {
-                pyArr.push(w)
+                that.$message.warning(res.data)
               }
-            }
-          })
-          this.form.setFieldsValue({'mnemonic':pyArr.join("")})
+            })
+          },500)
+        } else {
+          that.form.setFieldsValue({'mnemonic':''})
         }
       },
       onlyUnitOnChange(e) {

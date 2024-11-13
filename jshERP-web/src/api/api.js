@@ -61,6 +61,7 @@ const getMaterialByBarCode = (params)=>getAction("/material/getMaterialByBarCode
 const getMaxBarCode = (params)=>getAction("/material/getMaxBarCode",params);
 const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCodeExist",params);
 const batchUpdateMaterial = (params)=>postAction("/material/batchUpdate",params);
+const changeNameToPinYin = (params)=>postAction("/material/changeNameToPinYin",params);
 //序列号
 const addSerialNumber = (params)=>postAction("/serialNumber/add",params);
 const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
@@ -163,6 +164,7 @@ export {
   getMaxBarCode,
   checkMaterialBarCode,
   batchUpdateMaterial,
+  changeNameToPinYin,
   addSerialNumber,
   editSerialNumber,
   checkSerialNumber,
