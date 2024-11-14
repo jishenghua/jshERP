@@ -13,7 +13,7 @@
     :style="modalStyle">
     <template slot="footer">
       <a-button key="back" @click="handleCancel">取消</a-button>
-      <a-button type="primary" v-if="showOkFlag" :loading="confirmLoading" @click="handleOk">保存</a-button>
+      <a-button type="primary" v-if="showOkFlag" :loading="confirmLoading" @click="handleOk">保存（Ctrl+S）</a-button>
     </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
@@ -452,7 +452,22 @@
       let realScreenWidth = window.screen.width
       this.width = realScreenWidth<1500?'1200px':'1400px'
     },
+    mounted() {
+      document.getElementById(this.prefixNo).addEventListener('keydown', this.handleOkKey)
+    },
+    beforeDestroy() {
+      document.getElementById(this.prefixNo).removeEventListener('keydown', this.handleOkKey)
+    },
     methods: {
+      // 快捷键
+      handleOkKey(e) {
+        const key = window.event.keyCode ? window.event.keyCode : window.event.which
+        if (key === 83 && e.ctrlKey) {
+          //保存 CTRL+S
+          this.handleOk()
+          e.preventDefault()
+        }
+      },
       // 获取所有的editableTable实例
       getAllTable() {
         return Promise.all([
