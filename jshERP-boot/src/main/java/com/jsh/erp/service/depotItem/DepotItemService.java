@@ -649,8 +649,12 @@ public class DepotItemService {
                         stock = getOneBatchNumberStock(depotItem.getDepotId(), barCode, depotItem.getBatchNumber());
                         stockMsg += "-批号" + depotItem.getBatchNumber();
                     }
-                    BigDecimal thisBasicNumber = depotItem.getBasicNumber()==null?BigDecimal.ZERO:depotItem.getBasicNumber();
-                    if(!systemConfigService.getMinusStockFlag() && stock.compareTo(thisBasicNumber)<0){
+                    BigDecimal thisRealNumber = depotItem.getBasicNumber()==null?BigDecimal.ZERO:depotItem.getBasicNumber();
+                    if(StringUtil.isNotEmpty(depotItem.getBatchNumber())) {
+                        //对于批次商品，直接使用当前填写的数量
+                        thisRealNumber = depotItem.getOperNumber()==null?BigDecimal.ZERO:depotItem.getOperNumber();
+                    }
+                    if(!systemConfigService.getMinusStockFlag() && stock.compareTo(thisRealNumber)<0){
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
                                 String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, stockMsg));
                     }
