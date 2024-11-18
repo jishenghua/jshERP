@@ -716,6 +716,7 @@ public class MaterialService {
                     Long unitId = unitService.getUnitIdByParam(unit, manyUnit, new BigDecimal(ratio.trim()));
                     if(unitId != null) {
                         m.setUnitId(unitId);
+                        m.setUnit("");
                     } else {
                         throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_UNIT_MATE_CODE,
                                 String.format(ExceptionConstants.MATERIAL_UNIT_MATE_MSG, manyBarCode));
@@ -730,6 +731,7 @@ public class MaterialService {
                     materialExObj.put("other", otherObj);
                 } else {
                     m.setUnit(unit);
+                    m.setUnitId(null);
                 }
                 m.setMaterialExObj(materialExObj);
                 m.setEnabled("1".equals(enabled));
@@ -771,6 +773,14 @@ public class MaterialService {
                     Material material = JSONObject.parseObject(materialJson, Material.class);
                     material.setId(mId);
                     materialMapper.updateByPrimaryKeySelective(material);
+                    //更新多单位
+                    if(material.getUnitId() == null) {
+                        materialMapperEx.setUnitIdToNull(material.getId());
+                    }
+                    //如果之前有保质期，则更新保质期
+                    if(materials.get(0).getExpiryNum()!=null && material.getExpiryNum() == null) {
+                        materialMapperEx.setExpiryNumToNull(material.getId());
+                    }
                 }
                 //给商品新增或更新条码与价格相关信息
                 JSONObject materialExObj = m.getMaterialExObj();
