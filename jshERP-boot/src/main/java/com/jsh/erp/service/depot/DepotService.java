@@ -61,15 +61,9 @@ public class DepotService {
 
     public List<Depot> getDepotListByIds(String ids)throws Exception {
         List<Long> idList = StringUtil.strToLongList(ids);
-        List<Depot> list = new ArrayList<>();
-        try{
-            DepotExample example = new DepotExample();
-            example.createCriteria().andIdIn(idList);
-            list = depotMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list;
+        DepotExample example = new DepotExample();
+        example.createCriteria().andIdIn(idList);
+        return depotMapper.selectByExample(example);
     }
 
     public List<Depot> getDepot()throws Exception {
@@ -188,37 +182,33 @@ public class DepotService {
         int result=0;
         String [] idArray=ids.split(",");
         //校验单据子表	jsh_depot_item
-        List<DepotItem> depotItemList=null;
-        try{
-            depotItemList = depotItemMapperEx.getDepotItemListListByDepotIds(idArray);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
+        List<DepotItem> depotItemList = depotItemMapperEx.getDepotItemListListByDepotIds(idArray);
         if(depotItemList!=null&&depotItemList.size()>0){
             logger.error("异常码[{}],异常提示[{}],参数,DepotIds[{}]",
                     ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,ExceptionConstants.DELETE_FORCE_CONFIRM_MSG,ids);
             throw new BusinessRunTimeException(ExceptionConstants.DELETE_FORCE_CONFIRM_CODE,
                     ExceptionConstants.DELETE_FORCE_CONFIRM_MSG);
         }
-        //记录日志
-        StringBuffer sb = new StringBuffer();
-        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
-        List<Depot> list = getDepotListByIds(ids);
-        for(Depot depot: list){
-            sb.append("[").append(depot.getName()).append("]");
-        }
-        logService.insertLog("仓库", sb.toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        User userInfo=userService.getCurrentUser();
-        //校验通过执行删除操作
         try{
+            //记录日志
+            StringBuffer sb = new StringBuffer();
+            sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+            List<Depot> list = getDepotListByIds(ids);
+            for(Depot depot: list){
+                sb.append("[").append(depot.getName()).append("]");
+            }
+            User userInfo=userService.getCurrentUser();
+            //校验通过执行删除操作
             //删除仓库关联的商品的初始库存
             materialInitialStockMapperEx.batchDeleteByDepots(idArray);
             //删除仓库关联的商品的当前库存
             materialCurrentStockMapperEx.batchDeleteByDepots(idArray);
             //删除仓库
             result = depotMapperEx.batchDeleteDepotByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
-        }catch(Exception e){
+            //记录日志
+            logService.insertLog("仓库", sb.toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        } catch (Exception e) {
             JshException.writeFail(logger, e);
         }
         return result;
