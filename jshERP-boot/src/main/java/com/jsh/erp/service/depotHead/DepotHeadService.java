@@ -445,9 +445,12 @@ public class DepotHeadService {
     public int batchDeleteBillByIds(String ids)throws Exception {
         StringBuffer sb = new StringBuffer();
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        //路径列表
+        List<String> pathList = new ArrayList<>();
         List<DepotHead> dhList = getDepotHeadListByIds(ids);
         for(DepotHead depotHead: dhList){
             sb.append("[").append(depotHead.getNumber()).append("]");
+            pathList.add(depotHead.getFileName());
             //只有未审核的单据才能被删除
             if("0".equals(depotHead.getStatus())) {
                 User userInfo = userService.getCurrentUser();
@@ -567,6 +570,8 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));
             }
         }
+        //逻辑删除文件
+        systemConfigService.deleteFileByPathList(pathList);
         logService.insertLog("单据", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         return 1;

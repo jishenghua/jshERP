@@ -6,6 +6,7 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
+import com.aliyun.oss.model.CopyObjectResult;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.jsh.erp.constants.BusinessConstants;
@@ -42,6 +43,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,8 +63,13 @@ public class SystemConfigService {
     @Resource
     private LogService logService;
 
+    @Value(value="${file.uploadType}")
+    private Long fileUploadType;
+
     @Value(value="${file.path}")
     private String filePath;
+
+    private static String DELETED = "deleted";
 
     public SystemConfig getSystemConfig(long id)throws Exception {
         SystemConfig result=null;
@@ -347,6 +354,106 @@ public class SystemConfigService {
     public String getFileUrlAliOss(String imgPath) throws Exception {
         String linkUrl = platformConfigService.getPlatformConfigByKey("aliOss_linkUrl").getPlatformValue();
         return linkUrl + filePath + "/" + imgPath;
+    }
+
+    /**
+     * 逻辑删除文件
+     * @param pathList
+     */
+    public void deleteFileByPathList(List<String> pathList) throws Exception {
+        if(fileUploadType == 1) {
+            //本地
+            for(String pathStr: pathList) {
+                String[] pathArr = pathStr.split(",");
+                for (int i = 0; i < pathArr.length; i++) {
+                    String path = pathArr[i];
+                    // 提取文件的路径
+                    String pathDir = getDirByPath(path);
+                    if(StringUtil.isNotEmpty(pathDir)) {
+                        // 源文件路径
+                        Path sourcePath = Paths.get(filePath + File.separator + path);
+                        // 目标文件路径（注意这里是新文件的完整路径，包括文件名）
+                        Path targetPath = Paths.get(filePath + File.separator + DELETED + File.separator + path);
+                        try {
+                            File file = new File(filePath + File.separator + DELETED + File.separator + pathDir);
+                            if (!file.exists()) {
+                                file.mkdirs();// 创建文件根目录
+                            }
+                            // 复制文件，如果目标文件已存在则替换它
+                            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                            // 删除源文件
+                            Files.delete(sourcePath);
+                            logger.info("File copied successfully.");
+                        } catch (NoSuchFileException e) {
+                            logger.error("Source file not found: " + e.getMessage());
+                        } catch (IOException e) {
+                            logger.error("An I/O error occurred: " + e.getMessage());
+                        } catch (SecurityException e) {
+                            logger.error("No permission to copy file: " + e.getMessage());
+                        }
+                    }
+                }
+            }
+        } else if(fileUploadType == 2) {
+            //oss
+            String endpoint = platformConfigService.getPlatformConfigByKey("aliOss_endpoint").getPlatformValue();
+            String accessKeyId = platformConfigService.getPlatformConfigByKey("aliOss_accessKeyId").getPlatformValue();
+            String accessKeySecret = platformConfigService.getPlatformConfigByKey("aliOss_accessKeySecret").getPlatformValue();
+            String bucketName = platformConfigService.getPlatformConfigByKey("aliOss_bucketName").getPlatformValue();
+            for(String pathStr: pathList) {
+                String[] pathArr = pathStr.split(",");
+                for (int i = 0; i < pathArr.length; i++) {
+                    String path = pathArr[i];
+                    // 创建OSSClient实例。
+                    OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+                    try {
+                        String filePathStr = StringUtil.isNotEmpty(filePath)? filePath.substring(1):"";
+                        String sourceObjectKey = filePathStr + "/" + path;
+                        String sourceSmallObjectKey = filePathStr + "-small/" + path;
+                        String destinationObjectKey = DELETED + "/" + sourceObjectKey;
+                        String destinationSmallObjectKey = DELETED + "/" + sourceSmallObjectKey;
+                        this.copySourceToDest(ossClient, bucketName, sourceObjectKey, destinationObjectKey);
+                        this.copySourceToDest(ossClient, bucketName, sourceSmallObjectKey, destinationSmallObjectKey);
+                    } catch (Exception e) {
+                        logger.error(e.getMessage());
+                    } finally {
+                        // 关闭OSSClient。
+                        if (ossClient != null) {
+                            ossClient.shutdown();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param ossClient
+     * @param bucketName
+     * @param sourceObjectKey 源文件路径，包括目录和文件名
+     * @param destinationObjectKey 目标文件路径，包括新目录和文件名
+     */
+    public void copySourceToDest(OSS ossClient, String bucketName, String sourceObjectKey, String destinationObjectKey) {
+        // 复制文件
+        CopyObjectResult copyResult = ossClient.copyObject(bucketName, sourceObjectKey, bucketName, destinationObjectKey);
+        // 确认复制成功
+        if (copyResult != null && copyResult.getETag() != null) {
+            logger.info("文件复制成功，ETag: " + copyResult.getETag());
+            // 删除源文件
+            ossClient.deleteObject(bucketName, sourceObjectKey);
+            logger.info("源文件已删除：" + sourceObjectKey);
+        } else {
+            logger.info("文件复制失败");
+        }
+    }
+
+    public String getDirByPath(String path) {
+        if(path.lastIndexOf("/")>-1) {
+            return path.substring(0, path.lastIndexOf("/"));
+        } else {
+            return null;
+        }
     }
 
     public BufferedImage getImageMini(InputStream inputStream, int w) throws Exception {

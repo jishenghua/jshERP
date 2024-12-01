@@ -16,6 +16,7 @@ import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.supplier.SupplierService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
@@ -50,6 +51,8 @@ public class AccountHeadService {
     private UserService userService;
     @Resource
     private SupplierService supplierService;
+    @Resource
+    private SystemConfigService systemConfigService;
     @Resource
     private LogService logService;
     @Resource
@@ -216,13 +219,16 @@ public class AccountHeadService {
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
+        List<AccountHead> list = getAccountHeadListByIds(ids);
         //删除主表
         accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         //删除子表
         accountHeadMapperEx.batchDeleteAccountHeadByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
-        List<AccountHead> list = getAccountHeadListByIds(ids);
+        //路径列表
+        List<String> pathList = new ArrayList<>();
         for(AccountHead accountHead: list){
             sb.append("[").append(accountHead.getBillNo()).append("]");
+            pathList.add(accountHead.getFileName());
             if("1".equals(accountHead.getStatus())) {
                 throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
                         String.format(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));
@@ -234,6 +240,8 @@ public class AccountHeadService {
                 }
             }
         }
+        //逻辑删除文件
+        systemConfigService.deleteFileByPathList(pathList);
         logService.insertLog("财务", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         return 1;

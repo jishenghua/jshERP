@@ -15,6 +15,7 @@ import com.jsh.erp.service.depotItem.DepotItemService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.materialCategory.MaterialCategoryService;
 import com.jsh.erp.service.materialExtend.MaterialExtendService;
+import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
@@ -77,6 +78,8 @@ public class MaterialService {
     private DepotService depotService;
     @Resource
     private MaterialExtendService materialExtendService;
+    @Resource
+    private SystemConfigService systemConfigService;
 
     @Value(value="${file.uploadType}")
     private Long fileUploadType;
@@ -291,9 +294,12 @@ public class MaterialService {
         //记录日志
         StringBuffer sb = new StringBuffer();
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+        //路径列表
+        List<String> pathList = new ArrayList<>();
         List<Material> list = getMaterialListByIds(ids);
         for(Material material: list){
             sb.append("[").append(material.getName()).append("]");
+            pathList.add(material.getImgName());
         }
         logService.insertLog("商品", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
@@ -304,6 +310,8 @@ public class MaterialService {
             materialMapperEx.batchDeleteMaterialByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
             //逻辑删除商品价格扩展
             materialExtendMapperEx.batchDeleteMaterialExtendByMIds(idArray);
+            //逻辑删除文件
+            systemConfigService.deleteFileByPathList(pathList);
             return 1;
         }catch(Exception e){
             JshException.writeFail(logger, e);
