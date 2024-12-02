@@ -410,8 +410,8 @@ public class SystemConfigService {
                         String filePathStr = StringUtil.isNotEmpty(filePath)? filePath.substring(1):"";
                         String sourceObjectKey = filePathStr + "/" + path;
                         String sourceSmallObjectKey = filePathStr + "-small/" + path;
-                        String destinationObjectKey = DELETED + "/" + sourceObjectKey;
-                        String destinationSmallObjectKey = DELETED + "/" + sourceSmallObjectKey;
+                        String destinationObjectKey = DELETED + "/list/" + sourceObjectKey;
+                        String destinationSmallObjectKey = DELETED + "/list/" + sourceSmallObjectKey;
                         this.copySourceToDest(ossClient, bucketName, sourceObjectKey, destinationObjectKey);
                         this.copySourceToDest(ossClient, bucketName, sourceSmallObjectKey, destinationSmallObjectKey);
                     } catch (Exception e) {
