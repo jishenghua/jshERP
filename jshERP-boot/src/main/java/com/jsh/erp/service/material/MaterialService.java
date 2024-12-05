@@ -299,7 +299,9 @@ public class MaterialService {
         List<Material> list = getMaterialListByIds(ids);
         for(Material material: list){
             sb.append("[").append(material.getName()).append("]");
-            pathList.add(material.getImgName());
+            if(StringUtil.isNotEmpty(material.getImgName())) {
+                pathList.add(material.getImgName());
+            }
         }
         logService.insertLog("商品", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());

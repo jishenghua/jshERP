@@ -228,7 +228,9 @@ public class AccountHeadService {
         List<String> pathList = new ArrayList<>();
         for(AccountHead accountHead: list){
             sb.append("[").append(accountHead.getBillNo()).append("]");
-            pathList.add(accountHead.getFileName());
+            if(StringUtil.isNotEmpty(accountHead.getFileName())) {
+                pathList.add(accountHead.getFileName());
+            }
             if("1".equals(accountHead.getStatus())) {
                 throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
                         String.format(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));

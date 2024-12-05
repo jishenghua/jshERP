@@ -450,7 +450,9 @@ public class DepotHeadService {
         List<DepotHead> dhList = getDepotHeadListByIds(ids);
         for(DepotHead depotHead: dhList){
             sb.append("[").append(depotHead.getNumber()).append("]");
-            pathList.add(depotHead.getFileName());
+            if(StringUtil.isNotEmpty(depotHead.getFileName())) {
+                pathList.add(depotHead.getFileName());
+            }
             //只有未审核的单据才能被删除
             if("0".equals(depotHead.getStatus())) {
                 User userInfo = userService.getCurrentUser();

@@ -364,32 +364,33 @@ public class SystemConfigService {
         if(fileUploadType == 1) {
             //本地
             for(String pathStr: pathList) {
-                String[] pathArr = pathStr.split(",");
-                for (int i = 0; i < pathArr.length; i++) {
-                    String path = pathArr[i];
-                    // 提取文件的路径
-                    String pathDir = getDirByPath(path);
-                    if(StringUtil.isNotEmpty(pathDir)) {
-                        // 源文件路径
-                        Path sourcePath = Paths.get(filePath + File.separator + path);
-                        // 目标文件路径（注意这里是新文件的完整路径，包括文件名）
-                        Path targetPath = Paths.get(filePath + File.separator + DELETED + File.separator + path);
-                        try {
-                            File file = new File(filePath + File.separator + DELETED + File.separator + pathDir);
-                            if (!file.exists()) {
-                                file.mkdirs();// 创建文件根目录
+                if(StringUtil.isNotEmpty(pathStr)) {
+                    String[] pathArr = pathStr.split(",");
+                    for (String path : pathArr) {
+                        // 提取文件的路径
+                        String pathDir = getDirByPath(path);
+                        if (StringUtil.isNotEmpty(pathDir)) {
+                            // 源文件路径
+                            Path sourcePath = Paths.get(filePath + File.separator + path);
+                            // 目标文件路径（注意这里是新文件的完整路径，包括文件名）
+                            Path targetPath = Paths.get(filePath + File.separator + DELETED + File.separator + path);
+                            try {
+                                File file = new File(filePath + File.separator + DELETED + File.separator + pathDir);
+                                if (!file.exists()) {
+                                    file.mkdirs();// 创建文件根目录
+                                }
+                                // 复制文件，如果目标文件已存在则替换它
+                                Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                                // 删除源文件
+                                Files.delete(sourcePath);
+                                logger.info("File copied successfully.");
+                            } catch (NoSuchFileException e) {
+                                logger.error("Source file not found: " + e.getMessage());
+                            } catch (IOException e) {
+                                logger.error("An I/O error occurred: " + e.getMessage());
+                            } catch (SecurityException e) {
+                                logger.error("No permission to copy file: " + e.getMessage());
                             }
-                            // 复制文件，如果目标文件已存在则替换它
-                            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-                            // 删除源文件
-                            Files.delete(sourcePath);
-                            logger.info("File copied successfully.");
-                        } catch (NoSuchFileException e) {
-                            logger.error("Source file not found: " + e.getMessage());
-                        } catch (IOException e) {
-                            logger.error("An I/O error occurred: " + e.getMessage());
-                        } catch (SecurityException e) {
-                            logger.error("No permission to copy file: " + e.getMessage());
                         }
                     }
                 }
@@ -401,25 +402,28 @@ public class SystemConfigService {
             String accessKeySecret = platformConfigService.getPlatformConfigByKey("aliOss_accessKeySecret").getPlatformValue();
             String bucketName = platformConfigService.getPlatformConfigByKey("aliOss_bucketName").getPlatformValue();
             for(String pathStr: pathList) {
-                String[] pathArr = pathStr.split(",");
-                for (int i = 0; i < pathArr.length; i++) {
-                    String path = pathArr[i];
-                    // 创建OSSClient实例。
-                    OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-                    try {
-                        String filePathStr = StringUtil.isNotEmpty(filePath)? filePath.substring(1):"";
-                        String sourceObjectKey = filePathStr + "/" + path;
-                        String sourceSmallObjectKey = filePathStr + "-small/" + path;
-                        String destinationObjectKey = DELETED + "/list/" + sourceObjectKey;
-                        String destinationSmallObjectKey = DELETED + "/list/" + sourceSmallObjectKey;
-                        this.copySourceToDest(ossClient, bucketName, sourceObjectKey, destinationObjectKey);
-                        this.copySourceToDest(ossClient, bucketName, sourceSmallObjectKey, destinationSmallObjectKey);
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                    } finally {
-                        // 关闭OSSClient。
-                        if (ossClient != null) {
-                            ossClient.shutdown();
+                if(StringUtil.isNotEmpty(pathStr)) {
+                    String[] pathArr = pathStr.split(",");
+                    for (String path : pathArr) {
+                        if(StringUtil.isNotEmpty(path)) {
+                            // 创建OSSClient实例。
+                            OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+                            try {
+                                String filePathStr = StringUtil.isNotEmpty(filePath) ? filePath.substring(1) : "";
+                                String sourceObjectKey = filePathStr + "/" + path;
+                                String sourceSmallObjectKey = filePathStr + "-small/" + path;
+                                String destinationObjectKey = DELETED + "/list/" + sourceObjectKey;
+                                String destinationSmallObjectKey = DELETED + "/list/" + sourceSmallObjectKey;
+                                this.copySourceToDest(ossClient, bucketName, sourceObjectKey, destinationObjectKey);
+                                this.copySourceToDest(ossClient, bucketName, sourceSmallObjectKey, destinationSmallObjectKey);
+                            } catch (Exception e) {
+                                logger.error(e.getMessage());
+                            } finally {
+                                // 关闭OSSClient。
+                                if (ossClient != null) {
+                                    ossClient.shutdown();
+                                }
+                            }
                         }
                     }
                 }
