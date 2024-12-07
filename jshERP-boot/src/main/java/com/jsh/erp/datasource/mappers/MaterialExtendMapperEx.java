@@ -24,4 +24,7 @@ public interface MaterialExtendMapperEx {
     int batchDeleteMaterialExtendByMIds(@Param("ids") String ids[]);
 
     int specialUpdatePrice(MaterialExtend record);
+
+    List<MaterialExtend> getBasicInfoByMid(
+            @Param("materialId") Long materialId);
 }

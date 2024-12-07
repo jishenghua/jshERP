@@ -705,7 +705,7 @@ public class MaterialService {
                 }
                 //批量校验excel中有无重复商品，是指名称、规格、型号、颜色、单位、多属性
                 batchCheckExistMaterialListByParam(mList, name, standard, model, color, unit, sku);
-                //批量校验excel中有无重复条码
+                //批量校验excel中有无重复条码（1-文档自身校验，2-和数据库里面的商品校验）
                 batchCheckExistBarCodeByParam(mList, barCode, manyBarCode);
                 JSONObject materialExObj = new JSONObject();
                 JSONObject basicObj = new JSONObject();
@@ -946,11 +946,24 @@ public class MaterialService {
     }
 
     /**
-     * 批量校验excel中有无重复条码
+     * 批量校验excel中有无重复条码（1-文档自身校验，2-和数据库里面的商品校验）
      * @param mList
      */
     public void batchCheckExistBarCodeByParam(List<MaterialWithInitStock> mList,
-                                              String barCode, String manyBarCode) {
+                                              String barCode, String manyBarCode) throws Exception {
+        if(barCode.equals(manyBarCode)) {
+            //同一个商品的主副条码重复了，进行提醒
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE,
+                    String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG, manyBarCode));
+        }
+        if(StringUtil.isNotEmpty(manyBarCode)) {
+            //EXCEL中有副条码在系统中已存在（除自身商品之外）
+            int count = materialExtendService.getCountByManyBarCodeWithoutUs(manyBarCode, barCode);
+            if (count>0) {
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_MANY_BARCODE_EXIST_CODE,
+                        String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_MANY_BARCODE_EXIST_MSG, manyBarCode));
+            }
+        }
         for(MaterialWithInitStock material: mList){
             JSONObject materialExObj = material.getMaterialExObj();
             String basicBarCode = "";

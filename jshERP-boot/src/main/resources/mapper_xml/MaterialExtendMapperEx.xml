@@ -75,4 +75,10 @@
         where id = #{id,jdbcType=BIGINT}
         and ifnull(delete_flag,'0') !='1'
     </update>
+
+    <select id="getBasicInfoByMid" resultType="com.jsh.erp.datasource.entities.MaterialExtend">
+        select * from jsh_material_extend
+        where material_id=#{materialId} and default_flag='1'
+        and ifnull(delete_Flag,'0') !='1'
+    </select>
 </mapper>

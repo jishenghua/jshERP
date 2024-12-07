@@ -376,7 +376,6 @@ public class MaterialExtendService {
     }
 
     public MaterialExtend getInfoByBarCode(String barCode)throws Exception {
-        MaterialExtend materialExtend = new MaterialExtend();
         MaterialExtendExample example = new MaterialExtendExample();
         example.createCriteria().andBarCodeEqualTo(barCode)
                 .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
@@ -389,20 +388,25 @@ public class MaterialExtendService {
     }
 
     /**
-     * 查询某个商品里面被清除的条码信息
-     * @param barCodeList
-     * @param mId
+     * 商品的副条码和数据库里面的商品条码存在重复（除自身商品之外）
+     * @param manyBarCode
+     * @param barCode
      * @return
-     * @throws Exception
      */
-    public List<MaterialExtend> getMeListByBarCodeAndMid(List<String> barCodeList, Long mId)throws Exception {
-        List<MaterialExtend> list = new ArrayList<>();
-        if(barCodeList.size()>0) {
-            MaterialExtendExample example = new MaterialExtendExample();
-            example.createCriteria().andBarCodeNotIn(barCodeList).andMaterialIdEqualTo(mId)
-                    .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-            list = materialExtendMapper.selectByExample(example);
+    public int getCountByManyBarCodeWithoutUs(String manyBarCode, String barCode) {
+        MaterialExtendExample example = new MaterialExtendExample();
+        example.createCriteria().andBarCodeEqualTo(manyBarCode).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<MaterialExtend> list = materialExtendMapper.selectByExample(example);
+        if(list!=null && list.size()>0) {
+            for(MaterialExtend me: list) {
+                List<MaterialExtend> basicMeList = materialExtendMapperEx.getBasicInfoByMid(me.getMaterialId());
+                for(MaterialExtend basicMe: basicMeList) {
+                    if(basicMe!=null && !barCode.equals(basicMe.getBarCode())) {
+                        return 1;
+                    }
+                }
+            }
         }
-        return list;
+        return 0;
     }
 }

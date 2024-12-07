@@ -350,6 +350,9 @@ public class ExceptionConstants {
     //基本条码为空
     public static final int MATERIAL_BARCODE_EMPTY_CODE = 8000027;
     public static final String MATERIAL_BARCODE_EMPTY_MSG = "第%s行基本条码为空";
+    //EXCEL中有副条码在系统中已存在（除自身商品之外）
+    public static final int MATERIAL_EXCEL_IMPORT_MANY_BARCODE_EXIST_CODE = 80000028;
+    public static final String MATERIAL_EXCEL_IMPORT_MANY_BARCODE_EXIST_MSG = "抱歉，EXCEL中有副条码在系统中已存在，具体副条码为：%s";
 
     /**
      *  单据信息
