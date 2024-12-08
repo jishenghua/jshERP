@@ -711,6 +711,14 @@
                   this.$message.warning('抱歉，多属性商品不能录入期初库存，建议进行盘点录入！')
                   return
                 }
+                if(formData.enableSerialNumber === '1' && depotStockObj.initStock && depotStockObj.initStock-0) {
+                  this.$message.warning('抱歉，序列号商品不能录入期初库存，建议进行入库单据录入！')
+                  return
+                }
+                if(formData.enableBatchNumber === '1' && depotStockObj.initStock && depotStockObj.initStock-0) {
+                  this.$message.warning('抱歉，批号商品不能录入期初库存，建议进行入库单据录入！')
+                  return
+                }
                 if(depotStockObj.lowSafeStock && depotStockObj.highSafeStock) {
                   if(depotStockObj.lowSafeStock-0 > depotStockObj.highSafeStock-0) {
                     this.$message.warning('抱歉，' + depotStockObj.name + '的最低安全库存大于最高安全库存！')
