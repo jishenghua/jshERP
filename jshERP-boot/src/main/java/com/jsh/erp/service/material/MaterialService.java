@@ -951,12 +951,12 @@ public class MaterialService {
      */
     public void batchCheckExistBarCodeByParam(List<MaterialWithInitStock> mList,
                                               String barCode, String manyBarCode) throws Exception {
-        if(barCode.equals(manyBarCode)) {
-            //同一个商品的主副条码重复了，进行提醒
-            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE,
-                    String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG, manyBarCode));
-        }
         if(StringUtil.isNotEmpty(manyBarCode)) {
+            if(barCode.equals(manyBarCode)) {
+                //同一个商品的主副条码重复了，进行提醒
+                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_CODE,
+                        String.format(ExceptionConstants.MATERIAL_EXCEL_IMPORT_BARCODE_EXIST_MSG, manyBarCode));
+            }
             //EXCEL中有副条码在系统中已存在（除自身商品之外）
             int count = materialExtendService.getCountByManyBarCodeWithoutUs(manyBarCode, barCode);
             if (count>0) {
