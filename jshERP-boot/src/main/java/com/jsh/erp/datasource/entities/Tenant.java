@@ -21,6 +21,8 @@ public class Tenant {
 
     private String remark;
 
+    private String deleteFlag;
+
     public Long getId() {
         return id;
     }
@@ -91,5 +93,13 @@ public class Tenant {
 
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(String deleteFlag) {
+        this.deleteFlag = deleteFlag == null ? null : deleteFlag.trim();
     }
 }

@@ -33,6 +33,8 @@ public class User {
 
     private Long tenantId;
 
+    private String deleteFlag;
+
     public Long getId() {
         return id;
     }
@@ -159,5 +161,13 @@ public class User {
 
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public String getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(String deleteFlag) {
+        this.deleteFlag = deleteFlag == null ? null : deleteFlag.trim();
     }
 }

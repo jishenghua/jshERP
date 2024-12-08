@@ -1611,3 +1611,14 @@ alter table jsh_system_config add audit_print_flag varchar(1) DEFAULT '0' COMMEN
 -- --------------------------------------------------------
 alter table jsh_material add brand varchar(100) DEFAULT NULL COMMENT '品牌' after standard;
 alter table jsh_material add mnemonic varchar(100) DEFAULT NULL COMMENT '助记码' after brand;
+
+-- --------------------------------------------------------
+-- 时间 2024年12月08日
+-- by jishenghua
+-- 给用户表增加删除字段、修改状态表的备注
+-- 给租户表增加删除字段
+-- --------------------------------------------------------
+alter table jsh_user add delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除' after tenant_id;
+alter table jsh_user change Status status tinyint(4) DEFAULT '0' COMMENT '状态，0正常，2封禁';
+update jsh_user set delete_flag='1' where status=1;
+alter table jsh_tenant add delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除' after remark;
