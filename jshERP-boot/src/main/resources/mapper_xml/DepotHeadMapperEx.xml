@@ -1163,7 +1163,7 @@
         select distinct dh.*, s.supplier OrganName, u.username userName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_user u on dh.creator=u.id and and ifnull(u.delete_flag,'0') !='1'
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
@@ -1217,7 +1217,7 @@
         select distinct dh.*, s.supplier OrganName, u.username userName
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
-        left join jsh_user u on dh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_user u on dh.creator=u.id and ifnull(u.delete_flag,'0') !='1'
         left join jsh_depot_item di on dh.id = di.header_id and ifnull(di.delete_flag,'0') !='1'
         left join jsh_material m on di.material_id = m.id and ifnull(m.delete_flag,'0') !='1'
         where 1=1
@@ -1361,7 +1361,7 @@
         </if>) tb
         left join jsh_depot_head jdh on jdh.id=tb.id and ifnull(jdh.delete_flag,'0') !='1'
         left join jsh_supplier s on jdh.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
-        left join jsh_user u on jdh.creator=u.id and ifnull(u.Status,'0') !='1'
+        left join jsh_user u on jdh.creator=u.id and ifnull(u.delete_flag,'0') !='1'
         left join jsh_account a on jdh.account_id=a.id and ifnull(a.delete_flag,'0') !='1'
     </select>
 

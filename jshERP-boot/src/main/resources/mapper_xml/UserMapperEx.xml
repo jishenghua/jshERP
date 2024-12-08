@@ -26,7 +26,7 @@
         left join jsh_orga_user_rel rel on user.id=rel.user_id and ifnull(rel.delete_flag,'0') !='1'
         left join jsh_organization org on rel.orga_id=org.id and ifnull(org.delete_flag,'0') !='1'
         where 1=1
-        and user.status !='1'
+        and ifnull(user.delete_flag,'0') !='1'
         <if test="userName != null">
             <bind name="bindUserName" value="'%'+userName+'%'"/>
             and user.username like #{bindUserName}
@@ -45,7 +45,7 @@
         select count(user.id)
         FROM jsh_user user
         where 1=1
-        and user.status !='1'
+        and ifnull(user.delete_flag,'0') !='1'
         <if test="userName != null">
             <bind name="bindUserName" value="'%'+userName+'%'"/>
             and user.username like #{bindUserName}
@@ -60,7 +60,8 @@
         user.description, user.remark,user.isystem
         FROM jsh_user user
         where 1=1
-        and ifnull(user.status,'0') not in('1','2')
+        and user.status = 0
+        and ifnull(user.delete_flag,'0') !='1'
         <if test="userName != null and userName != ''">
             and user.userName = #{userName}
         </if>
@@ -118,7 +119,8 @@
             and user.id=rel.user_id
             and rel.orga_id=#{orgId}
             and ifnull(rel.delete_flag,'0') !='1'
-            and ifnull(user.status,'0') not in('1','2')
+            and user.status = 0
+            and ifnull(user.delete_flag,'0') !='1'
           ) node
           order by sort asc
     </select>
@@ -133,14 +135,15 @@
     </select>
 
     <update id="disableUserByLimit">
-        update jsh_user set Status='2'
-        where tenant_id=#{tenantId} and id!=#{tenantId} and Status!='1'
+        update jsh_user set status='2'
+        where tenant_id=#{tenantId} and id!=#{tenantId}
     </update>
 
     <select id="getListByOrgaId" resultType="com.jsh.erp.datasource.entities.User">
         select u.*,our.orga_id from jsh_user u
         left join jsh_orga_user_rel our on u.id=our.user_id
         where u.leader_flag='1' and orga_id= #{orgaId}
+        and ifnull(u.delete_flag,'0') !='1'
         <if test="id != null">
             and u.id != #{id}
         </if>
@@ -149,12 +152,14 @@
     <select id="getUserByWeixinOpenId" resultType="com.jsh.erp.datasource.entities.User">
         select u.* from jsh_user u
         where u.weixin_open_id = #{weixinOpenId}
-        and ifnull(u.status,'0') not in('1','2')
+        and u.status=0
+        and ifnull(u.delete_flag,'0') !='1'
     </select>
 
     <update id="updateUserWithWeixinOpenId">
         update jsh_user u set u.weixin_open_id = #{weixinOpenId}
         where u.login_name = #{loginName} and u.password = #{password}
-        and ifnull(u.status,'0') not in('1','2')
+        and u.status=0
+        and ifnull(u.delete_flag,'0') !='1'
     </update>
 </mapper>

@@ -59,6 +59,7 @@ public class TenantService {
 
     public List<Tenant> getTenant()throws Exception {
         TenantExample example = new TenantExample();
+        example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Tenant> list=null;
         try{
             list=tenantMapper.selectByExample(example);
@@ -162,7 +163,7 @@ public class TenantService {
 
     public int checkIsNameExist(Long id, String name)throws Exception {
         TenantExample example = new TenantExample();
-        example.createCriteria().andIdNotEqualTo(id).andLoginNameEqualTo(name);
+        example.createCriteria().andIdNotEqualTo(id).andLoginNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Tenant> list=null;
         try{
             list= tenantMapper.selectByExample(example);
@@ -175,7 +176,7 @@ public class TenantService {
     public Tenant getTenantByTenantId(long tenantId) {
         Tenant tenant = new Tenant();
         TenantExample example = new TenantExample();
-        example.createCriteria().andTenantIdEqualTo(tenantId);
+        example.createCriteria().andTenantIdEqualTo(tenantId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<Tenant> list = tenantMapper.selectByExample(example);
         if(list.size()>0) {
             tenant = list.get(0);

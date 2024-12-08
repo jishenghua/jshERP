@@ -25,6 +25,7 @@
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and remark like #{bindRemark}
         </if>
+        and ifnull(delete_flag,'0') !='1'
         order by id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -49,5 +50,6 @@
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and remark like #{bindRemark}
         </if>
+        and ifnull(delete_flag,'0') !='1'
     </select>
 </mapper>
