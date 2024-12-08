@@ -801,8 +801,11 @@ public class MaterialService {
                 for(Depot depot: depotList){
                     Long depotId = depot.getId();
                     String materialDepotKey = mId + "_" + depotId;
+                    //获取初始库存
+                    BigDecimal initStock = getInitStock(mId, depotId);
+                    //excel里面的当前库存
                     BigDecimal stock = stockMap.get(depot.getId());
-                    //新增初始库存
+                    //新增或更新初始库存
                     if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
                         String basicStr = materialExObj.getString("basic");
                         MaterialExtend materialExtend = JSONObject.parseObject(basicStr, MaterialExtend.class);
@@ -810,46 +813,29 @@ public class MaterialService {
                             throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_SKU_BEGIN_STOCK_FAILED_CODE,
                                     String.format(ExceptionConstants.MATERIAL_SKU_BEGIN_STOCK_FAILED_MSG, materialExtend.getBarCode()));
                         }
-                        if(materialDepotInitialMap.get(materialDepotKey)==null) {
-                            MaterialInitialStock materialInitialStock = new MaterialInitialStock();
-                            materialInitialStock.setMaterialId(mId);
-                            materialInitialStock.setDepotId(depotId);
-                            materialInitialStock.setNumber(stock);
-                            insertInitialStockMaterialList.add(materialInitialStock);
-                            deleteInitialStockMaterialIdList.add(mId);
-                            materialDepotInitialMap.put(materialDepotKey, materialDepotKey);
+                        buildChangeInitialStock(deleteInitialStockMaterialIdList, insertInitialStockMaterialList, materialDepotInitialMap, mId, depotId, materialDepotKey, stock);
+                    } else {
+                        if(initStock.compareTo(BigDecimal.ZERO)!=0) {
+                            buildChangeInitialStock(deleteInitialStockMaterialIdList, insertInitialStockMaterialList, materialDepotInitialMap, mId, depotId, materialDepotKey, stock);
                         }
                     }
                     //新增或更新当前库存
                     Long billCount = depotItemService.getCountByMaterialAndDepot(mId, depotId);
                     if(billCount == 0) {
                         if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
-                            if(materialDepotCurrentMap.get(materialDepotKey)==null) {
-                                MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-                                materialCurrentStock.setMaterialId(mId);
-                                materialCurrentStock.setDepotId(depotId);
-                                materialCurrentStock.setCurrentNumber(stock);
-                                insertCurrentStockMaterialList.add(materialCurrentStock);
-                                deleteCurrentStockMaterialIdList.add(mId);
-                                materialDepotCurrentMap.put(materialDepotKey, materialDepotKey);
+                            buildChangeCurrentStock(deleteCurrentStockMaterialIdList, insertCurrentStockMaterialList, materialDepotCurrentMap, mId, depotId, materialDepotKey, stock);
+                        } else {
+                            if(initStock.compareTo(BigDecimal.ZERO)!=0) {
+                                buildChangeCurrentStock(deleteCurrentStockMaterialIdList, insertCurrentStockMaterialList, materialDepotCurrentMap, mId, depotId, materialDepotKey, stock);
                             }
                         }
                     } else {
-                        BigDecimal initStock = getInitStock(mId, depotId);
                         BigDecimal currentNumber = getCurrentStockByMaterialIdAndDepotId(mId, depotId);
                         //当前库存的更新：减去初始库存，再加上导入的新初始库存
                         if(currentNumber!=null && initStock!=null && stock!=null) {
                             currentNumber = currentNumber.subtract(initStock).add(stock);
                         }
-                        if(materialDepotCurrentMap.get(materialDepotKey)==null) {
-                            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
-                            materialCurrentStock.setMaterialId(mId);
-                            materialCurrentStock.setDepotId(depotId);
-                            materialCurrentStock.setCurrentNumber(currentNumber);
-                            insertCurrentStockMaterialList.add(materialCurrentStock);
-                            deleteCurrentStockMaterialIdList.add(mId);
-                            materialDepotCurrentMap.put(materialDepotKey, materialDepotKey);
-                        }
+                        buildChangeCurrentStock(deleteCurrentStockMaterialIdList, insertCurrentStockMaterialList, materialDepotCurrentMap, mId, depotId, materialDepotKey, currentNumber);
                     }
                 }
             }
@@ -878,6 +864,38 @@ public class MaterialService {
             info.data = "导入失败";
         }
         return info;
+    }
+
+    /**
+     * 构造初始库存的变化
+     */
+    private void buildChangeInitialStock(List<Long> deleteInitialStockMaterialIdList, List<MaterialInitialStock> insertInitialStockMaterialList,
+                                         Map<String, String> materialDepotInitialMap, Long mId, Long depotId, String materialDepotKey, BigDecimal stock) {
+        if(materialDepotInitialMap.get(materialDepotKey)==null) {
+            MaterialInitialStock materialInitialStock = new MaterialInitialStock();
+            materialInitialStock.setMaterialId(mId);
+            materialInitialStock.setDepotId(depotId);
+            materialInitialStock.setNumber(stock);
+            insertInitialStockMaterialList.add(materialInitialStock);
+            deleteInitialStockMaterialIdList.add(mId);
+            materialDepotInitialMap.put(materialDepotKey, materialDepotKey);
+        }
+    }
+
+    /**
+     * 构造当前库存的变化
+     */
+    private void buildChangeCurrentStock(List<Long> deleteCurrentStockMaterialIdList, List<MaterialCurrentStock> insertCurrentStockMaterialList,
+                                         Map<String, String> materialDepotCurrentMap, Long mId, Long depotId, String materialDepotKey, BigDecimal stock) {
+        if(materialDepotCurrentMap.get(materialDepotKey)==null) {
+            MaterialCurrentStock materialCurrentStock = new MaterialCurrentStock();
+            materialCurrentStock.setMaterialId(mId);
+            materialCurrentStock.setDepotId(depotId);
+            materialCurrentStock.setCurrentNumber(stock);
+            insertCurrentStockMaterialList.add(materialCurrentStock);
+            deleteCurrentStockMaterialIdList.add(mId);
+            materialDepotCurrentMap.put(materialDepotKey, materialDepotKey);
+        }
     }
 
     private Map<String, Long> parseDepotToMap(List<Depot> depotList) {
