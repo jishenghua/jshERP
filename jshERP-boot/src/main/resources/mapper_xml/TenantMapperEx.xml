@@ -8,7 +8,7 @@
 
     <select id="selectByConditionTenant" parameterType="com.jsh.erp.datasource.entities.TenantExample" resultMap="ResultMapEx">
         select jsh_tenant.*,
-        (select count(jsh_user.id) from jsh_user where jsh_user.Status='0' and jsh_user.tenant_id=jsh_tenant.tenant_id) userCount
+        (select count(jsh_user.id) from jsh_user where jsh_user.status='0' and jsh_user.delete_flag=0 and jsh_user.tenant_id=jsh_tenant.tenant_id) userCount
         FROM jsh_tenant
         where 1=1
         <if test="loginName != null">
