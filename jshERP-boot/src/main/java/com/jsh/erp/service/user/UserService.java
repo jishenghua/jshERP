@@ -103,7 +103,7 @@ public class UserService {
             Long userId = this.getUserId(request);
             if(userId!=null) {
                 UserExample example = new UserExample();
-                example.createCriteria().andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+                example.createCriteria().andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
                 list = userMapper.selectByExample(example);
             }
         }catch(Exception e){
