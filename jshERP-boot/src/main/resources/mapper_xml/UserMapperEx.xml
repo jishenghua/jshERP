@@ -72,7 +72,7 @@
     </select>
     <update id="batDeleteOrUpdateUser">
         update jsh_user
-        set status=#{status}
+        set delete_flag = '1'
         where id in (
         <foreach collection="ids" item="id" separator=",">
             #{id}

@@ -287,9 +287,9 @@ public class UserService {
         }
         logService.insertLog("用户", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        String idsArray[]=ids.split(",");
+        String[] idsArray =ids.split(",");
         try{
-            result=userMapperEx.batDeleteOrUpdateUser(idsArray,BusinessConstants.USER_STATUS_DELETE);
+            result=userMapperEx.batDeleteOrUpdateUser(idsArray);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -412,7 +412,7 @@ public class UserService {
         List<User> list = null;
         try {
             UserExample example = new UserExample();
-            example.createCriteria().andLoginNameEqualTo(loginName).andStatusNotEqualTo(BusinessConstants.USER_STATUS_DELETE);
+            example.createCriteria().andLoginNameEqualTo(loginName).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             list = userMapper.selectByExample(example);
             if (null != list && list.size() == 0) {
                 return ExceptionCodeConstants.UserExceptionCode.USER_NOT_EXIST;
@@ -438,7 +438,7 @@ public class UserService {
         try {
             UserExample example = new UserExample();
             example.createCriteria().andLoginNameEqualTo(loginName).andPasswordEqualTo(password)
-                    .andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+                    .andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
             list = userMapper.selectByExample(example);
             if (null != list && list.size() == 0) {
                 return ExceptionCodeConstants.UserExceptionCode.USER_PASSWORD_ERROR;
@@ -452,7 +452,8 @@ public class UserService {
 
     public User getUserByLoginName(String loginName)throws Exception {
         UserExample example = new UserExample();
-        example.createCriteria().andLoginNameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+        example.createCriteria().andLoginNameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<User> list=null;
         try{
             list= userMapper.selectByExample(example);
@@ -468,10 +469,10 @@ public class UserService {
 
     public int checkIsNameExist(Long id, String name)throws Exception {
         UserExample example = new UserExample();
-        List <Byte> userStatus=new ArrayList<Byte>();
-        userStatus.add(BusinessConstants.USER_STATUS_DELETE);
-        userStatus.add(BusinessConstants.USER_STATUS_BANNED);
-        example.createCriteria().andIdNotEqualTo(id).andLoginNameEqualTo(name).andStatusNotIn(userStatus);
+        List<Byte> userStatus = new ArrayList<>();
+        userStatus.add(BusinessConstants.USER_STATUS_NORMAL);
+        example.createCriteria().andIdNotEqualTo(id).andLoginNameEqualTo(name).andStatusIn(userStatus)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<User> list=null;
         try{
             list= userMapper.selectByExample(example);
@@ -502,7 +503,8 @@ public class UserService {
     public Long getIdByLoginName(String loginName) {
         Long userId = 0L;
         UserExample example = new UserExample();
-        example.createCriteria().andLoginNameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL);
+        example.createCriteria().andLoginNameEqualTo(loginName).andStatusEqualTo(BusinessConstants.USER_STATUS_NORMAL)
+                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
         List<User> list = userMapper.selectByExample(example);
         if(list!=null) {
             userId = list.get(0).getId();

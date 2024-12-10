@@ -26,7 +26,7 @@ public interface UserMapperEx {
     List<User> getUserListByUserNameOrLoginName(@Param("userName") String userName,
                                                 @Param("loginName") String loginName);
 
-    int batDeleteOrUpdateUser(@Param("ids") String ids[], @Param("status") byte status);
+    int batDeleteOrUpdateUser(@Param("ids") String[] ids);
 
     List<TreeNodeEx> getNodeTree();
     List<TreeNodeEx> getNextNodeTree(Map<String, Object> parameterMap);

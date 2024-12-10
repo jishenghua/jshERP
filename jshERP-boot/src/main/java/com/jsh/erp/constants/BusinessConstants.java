@@ -172,10 +172,9 @@ public class BusinessConstants {
     public static final byte USER_NOT_MANAGER = 1;
     /**
      * 用户状态
-     * 0：正常，1：删除，2封禁
+     * 0：正常，2封禁
      * */
     public static final byte USER_STATUS_NORMAL = 0;
-    public static final byte USER_STATUS_DELETE = 1;
     public static final byte USER_STATUS_BANNED = 2;
     /**
      * 日志操作
