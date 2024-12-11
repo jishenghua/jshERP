@@ -298,9 +298,10 @@
             this.currentStock = res.data.currentStock.toFixed(2)
             this.currentStockPrice = res.data.currentStockPrice.toFixed(2)
             this.currentWeight = res.data.currentWeight.toFixed(2)
-          }
-          if(res.code===510){
+          } else if(res.code===510){
             this.$message.warning(res.data)
+          } else {
+            this.$message.warning(res.data.message)
           }
           this.loading = false;
         })

@@ -246,9 +246,10 @@
             this.tableAddTotalRow(this.columns, this.dataSource)
             this.firstTotal = '期初应付：' + res.data.firstMoney + "，"
             this.lastTotal = '期末应付：' + res.data.lastMoney
-          }
-          if(res.code===510){
+          } else if(res.code===510){
             this.$message.warning(res.data)
+          } else {
+            this.$message.warning(res.data.message)
           }
           this.loading = false;
         })

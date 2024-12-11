@@ -245,9 +245,10 @@
             this.numSumTotalStr = res.data.numSumTotal.toFixed(2)
             this.priceSumTotalStr = res.data.priceSumTotal.toFixed(2)
             this.tableAddTotalRow(this.columns, this.dataSource)
-          }
-          if(res.code===510){
+          } else if(res.code===510){
             this.$message.warning(res.data)
+          } else {
+            this.$message.warning(res.data.message)
           }
           this.loading = false;
         })
