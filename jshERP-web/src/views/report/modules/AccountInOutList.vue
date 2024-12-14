@@ -87,7 +87,7 @@
       return {
         title:"操作",
         visible: false,
-        disableMixinCreated: false,
+        disableMixinCreated: true,
         toFromType: '',
         currentAccountId: '',
         currentInitialAmount: '',
