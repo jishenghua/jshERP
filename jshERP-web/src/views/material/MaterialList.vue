@@ -184,6 +184,11 @@
               <a-tag v-if="record.enableSerialNumber==1" color="orange">序</a-tag>
               <a-tag v-if="record.enableBatchNumber==1" color="orange">批</a-tag>
             </template>
+            <template slot="customRenderInitialStock" slot-scope="text, record">
+              <a-tooltip :title="record.bigUnitInitialStock">
+                {{text}}
+              </a-tooltip>
+            </template>
             <template slot="customRenderStock" slot-scope="text, record">
               <a-tooltip :title="record.bigUnitStock">
                 {{text}}
@@ -301,6 +306,9 @@
           {title: '基础重量', dataIndex: 'weight', width: 80},
           {title: '保质期', dataIndex: 'expiryNum', width: 60},
           {title: '制造商', dataIndex: 'mfrs', width: 120, ellipsis:true},
+          {title: '初始库存', dataIndex: 'initialStock', width: 80,
+            scopedSlots: { customRender: 'customRenderInitialStock' }
+          },
           {title: '库存', dataIndex: 'stock', width: 80,
             scopedSlots: { customRender: 'customRenderStock' }
           },
