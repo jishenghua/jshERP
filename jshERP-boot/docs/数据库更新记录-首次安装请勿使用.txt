@@ -1622,3 +1622,10 @@ alter table jsh_user add delete_flag varchar(1) DEFAULT '0' COMMENT '删除标�
 alter table jsh_user change Status status tinyint(4) DEFAULT '0' COMMENT '状态，0正常，2封禁';
 update jsh_user set delete_flag='1' where status=1;
 alter table jsh_tenant add delete_flag varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除' after remark;
+
+-- --------------------------------------------------------
+-- 时间 2024年12月17日
+-- by jishenghua
+-- 更新菜单：把计量单位更新为多单位
+-- --------------------------------------------------------
+update jsh_function set name='多单位' where number='010103';

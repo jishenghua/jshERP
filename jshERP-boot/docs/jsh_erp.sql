@@ -181,7 +181,7 @@ CREATE TABLE `jsh_depot_item` (
   `header_id` bigint(20) NOT NULL COMMENT '表头Id',
   `material_id` bigint(20) NOT NULL COMMENT '商品Id',
   `material_extend_id` bigint(20) DEFAULT NULL COMMENT '商品扩展id',
-  `material_unit` varchar(20) DEFAULT NULL COMMENT '商品计量单位',
+  `material_unit` varchar(20) DEFAULT NULL COMMENT '商品单位',
   `sku` varchar(50) DEFAULT NULL COMMENT '多属性',
   `oper_number` decimal(24,6) DEFAULT NULL COMMENT '数量',
   `basic_number` decimal(24,6) DEFAULT NULL COMMENT '基础数量，如kg、瓶',
@@ -278,7 +278,7 @@ INSERT INTO `jsh_function` VALUES ('211', '040104', '零售退货', '0401', '/bi
 INSERT INTO `jsh_function` VALUES ('212', '070407', '收预付款', '0704', '/financial/advance_in', '/financial/AdvanceInList', '\0', '0495', '', '电脑版', '1,2,3,7', 'profile', '0');
 INSERT INTO `jsh_function` VALUES ('217', '01020102', '客户信息', '0102', '/system/customer', '/system/CustomerList', '\0', '0262', '', '电脑版', '1,3', 'profile', '0');
 INSERT INTO `jsh_function` VALUES ('218', '01020103', '会员信息', '0102', '/system/member', '/system/MemberList', '\0', '0263', '', '电脑版', '1,3', 'profile', '0');
-INSERT INTO `jsh_function` VALUES ('220', '010103', '计量单位', '0101', '/system/unit', '/system/UnitList', '\0', '0245', '', '电脑版', '1', 'profile', '0');
+INSERT INTO `jsh_function` VALUES ('220', '010103', '多单位', '0101', '/system/unit', '/system/UnitList', '\0', '0245', '', '电脑版', '1', 'profile', '0');
 INSERT INTO `jsh_function` VALUES ('225', '0401', '零售管理', '0', '/billC', '/layouts/TabLayout', '\0', '0101', '', '电脑版', '', 'gift', '0');
 INSERT INTO `jsh_function` VALUES ('226', '030106', '入库明细', '0301', '/report/in_detail', '/report/InDetail', '\0', '0640', '', '电脑版', '', 'profile', '0');
 INSERT INTO `jsh_function` VALUES ('227', '030107', '出库明细', '0301', '/report/out_detail', '/report/OutDetail', '\0', '0645', '', '电脑版', '', 'profile', '0');
@@ -364,7 +364,7 @@ CREATE TABLE `jsh_material` (
   `unit` varchar(50) DEFAULT NULL COMMENT '单位-单个',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
   `img_name` varchar(1000) DEFAULT NULL COMMENT '图片名称',
-  `unit_id` bigint(20) DEFAULT NULL COMMENT '计量单位Id',
+  `unit_id` bigint(20) DEFAULT NULL COMMENT '单位Id',
   `expiry_num` int(10) DEFAULT NULL COMMENT '保质期天数',
   `weight` decimal(24,6) DEFAULT NULL COMMENT '基础重量(kg)',
   `enabled` bit(1) DEFAULT NULL COMMENT '启用 0-禁用  1-启用',
