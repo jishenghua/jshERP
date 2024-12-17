@@ -229,7 +229,7 @@ public class DepotItemController {
                     item.put("mfrs", diEx.getMMfrs());
                     item.put("materialOther", depotItemService.getOtherInfo(mpArr, diEx));
                     BigDecimal stock;
-                    Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询计量单位信息
+                    Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询多单位信息
                     String materialUnit = diEx.getMaterialUnit();
                     if(StringUtil.isNotEmpty(diEx.getSku())){
                         stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);

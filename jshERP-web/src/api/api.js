@@ -94,7 +94,7 @@ const addUserBusiness = (params)=>postAction("/userBusiness/add",params);
 const editUserBusiness = (params)=>putAction("/userBusiness/update",params);
 const checkUserBusiness = (params)=>getAction("/userBusiness/checkIsValueExist",params);
 const updateBtnStrByRoleId = (params)=>postAction("/userBusiness/updateBtnStr",params);
-//计量单位
+//多单位
 const addUnit = (params)=>postAction("/unit/add",params);
 const editUnit = (params)=>putAction("/unit/update",params);
 const checkUnit = (params)=>getAction("/unit/checkIsNameExist",params);

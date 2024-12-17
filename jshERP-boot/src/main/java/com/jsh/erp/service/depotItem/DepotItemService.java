@@ -505,7 +505,7 @@ public class DepotItemService {
                     depotItem.setLinkId(rowObj.getLong("linkId"));
                 }
                 //以下进行单位换算
-                Unit unitInfo = materialService.findUnit(materialExtend.getMaterialId()); //查询计量单位信息
+                Unit unitInfo = materialService.findUnit(materialExtend.getMaterialId()); //查询多单位信息
                 if (StringUtil.isExist(rowObj.get("operNumber"))) {
                     depotItem.setOperNumber(rowObj.getBigDecimal("operNumber"));
                     String unit = rowObj.get("unit").toString();
@@ -1071,7 +1071,7 @@ public class DepotItemService {
     public void updateCurrentUnitPrice(DepotItem depotItem) throws Exception {
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
-        //查询计量单位信息
+        //查询多单位信息
         Unit unitInfo = materialService.findUnit(depotItem.getMaterialId());
         List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdList(null, forceFlag, inOutManageFlag, depotItem.getSku(),
                 depotItem.getBatchNumber(), null, null, null, depotItem.getMaterialId(), null, null);

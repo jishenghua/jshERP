@@ -8,8 +8,8 @@
           <a-form layout="inline" @keyup.enter.native="searchQuery">
             <a-row :gutter="24">
               <a-col :md="6" :sm="24">
-                <a-form-item label="计量单位" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入计量单位查询" v-model="queryParam.name"></a-input>
+                <a-form-item label="单位名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入单位名称查询" v-model="queryParam.name"></a-input>
                 </a-form-item>
               </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
@@ -105,7 +105,7 @@
             align:"center",
             scopedSlots: { customRender: 'action' },
           },
-          { title: '计量单位', align:"left", dataIndex: 'name', width:200 },
+          { title: '单位名称', align:"left", dataIndex: 'name', width:200 },
           { title: '基本单位', align:"left", dataIndex: 'basicUnit', width:80 },
           { title: '副单位', align:"left", dataIndex: 'otherUnit', width:100,
             customRender:function (t,r,index) {

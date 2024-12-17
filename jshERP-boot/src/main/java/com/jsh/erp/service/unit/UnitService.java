@@ -108,7 +108,7 @@ public class UnitService {
             parseNameByUnit(unit);
             unit.setEnabled(true);
             result=unitMapper.insertSelective(unit);
-            logService.insertLog("计量单位",
+            logService.insertLog("多单位",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(unit.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -129,7 +129,7 @@ public class UnitService {
             if(unit.getRatioThree()==null) {
                 unitMapperEx.updateRatioThreeById(unit.getId());
             }
-            logService.insertLog("计量单位",
+            logService.insertLog("多单位",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(unit.getName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -186,7 +186,7 @@ public class UnitService {
         for(Unit unit: list){
             sb.append("[").append(unit.getName()).append("]");
         }
-        logService.insertLog("计量单位", sb.toString(),
+        logService.insertLog("多单位", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         //校验通过执行删除操作
@@ -291,7 +291,7 @@ public class UnitService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(Boolean status, String ids)throws Exception {
-        logService.insertLog("计量单位",
+        logService.insertLog("多单位",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ENABLED).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         List<Long> unitIds = StringUtil.strToLongList(ids);

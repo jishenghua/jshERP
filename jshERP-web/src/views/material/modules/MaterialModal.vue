@@ -37,7 +37,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单位"
-                  data-step="4" data-title="单位" data-intro="此处支持单个单位和多单位，勾选多单位就可以切换到多单位的下拉框，多单位需要先在【计量单位】页面进行录入。
+                  data-step="4" data-title="单位" data-intro="此处支持单个单位和多单位，勾选多单位就可以切换到多单位的下拉框，多单位需要先在【多单位】页面进行录入。
                   比如牛奶有瓶和箱两种单位，12瓶=1箱，这就构成了多单位，多单位中有个换算比例">
                   <a-row class="form-row" :gutter="24">
                     <a-col :lg="15" :md="15" :sm="24" style="padding:0px 0px 0px 12px;">
@@ -48,7 +48,7 @@
                           <v-nodes :vnodes="menu" />
                           <a-divider style="margin: 4px 0;" />
                           <div style="padding: 4px 8px; cursor: pointer;"
-                               @mousedown="e => e.preventDefault()" @click="addUnit"><a-icon type="plus" /> 新增计量单位</div>
+                               @mousedown="e => e.preventDefault()" @click="addUnit"><a-icon type="plus" /> 新增多单位</div>
                         </div>
                         <a-select-option v-for="(item,index) in unitList"
                           :key="index" :value="item.id">
@@ -1234,7 +1234,7 @@
       },
       addUnit() {
         this.$refs.unitModalForm.add();
-        this.$refs.unitModalForm.title = "新增计量单位";
+        this.$refs.unitModalForm.title = "新增多单位";
         this.$refs.unitModalForm.disableSubmit = false;
       },
       unitModalFormOk() {
