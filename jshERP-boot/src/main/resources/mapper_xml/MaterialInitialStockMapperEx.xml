@@ -10,6 +10,18 @@
       </foreach >
   </insert>
 
+
+  <select id="getInitialStockMapByIdList" resultType="com.jsh.erp.datasource.entities.MaterialInitialStock">
+      select material_id, sum(number) number from jsh_material_initial_stock
+      where 1=1
+      and ifnull(delete_flag,'0') !='1'
+      and material_id in
+      <foreach collection="materialIdList" item="materialId" index="index" separator="," open="(" close=")">
+          #{materialId}
+      </foreach>
+      group by material_id
+  </select>
+
   <select id="getListExceptZero" resultType="com.jsh.erp.datasource.entities.MaterialInitialStock">
       select * from jsh_material_initial_stock where number!=0
       and ifnull(delete_flag,'0') !='1'

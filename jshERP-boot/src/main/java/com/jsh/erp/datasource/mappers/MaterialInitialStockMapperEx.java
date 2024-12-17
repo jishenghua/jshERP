@@ -11,6 +11,9 @@ public interface MaterialInitialStockMapperEx {
 
     int batchInsert(List<MaterialInitialStock> list);
 
+    List<MaterialInitialStock> getInitialStockMapByIdList(
+            @Param("materialIdList") List<Long> materialIdList);
+
     List<MaterialInitialStock> getListExceptZero();
 
     void batchDeleteByDepots(@Param("ids") String ids[]);

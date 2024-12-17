@@ -138,6 +138,7 @@ public class MaterialService {
             list= materialMapperEx.selectByConditionMaterial(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
                     enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList, offset, rows);
             if (null != list && list.size()>0) {
+                Map<Long,BigDecimal> initialStockMap = getInitialStockMapByMaterialList(list);
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
                 for (MaterialVo4Unit m : list) {
                     if(fileUploadType == 2) {
@@ -145,6 +146,8 @@ public class MaterialService {
                         m.setImgLarge("large");
                     }
                     m.setMaterialOther(getMaterialOtherByParam(mpArr, m));
+                    m.setInitialStock(initialStockMap.get(m.getId())!=null? initialStockMap.get(m.getId()): BigDecimal.ZERO);
+                    m.setBigUnitInitialStock(getBigUnitStock(m.getInitialStock(), m.getUnitId()));
                     m.setStock(currentStockMap.get(m.getId())!=null? currentStockMap.get(m.getId()): BigDecimal.ZERO);
                     m.setBigUnitStock(getBigUnitStock(m.getStock(), m.getUnitId()));
                     resList.add(m);
@@ -1265,6 +1268,24 @@ public class MaterialService {
             stock = getInitStock(materialId,depotId);
         }
         return stock;
+    }
+
+    /**
+     * 根据商品列表获取初始库存Map
+     * @param list
+     * @return
+     */
+    public Map<Long,BigDecimal> getInitialStockMapByMaterialList(List<MaterialVo4Unit> list) {
+        Map<Long,BigDecimal> map = new HashMap<>();
+        List<Long> materialIdList = new ArrayList<>();
+        for(MaterialVo4Unit materialVo4Unit: list) {
+            materialIdList.add(materialVo4Unit.getId());
+        }
+        List<MaterialInitialStock> mcsList = materialInitialStockMapperEx.getInitialStockMapByIdList(materialIdList);
+        for(MaterialInitialStock materialInitialStock: mcsList) {
+            map.put(materialInitialStock.getMaterialId(), materialInitialStock.getNumber());
+        }
+        return map;
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.MaterialCurrentStock;
-import com.jsh.erp.datasource.entities.MaterialCurrentStockExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;

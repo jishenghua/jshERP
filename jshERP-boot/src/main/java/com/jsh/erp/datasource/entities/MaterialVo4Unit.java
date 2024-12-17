@@ -51,6 +51,11 @@ public class MaterialVo4Unit extends Material{
      */
     private String bigUnitStock;
 
+    /**
+     * 换算为大单位的初始库存
+     */
+    private String bigUnitInitialStock;
+
     private String imgSmall;
 
     private String imgLarge;
@@ -245,5 +250,13 @@ public class MaterialVo4Unit extends Material{
 
     public void setImgLarge(String imgLarge) {
         this.imgLarge = imgLarge;
+    }
+
+    public String getBigUnitInitialStock() {
+        return bigUnitInitialStock;
+    }
+
+    public void setBigUnitInitialStock(String bigUnitInitialStock) {
+        this.bigUnitInitialStock = bigUnitInitialStock;
     }
 }
