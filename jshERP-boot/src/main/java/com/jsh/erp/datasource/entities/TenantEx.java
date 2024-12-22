@@ -8,6 +8,10 @@ public class TenantEx extends Tenant{
 
     private Integer userCount;
 
+    private Long roleId;
+
+    private String roleName;
+
     public String getCreateTimeStr() {
         return createTimeStr;
     }
@@ -30,5 +34,21 @@ public class TenantEx extends Tenant{
 
     public void setUserCount(Integer userCount) {
         this.userCount = userCount;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

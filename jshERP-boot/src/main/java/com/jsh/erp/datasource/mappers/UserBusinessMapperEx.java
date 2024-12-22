@@ -19,4 +19,6 @@ public interface UserBusinessMapperEx {
     List<UserBusiness> getBasicDataByKeyIdAndType(
             @Param("keyId") String keyId,
             @Param("type") String type);
+
+    void updateValueByTypeAndKeyId(@Param("type") String type, @Param("keyId") String keyId, @Param("ubValue") String ubValue);
 }

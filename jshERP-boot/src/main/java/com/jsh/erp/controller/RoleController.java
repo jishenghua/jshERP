@@ -73,6 +73,12 @@ public class RoleController {
         return roleService.allList();
     }
 
+    @GetMapping(value = "/tenantRoleList")
+    @ApiOperation(value = "查询租户角色列表")
+    public List<Role> tenantRoleList(HttpServletRequest request)throws Exception {
+        return roleService.tenantRoleList();
+    }
+
     /**
      * 批量设置状态-启用或者禁用
      * @param jsonObject

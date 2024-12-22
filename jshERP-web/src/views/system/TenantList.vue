@@ -138,6 +138,7 @@
           { title: '租户类型',dataIndex: 'type',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderType' }
           },
+          { title: '租户角色', dataIndex: 'roleName', width: 80, align: "center"},
           { title: '租户状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderEnabled' }
           },

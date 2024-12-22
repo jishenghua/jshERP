@@ -39,6 +39,9 @@ public class RoleService {
     @Resource
     private UserService userService;
 
+    //超管的专用角色
+    private static Long MANAGE_ROLE_ID = 4L;
+
     public Role getRole(long id)throws Exception {
         Role result=null;
         try{
@@ -69,6 +72,22 @@ public class RoleService {
         List<Role> list=null;
         try{
             list=roleMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    public List<Role> tenantRoleList() {
+        List<Role> list=null;
+        try{
+            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                RoleExample example = new RoleExample();
+                example.createCriteria().andEnabledEqualTo(true).andTenantIdIsNull().andIdNotEqualTo(MANAGE_ROLE_ID)
+                        .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+                example.setOrderByClause("sort asc, id asc");
+                list=roleMapper.selectByExample(example);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

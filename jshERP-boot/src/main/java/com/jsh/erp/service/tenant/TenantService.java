@@ -2,12 +2,14 @@ package com.jsh.erp.service.tenant;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.entities.Tenant;
+import com.jsh.erp.datasource.entities.TenantEx;
+import com.jsh.erp.datasource.entities.TenantExample;
+import com.jsh.erp.datasource.entities.UserEx;
 import com.jsh.erp.datasource.mappers.TenantMapper;
 import com.jsh.erp.datasource.mappers.TenantMapperEx;
+import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
 import com.jsh.erp.datasource.mappers.UserMapperEx;
-import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -23,7 +25,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TenantService {
@@ -37,6 +40,9 @@ public class TenantService {
 
     @Resource
     private UserMapperEx userMapperEx;
+
+    @Resource
+    private UserBusinessMapperEx userBusinessMapperEx;
 
     @Resource
     private UserService userService;
@@ -125,6 +131,11 @@ public class TenantService {
                     userMapperEx.disableUserByLimit(tenant.getTenantId());
                 }
                 result = tenantMapper.updateByPrimaryKeySelective(tenant);
+                //更新租户对应的角色
+                if(obj.get("roleId")!=null) {
+                    String ubValue = "[" + obj.getString("roleId") + "]";
+                    userBusinessMapperEx.updateValueByTypeAndKeyId("UserRole", tenant.getTenantId().toString(), ubValue);
+                }
             }
         }catch(Exception e){
             JshException.writeFail(logger, e);

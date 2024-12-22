@@ -30,6 +30,13 @@
               <a-select-option value="1">付费租户</a-select-option>
             </a-select>
           </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="租户角色" v-if="model.id">
+            <a-select style="width:100%" placeholder="请选择租户角色" v-decorator.trim="[ 'roleId' ]">
+              <a-select-option v-for="(item,index) in tenantRoleList" :key="index" :value="item.id">
+                {{ item.name }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="到期时间">
             <j-date style="width:100%" placeholder="请选择到期时间" v-decorator.trim="[ 'expireTime' ]" :show-time="true"/>
           </a-form-item>
@@ -44,7 +51,7 @@
 <script>
   import pick from 'lodash.pick'
   import {mixinDevice} from '@/utils/mixin'
-  import {addTenant,editTenant,checkTenant } from '@/api/api'
+  import {addTenant,editTenant,checkTenant, getTenantRoleList } from '@/api/api'
   import JDate from '@/components/jeecg/JDate'
   import md5 from 'md5'
   export default {
@@ -58,6 +65,7 @@
         title:"操作",
         visible: false,
         model: {},
+        tenantRoleList: [],  //租户角色列表
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -91,8 +99,16 @@
         this.model.expireTime = this.model.expireTimeStr
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'loginName', 'userNumLimit', 'type', 'expireTime', 'remark'))
-        });
+          this.form.setFieldsValue(pick(this.model,'loginName', 'userNumLimit', 'type', 'roleId', 'expireTime', 'remark'))
+        })
+        this.getTenantRoleList()
+      },
+      getTenantRoleList() {
+        getTenantRoleList().then((res)=>{
+          if(res) {
+            this.tenantRoleList = res
+          }
+        })
       },
       close () {
         this.$emit('close');

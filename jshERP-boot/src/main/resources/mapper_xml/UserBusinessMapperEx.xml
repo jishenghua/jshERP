@@ -18,4 +18,9 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
+    <update id="updateValueByTypeAndKeyId">
+        update jsh_user_business
+        set value= #{ubValue}
+        where type = #{type} and key_id = #{keyId}
+    </update>
 </mapper>

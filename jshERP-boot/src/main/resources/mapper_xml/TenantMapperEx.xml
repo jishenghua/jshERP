@@ -3,11 +3,19 @@
 <mapper namespace="com.jsh.erp.datasource.mappers.TenantMapperEx">
 
     <resultMap extends="com.jsh.erp.datasource.mappers.LogMapper.BaseResultMap" id="ResultMapEx" type="com.jsh.erp.datasource.entities.TenantEx">
+        <result column="roleId" jdbcType="VARCHAR" property="roleId" />
+        <result column="roleName" jdbcType="VARCHAR" property="roleName" />
         <result column="userCount" jdbcType="VARCHAR" property="userCount" />
     </resultMap>
 
     <select id="selectByConditionTenant" parameterType="com.jsh.erp.datasource.entities.TenantExample" resultMap="ResultMapEx">
         select jsh_tenant.*,
+        (select r.id from jsh_user_business ub
+        left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
+        where ub.type='UserRole' and ub.key_id=jsh_tenant.tenant_id limit 0,1) roleId,
+        (select r.name from jsh_user_business ub
+        left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
+        where ub.type='UserRole' and ub.key_id=jsh_tenant.tenant_id limit 0,1) roleName,
         (select count(jsh_user.id) from jsh_user where jsh_user.status='0' and jsh_user.delete_flag=0 and jsh_user.tenant_id=jsh_tenant.tenant_id) userCount
         FROM jsh_tenant
         where 1=1
