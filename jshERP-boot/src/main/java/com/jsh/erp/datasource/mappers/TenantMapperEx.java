@@ -10,6 +10,7 @@ public interface TenantMapperEx {
 
     List<TenantEx> selectByConditionTenant(
             @Param("loginName") String loginName,
+            @Param("roleId") Long roleId,
             @Param("type") String type,
             @Param("enabled") String enabled,
             @Param("remark") String remark,
@@ -18,6 +19,7 @@ public interface TenantMapperEx {
 
     Long countsByTenant(
             @Param("loginName") String loginName,
+            @Param("roleId") Long roleId,
             @Param("type") String type,
             @Param("enabled") String enabled,
             @Param("remark") String remark);

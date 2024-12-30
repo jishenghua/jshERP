@@ -9,55 +9,60 @@
     </resultMap>
 
     <select id="selectByConditionTenant" parameterType="com.jsh.erp.datasource.entities.TenantExample" resultMap="ResultMapEx">
-        select jsh_tenant.*,
-        (select r.id from jsh_user_business ub
+        select t.*, r.id roleId, r.name roleName,
+        (select count(jsh_user.id) from jsh_user where jsh_user.status='0' and jsh_user.delete_flag=0 and jsh_user.tenant_id=t.tenant_id) userCount
+        from jsh_tenant t
+        left join jsh_user_business ub on ub.key_id = t.tenant_id and ifnull(ub.delete_flag,'0') !='1'
         left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
-        where ub.type='UserRole' and ub.key_id=jsh_tenant.tenant_id limit 0,1) roleId,
-        (select r.name from jsh_user_business ub
-        left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
-        where ub.type='UserRole' and ub.key_id=jsh_tenant.tenant_id limit 0,1) roleName,
-        (select count(jsh_user.id) from jsh_user where jsh_user.status='0' and jsh_user.delete_flag=0 and jsh_user.tenant_id=jsh_tenant.tenant_id) userCount
-        FROM jsh_tenant
-        where 1=1
+        where ub.type='UserRole'
         <if test="loginName != null">
             <bind name="bindLoginName" value="'%'+loginName+'%'"/>
-            and login_name like #{bindLoginName}
+            and t.login_name like #{bindLoginName}
+        </if>
+        <if test="roleId != null and roleId != ''">
+            and r.id = #{roleId}
         </if>
         <if test="type != null and type != ''">
-            and type = #{type}
+            and t.type = #{type}
         </if>
         <if test="enabled != null and enabled != ''">
-            and enabled = #{enabled}
+            and t.enabled = #{enabled}
         </if>
         <if test="remark != null">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and remark like #{bindRemark}
+            and t.remark like #{bindRemark}
         </if>
-        and ifnull(delete_flag,'0') !='1'
-        order by id desc
+        and ifnull(t.delete_flag,'0') !='1'
+        order by t.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
     </select>
+
     <select id="countsByTenant" resultType="java.lang.Long">
-        SELECT
-        COUNT(id)
-        FROM jsh_tenant
-        WHERE 1=1
+        select
+        count(t.id)
+        from jsh_tenant t
+        left join jsh_user_business ub on ub.key_id = t.tenant_id and ifnull(ub.delete_flag,'0') !='1'
+        left join jsh_role r on ub.value=concat("[",r.id,"]") and ifnull(r.delete_flag,'0') !='1'
+        where ub.type='UserRole'
         <if test="loginName != null">
             <bind name="bindLoginName" value="'%'+loginName+'%'"/>
-            and login_name like #{bindLoginName}
+            and t.login_name like #{bindLoginName}
+        </if>
+        <if test="roleId != null and roleId != ''">
+            and r.id = #{roleId}
         </if>
         <if test="type != null and type != ''">
-            and type = #{type}
+            and t.type = #{type}
         </if>
         <if test="enabled != null and enabled != ''">
-            and enabled = #{enabled}
+            and t.enabled = #{enabled}
         </if>
         <if test="remark != null">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and remark like #{bindRemark}
+            and t.remark like #{bindRemark}
         </if>
-        and ifnull(delete_flag,'0') !='1'
+        and ifnull(t.delete_flag,'0') !='1'
     </select>
 </mapper>
