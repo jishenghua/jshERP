@@ -12,18 +12,19 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="租户类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select v-model="queryParam.type" placeholder="请选择租户类型">
-                    <a-select-option value="0">试用租户</a-select-option>
-                    <a-select-option value="1">付费租户</a-select-option>
+                <a-form-item label="租户角色" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select v-model="queryParam.roleId" placeholder="请选择租户角色">
+                    <a-select-option v-for="(item,index) in tenantRoleList" :key="index" :value="item.id">
+                      {{ item.name }}
+                    </a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="租户状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select v-model="queryParam.enabled" placeholder="请选择操作状态">
-                    <a-select-option value="1">启用</a-select-option>
-                    <a-select-option value="0">禁用</a-select-option>
+                <a-form-item label="租户类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select v-model="queryParam.type" placeholder="请选择租户类型">
+                    <a-select-option value="0">试用租户</a-select-option>
+                    <a-select-option value="1">付费租户</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -38,6 +39,14 @@
                 </span>
               </a-col>
               <template v-if="toggleSearchStatus">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="租户状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select v-model="queryParam.enabled" placeholder="请选择操作状态">
+                      <a-select-option value="1">启用</a-select-option>
+                      <a-select-option value="0">禁用</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input v-model="queryParam.remark" placeholder="请输入备注"></a-input>
@@ -92,6 +101,7 @@
   import TenantModal from './modules/TenantModal'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import JInput from '@/components/jeecg/JInput'
+  import { getTenantRoleList } from '@/api/api'
   export default {
     name: "TenantList",
     mixins: [JeecgListMixin],
@@ -110,10 +120,12 @@
         },
         queryParam: {
           loginName: '',
+          roleId: '',
           type: '',
           enabled: '',
           remark: ''
         },
+        tenantRoleList: [],  //租户角色列表
         columns: [
           {
             title: '#',
@@ -135,10 +147,10 @@
           { title: '登录名称', dataIndex: 'loginName', width: 100, align: "center"},
           { title: '用户数量', dataIndex: 'userCount', width: 60, align: "center"},
           { title: '用户数量限制', dataIndex: 'userNumLimit', width: 80, align: "center"},
+          { title: '租户角色', dataIndex: 'roleName', width: 80, align: "center"},
           { title: '租户类型',dataIndex: 'type',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderType' }
           },
-          { title: '租户角色', dataIndex: 'roleName', width: 80, align: "center"},
           { title: '租户状态',dataIndex: 'enabled',width:60,align:"center",
             scopedSlots: { customRender: 'customRenderEnabled' }
           },
@@ -153,8 +165,16 @@
       }
     },
     created () {
+      this.getTenantRoleList()
     },
     methods: {
+      getTenantRoleList() {
+        getTenantRoleList().then((res)=>{
+          if(res) {
+            this.tenantRoleList = res
+          }
+        })
+      }
     }
   }
 </script>
