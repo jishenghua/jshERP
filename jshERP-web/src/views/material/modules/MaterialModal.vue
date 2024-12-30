@@ -834,21 +834,21 @@
               this.skuThreeTitle = item.name
             }
           })
-          getMaterialAttributeValueListById({'id': skuOneId}).then((res)=>{
-            if(res) {
-              this.skuOneList = res
-            }
-          })
-          getMaterialAttributeValueListById({'id': skuTwoId}).then((res)=>{
-            if(res) {
-              this.skuTwoList = res
-            }
-          })
-          getMaterialAttributeValueListById({'id': skuThreeId}).then((res)=>{
-            if(res) {
-              this.skuThreeList = res
-            }
-          })
+          if(skuOneId) {
+            getMaterialAttributeValueListById({'id': skuOneId}).then((res)=>{
+              this.skuOneList = res? res:[]
+            })
+          }
+          if(skuTwoId) {
+            getMaterialAttributeValueListById({'id': skuTwoId}).then((res)=>{
+              this.skuTwoList = res? res:[]
+            })
+          }
+          if(skuThreeId) {
+            getMaterialAttributeValueListById({'id': skuThreeId}).then((res)=>{
+              this.skuThreeList = res? res:[]
+            })
+          }
         }
         //控制条码列表中的多属性列
         if(value.length>0) {
