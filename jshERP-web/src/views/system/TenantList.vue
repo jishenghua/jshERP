@@ -12,19 +12,18 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="租户角色" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select v-model="queryParam.roleId" placeholder="请选择租户角色">
-                    <a-select-option v-for="(item,index) in tenantRoleList" :key="index" :value="item.id">
-                      {{ item.name }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
                 <a-form-item label="租户类型" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select v-model="queryParam.type" placeholder="请选择租户类型">
                     <a-select-option value="0">试用租户</a-select-option>
                     <a-select-option value="1">付费租户</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="租户状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-select v-model="queryParam.enabled" placeholder="请选择操作状态">
+                    <a-select-option value="1">启用</a-select-option>
+                    <a-select-option value="0">禁用</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -39,14 +38,6 @@
                 </span>
               </a-col>
               <template v-if="toggleSearchStatus">
-                <a-col :md="6" :sm="24">
-                  <a-form-item label="租户状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select v-model="queryParam.enabled" placeholder="请选择操作状态">
-                      <a-select-option value="1">启用</a-select-option>
-                      <a-select-option value="0">禁用</a-select-option>
-                    </a-select>
-                  </a-form-item>
-                </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input v-model="queryParam.remark" placeholder="请输入备注"></a-input>
@@ -125,7 +116,6 @@
           enabled: '',
           remark: ''
         },
-        tenantRoleList: [],  //租户角色列表
         columns: [
           {
             title: '#',
@@ -165,16 +155,8 @@
       }
     },
     created () {
-      this.getTenantRoleList()
     },
     methods: {
-      getTenantRoleList() {
-        getTenantRoleList().then((res)=>{
-          if(res) {
-            this.tenantRoleList = res
-          }
-        })
-      }
     }
   }
 </script>

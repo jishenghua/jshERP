@@ -18,14 +18,10 @@
         where ub.type='UserRole' and ub.key_id=t.tenant_id limit 0,1) roleName,
         (select count(jsh_user.id) from jsh_user where jsh_user.status='0' and jsh_user.delete_flag=0 and jsh_user.tenant_id=t.tenant_id) userCount
         from jsh_tenant t
-        left join jsh_user_business ub on ub.key_id = t.tenant_id and ifnull(ub.delete_flag,'0') !='1'
-        where ub.type='UserRole'
+        where 1=1
         <if test="loginName != null">
             <bind name="bindLoginName" value="'%'+loginName+'%'"/>
             and t.login_name like #{bindLoginName}
-        </if>
-        <if test="roleId != null and roleId != ''">
-            and ub.value = concat("[",#{roleId},"]")
         </if>
         <if test="type != null and type != ''">
             and t.type = #{type}
@@ -48,14 +44,10 @@
         select
         count(t.id)
         from jsh_tenant t
-        left join jsh_user_business ub on ub.key_id = t.tenant_id and ifnull(ub.delete_flag,'0') !='1'
-        where ub.type='UserRole'
+        where 1=1
         <if test="loginName != null">
             <bind name="bindLoginName" value="'%'+loginName+'%'"/>
             and t.login_name like #{bindLoginName}
-        </if>
-        <if test="roleId != null and roleId != ''">
-            and ub.value = concat("[",#{roleId},"]")
         </if>
         <if test="type != null and type != ''">
             and t.type = #{type}
