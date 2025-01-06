@@ -122,7 +122,7 @@ export default {
       }
       return (
         <Item {...{ key: menu.url }}>
-          <tag {...{ props, attrs }}>
+          <tag {...{ props, attrs }} title={menu.text}>
             {this.renderIcon(menu.icon)}
             <span>{menu.text}</span>
           </tag>
@@ -138,7 +138,7 @@ export default {
         <SubMenu {...{ key: menu.url }}>
           <span slot="title">
             {this.renderIcon(menu.icon)}
-            <span>{menu.text}</span>
+            <span title={menu.text}>{menu.text}</span>
           </span>
           {itemArr}
         </SubMenu>
