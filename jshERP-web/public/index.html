@@ -275,10 +275,10 @@
     translate.service.use('client.edge')
     //开启html页面变化的监控，对变化部分会进行自动翻译
     translate.listener.start()
+    //不显示语言选择标签
+    translate.selectLanguageTag.show = false;
     //执行翻译初始化操作，显示出select语言选择
     translate.execute()
-    //不显示语言选择标签
-    translate.selectLanguageTag.show = false
   </script>
 </head>
 
