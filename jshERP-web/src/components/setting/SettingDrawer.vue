@@ -207,7 +207,7 @@
       return {
         visible: true,
         langSetTitle: '选择语言',
-        currentLang: translate.language.getCurrent(),
+        currentLang: '',
         colorList
       }
     },
@@ -231,6 +231,7 @@
       }
     },
     created () {
+      this.currentLang = translate.language.getCurrent()
     },
     methods: {
       showDrawer() {
@@ -280,6 +281,7 @@
       },
       handleChangeLang(value) {
         translate.changeLanguage(value)
+        this.currentLang = translate.language.getCurrent()
       }
     },
   }
