@@ -339,6 +339,12 @@
             </foreach>
             ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
         </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="forceFlag">
             and dh.status = '1'
         </if>
@@ -410,6 +416,12 @@
             </foreach>
             ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
         </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="forceFlag">
             and dh.status = '1'
         </if>
@@ -471,6 +483,12 @@
                 #{organId}
             </foreach>
             ) or dh.sub_type='采购退货' or dh.sub_type='零售' or dh.sub_type='其它')
+        </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="forceFlag">
             and dh.status = '1'
@@ -553,6 +571,12 @@
             or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="forceFlag">
             and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
@@ -624,6 +648,12 @@
             or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="forceFlag">
             and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
@@ -688,6 +718,12 @@
             or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="forceFlag">
             and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
@@ -734,6 +770,12 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="forceFlag">
             and dh.status = '1'
@@ -794,6 +836,12 @@
             </foreach>
             )
         </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="forceFlag">
             and dh.status = '1'
         </if>
@@ -845,6 +893,12 @@
                 #{creator}
             </foreach>
             )
+        </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         <if test="forceFlag">
             and dh.status = '1'

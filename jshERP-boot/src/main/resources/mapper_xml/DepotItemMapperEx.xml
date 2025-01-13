@@ -419,6 +419,12 @@
         left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
         where 1=1
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
@@ -481,6 +487,12 @@
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_depot_head dh on di.header_id=dh.id  and ifnull(dh.delete_flag,'0') !='1'
         where 1=1
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
@@ -618,6 +630,12 @@
         and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey})
@@ -895,6 +913,12 @@
                 #{item}
             </foreach>
         </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
         order by depotName asc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -925,6 +949,12 @@
         <if test="depotList.size()>0">
             and mis.depot_id in
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="categoryList.size()>0">
+            and m.category_id in
+            <foreach collection="categoryList" item="item" index="index" separator="," open="(" close=")">
                 #{item}
             </foreach>
         </if>

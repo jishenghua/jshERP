@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.vo.DepotHeadVo4List;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
+import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.utils.*;
@@ -46,6 +47,9 @@ public class DepotHeadController {
 
     @Resource
     private DepotService depotService;
+
+    @Resource
+    private MaterialService materialService;
 
     @Resource
     private SystemConfigService systemConfigService;
@@ -100,6 +104,7 @@ public class DepotHeadController {
                                             @RequestParam("endTime") String endTime,
                                             @RequestParam("type") String type,
                                             @RequestParam(value = "creator", required = false) Long creator,
+                                            @RequestParam(value = "categoryId", required = false) Long categoryId,
                                             @RequestParam(value = "organizationId", required = false) Long organizationId,
                                             @RequestParam("remark") String remark,
                                             @RequestParam(value = "column", required = false, defaultValue = "createTime") String column,
@@ -126,14 +131,18 @@ public class DepotHeadController {
             }
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = depotHeadService.getOrganArray(subType, "");
+            List<Long> categoryList = new ArrayList<>();
+            if(categoryId != null){
+                categoryList = materialService.getListByParentId(categoryId);
+            }
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
-            List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
+            List<DepotHeadVo4InDetail> list = depotHeadService.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, categoryList, forceFlag, inOutManageFlag,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark,
                     StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
+            int total = depotHeadService.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, categoryList, forceFlag, inOutManageFlag,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark);
             map.put("total", total);
             //存放数据json数组
@@ -141,7 +150,7 @@ public class DepotHeadController {
                 resList.addAll(list);
             }
             map.put("rows", resList);
-            DepotHeadVo4InDetail statistic = depotHeadService.findInOutDetailStatistic(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
+            DepotHeadVo4InDetail statistic = depotHeadService.findInOutDetailStatistic(beginTime, endTime, type, creatorArray, organArray, categoryList, forceFlag, inOutManageFlag,
                     StringUtil.toNull(materialParam), depotList, oId, StringUtil.toNull(number), creator, remark);
             map.put("operNumberTotal", statistic.getOperNumber());
             map.put("allPriceTotal", statistic.getAllPrice());
@@ -175,6 +184,7 @@ public class DepotHeadController {
                                                    @RequestParam(value = "organId", required = false) Integer oId,
                                                    @RequestParam("materialParam") String materialParam,
                                                    @RequestParam(value = "depotId", required = false) Long depotId,
+                                                   @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                    @RequestParam(value = "organizationId", required = false) Long organizationId,
                                                    @RequestParam("beginTime") String beginTime,
                                                    @RequestParam("endTime") String endTime,
@@ -196,18 +206,22 @@ public class DepotHeadController {
                     depotList.add(object.getLong("id"));
                 }
             }
+            List<Long> categoryList = new ArrayList<>();
+            if(categoryId != null){
+                categoryList = materialService.getListByParentId(categoryId);
+            }
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
-            List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, forceFlag, inOutManageFlag,
+            List<DepotHeadVo4InOutMCount> list = depotHeadService.findInOutMaterialCount(beginTime, endTime, type, categoryList, forceFlag, inOutManageFlag,
                     StringUtil.toNull(materialParam), depotList, organizationId, oId, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order),
                     (currentPage-1)*pageSize, pageSize);
-            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, inOutManageFlag,
+            int total = depotHeadService.findInOutMaterialCountTotal(beginTime, endTime, type, categoryList, forceFlag, inOutManageFlag,
                     StringUtil.toNull(materialParam), depotList, organizationId, oId);
             map.put("total", total);
             map.put("rows", list);
-            DepotHeadVo4InOutMCount statistic = depotHeadService.findInOutMaterialCountStatistic(beginTime, endTime, type, forceFlag, inOutManageFlag,
+            DepotHeadVo4InOutMCount statistic = depotHeadService.findInOutMaterialCountStatistic(beginTime, endTime, type, categoryList, forceFlag, inOutManageFlag,
                     StringUtil.toNull(materialParam), depotList, organizationId, oId);
             map.put("numSumTotal", statistic.getNumSum());
             map.put("priceSumTotal", statistic.getPriceSum());
@@ -243,6 +257,7 @@ public class DepotHeadController {
                                                  @RequestParam("materialParam") String materialParam,
                                                  @RequestParam(value = "depotId", required = false) Long depotId,
                                                  @RequestParam(value = "depotIdF", required = false) Long depotIdF,
+                                                 @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                  @RequestParam(value = "organizationId", required = false) Long organizationId,
                                                  @RequestParam("beginTime") String beginTime,
                                                  @RequestParam("endTime") String endTime,
@@ -280,18 +295,22 @@ public class DepotHeadController {
             if(creatorArray == null && organizationId != null) {
                 creatorArray = depotHeadService.getCreatorArrayByOrg(organizationId);
             }
+            List<Long> categoryList = new ArrayList<>();
+            if(categoryId != null){
+                categoryList = materialService.getListByParentId(categoryId);
+            }
             beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotHeadVo4InDetail> list = depotHeadService.findAllocationDetail(beginTime, endTime, subType, StringUtil.toNull(number),
-                    creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark,
+                    creatorArray, categoryList, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark,
                     StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
             int total = depotHeadService.findAllocationDetailCount(beginTime, endTime, subType, StringUtil.toNull(number),
-                    creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
+                    creatorArray, categoryList, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
             map.put("rows", list);
             map.put("total", total);
             DepotHeadVo4InDetail statistic = depotHeadService.findAllocationStatistic(beginTime, endTime, subType, StringUtil.toNull(number),
-                    creatorArray, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
+                    creatorArray, categoryList, forceFlag, StringUtil.toNull(materialParam), depotList, depotFList, remark);
             map.put("operNumberTotal", statistic.getOperNumber());
             map.put("allPriceTotal", statistic.getAllPrice());
             res.code = 200;

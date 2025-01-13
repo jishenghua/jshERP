@@ -79,7 +79,8 @@ public interface DepotItemMapperEx {
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
             @Param("organId") Long organId,
-            @Param("organArray") String [] organArray,
+            @Param("organArray") String[] organArray,
+            @Param("categoryList") List<Long> categoryList,
             @Param("depotList") List<Long> depotList,
             @Param("forceFlag") Boolean forceFlag,
             @Param("offset") Integer offset,
@@ -92,7 +93,8 @@ public interface DepotItemMapperEx {
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
             @Param("organId") Long organId,
-            @Param("organArray") String [] organArray,
+            @Param("organArray") String[] organArray,
+            @Param("categoryList") List<Long> categoryList,
             @Param("depotList") List<Long> depotList,
             @Param("forceFlag") Boolean forceFlag);
 
@@ -131,6 +133,7 @@ public interface DepotItemMapperEx {
             @Param("creatorArray") String[] creatorArray,
             @Param("organId") Long organId,
             @Param("organArray") String [] organArray,
+            @Param("categoryList") List<Long> categoryList,
             @Param("depotList") List<Long> depotList,
             @Param("forceFlag") Boolean forceFlag);
 
@@ -193,11 +196,13 @@ public interface DepotItemMapperEx {
             @Param("offset") Integer offset,
             @Param("rows") Integer rows,
             @Param("materialParam") String materialParam,
-            @Param("depotList") List<Long> depotList);
+            @Param("depotList") List<Long> depotList,
+            @Param("categoryList") List<Long> categoryList);
 
     int findStockWarningCountTotal(
             @Param("materialParam") String materialParam,
-            @Param("depotList") List<Long> depotList);
+            @Param("depotList") List<Long> depotList,
+            @Param("categoryList") List<Long> categoryList);
 
     BigDecimal getFinishNumber(
             @Param("meId") Long meId,

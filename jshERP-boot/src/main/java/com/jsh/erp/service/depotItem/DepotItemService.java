@@ -322,10 +322,10 @@ public class DepotItemService {
     }
 
     public List<DepotItemVo4WithInfoEx> getListWithBuyOrSale(String materialParam, String billType,
-                     String beginTime, String endTime, String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag, Integer offset, Integer rows)throws Exception {
+                                                             String beginTime, String endTime, String[] creatorArray, Long organId, String[] organArray, List<Long> categoryList, List<Long> depotList, Boolean forceFlag, Integer offset, Integer rows)throws Exception {
         List<DepotItemVo4WithInfoEx> list =null;
         try{
-            list = depotItemMapperEx.getListWithBuyOrSale(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, offset, rows);
+            list = depotItemMapperEx.getListWithBuyOrSale(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -333,10 +333,10 @@ public class DepotItemService {
     }
 
     public int getListWithBuyOrSaleCount(String materialParam, String billType,
-                     String beginTime, String endTime, String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag)throws Exception {
+                                         String beginTime, String endTime, String[] creatorArray, Long organId, String[] organArray, List<Long> categoryList, List<Long> depotList, Boolean forceFlag)throws Exception {
         int result=0;
         try{
-            result = depotItemMapperEx.getListWithBuyOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            result = depotItemMapperEx.getListWithBuyOrSaleCount(materialParam, billType, beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -359,10 +359,10 @@ public class DepotItemService {
     }
 
     public BigDecimal buyOrSalePriceTotal(String type, String subType, String materialParam, String beginTime, String endTime,
-                                String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag) throws Exception{
+                                String[] creatorArray, Long organId, String [] organArray, List<Long> categoryList, List<Long> depotList, Boolean forceFlag) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
-            result= depotItemMapperEx.buyOrSalePriceTotal(type, subType, materialParam, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            result= depotItemMapperEx.buyOrSalePriceTotal(type, subType, materialParam, beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -915,20 +915,21 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public List<DepotItemStockWarningCount> findStockWarningCount(Integer offset, Integer rows, String materialParam, List<Long> depotList) {
+    public List<DepotItemStockWarningCount> findStockWarningCount(Integer offset, Integer rows, String materialParam, List<Long> depotList, List<Long> categoryList) {
         List<DepotItemStockWarningCount> list = null;
         try{
-            list =depotItemMapperEx.findStockWarningCount(offset, rows, materialParam, depotList);
+            list =depotItemMapperEx.findStockWarningCount(offset, rows, materialParam, depotList, categoryList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int findStockWarningCountTotal(String materialParam, List<Long> depotList) {
+    public int findStockWarningCountTotal(String materialParam, List<Long> depotList, List<Long> categoryList) {
         int result = 0;
         try{
-            result =depotItemMapperEx.findStockWarningCountTotal(materialParam, depotList);
+            result =depotItemMapperEx.findStockWarningCountTotal(materialParam, depotList, categoryList);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

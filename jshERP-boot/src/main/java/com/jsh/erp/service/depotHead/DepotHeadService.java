@@ -706,13 +706,13 @@ public class DepotHeadService {
         return materialCountListMap;
     }
 
-    public List<DepotHeadVo4InDetail> findInOutDetail(String beginTime, String endTime, String type, String [] creatorArray,
-                                                      String [] organArray, Boolean forceFlag, Boolean inOutManageFlag,
+    public List<DepotHeadVo4InDetail> findInOutDetail(String beginTime, String endTime, String type, String[] creatorArray,
+                                                      String[] organArray, List<Long> categoryList, Boolean forceFlag, Boolean inOutManageFlag,
                                                       String materialParam, List<Long> depotList, Integer oId, String number,
                                                       Long creator, String remark, String column, String order, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
+            list =depotHeadMapperEx.findInOutDetail(beginTime, endTime, type, creatorArray, organArray, categoryList, forceFlag, inOutManageFlag,
                     materialParam, depotList, oId, number, creator, remark, column, order, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -720,12 +720,12 @@ public class DepotHeadService {
         return list;
     }
 
-    public int findInOutDetailCount(String beginTime, String endTime, String type, String [] creatorArray,
-                              String [] organArray, Boolean forceFlag, Boolean inOutManageFlag, String materialParam, List<Long> depotList, Integer oId, String number,
-                              Long creator, String remark) throws Exception{
+    public int findInOutDetailCount(String beginTime, String endTime, String type, String[] creatorArray,
+                                    String[] organArray, List<Long> categoryList, Boolean forceFlag, Boolean inOutManageFlag, String materialParam, List<Long> depotList, Integer oId, String number,
+                                    Long creator, String remark) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
+            result =depotHeadMapperEx.findInOutDetailCount(beginTime, endTime, type, creatorArray, organArray, categoryList, forceFlag, inOutManageFlag,
                     materialParam, depotList, oId, number, creator, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -734,12 +734,12 @@ public class DepotHeadService {
     }
 
     public DepotHeadVo4InDetail findInOutDetailStatistic(String beginTime, String endTime, String type, String [] creatorArray,
-                                                      String [] organArray, Boolean forceFlag, Boolean inOutManageFlag,
+                                                      String [] organArray, List<Long> categoryList, Boolean forceFlag, Boolean inOutManageFlag,
                                                       String materialParam, List<Long> depotList, Integer oId, String number,
                                                       Long creator, String remark) throws Exception{
         DepotHeadVo4InDetail item = new DepotHeadVo4InDetail();
         try{
-            List<DepotHeadVo4InDetail> list =depotHeadMapperEx.findInOutDetailStatistic(beginTime, endTime, type, creatorArray, organArray, forceFlag, inOutManageFlag,
+            List<DepotHeadVo4InDetail> list =depotHeadMapperEx.findInOutDetailStatistic(beginTime, endTime, type, creatorArray, organArray, categoryList, forceFlag, inOutManageFlag,
                     materialParam, depotList, oId, number, creator, remark);
             if(list.size()>0) {
                 item.setOperNumber(list.get(0).getOperNumber());
@@ -751,7 +751,7 @@ public class DepotHeadService {
         return item;
     }
 
-    public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type,
+    public List<DepotHeadVo4InOutMCount> findInOutMaterialCount(String beginTime, String endTime, String type, List<Long> categoryList,
                                                                 Boolean forceFlag, Boolean inOutManageFlag, String materialParam,
                                                                 List<Long> depotList, Long organizationId, Integer oId, String column, String order,
                                                                 Integer offset, Integer rows)throws Exception {
@@ -763,7 +763,7 @@ public class DepotHeadService {
             }
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = getOrganArray(subType, "");
-            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, forceFlag, inOutManageFlag, materialParam, depotList, oId,
+            list =depotHeadMapperEx.findInOutMaterialCount(beginTime, endTime, type, categoryList, forceFlag, inOutManageFlag, materialParam, depotList, oId,
                     creatorArray, organArray, column, order, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -771,7 +771,7 @@ public class DepotHeadService {
         return list;
     }
 
-    public int findInOutMaterialCountTotal(String beginTime, String endTime, String type,
+    public int findInOutMaterialCountTotal(String beginTime, String endTime, String type, List<Long> categoryList,
                                            Boolean forceFlag, Boolean inOutManageFlag, String materialParam,
                                            List<Long> depotList, Long organizationId, Integer oId)throws Exception {
         int result = 0;
@@ -782,7 +782,7 @@ public class DepotHeadService {
             }
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = getOrganArray(subType, "");
-            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, forceFlag, inOutManageFlag, materialParam, depotList, oId,
+            result =depotHeadMapperEx.findInOutMaterialCountTotal(beginTime, endTime, type, categoryList, forceFlag, inOutManageFlag, materialParam, depotList, oId,
                     creatorArray, organArray);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -790,7 +790,7 @@ public class DepotHeadService {
         return result;
     }
 
-    public DepotHeadVo4InOutMCount findInOutMaterialCountStatistic(String beginTime, String endTime, String type,
+    public DepotHeadVo4InOutMCount findInOutMaterialCountStatistic(String beginTime, String endTime, String type, List<Long> categoryList,
                                                                 Boolean forceFlag, Boolean inOutManageFlag, String materialParam,
                                                                 List<Long> depotList, Long organizationId, Integer oId) throws Exception {
         DepotHeadVo4InOutMCount item = new DepotHeadVo4InOutMCount();
@@ -801,7 +801,7 @@ public class DepotHeadService {
             }
             String subType = "出库".equals(type)? "销售" : "";
             String [] organArray = getOrganArray(subType, "");
-            List<DepotHeadVo4InOutMCount> list = depotHeadMapperEx.findInOutMaterialCountStatistic(beginTime, endTime, type,
+            List<DepotHeadVo4InOutMCount> list = depotHeadMapperEx.findInOutMaterialCountStatistic(beginTime, endTime, type, categoryList,
                     forceFlag, inOutManageFlag, materialParam, depotList, oId, creatorArray, organArray);
             if(list.size()>0) {
                 item.setNumSum(list.get(0).getNumSum());
@@ -814,11 +814,11 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4InDetail> findAllocationDetail(String beginTime, String endTime, String subType, String number,
-                            String [] creatorArray, Boolean forceFlag, String materialParam, List<Long> depotList, List<Long> depotFList,
+                            String [] creatorArray, List<Long> categoryList, Boolean forceFlag, String materialParam, List<Long> depotList, List<Long> depotFList,
                             String remark, String column, String order, Integer offset, Integer rows) throws Exception{
         List<DepotHeadVo4InDetail> list = null;
         try{
-            list =depotHeadMapperEx.findAllocationDetail(beginTime, endTime, subType, number, creatorArray, forceFlag,
+            list =depotHeadMapperEx.findAllocationDetail(beginTime, endTime, subType, number, creatorArray, categoryList, forceFlag,
                     materialParam, depotList, depotFList, remark, column, order, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -827,11 +827,11 @@ public class DepotHeadService {
     }
 
     public int findAllocationDetailCount(String beginTime, String endTime, String subType, String number,
-                            String [] creatorArray, Boolean forceFlag, String materialParam, List<Long> depotList,  List<Long> depotFList,
+                            String [] creatorArray, List<Long> categoryList, Boolean forceFlag, String materialParam, List<Long> depotList,  List<Long> depotFList,
                             String remark) throws Exception{
         int result = 0;
         try{
-            result =depotHeadMapperEx.findAllocationDetailCount(beginTime, endTime, subType, number, creatorArray, forceFlag,
+            result =depotHeadMapperEx.findAllocationDetailCount(beginTime, endTime, subType, number, creatorArray, categoryList, forceFlag,
                     materialParam, depotList, depotFList, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -840,11 +840,11 @@ public class DepotHeadService {
     }
 
     public DepotHeadVo4InDetail findAllocationStatistic(String beginTime, String endTime, String subType, String number,
-                                                        String [] creatorArray, Boolean forceFlag, String materialParam, List<Long> depotList, List<Long> depotFList,
+                                                        String [] creatorArray, List<Long> categoryList, Boolean forceFlag, String materialParam, List<Long> depotList, List<Long> depotFList,
                                                         String remark) throws Exception{
         DepotHeadVo4InDetail item = new DepotHeadVo4InDetail();
         try{
-            List<DepotHeadVo4InDetail> list =depotHeadMapperEx.findAllocationStatistic(beginTime, endTime, subType, number, creatorArray, forceFlag,
+            List<DepotHeadVo4InDetail> list =depotHeadMapperEx.findAllocationStatistic(beginTime, endTime, subType, number, creatorArray, categoryList, forceFlag,
                     materialParam, depotList, depotFList, remark);
             if(list.size()>0) {
                 item.setOperNumber(list.get(0).getOperNumber());

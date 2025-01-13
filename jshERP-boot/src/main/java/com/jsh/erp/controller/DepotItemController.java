@@ -658,6 +658,7 @@ public class DepotItemController {
                                   @RequestParam("endTime") String endTime,
                                   @RequestParam(value = "organId", required = false) Long organId,
                                   @RequestParam(value = "depotId", required = false) Long depotId,
+                                  @RequestParam(value = "categoryId", required = false) Long categoryId,
                                   @RequestParam(value = "organizationId", required = false) Long organizationId,
                                   @RequestParam("materialParam") String materialParam,
                                   @RequestParam("mpList") String mpList,
@@ -672,13 +673,17 @@ public class DepotItemController {
                 creatorArray = depotHeadService.getCreatorArrayByOrg(organizationId);
             }
             String [] organArray = null;
+            List<Long> categoryList = new ArrayList<>();
+            if(categoryId != null){
+                categoryList = materialService.getListByParentId(categoryId);
+            }
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBuyOrSale(StringUtil.toNull(materialParam),
-                    "buy", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
+                    "buy", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBuyOrSaleCount(StringUtil.toNull(materialParam),
-                    "buy", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+                    "buy", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -710,8 +715,10 @@ public class DepotItemController {
                     dataArray.add(item);
                 }
             }
-            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "采购", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
-            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "采购退货", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "采购", StringUtil.toNull(materialParam),
+                    beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
+            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "采购退货", StringUtil.toNull(materialParam),
+                    beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             BigDecimal realityPriceTotal = inSumPriceTotal.subtract(outSumPriceTotal);
             map.put("rows", dataArray);
             map.put("realityPriceTotal", realityPriceTotal);
@@ -744,6 +751,7 @@ public class DepotItemController {
                                       @RequestParam("endTime") String endTime,
                                       @RequestParam(value = "organId", required = false) Long organId,
                                       @RequestParam(value = "depotId", required = false) Long depotId,
+                                      @RequestParam(value = "categoryId", required = false) Long categoryId,
                                       @RequestParam(value = "organizationId", required = false) Long organizationId,
                                       @RequestParam("materialParam") String materialParam,
                                       @RequestParam("mpList") String mpList,
@@ -758,13 +766,17 @@ public class DepotItemController {
                 creatorArray = depotHeadService.getCreatorArrayByOrg(organizationId);
             }
             String [] organArray = null;
+            List<Long> categoryList = new ArrayList<>();
+            if(categoryId != null){
+                categoryList = materialService.getListByParentId(categoryId);
+            }
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBuyOrSale(StringUtil.toNull(materialParam),
-                    "retail", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
+                    "retail", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBuyOrSaleCount(StringUtil.toNull(materialParam),
-                    "retail", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+                    "retail", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -796,8 +808,10 @@ public class DepotItemController {
                     dataArray.add(item);
                 }
             }
-            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "零售", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
-            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "零售退货", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "零售", StringUtil.toNull(materialParam),
+                    beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
+            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "零售退货", StringUtil.toNull(materialParam),
+                    beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             BigDecimal realityPriceTotal = outSumPriceTotal.subtract(inSumPriceTotal);
             map.put("rows", dataArray);
             map.put("realityPriceTotal", realityPriceTotal);
@@ -831,6 +845,7 @@ public class DepotItemController {
                                     @RequestParam("endTime") String endTime,
                                     @RequestParam(value = "organId", required = false) Long organId,
                                     @RequestParam(value = "depotId", required = false) Long depotId,
+                                    @RequestParam(value = "categoryId", required = false) Long categoryId,
                                     @RequestParam(value = "organizationId", required = false) Long organizationId,
                                     @RequestParam("materialParam") String materialParam,
                                     @RequestParam("mpList") String mpList,
@@ -845,13 +860,17 @@ public class DepotItemController {
                 creatorArray = depotHeadService.getCreatorArrayByOrg(organizationId);
             }
             String [] organArray = depotHeadService.getOrganArray("销售", "");
+            List<Long> categoryList = new ArrayList<>();
+            if(categoryId != null){
+                categoryList = materialService.getListByParentId(categoryId);
+            }
             List<Long> depotList = depotService.parseDepotList(depotId);
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBuyOrSale(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
+                    "sale", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
             String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBuyOrSaleCount(StringUtil.toNull(materialParam),
-                    "sale", beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+                    "sale", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             map.put("total", total);
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
@@ -883,8 +902,10 @@ public class DepotItemController {
                     dataArray.add(item);
                 }
             }
-            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "销售", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
-            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "销售退货", StringUtil.toNull(materialParam), beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag);
+            BigDecimal outSumPriceTotal = depotItemService.buyOrSalePriceTotal("出库", "销售", StringUtil.toNull(materialParam),
+                    beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
+            BigDecimal inSumPriceTotal = depotItemService.buyOrSalePriceTotal("入库", "销售退货", StringUtil.toNull(materialParam),
+                    beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             BigDecimal realityPriceTotal = outSumPriceTotal.subtract(inSumPriceTotal);
             map.put("rows", dataArray);
             map.put("realityPriceTotal", realityPriceTotal);
@@ -926,6 +947,7 @@ public class DepotItemController {
                                                   @RequestParam("pageSize") Integer pageSize,
                                                   @RequestParam("materialParam") String materialParam,
                                                   @RequestParam(value = "depotId", required = false) Long depotId,
+                                                  @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                   @RequestParam("mpList") String mpList)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -941,8 +963,12 @@ public class DepotItemController {
                     depotList.add(object.getLong("id"));
                 }
             }
+            List<Long> categoryList = new ArrayList<>();
+            if(categoryId != null){
+                categoryList = materialService.getListByParentId(categoryId);
+            }
             String[] mpArr = mpList.split(",");
-            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize, materialParam, depotList);
+            List<DepotItemStockWarningCount> list = depotItemService.findStockWarningCount((currentPage-1)*pageSize, pageSize, materialParam, depotList, categoryList);
             //存放数据json数组
             if (null != list) {
                 for (DepotItemStockWarningCount disw : list) {
@@ -960,7 +986,7 @@ public class DepotItemController {
                     }
                 }
             }
-            int total = depotItemService.findStockWarningCountTotal(materialParam, depotList);
+            int total = depotItemService.findStockWarningCountTotal(materialParam, depotList, categoryList);
             map.put("total", total);
             map.put("rows", list);
             res.code = 200;
