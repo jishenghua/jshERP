@@ -86,6 +86,13 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="商品类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                                   :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择商品类别">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入备注" v-model="queryParam.remark"></a-input>
                   </a-form-item>
@@ -166,9 +173,9 @@
 <script>
   import BillDetail from '../bill/dialog/BillDetail'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getFormatDate, getNowFormatYear, getPrevMonthFormatDate } from '@/utils/util'
+  import { getFormatDate, getPrevMonthFormatDate } from '@/utils/util'
   import {getAction} from '@/api/manage'
-  import {findBySelectOrgan, findBillDetailByNumber, getUserList, getAllOrganizationTreeByUser} from '@/api/api'
+  import {findBySelectOrgan, findBillDetailByNumber, getUserList, queryMaterialCategoryTreeList, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -210,6 +217,7 @@
         depotList: [],
         userList: [],
         orgaTree: [],
+        categoryTree:[],
         operNumberTotalStr: '0',
         allPriceTotalStr: '0',
         tabKey: "1",
@@ -258,6 +266,7 @@
       this.initSupplier()
       this.initUser()
       this.loadAllOrgaData()
+      this.loadCategoryTreeData()
       this.initColumnsSetting()
     },
     methods: {
@@ -327,6 +336,20 @@
         getAllOrganizationTreeByUser(params).then((res)=>{
           if(res){
             that.orgaTree = res
+          }
+        })
+      },
+      loadCategoryTreeData(){
+        let that = this;
+        let params = {};
+        params.id='';
+        queryMaterialCategoryTreeList(params).then((res)=>{
+          if(res){
+            that.categoryTree = [];
+            for (let i = 0; i < res.length; i++) {
+              let temp = res[i];
+              that.categoryTree.push(temp);
+            }
           }
         })
       },

@@ -26,6 +26,13 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
+                <a-form-item label="商品类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                                 :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择商品类别">
+                  </a-tree-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
                 <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" v-print="'#reportPrint'" icon="printer">打印</a-button>
@@ -103,6 +110,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import {getAction} from '@/api/manage'
+  import { queryMaterialCategoryTreeList } from '@/api/api'
   import { getMpListShort } from "@/utils/util"
   import Vue from 'vue'
   export default {
@@ -131,6 +139,7 @@
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
         depotList: [],
+        categoryTree:[],
         tabKey: "1",
         pageName: 'stockWarningReport',
         // 默认索引
@@ -167,6 +176,7 @@
     },
     created () {
       this.getDepotData()
+      this.loadCategoryTreeData()
       this.initColumnsSetting()
     },
     methods: {
@@ -183,6 +193,20 @@
             this.depotList = res.data;
           }else{
             this.$message.info(res.data);
+          }
+        })
+      },
+      loadCategoryTreeData(){
+        let that = this;
+        let params = {};
+        params.id='';
+        queryMaterialCategoryTreeList(params).then((res)=>{
+          if(res){
+            that.categoryTree = [];
+            for (let i = 0; i < res.length; i++) {
+              let temp = res[i];
+              that.categoryTree.push(temp);
+            }
           }
         })
       },

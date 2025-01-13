@@ -234,7 +234,7 @@
     },
     created() {
       this.getDepotData()
-      this.loadTreeData()
+      this.loadCategoryTreeData()
       this.initColumnsSetting()
     },
     methods: {
@@ -266,7 +266,7 @@
           return ''
         }
       },
-      loadTreeData(){
+      loadCategoryTreeData(){
         let that = this;
         let params = {};
         params.id='';

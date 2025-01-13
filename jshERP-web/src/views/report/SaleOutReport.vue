@@ -71,6 +71,13 @@
                     </a-tree-select>
                   </a-form-item>
                 </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="商品类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
+                                   :treeData="categoryTree" v-model="queryParam.categoryId" placeholder="请选择商品类别">
+                    </a-tree-select>
+                  </a-form-item>
+                </a-col>
               </template>
             </a-row>
           </a-form>
@@ -141,9 +148,9 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getNowFormatYear, getMpListShort, getPrevMonthFormatDate, getFormatDate } from '@/utils/util'
+  import { getMpListShort, getPrevMonthFormatDate, getFormatDate } from '@/utils/util'
   import {getAction} from '@/api/manage'
-  import {findBySelectCus, getAllOrganizationTreeByUser} from '@/api/api'
+  import {findBySelectCus, queryMaterialCategoryTreeList, getAllOrganizationTreeByUser} from '@/api/api'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import moment from 'moment'
   import Vue from 'vue'
@@ -179,6 +186,7 @@
         cusList: [],
         depotList: [],
         orgaTree: [],
+        categoryTree:[],
         realityPriceTotal: '',
         tabKey: "1",
         pageName: 'saleOutReport',
@@ -217,6 +225,7 @@
       this.initCustomer()
       this.getDepotData()
       this.loadAllOrgaData()
+      this.loadCategoryTreeData()
       this.initColumnsSetting()
     },
     methods: {
@@ -282,6 +291,20 @@
         getAllOrganizationTreeByUser(params).then((res)=>{
           if(res){
             that.orgaTree = res
+          }
+        })
+      },
+      loadCategoryTreeData(){
+        let that = this;
+        let params = {};
+        params.id='';
+        queryMaterialCategoryTreeList(params).then((res)=>{
+          if(res){
+            that.categoryTree = [];
+            for (let i = 0; i < res.length; i++) {
+              let temp = res[i];
+              that.categoryTree.push(temp);
+            }
           }
         })
       },
