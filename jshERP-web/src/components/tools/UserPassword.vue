@@ -17,13 +17,13 @@
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item label="旧密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input type="password" placeholder="请输入旧密码" v-decorator="[ 'oldpassword', validatorRules.oldpassword]" />
+            <a-input-password type="password" placeholder="请输入旧密码" v-decorator="[ 'oldpassword', validatorRules.oldpassword]" />
           </a-form-item>
           <a-form-item label="新密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input type="password" placeholder="新密码至少6位，区分大小写" v-decorator="[ 'password', validatorRules.password]" />
+            <a-input-password type="password" placeholder="新密码至少6位，区分大小写" v-decorator="[ 'password', validatorRules.password]" />
           </a-form-item>
           <a-form-item label="确认新密码" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input type="password"  placeholder="请确认新密码" v-decorator="[ 'confirmPassword', validatorRules.confirmPassword]"/>
+            <a-input-password type="password"  placeholder="请确认新密码" v-decorator="[ 'confirmPassword', validatorRules.confirmPassword]"/>
           </a-form-item>
         </a-form>
       </a-spin>

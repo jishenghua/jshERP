@@ -22,7 +22,7 @@
         <a-form-item
           fieldDecoratorId="password"
           :fieldDecoratorOptions="{rules: [{ required: false}, { validator: this.handlePasswordLevel }], validateTrigger: ['change', 'blur'], validateFirst: true}">
-          <a-input size="large" type="password" @click="handlePasswordInputClick" autocomplete="false" placeholder="至少6位密码，区分大小写"></a-input>
+          <a-input-password size="large" type="password" @click="handlePasswordInputClick" autocomplete="false" placeholder="至少6位密码，区分大小写"></a-input-password>
         </a-form-item>
       </a-popover>
 
@@ -30,7 +30,7 @@
         fieldDecoratorId="password2"
         :fieldDecoratorOptions="{rules: [{ required: true, message: '至少6位密码，区分大小写' }, { validator: this.handlePasswordCheck }], validateTrigger: ['change', 'blur'], validateFirst: true}">
 
-        <a-input size="large" type="password" autocomplete="false" placeholder="确认密码"></a-input>
+        <a-input-password size="large" type="password" autocomplete="false" placeholder="确认密码"></a-input-password>
       </a-form-item>
 
       <a-row :gutter="0">

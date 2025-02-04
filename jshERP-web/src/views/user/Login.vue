@@ -13,14 +13,14 @@
       </a-form-item>
 
       <a-form-item>
-        <a-input
+        <a-input-password
           v-decorator="['password',{initialValue:'', rules: validatorRules.password.rules}]"
           size="large"
           type="password"
           autocomplete="false"
           placeholder="请输入密码">
           <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
-        </a-input>
+        </a-input-password>
       </a-form-item>
 
       <a-row :gutter="0">
