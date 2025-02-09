@@ -220,6 +220,12 @@ public class AccountHeadService {
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         List<AccountHead> list = getAccountHeadListByIds(ids);
+        for(AccountHead accountHead: list){
+            if(!"0".equals(accountHead.getStatus())) {
+                throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
+                        String.format(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));
+            }
+        }
         //删除主表
         accountItemMapperEx.batchDeleteAccountItemByHeadIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
         //删除子表
@@ -230,10 +236,6 @@ public class AccountHeadService {
             sb.append("[").append(accountHead.getBillNo()).append("]");
             if(StringUtil.isNotEmpty(accountHead.getFileName())) {
                 pathList.add(accountHead.getFileName());
-            }
-            if("1".equals(accountHead.getStatus())) {
-                throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
-                        String.format(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));
             }
             if("收预付款".equals(accountHead.getType())){
                 if (accountHead.getOrganId() != null) {
