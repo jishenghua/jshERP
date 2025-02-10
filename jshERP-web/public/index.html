@@ -304,10 +304,12 @@ translate.selectLanguageTag.show = false;
 
 //VUE的渲染需要时间，所以留出一点点时间来进行翻译切换
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('页面 DOM 已渲染完毕');
+    //页面 DOM 已渲染完毕，当然最好是能监控到整个vue渲染完毕后触发最好
+    translate.execute();
+    //2秒后再一次，避免有遗漏
     setTimeout(function(){
     	translate.execute();
-    },500);
+    },2000);
 });
 </script>
 <!-- 全局配置-多语言切换-结束 -->
