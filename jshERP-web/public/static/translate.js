@@ -14,7 +14,7 @@ var translate = {
 	 * 格式：major.minor.patch.date
 	 */
 	// AUTO_VERSION_START
-	version: '3.13.2.20250208',
+	version: '3.13.3.20250210',
 	// AUTO_VERSION_END
 	/*
 		当前使用的版本，默认使用v2. 可使用 setUseVersion2(); 
@@ -5209,7 +5209,7 @@ var translate = {
 
 			if(typeof(obj) == 'string'){
 				//案例一的场景，传入单个字符串
-				texts[0] = [obj];
+				texts[0] = obj;
 			}else{
 				//不是字符串了，而是对象了，判断是案例二还是案例三
 
