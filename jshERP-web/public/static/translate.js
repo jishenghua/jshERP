@@ -3,8 +3,10 @@
 	国际化，网页自动翻译。
 	作者：管雷鸣
 	开原仓库：https://github.com/xnx3/translate
-
  */ 
+if(typeof(translate) == 'object' && typeof(translate.version) == 'string'){
+	throw new Error('translate.js 已经加载过一次了，当前是重复加载，避免你的翻译出现异常，已帮你拦截此次加载。本信息只是给你一个提示，你可以检查一下你的项目中是否出现了重复引入 translate.js ，当然，这个异常并不会影响到你的具体使用，它已经自动帮你处理拦截了这个异常，只不过提示出来是让你知道，你的代码里出现了重复引入的情况。');
+}
 var translate = {
 	/**
 	 * 当前的版本
@@ -12,8 +14,8 @@ var translate = {
 	 * 格式：major.minor.patch.date
 	 */
 	// AUTO_VERSION_START
-  version: '3.12.4.20250110',
-  // AUTO_VERSION_END
+	version: '3.13.2.20250208',
+	// AUTO_VERSION_END
 	/*
 		当前使用的版本，默认使用v2. 可使用 setUseVersion2(); 
 		来设置使用v2 ，已废弃，主要是区分是否是v1版本来着，v2跟v3版本是同样的使用方式
@@ -179,7 +181,7 @@ var translate = {
 					document.getElementById('translateSelectLanguage').style.width = '94px';
 				}catch(e){ console.log(e);} 
 				*/
-			});
+			}, null);
 			
 			
 		}
@@ -852,6 +854,7 @@ var translate = {
 			return doms;
 		}
 	},
+	
 	listener:{
 		//当前页面打开后，是否已经执行完execute() 方法进行翻译了，只要执行完一次，这里便是true。 （多种语言的API请求完毕并已渲染html）
 		//isExecuteFinish:false,
@@ -1116,16 +1119,14 @@ var translate = {
 									translate.inProgressNodes[ini].number = translate.inProgressNodes[ini].number - 1;
 									//console.log("inProgressNodes -- number: "+translate.inProgressNodes[ini].number+', text:'+ipnode.nodeValue);
 									if(translate.inProgressNodes[ini].number < 1){
-										
-										
-											//console.log('ini-'+ini)
-											translate.inProgressNodes.splice(ini,1);	
-											//console.log("inProgressNodes -- 减去node length: "+translate.inProgressNodes.length+', text:'+ipnode.nodeValue);
-										//
+										translate.inProgressNodes.splice(ini,1);	
+										//console.log("inProgressNodes -- 减去node length: "+translate.inProgressNodes.length+', text:'+ipnode.nodeValue);
 									}
+
 									break;
 								}
 							}
+							
 						}, 50, ipnode);
 
 						translate.element.nodeAnalyse.set(this.nodes[hash][task_index], task.originalText, task.resultText, task['attribute']);
@@ -1221,10 +1222,100 @@ var translate = {
 			}
 		}
 	},
+
+
+	/*
+		当前状态，执行状态
+		0 空闲(或者执行翻译完毕)
+		10 扫描要翻译的node，并读取浏览器缓存的翻译内容进行渲染显示
+		20 浏览器缓存渲染完毕，ajax通过文本翻译接口开始请求，在发起ajax请求前，状态变为20，然后再发起ajax请求
+		至于翻译完毕后进行渲染，这个就不单独记录了，因为如果页面存在不同的语种，不同的语种是按照不同的请求来的，是多个异步同时进行的过程
+	*/
+	state:0,
+
+	/*
+		等待翻译队列  v3.12.6 增加
+		当前是否有需要等待翻译的任务，这个目的是为了保证同一时间 translate.execute() 只有一次在执行，免得被新手前端给造成死循环，导致edge翻译给你屏蔽，用户网页还卡死
+		当执行 translate.execute() 时，会先判断状态 translate.state 是否是0空闲的状态，如果空闲，才会执行，如果不是空闲，则不会执行，而是进入到这里进行等待，等待执行完毕后 translate.state 变成0空闲之后，再来执行这里的
+		
+	*/
+	waitingExecute:{
+
+		/*
+			一维数组形态，存放执行的翻译任务
+			二维对象形态，存放执行传入的 docs
+		*/
+		queue:[],
+		/*
+			增加一个翻译任务到翻译队列中
+			docs 同 translate.execute(docs) 的传入参数
+		 */ 
+		add:function(docs){
+			//向数组末尾追加
+			translate.waitingExecute.queue.push(docs);
+			//开启一个定时器进行触发
+			let intervalId = setInterval(function() {
+				if(translate.state == 0){
+					//清除定时器，结束循环
+					clearInterval(intervalId);
+					var docs = translate.waitingExecute.get();
+					translate.execute(docs);
+					//console.log('stop waitingExecute setInterval');
+				}
+			}, 500);
+		},
+		/*
+			从 quque 中取第一个元素，同时将其从queue中删除掉它。
+			如果取的时候 quque已经没有任何元素了，会返回 null， 但是理论上不会出现null
+		 */
+		get:function(){
+			//使用 shift 方法删除数组的第一个元素，并将第一个元素的值返回
+			if(translate.waitingExecute.queue.length > 0){
+				return translate.waitingExecute.queue.shift();
+			}else{
+				console.log('警告， translate.waitingExecute.get 出现异常，quque已空，但还往外取。');
+				return null;
+			}
+		},
+		//当前 translate.translateRequest[uuid] 的是否已经全部执行完毕，这里单纯只是对 translate.translateRequest[uuid] 的进行判断，这里要在 translate.json 接口触发完并渲染完毕后触发，当然接口失败时也要触发
+		isAllExecuteFinish:function(uuid){
+			
+			for(var lang in translate.translateRequest[uuid]){
+				for(var i = 0; i<translate.translateRequest[uuid][lang].length; i++){
+					if(translate.translateRequest[uuid][lang][i].executeFinish == 0){
+						//这个还没执行完，那么直接退出，不在向后执行了
+						//console.log('uuid:'+uuid+'  lang:'+lang+'  executeFinish:0  time:'+translate.translateRequest[uuid][lang][i][addtime]);
+						
+						//这里要考虑进行时间判断
+
+						return;
+					}
+				}
+			}
+
+			//都执行完了，那么设置完毕
+			translate.state = 0;
+			translate.executeNumber++;
+		}
+
+	},
 	
-	//执行翻译操作。翻译的是 nodeQueue 中的
-	//docs 如果传入，那么翻译的只是传入的这个docs的。传入如 [document.getElementById('xxx'),document.getElementById('xxx'),...]
+	//execute() 方法已经被执行过多少次了， 只有execute() 完全执行完，也就是界面渲染完毕后，它才会+1
+	executeNumber:0,
+
+	/*
+		执行翻译操作。翻译的是 nodeQueue 中的
+		docs 如果传入，那么翻译的只是传入的这个docs的。传入如 [document.getElementById('xxx'),document.getElementById('xxx'),...]
+			 如果不传入或者传入null，则是翻译整个网页所有能翻译的元素	
+	 */ 
 	execute:function(docs){
+		if(translate.state != 0){
+			console.log('当前翻译还未完结，新的翻译任务已加入等待翻译队列中，待翻译结束后便会执行当前翻译任务。');
+			translate.waitingExecute.add(docs);
+			return;
+		}
+		translate.state = 1;
+		//console.log('translate.state = 1');
 		if(typeof(docs) != 'undefined'){
 			//execute传入参数，只有v2版本才支持
 			translate.useVersion = 'v2';
@@ -1285,6 +1376,7 @@ var translate = {
 			}
 			
 			//没有指定翻译目标语言、又没自动获取用户本国语种，则不翻译
+			translate.state = 0;
 			return;
 		}
 		
@@ -1294,6 +1386,7 @@ var translate = {
 				//这是自定义设置的允许翻译本地语种中，跟本地语种不一致的语言进行翻译
 
 			}else{
+				translate.state = 0;
 				return;
 			}
 		}
@@ -1312,14 +1405,17 @@ var translate = {
 			其实2、3都是通过 getDocuments() 取，在getDocuments() 就对2、3进行了判断
 		*/
 		var all;
-		if(typeof(docs) != 'undefined'){
+		if(typeof(docs) != 'undefined' && docs != null){
 			//1. 这个方法已经指定的翻译 nodes
 			
+			/* v3.12.6 注释，转到判断非null
 			if(docs == null){
 				//要翻译的目标区域不存在
 				console.log('translate.execute(...) 中传入的要翻译的目标区域不存在。');
+				translate.state = 0;
 				return;
 			}
+			*/
 			
 			if(typeof(docs.length) == 'undefined'){
 				//不是数组，是单个元素
@@ -1722,6 +1818,8 @@ var translate = {
 		//console.log(translate.nodeQueue[uuid]['list'])
 		if(fanyiLangs.length == 0){
 			//没有需要翻译的，直接退出
+			translate.state = 0;
+			translate.executeNumber++;
 			return;
 		}
 		
@@ -1767,6 +1865,9 @@ var translate = {
 			}
 		}
 		//加入 translate.inProgressNodes -- end
+	
+		//状态
+		translate.state = 20;
 
 
 
@@ -1776,6 +1877,9 @@ var translate = {
 			//console.log(typeof(translateTextArray[lang]))
 			
 			if(typeof(translateTextArray[lang]) == 'undefined' || translateTextArray[lang].length < 1){
+				console.log('异常,理论上不应该存在： typeof(translateTextArray[lang]) == \'undefined\' || translateTextArray[lang].length < 1');
+				translate.state = 0;
+				translate.executeNumber++;
 				return;
 			}
 
@@ -1785,11 +1889,21 @@ var translate = {
 				console.log(translateTextArray[lang][ttr_index])
 			}*/
 
+			//将需要请求翻译接口的加入到 translate.translateRequest 中
+			if(typeof(translate.translateRequest[uuid]) == 'undefined' || translate.translateRequest[uuid] == null){
+				translate.translateRequest[uuid] = {};
+			}
+			translate.translateRequest[uuid][lang] = {};
+			translate.translateRequest[uuid][lang].executeFinish = 0; //是否执行完毕，0是执行中， 1是执行完毕（不管是失败还是成功） 而且执行完毕是指ajax请求获得响应，并且dom渲染完成之后才算完毕。当然如果ajax接口失败那也是直接算完毕
+			translate.translateRequest[uuid][lang].addtime = Math.floor(Date.now() / 1000);
+
+
 			/*** 翻译开始 ***/
 			var url = translate.request.api.translate;
 			var data = {
 				from:lang,
 				to:translate.to,
+				lowercase:translate.whole.isEnableAll? '0':'1', //首字母大写
 				//text:JSON.stringify(translateTextArray[lang])
 				text:encodeURIComponent(JSON.stringify(translateTextArray[lang]))
 			};
@@ -1798,6 +1912,10 @@ var translate = {
 				//console.log(data); 
 				//console.log(translateTextArray[data.from]);
 				if(data.result == 0){
+					translate.translateRequest[uuid][lang].result = 2;
+					translate.translateRequest[uuid][lang].executeFinish = 1; //1是执行完毕
+					translate.translateRequest[uuid][lang].stoptime = Math.floor(Date.now() / 1000);
+					translate.waitingExecute.isAllExecuteFinish();
 					console.log('=======ERROR START=======');
 					console.log(translateTextArray[data.from]);
 					//console.log(encodeURIComponent(JSON.stringify(translateTextArray[data.from])));
@@ -1805,9 +1923,15 @@ var translate = {
 					console.log('response : '+data.info);
 					console.log('=======ERROR END  =======');
 					//translate.temp_executeFinishNumber++; //记录执行完的次数
+
 					return;
 				}
 				
+				if(typeof(translate.nodeQueue[uuid]) == 'undefined'){
+					console.log('提示：你很可能多次引入了 translate.js 所以造成了翻译本身的数据错乱，这只是个提示，它还是会给你正常翻译的，但是你最好不要重复引入太多次 translate.js ，正常情况下只需要引入一次 translate.js 就可以了。太多的话很可能会导致你页面卡顿');
+					return;
+				}
+
 				//console.log('-----待翻译3：----');
 				//console.log(translate.nodeQueue);
 				
@@ -1868,12 +1992,49 @@ var translate = {
 				task.execute(); //执行渲染任务
 				//translate.temp_executeFinishNumber++; //记录执行完的次数
 
+				translate.translateRequest[uuid][lang].result = 1;
+				translate.translateRequest[uuid][lang].executeFinish = 1; //1是执行完毕
+				translate.translateRequest[uuid][lang].stoptime = Math.floor(Date.now() / 1000);
+				translate.waitingExecute.isAllExecuteFinish();
+			}, function(xhr){
+				translate.translateRequest[uuid][lang].executeFinish = 1; //1是执行完毕
+				translate.translateRequest[uuid][lang].stoptime = Math.floor(Date.now() / 1000);
+				translate.translateRequest[uuid][lang].result = 3;
+				translate.waitingExecute.isAllExecuteFinish();
 			});
 			/*** 翻译end ***/
-
-			
 		}
 	},
+
+	/**
+	 * 翻译请求记录
+	 * 一维：key:uuid，也就是execute每次执行都会创建一个翻译队列，这个是翻译队列的唯一标识。  这个uuid跟 nodeQueue 的uuid是一样的
+	 * 		value:对象
+	 * 二维: 对象，包含：
+	 * 		from 存放的是要翻译的源语种，比如要讲简体中文翻译为英文，这里存放的就是 chinese_simplified
+	 * 		state 是否执行完毕，0是执行中， 1是执行完毕（不管是失败还是成功） 而且执行完毕是指ajax请求获得响应，并且dom渲染完成之后才算完毕。当然如果ajax接口失败那也是直接算完毕
+	 * 		addtime 这条数据加入到本数组的时间，也就是进行ajax请求开始那一刻的时间，10位时间戳
+	 * 		stoptime 执行完毕的时间，也就是state转为2那一刻的时间
+	 * 		result 执行结果， 0 是还没执行完，等待执行完， > 0 是执行完了有结果了，  
+	 * 												  1 是执行成功
+	 * 												  2 是接口有响应，也是200响应，但是接口响应的结果返回了错误，也就是返回了 {result:0, info:'...'}
+	 * 												  3 是接口不是200响应码
+	 * 
+	 */
+	translateRequest:{
+		/* 
+		uuid:[
+			'chinese_simplified':{
+				executeFinish:0,
+				addtime:150001111,
+				stoptime:150001111,
+				result:0
+			},
+			...
+		] 
+		*/
+	},
+
 	/*
 		将已成功翻译并渲染的node节点进行缓存记录
 		key: node节点的唯一标识符，通过 nodeuuid.uuid() 生成
@@ -2582,7 +2743,7 @@ var translate = {
 		//获取当前是什么语种
 		//var langs = translate.language.get(text);
 		var textRecognition = translate.language.recognition(text);
-		langs = textRecognition.languageArray;
+		var langs = textRecognition.languageArray;
 		//console.log('langs');
 		//console.log(langs);
 
@@ -3873,7 +4034,7 @@ var translate = {
 				translate.selectLanguageTag
 				translate.execute(); //执行翻译
 			}
-		});
+		}, null);
 	},
 	
 	util:{
@@ -4080,14 +4241,19 @@ var translate = {
 		},
 		/**
 		 * 将一个 JSONArray 数组，按照文字长度进行拆分。
-		 *  比如传入的 array 数组的文字长度是6200，传入的 size 是2000，那么就是将 array 数组拆分为多个长度不超出2000的数组返回。
+		 *  比如传入的 array 数组的文字长度是6200，传入的 stringLength 是2000，那么就是将 array 数组拆分为多个长度不超出2000的数组返回。
+		 * 		如果传入了 maxSize = 5 那么会对拆分后的数组的长度进行判断，如果数组内元素超过5，那么还要进行缩短，拆分后的数组不允许超过这个数
+		 * 		也就是拆分后的数组有两重限制，一是限制转化为文本形式的长度、再就是拆分后本身数组的大小。
+		 * 		
 		 *  注意，这个长度是指 array.toString() 后的长度，也就是包含了 [""] 这种符号的长度
 		 * @param array 要被拆分的数组，其内都是String类型，传入格式如 ["你好","世界"]
-		 * @param size 要被拆分的长度
+		 * @param stringLength 要被拆分的数组转化为字符串之后的长度
+		 * @param maxSize 被拆分的数组最大包含多少个，数组大小最大允许多大，要小于等于这个数。 如果设置为0则是不启用这个，不对拆分后的数组进行判断。
 		 * @return 被拆分后的数组列表
 		 * @author 刘晓腾
 		 */
-		 split:function(array, size) {
+		 split:function(array, size, maxSize) {
+		 	let orgsize = size;
 		    let list = [];
 		    // 数组长度小于size，直接进行返回
 		    if(JSON.stringify(array).length <= size) {
@@ -4145,10 +4311,10 @@ var translate = {
 		                        // 看看是否以引号开头，如果不是，需要拼两个引号
 		                        if (s.startsWith("\"")) {
 		                            // 拼一个引号，-1
-		                            endIndex = s.length() - 1;
+		                            endIndex = s.length - 1;
 		                        } else {
 		                            // 拼两个引号，-2
-		                            endIndex = s.length() - 2;
+		                            endIndex = s.length - 2;
 		                        }
 		                        if (!s.endsWith("\"")) {
 		                            // 开始不是逗号了，不能-1
@@ -4185,7 +4351,93 @@ var translate = {
 		            }
 		        }
 		    }
+			// 设置了maxSize，进行处理
+			if (maxSize && maxSize > 0) {
+				list = translate.util._splitMaxSize(list, orgsize, maxSize);
+			}
 		    return list;
+		},
+		/**
+		 * 针对split函数中maxSize的处理
+		 * 	private
+		 * @param array 已拆分的二维数组
+		 * @param size 拆分的长度
+		 * @param maxSize 元素数量
+		 * @author 刘晓腾
+		 */
+		_splitMaxSize:function(array, size, maxSize) {
+			// console.log("------ splitMaxSize run ------")
+
+			// 返回的数据
+			let list = [];
+			// 暂存的数组，用来存储每次遍历时超出的数据
+			let tmp = [];
+
+		 	// 遍历二维数组
+			array.forEach(function(arr, index) {
+				// 累加数组
+				arr = tmp.concat(arr);
+				// 计算元素数量
+				let length = arr.length;
+				// 数组中元素数量大于maxSize，对多余的元素进行移除
+				if (length > maxSize) {
+					// 第一个数组，包含前N个元素
+					let firstArray = arr.slice(0, maxSize);
+					// 第二个数组，包含剩下的元素
+					let secondArray = arr.slice(maxSize);
+
+					// 处理长度
+					let len = 1;
+					while (JSON.stringify(firstArray).length > size) {
+						// 长度超过限制，进行处理
+						firstArray = arr.slice(0, maxSize - len);
+						secondArray = arr.slice(maxSize - len);
+						len++;
+						if (len >= arr.length+1) {
+							break;
+						}
+					}
+
+					// 第一个数组记录
+					list.push(firstArray);
+					// 第二个数组暂存
+					tmp.length = 0;
+					tmp = secondArray;
+				} else {
+					// 没超，只处理长度
+					// 处理长度
+					let firstArray = arr;
+					let secondArray = [];
+					let len = 1;
+					while (JSON.stringify(firstArray).length > size) {
+						// 长度超过限制，进行处理
+						firstArray = arr.slice(0, maxSize - len);
+						secondArray = arr.slice(maxSize - len);
+						len++;
+						if (len >= arr.length+1) {
+							break;
+						}
+					}
+
+					// 第一个数组记录
+					list.push(firstArray);
+					// 第二个数组暂存
+					tmp.length = 0;
+					tmp = secondArray;
+				}
+
+			});
+
+			// 临时数组中还有元素，也要进行处理
+			if (tmp.length > 0) {
+				let tmpl = [];
+				tmpl.push(tmp);
+				// 递归处理
+				let l = translate.util._splitMaxSize(tmpl, size, maxSize);
+				list = list.concat(l);
+			}
+
+			return list;
 		},
 		/* 
 			浏览器的语种标识跟translate.js的语种标识的对应
@@ -4204,6 +4456,7 @@ var translate = {
 			'nl':'dutch',
 			'yo':'yoruba',
 			'en':'english',
+			'en-US':'english',
 			'kok':'gongen',
 			'la':'latin',
 			'ne':'nepali',
@@ -4363,7 +4616,7 @@ var translate = {
 			},
 
 			language:{
-				json:[{"id":"ukrainian","name":"УкраїнськаName","serviceId":"uk"},{"id":"norwegian","name":"Norge","serviceId":"no"},{"id":"welsh","name":"color name","serviceId":"cy"},{"id":"dutch","name":"nederlands","serviceId":"nl"},{"id":"japanese","name":"日本語","serviceId":"ja"},{"id":"filipino","name":"Pilipino","serviceId":"fil"},{"id":"english","name":"English","serviceId":"en"},{"id":"lao","name":"ກະຣຸນາ","serviceId":"lo"},{"id":"telugu","name":"తెలుగుQFontDatabase","serviceId":"te"},{"id":"romanian","name":"Română","serviceId":"ro"},{"id":"nepali","name":"नेपालीName","serviceId":"ne"},{"id":"french","name":"Français","serviceId":"fr"},{"id":"haitian_creole","name":"Kreyòl ayisyen","serviceId":"ht"},{"id":"czech","name":"český","serviceId":"cs"},{"id":"swedish","name":"Svenska","serviceId":"sv"},{"id":"russian","name":"Русский язык","serviceId":"ru"},{"id":"malagasy","name":"Malagasy","serviceId":"mg"},{"id":"burmese","name":"ဗာရမ်","serviceId":"my"},{"id":"pashto","name":"پښتوName","serviceId":"ps"},{"id":"thai","name":"คนไทย","serviceId":"th"},{"id":"armenian","name":"Արմենյան","serviceId":"hy"},{"id":"chinese_simplified","name":"简体中文","serviceId":"zh-CHS"},{"id":"persian","name":"Persian","serviceId":"fa"},{"id":"chinese_traditional","name":"繁體中文","serviceId":"zh-CHT"},{"id":"kurdish","name":"Kurdî","serviceId":"ku"},{"id":"turkish","name":"Türkçe","serviceId":"tr"},{"id":"hindi","name":"हिन्दी","serviceId":"hi"},{"id":"bulgarian","name":"български","serviceId":"bg"},{"id":"malay","name":"Malay","serviceId":"ms"},{"id":"swahili","name":"Kiswahili","serviceId":"sw"},{"id":"oriya","name":"ଓଡିଆ","serviceId":"or"},{"id":"icelandic","name":"ÍslandName","serviceId":"is"},{"id":"irish","name":"Íris","serviceId":"ga"},{"id":"khmer","name":"ខ្មែរKCharselect unicode block name","serviceId":"km"},{"id":"gujarati","name":"ગુજરાતી","serviceId":"gu"},{"id":"slovak","name":"Slovenská","serviceId":"sk"},{"id":"kannada","name":"ಕನ್ನಡ್Name","serviceId":"kn"},{"id":"hebrew","name":"היברית","serviceId":"he"},{"id":"hungarian","name":"magyar","serviceId":"hu"},{"id":"marathi","name":"मराठीName","serviceId":"mr"},{"id":"tamil","name":"தாமில்","serviceId":"ta"},{"id":"estonian","name":"eesti keel","serviceId":"et"},{"id":"malayalam","name":"മലമാലം","serviceId":"ml"},{"id":"inuktitut","name":"ᐃᓄᒃᑎᑐᑦ","serviceId":"iu"},{"id":"arabic","name":"بالعربية","serviceId":"ar"},{"id":"deutsch","name":"Deutsch","serviceId":"de"},{"id":"slovene","name":"slovenščina","serviceId":"sl"},{"id":"bengali","name":"বেঙ্গালী","serviceId":"bn"},{"id":"urdu","name":"اوردو","serviceId":"ur"},{"id":"azerbaijani","name":"azerbaijani","serviceId":"az"},{"id":"portuguese","name":"português","serviceId":"pt"},{"id":"samoan","name":"lifiava","serviceId":"sm"},{"id":"afrikaans","name":"afrikaans","serviceId":"af"},{"id":"tongan","name":"汤加语","serviceId":"to"},{"id":"greek","name":"ελληνικά","serviceId":"el"},{"id":"indonesian","name":"IndonesiaName","serviceId":"id"},{"id":"spanish","name":"Español","serviceId":"es"},{"id":"danish","name":"dansk","serviceId":"da"},{"id":"amharic","name":"amharic","serviceId":"am"},{"id":"punjabi","name":"ਪੰਜਾਬੀName","serviceId":"pa"},{"id":"albanian","name":"albanian","serviceId":"sq"},{"id":"lithuanian","name":"Lietuva","serviceId":"lt"},{"id":"italian","name":"italiano","serviceId":"it"},{"id":"vietnamese","name":"Tiếng Việt","serviceId":"vi"},{"id":"korean","name":"한국어","serviceId":"ko"},{"id":"maltese","name":"Malti","serviceId":"mt"},{"id":"finnish","name":"suomi","serviceId":"fi"},{"id":"catalan","name":"català","serviceId":"ca"},{"id":"croatian","name":"hrvatski","serviceId":"hr"},{"id":"bosnian","name":"bosnian","serviceId":"bs-Latn"},{"id":"polish","name":"Polski","serviceId":"pl"},{"id":"latvian","name":"latviešu","serviceId":"lv"},{"id":"maori","name":"Maori","serviceId":"mi"}],
+				json:[{"id":"ukrainian","name":"Україна","serviceId":"uk"},{"id":"norwegian","name":"Norge","serviceId":"no"},{"id":"welsh","name":"Iaith Weleg","serviceId":"cy"},{"id":"dutch","name":"nederlands","serviceId":"nl"},{"id":"japanese","name":"日本語","serviceId":"ja"},{"id":"filipino","name":"Pilipino","serviceId":"fil"},{"id":"english","name":"English","serviceId":"en"},{"id":"lao","name":"ກະຣຸນາ","serviceId":"lo"},{"id":"telugu","name":"తెలుగుName","serviceId":"te"},{"id":"romanian","name":"Română","serviceId":"ro"},{"id":"nepali","name":"नेपालीName","serviceId":"ne"},{"id":"french","name":"Français","serviceId":"fr"},{"id":"haitian_creole","name":"Kreyòl ayisyen","serviceId":"ht"},{"id":"czech","name":"český","serviceId":"cs"},{"id":"swedish","name":"Svenska","serviceId":"sv"},{"id":"russian","name":"Русский язык","serviceId":"ru"},{"id":"malagasy","name":"Malagasy","serviceId":"mg"},{"id":"burmese","name":"ဗာရမ်","serviceId":"my"},{"id":"pashto","name":"پښتوName","serviceId":"ps"},{"id":"thai","name":"คนไทย","serviceId":"th"},{"id":"armenian","name":"Արմենյան","serviceId":"hy"},{"id":"chinese_simplified","name":"简体中文","serviceId":"zh-CHS"},{"id":"persian","name":"Persian","serviceId":"fa"},{"id":"chinese_traditional","name":"繁體中文","serviceId":"zh-CHT"},{"id":"kurdish","name":"Kurdî","serviceId":"ku"},{"id":"turkish","name":"Türkçe","serviceId":"tr"},{"id":"hindi","name":"हिन्दी","serviceId":"hi"},{"id":"bulgarian","name":"български","serviceId":"bg"},{"id":"malay","name":"Malay","serviceId":"ms"},{"id":"swahili","name":"Kiswahili","serviceId":"sw"},{"id":"oriya","name":"ଓଡିଆ","serviceId":"or"},{"id":"icelandic","name":"ÍslandName","serviceId":"is"},{"id":"irish","name":"Íris","serviceId":"ga"},{"id":"khmer","name":"ភាសា​ខ្មែរName","serviceId":"km"},{"id":"gujarati","name":"ગુજરાતી","serviceId":"gu"},{"id":"slovak","name":"Slovenská","serviceId":"sk"},{"id":"kannada","name":"ಕನ್ನಡ್Name","serviceId":"kn"},{"id":"hebrew","name":"היברית","serviceId":"he"},{"id":"hungarian","name":"magyar","serviceId":"hu"},{"id":"marathi","name":"मराठीName","serviceId":"mr"},{"id":"tamil","name":"தாமில்","serviceId":"ta"},{"id":"estonian","name":"eesti keel","serviceId":"et"},{"id":"malayalam","name":"മലമാലം","serviceId":"ml"},{"id":"inuktitut","name":"ᐃᓄᒃᑎᑐᑦ","serviceId":"iu"},{"id":"arabic","name":"بالعربية","serviceId":"ar"},{"id":"deutsch","name":"Deutsch","serviceId":"de"},{"id":"slovene","name":"slovenščina","serviceId":"sl"},{"id":"bengali","name":"বেঙ্গালী","serviceId":"bn"},{"id":"urdu","name":"اوردو","serviceId":"ur"},{"id":"azerbaijani","name":"azerbaijani","serviceId":"az"},{"id":"portuguese","name":"português","serviceId":"pt"},{"id":"samoan","name":"lifiava","serviceId":"sm"},{"id":"afrikaans","name":"afrikaans","serviceId":"af"},{"id":"tongan","name":"汤加语","serviceId":"to"},{"id":"greek","name":"ελληνικά","serviceId":"el"},{"id":"indonesian","name":"IndonesiaName","serviceId":"id"},{"id":"spanish","name":"Español","serviceId":"es"},{"id":"danish","name":"dansk","serviceId":"da"},{"id":"amharic","name":"amharic","serviceId":"am"},{"id":"punjabi","name":"ਪੰਜਾਬੀName","serviceId":"pa"},{"id":"albanian","name":"albanian","serviceId":"sq"},{"id":"lithuanian","name":"Lietuva","serviceId":"lt"},{"id":"italian","name":"italiano","serviceId":"it"},{"id":"vietnamese","name":"Tiếng Việt","serviceId":"vi"},{"id":"korean","name":"한국어","serviceId":"ko"},{"id":"maltese","name":"Malti","serviceId":"mt"},{"id":"finnish","name":"suomi","serviceId":"fi"},{"id":"catalan","name":"català","serviceId":"ca"},{"id":"croatian","name":"hrvatski","serviceId":"hr"},{"id":"bosnian","name":"bosnian","serviceId":"bs-Latn"},{"id":"polish","name":"Polski","serviceId":"pl"},{"id":"latvian","name":"latviešu","serviceId":"lv"},{"id":"maori","name":"Maori","serviceId":"mi"}],
 				/*
 					获取map形式的语言列表 
 					key为 translate.service 的 name  
@@ -4387,12 +4640,10 @@ var translate = {
 			 * @param data 请求的参数数据
 			 * @param func 请求完成的回调，传入如 function(data){ console.log(data); }
 			 */
-			translate:function(path, data, func){
+			translate:function(path, data, func, abnormalFunc){
 				var textArray = JSON.parse(decodeURIComponent(data.text));
-				let translateTextArray = translate.util.split(textArray, 48000);
-				//console.log(translateTextArray);
+				let translateTextArray = translate.util.split(textArray, 40000, 900);
 				
-
 				translate.request.send(translate.service.edge.api.auth, {}, function(auth){
 					var from = translate.service.edge.language.getMap()[data.from];
 					var to = translate.service.edge.language.getMap()[data.to];
@@ -4462,10 +4713,7 @@ var translate = {
 							}
 							
 							func(d);
-						}, 'post', true, {'Authorization':'Bearer '+auth, 'Content-Type':'application/json'}, function(xhr){
-							console.log('---------error--------');
-							console.log('edge translate service error, http code : '+xhr.status + ', response text : '+xhr.responseText);
-						}, true);
+						}, 'post', true, {'Authorization':'Bearer '+auth, 'Content-Type':'application/json'}, abnormalFunc, true);
 						
 
 					}
@@ -4762,8 +5010,9 @@ var translate = {
 		 * 		}
 		 * 		
 		 * @param func 请求完成的回调，传入如 function(data){ console.log(data); }
+		 * @param abnormalFunc 响应异常所执行的方法，响应码不是200就会执行这个方法 ,传入如 function(xhr){}  另外这里的 xhr 会额外有个参数  xhr.requestURL 返回当前请求失败的url
 		 */
-		post:function(path, data, func){
+		post:function(path, data, func, abnormalFunc){
 			var headers = {
 				'content-type':'application/x-www-form-urlencoded',
 			};
@@ -4779,7 +5028,7 @@ var translate = {
 			//if(url.indexOf('edge') > -1 && path == translate.request.api.translate){
 			if(translate.service.name == 'client.edge'){	
 				if(path == translate.request.api.translate){
-					translate.service.edge.translate(path, data, func);
+					translate.service.edge.translate(path, data, func, abnormalFunc);
 					return;
 				}
 				if(path == translate.request.api.language){
@@ -4795,7 +5044,7 @@ var translate = {
 			}
 			// ------- edge end --------
 
-			this.send(path, data, func, 'post', true, headers, null, true);
+			this.send(path, data, func, 'post', true, headers, abnormalFunc, true);
 		},
 		/**
 		 * 发送请求
@@ -4815,16 +5064,21 @@ var translate = {
 			if(data == null || typeof(data) == 'undefined'){
 				data = {};
 			}
-			//加入浏览器默认语种  v3.6.1 增加，以便更好的进行自动切换语种
-			data.browserDefaultLanguage = translate.util.browserDefaultLanguage();
-			if(typeof(translate.enterprise.key) != 'undefined' && typeof(translate.enterprise.key) == 'string' && translate.enterprise.key.length > 0){
-				data.key = translate.enterprise.key;
-			}
-
+			
 			if(typeof(data) == 'string'){
 				params = data; //payload 方式
 			}else{
 				//表单提交方式
+				
+				//加入浏览器默认语种  v3.6.1 增加，以便更好的进行自动切换语种
+				data.browserDefaultLanguage = translate.util.browserDefaultLanguage();
+				
+				//加入key
+				if(typeof(translate.enterprise.key) != 'undefined' && typeof(translate.enterprise.key) == 'string' && translate.enterprise.key.length > 0){
+					data.key = translate.enterprise.key;
+				}
+				
+				//组合参数
 				for(var index in data){
 					if(params.length > 0){
 						params = params + '&';
@@ -5009,7 +5263,7 @@ var translate = {
 				}
 
 				func(data);
-			});
+			}, null);
 		},
 		listener:{
 			minIntervalTime:800, // 两次触发的最小间隔时间，单位是毫秒，这里默认是800毫秒。最小填写时间为 200毫秒
@@ -5360,7 +5614,7 @@ var translate = {
 				curTooltipEle.style.top =selectionY+20+"px";
 				curTooltipEle.style.left = selectionX+50+"px" ;
 				curTooltipEle.style.display = "";
-			});
+			}, null);
 		},
 		start:function () {
 			//新建一个tooltip元素节点用于显示翻译
@@ -5531,6 +5785,22 @@ var nodeuuid = {
 		}
 		return uuid;
 	},
+	/*
+		开启远程调试能力，当你使用中遇到问题，需要向开源作者求助时，可以在你项目中主动调用这个方法，也就是 translate.enableRemoteDebug(); 即可启动远程调试能力
+		开源项目作者就可以对你当前出错的页面进行远程调试排查问题所在。当然前提是你的页面要保持别关闭。
+
+		这个能力是通过开源项目 https://github.com/HuolalaTech/page-spy-web 来实现的
+		
+	*/
+	enableRemoteDebug:function(){
+
+		/*
+
+			待同事实现
+		*/
+
+	}
+
 
 }
 console.log('------ translate.js ------\nTwo lines of js html automatic translation, page without change, no language configuration file, no API Key, SEO friendly! Open warehouse : https://github.com/xnx3/translate \n两行js实现html全自动翻译。 无需改动页面、无语言配置文件、无API Key、对SEO友好！完全开源，代码仓库：https://gitee.com/mail_osc/translate');
