@@ -89,79 +89,79 @@
             <div style="float:left; width: 40%; line-height: 30px">{{langSetTitle}}</div>
             <div style="float:left; width: 60%" id="langSetting">
               <a-select placeholder="请选择语言" showSearch optionFilterProp="children" :value="currentLang" @change="handleChangeLang" style="width:150px">
-                <a-select-option value="chinese_simplified">简体中文</a-select-option>
-                <a-select-option value="chinese_traditional">繁體中文</a-select-option>
-                <a-select-option value="english">English</a-select-option>
-                <a-select-option value="korean">한국어</a-select-option>
-                <a-select-option value="japanese">しろうと</a-select-option>
-                <a-select-option value="vietnamese">Tiếng Việt</a-select-option>
-                <a-select-option value="hindi">हिन्दी</a-select-option>
-                <a-select-option value="russian">Русский язык</a-select-option>
-                <a-select-option value="french">Français</a-select-option>
-                <a-select-option value="ukrainian">УкраїнськаName</a-select-option>
-                <a-select-option value="norwegian">Norge</a-select-option>
-                <a-select-option value="welsh">color name</a-select-option>
-                <a-select-option value="dutch">nederlands</a-select-option>
-                <a-select-option value="filipino">Pilipino</a-select-option>
-                <a-select-option value="lao">ກະຣຸນາ</a-select-option>
-                <a-select-option value="telugu">తెలుగుQFontDatabase</a-select-option>
-                <a-select-option value="romanian">Română</a-select-option>
-                <a-select-option value="nepali">नेपालीName</a-select-option>
-                <a-select-option value="haitian_creole">Kreyòl ayisyen</a-select-option>
-                <a-select-option value="czech">český</a-select-option>
-                <a-select-option value="swedish">Svenska</a-select-option>
-                <a-select-option value="malagasy">Malagasy</a-select-option>
-                <a-select-option value="burmese">ဗာရမ်</a-select-option>
-                <a-select-option value="pashto">پښتوName</a-select-option>
-                <a-select-option value="thai">คนไทย</a-select-option>
-                <a-select-option value="armenian">Արմենյան</a-select-option>
-                <a-select-option value="persian">Persian</a-select-option>
-                <a-select-option value="kurdish">Kurdî</a-select-option>
-                <a-select-option value="turkish">Türkçe</a-select-option>
-                <a-select-option value="bulgarian">български</a-select-option>
-                <a-select-option value="malay">Malay</a-select-option>
-                <a-select-option value="swahili">Kiswahili</a-select-option>
-                <a-select-option value="oriya">ଓଡିଆ</a-select-option>
-                <a-select-option value="icelandic">ÍslandName</a-select-option>
-                <a-select-option value="irish">Íris</a-select-option>
-                <a-select-option value="khmer">ខ្មែរKCharselect unicode block name</a-select-option>
-                <a-select-option value="gujarati">ગુજરાતી</a-select-option>
-                <a-select-option value="slovak">Slovenská</a-select-option>
-                <a-select-option value="kannada">ಕನ್ನಡ್Name</a-select-option>
-                <a-select-option value="hebrew">היברית</a-select-option>
-                <a-select-option value="hungarian">magyar</a-select-option>
-                <a-select-option value="marathi">मराठीName</a-select-option>
-                <a-select-option value="tamil">தாமில்</a-select-option>
-                <a-select-option value="estonian">eesti keel</a-select-option>
-                <a-select-option value="malayalam">മലമാലം</a-select-option>
-                <a-select-option value="inuktitut">ᐃᓄᒃᑎᑐᑦ</a-select-option>
-                <a-select-option value="arabic">بالعربية</a-select-option>
-                <a-select-option value="deutsch">Deutsch</a-select-option>
-                <a-select-option value="slovene">slovenščina</a-select-option>
-                <a-select-option value="bengali">বেঙ্গালী</a-select-option>
-                <a-select-option value="urdu">اوردو</a-select-option>
-                <a-select-option value="azerbaijani">azerbaijani</a-select-option>
-                <a-select-option value="portuguese">português</a-select-option>
-                <a-select-option value="samoan">lifiava</a-select-option>
-                <a-select-option value="afrikaans">afrikaans</a-select-option>
-                <a-select-option value="tongan">汤加语</a-select-option>
-                <a-select-option value="greek">ελληνικά</a-select-option>
-                <a-select-option value="indonesian">IndonesiaName</a-select-option>
-                <a-select-option value="spanish">Español</a-select-option>
-                <a-select-option value="danish">dansk</a-select-option>
-                <a-select-option value="amharic">amharic</a-select-option>
-                <a-select-option value="punjabi">ਪੰਜਾਬੀName</a-select-option>
-                <a-select-option value="albanian">albanian</a-select-option>
-                <a-select-option value="lithuanian">Lietuva</a-select-option>
-                <a-select-option value="italian">italiano</a-select-option>
-                <a-select-option value="maltese">Malti</a-select-option>
-                <a-select-option value="finnish">suomi</a-select-option>
-                <a-select-option value="catalan">català</a-select-option>
-                <a-select-option value="croatian">hrvatski</a-select-option>
-                <a-select-option value="bosnian">bosnian</a-select-option>
-                <a-select-option value="polish">Polski</a-select-option>
-                <a-select-option value="latvian">latviešu</a-select-option>
-                <a-select-option value="maori">Maori</a-select-option>
+                <a-select-option class="ignore" value="chinese_simplified">简体中文</a-select-option>
+                <a-select-option class="ignore" value="chinese_traditional">繁體中文</a-select-option>
+                <a-select-option class="ignore" value="english">English</a-select-option>
+                <a-select-option class="ignore" value="korean">한국어</a-select-option>
+                <a-select-option class="ignore" value="japanese">しろうと</a-select-option>
+                <a-select-option class="ignore" value="vietnamese">Tiếng Việt</a-select-option>
+                <a-select-option class="ignore" value="hindi">हिन्दी</a-select-option>
+                <a-select-option class="ignore" value="russian">Русский язык</a-select-option>
+                <a-select-option class="ignore" value="french">Français</a-select-option>
+                <a-select-option class="ignore" value="ukrainian">УкраїнськаName</a-select-option>
+                <a-select-option class="ignore" value="norwegian">Norge</a-select-option>
+                <a-select-option class="ignore" value="welsh">color name</a-select-option>
+                <a-select-option class="ignore" value="dutch">nederlands</a-select-option>
+                <a-select-option class="ignore" value="filipino">Pilipino</a-select-option>
+                <a-select-option class="ignore" value="lao">ກະຣຸນາ</a-select-option>
+                <a-select-option class="ignore" value="telugu">తెలుగుQFontDatabase</a-select-option>
+                <a-select-option class="ignore" value="romanian">Română</a-select-option>
+                <a-select-option class="ignore" value="nepali">नेपालीName</a-select-option>
+                <a-select-option class="ignore" value="haitian_creole">Kreyòl ayisyen</a-select-option>
+                <a-select-option class="ignore" value="czech">český</a-select-option>
+                <a-select-option class="ignore" value="swedish">Svenska</a-select-option>
+                <a-select-option class="ignore" value="malagasy">Malagasy</a-select-option>
+                <a-select-option class="ignore" value="burmese">ဗာရမ်</a-select-option>
+                <a-select-option class="ignore" value="pashto">پښتوName</a-select-option>
+                <a-select-option class="ignore" value="thai">คนไทย</a-select-option>
+                <a-select-option class="ignore" value="armenian">Արմենյան</a-select-option>
+                <a-select-option class="ignore" value="persian">Persian</a-select-option>
+                <a-select-option class="ignore" value="kurdish">Kurdî</a-select-option>
+                <a-select-option class="ignore" value="turkish">Türkçe</a-select-option>
+                <a-select-option class="ignore" value="bulgarian">български</a-select-option>
+                <a-select-option class="ignore" value="malay">Malay</a-select-option>
+                <a-select-option class="ignore" value="swahili">Kiswahili</a-select-option>
+                <a-select-option class="ignore" value="oriya">ଓଡିଆ</a-select-option>
+                <a-select-option class="ignore" value="icelandic">ÍslandName</a-select-option>
+                <a-select-option class="ignore" value="irish">Íris</a-select-option>
+                <a-select-option class="ignore" value="khmer">ខ្មែរKCharselect unicode block name</a-select-option>
+                <a-select-option class="ignore" value="gujarati">ગુજરાતી</a-select-option>
+                <a-select-option class="ignore" value="slovak">Slovenská</a-select-option>
+                <a-select-option class="ignore" value="kannada">ಕನ್ನಡ್Name</a-select-option>
+                <a-select-option class="ignore" value="hebrew">היברית</a-select-option>
+                <a-select-option class="ignore" value="hungarian">magyar</a-select-option>
+                <a-select-option class="ignore" value="marathi">मराठीName</a-select-option>
+                <a-select-option class="ignore" value="tamil">தாமில்</a-select-option>
+                <a-select-option class="ignore" value="estonian">eesti keel</a-select-option>
+                <a-select-option class="ignore" value="malayalam">മലമാലം</a-select-option>
+                <a-select-option class="ignore" value="inuktitut">ᐃᓄᒃᑎᑐᑦ</a-select-option>
+                <a-select-option class="ignore" value="arabic">بالعربية</a-select-option>
+                <a-select-option class="ignore" value="deutsch">Deutsch</a-select-option>
+                <a-select-option class="ignore" value="slovene">slovenščina</a-select-option>
+                <a-select-option class="ignore" value="bengali">বেঙ্গালী</a-select-option>
+                <a-select-option class="ignore" value="urdu">اوردو</a-select-option>
+                <a-select-option class="ignore" value="azerbaijani">azerbaijani</a-select-option>
+                <a-select-option class="ignore" value="portuguese">português</a-select-option>
+                <a-select-option class="ignore" value="samoan">lifiava</a-select-option>
+                <a-select-option class="ignore" value="afrikaans">afrikaans</a-select-option>
+                <a-select-option class="ignore" value="tongan">汤加语</a-select-option>
+                <a-select-option class="ignore" value="greek">ελληνικά</a-select-option>
+                <a-select-option class="ignore" value="indonesian">IndonesiaName</a-select-option>
+                <a-select-option class="ignore" value="spanish">Español</a-select-option>
+                <a-select-option class="ignore" value="danish">dansk</a-select-option>
+                <a-select-option class="ignore" value="amharic">amharic</a-select-option>
+                <a-select-option class="ignore" value="punjabi">ਪੰਜਾਬੀName</a-select-option>
+                <a-select-option class="ignore" value="albanian">albanian</a-select-option>
+                <a-select-option class="ignore" value="lithuanian">Lietuva</a-select-option>
+                <a-select-option class="ignore" value="italian">italiano</a-select-option>
+                <a-select-option class="ignore" value="maltese">Malti</a-select-option>
+                <a-select-option class="ignore" value="finnish">suomi</a-select-option>
+                <a-select-option class="ignore" value="catalan">català</a-select-option>
+                <a-select-option class="ignore" value="croatian">hrvatski</a-select-option>
+                <a-select-option class="ignore" value="bosnian">bosnian</a-select-option>
+                <a-select-option class="ignore" value="polish">Polski</a-select-option>
+                <a-select-option class="ignore" value="latvian">latviešu</a-select-option>
+                <a-select-option class="ignore" value="maori">Maori</a-select-option>
               </a-select>
             </div>
           </div>

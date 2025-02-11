@@ -237,8 +237,6 @@
     }
     /* 滚动条优化 end */
   </style>
-  <!-- 全局配置 -->
-  <script src="<%= BASE_URL %>static/translate.js"></script>
   <script>
     function getPlatform(type) {
       let res = '';
@@ -270,15 +268,6 @@
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
-    //设置本地语种（当前网页的语种）。如果不设置，默认就是 'chinese_simplified' 简体中文
-    translate.language.setLocal('chinese_simplified')
-    translate.service.use('client.edge')
-    //开启html页面变化的监控，对变化部分会进行自动翻译
-    translate.listener.start()
-    //不显示语言选择标签
-    translate.selectLanguageTag.show = false;
-    //执行翻译初始化操作，显示出select语言选择
-    translate.execute()
   </script>
 </head>
 
@@ -295,4 +284,34 @@
   </div>
 </div>
 </body>
+
+<!-- 全局配置-多语言切换-开始 -->
+<script src="<%= BASE_URL %>static/translate.js"></script>
+<script>
+//设置本地语种（当前网页的语种）。如果不设置，默认就是 'chinese_simplified' 简体中文
+translate.language.setLocal('chinese_simplified');
+translate.service.use('client.edge');
+//翻译自定义
+translate.nomenclature.append('chinese_simplified','english',`
+管伊佳ERP=GuanYiJia
+`)
+//开启html页面变化的监控，对变化部分会进行自动翻译
+translate.listener.start();
+//不显示语言选择标签
+translate.selectLanguageTag.show = false;
+//执行翻译初始化操作，显示出select语言选择
+//translate.execute();
+
+//VUE的渲染需要时间，所以留出一点点时间来进行翻译切换
+document.addEventListener('DOMContentLoaded', function () {
+    //页面 DOM 已渲染完毕，当然最好是能监控到整个vue渲染完毕后触发最好
+    translate.execute();
+    //2秒后再一次，避免有遗漏
+    setTimeout(function(){
+    	translate.execute();
+    },2000);
+});
+</script>
+<!-- 全局配置-多语言切换-结束 -->
+
 </html>
