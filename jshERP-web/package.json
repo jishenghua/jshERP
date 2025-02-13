@@ -24,7 +24,7 @@
     "md5": "^2.2.1",
     "nprogress": "^0.2.0",
     "viser-vue": "^2.4.4",
-    "vue": "^2.6.10",
+    "vue": "^2.7.16",
     "vue-area-linkage": "^5.1.0",
     "vue-cropper": "^0.4.8",
     "vue-draggable-resizable": "^2.3.0",
