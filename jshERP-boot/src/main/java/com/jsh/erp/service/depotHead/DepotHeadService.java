@@ -1333,7 +1333,7 @@ public class DepotHeadService {
 
 
     public DepotHead getDepotHead(String number)throws Exception {
-        DepotHead depotHead = new DepotHead();
+        DepotHead depotHead = null;
         try{
             DepotHeadExample example = new DepotHeadExample();
             example.createCriteria().andNumberEqualTo(number).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
