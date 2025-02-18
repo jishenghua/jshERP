@@ -608,9 +608,16 @@ export const BillModalMixin = {
           operNumber = row.operNumber-0 //数量
           taxLastMoney = value-0
           taxRate = row.taxRate-0 //税率
-          unitPrice = (taxLastMoney/operNumber/(1+taxRate*0.01)).toFixed(2)-0
-          allPrice = (unitPrice*operNumber).toFixed(2)-0
-          taxMoney =(taxLastMoney-allPrice).toFixed(2)-0
+          if(taxRate) {
+            unitPrice = (taxLastMoney/operNumber/(1+taxRate*0.01)).toFixed(2)-0
+            allPrice = (unitPrice*operNumber).toFixed(2)-0
+            taxMoney =(taxLastMoney-allPrice).toFixed(2)-0
+          } else {
+            //税率为0的情况，特殊处理
+            allPrice = taxLastMoney
+            unitPrice = (allPrice/operNumber).toFixed(2)-0 //单价
+            taxMoney = 0
+          }
           target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, allPrice: allPrice, taxMoney: taxMoney}}])
           target.recalcAllStatisticsColumns()
           that.autoChangePrice(target)
