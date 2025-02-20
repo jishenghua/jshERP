@@ -35,30 +35,6 @@
         </if>
         and ifnull(t.delete_flag,'0') !='1'
         order by t.id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
     </select>
 
-    <select id="countsByTenant" resultType="java.lang.Long">
-        select
-        count(t.id)
-        from jsh_tenant t
-        where 1=1
-        <if test="loginName != null">
-            <bind name="bindLoginName" value="'%'+loginName+'%'"/>
-            and t.login_name like #{bindLoginName}
-        </if>
-        <if test="type != null and type != ''">
-            and t.type = #{type}
-        </if>
-        <if test="enabled != null and enabled != ''">
-            and t.enabled = #{enabled}
-        </if>
-        <if test="remark != null">
-            <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and t.remark like #{bindRemark}
-        </if>
-        and ifnull(t.delete_flag,'0') !='1'
-    </select>
 </mapper>

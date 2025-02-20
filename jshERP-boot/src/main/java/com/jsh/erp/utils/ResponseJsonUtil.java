@@ -34,35 +34,6 @@ public class ResponseJsonUtil {
     }
 
     /**
-     *
-     * @param responseCode
-     * @return
-     */
-    public static String backJson4HttpApi(ResponseCode responseCode) {
-        if (responseCode != null) {
-            String result = JSON.toJSONString(responseCode, new ResponseFilter(),
-                    SerializerFeature.DisableCircularReferenceDetect,
-                    SerializerFeature.WriteNonStringKeyAsString);
-            result = result.replaceFirst("\"data\":\\{", "");
-            return result.substring(0, result.length() - 1);
-        }
-        return null;
-    }
-
-    /**
-     * 验证失败的json串
-     * @param code
-     * @return
-     */
-    public static String backJson4VerifyFailure(int code) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("message", "未通过验证");
-        return JSON.toJSONString(new ResponseCode(code, map), new ResponseFilter(),
-                SerializerFeature.DisableCircularReferenceDetect,
-                SerializerFeature.WriteNonStringKeyAsString);
-    }
-
-    /**
      * 成功的json串
      * @param responseCode
      * @return
@@ -79,5 +50,15 @@ public class ResponseJsonUtil {
     public static String returnJson(Map<String, Object> map, String message, int code) {
         map.put("message", message);
         return backJson(new ResponseCode(code, map));
+    }
+
+    public static String returnStr(Map<String, Object> objectMap, int res) {
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else if(res == -1) {
+            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
     }
 }

@@ -49,29 +49,6 @@
         </if>
         and ifnull(delete_flag,'0') !='1'
         order by sort asc, id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
-    </select>
-
-    <select id="countsByAccount" resultType="java.lang.Long">
-        SELECT
-        COUNT(id)
-        FROM jsh_account
-        WHERE 1=1
-        <if test="name != null">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and name like #{bindName}
-        </if>
-        <if test="serialNo != null and serialNo !=''">
-            <bind name="bindSerialNo" value="'%'+serialNo+'%'"/>
-            and serial_no like #{bindSerialNo}
-        </if>
-        <if test="remark != null">
-            <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and remark like #{bindRemark}
-        </if>
-        and ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="getAccountSum" resultType="java.math.BigDecimal">

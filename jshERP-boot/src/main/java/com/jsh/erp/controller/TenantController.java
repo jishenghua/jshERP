@@ -1,23 +1,27 @@
 package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.service.tenant.TenantService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.datasource.entities.Tenant;
+import com.jsh.erp.datasource.entities.TenantEx;
+import com.jsh.erp.service.TenantService;
+import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * @author ji_sheng_hua 管伊佳erp
@@ -26,10 +30,98 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RequestMapping(value = "/tenant")
 @Api(tags = {"租户管理"})
 public class TenantController {
-    private Logger logger = LoggerFactory.getLogger(TenantController.class);
 
     @Resource
     private TenantService tenantService;
+
+    @GetMapping(value = "/info")
+    @ApiOperation(value = "根据id获取信息")
+    public String getList(@RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        Tenant tenant = tenantService.getTenant(id);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(tenant != null) {
+            objectMap.put("info", tenant);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取信息列表")
+    public String getList(@RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
+                                 @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
+                                 @RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        if (pageSize != null && pageSize <= 0) {
+            pageSize = 10;
+        }
+        String loginName = StringUtil.getInfo(search, "loginName");
+        String type = StringUtil.getInfo(search, "type");
+        String enabled = StringUtil.getInfo(search, "enabled");
+        String remark = StringUtil.getInfo(search, "remark");
+        IPage<TenantEx> page = new Page<>();
+        page.setCurrent(currentPage);
+        page.setSize(pageSize);
+        IPage<TenantEx> list = tenantService.select(page, loginName, type, enabled, remark);
+        if (list != null) {
+            objectMap.put("rows", list.getRecords());
+            objectMap.put("total", list.getTotal());
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            objectMap.put("rows", new ArrayList<Object>());
+            objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
+            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
+        }
+    }
+
+    @PostMapping(value = "/add")
+    @ApiOperation(value = "新增")
+    public String addResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int insert = tenantService.insertTenant(obj, request);
+        return returnStr(objectMap, insert);
+    }
+
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "修改")
+    public String updateResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int update = tenantService.updateTenant(obj, request);
+        return returnStr(objectMap, update);
+    }
+
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = tenantService.deleteTenant(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = tenantService.batchDeleteTenant(ids, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @GetMapping(value = "/checkIsNameExist")
+    @ApiOperation(value = "检查名称是否存在")
+    public String checkIsNameExist(@RequestParam Long id, @RequestParam(value ="name", required = false) String name,
+                                   HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int exist = tenantService.checkIsNameExist(id, name);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
 
     /**
      * 批量设置状态-启用或者禁用

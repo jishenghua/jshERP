@@ -1,6 +1,7 @@
-package com.jsh.erp.service.tenant;
+package com.jsh.erp.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Tenant;
 import com.jsh.erp.datasource.entities.TenantEx;
@@ -10,6 +11,7 @@ import com.jsh.erp.datasource.mappers.TenantMapper;
 import com.jsh.erp.datasource.mappers.TenantMapperEx;
 import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
 import com.jsh.erp.datasource.mappers.UserMapperEx;
+import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -75,13 +77,13 @@ public class TenantService {
         return list;
     }
 
-    public List<TenantEx> select(String loginName, String type, String enabled, String remark, int offset, int rows)throws Exception {
-        List<TenantEx> list= new ArrayList<>();
+    public IPage<TenantEx> select(IPage<TenantEx> page, String loginName, String type, String enabled, String remark)throws Exception {
+        IPage<TenantEx> iPage = null;
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                list = tenantMapperEx.selectByConditionTenant(loginName, type, enabled, remark, offset, rows);
-                if (null != list) {
-                    for (TenantEx tenantEx : list) {
+                iPage = tenantMapperEx.selectByConditionTenant(page, loginName, type, enabled, remark);
+                if (null != iPage.getRecords()) {
+                    for (TenantEx tenantEx : iPage.getRecords()) {
                         tenantEx.setCreateTimeStr(Tools.getCenternTime(tenantEx.getCreateTime()));
                         tenantEx.setExpireTimeStr(Tools.getCenternTime(tenantEx.getExpireTime()));
                     }
@@ -90,19 +92,7 @@ public class TenantService {
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return list;
-    }
-
-    public Long countTenant(String loginName, String type, String enabled, String remark)throws Exception {
-        Long result=null;
-        try{
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = tenantMapperEx.countsByTenant(loginName, type, enabled, remark);
-            }
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
+        return iPage;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

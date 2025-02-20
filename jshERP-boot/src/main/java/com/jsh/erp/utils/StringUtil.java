@@ -28,6 +28,9 @@ public class StringUtil {
             "| grant | grant|grant | execute | execute|execute | exec | exec|exec | xp_cmdshell | xp_cmdshell|xp_cmdshell " +
             "| call | call|call | declare | declare|declare | source | source|source | sql | sql|sql ";
 
+    /** 下划线 */
+    private static final char SEPARATOR = '_';
+
     public static String filterNull(String str) {
         if (str == null) {
             return "";

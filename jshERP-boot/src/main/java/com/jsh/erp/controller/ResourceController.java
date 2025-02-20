@@ -3,11 +3,12 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.service.CommonQueryManager;
-import com.jsh.erp.utils.*;
+import com.jsh.erp.utils.Constants;
+import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.ParamUtils;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * by jishenghua 2018-9-12 23:58:10 管伊佳erp
@@ -79,13 +81,7 @@ public class ResourceController {
                               @RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int insert = configResourceManager.insert(apiName, obj, request);
-        if(insert > 0) {
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else if(insert == -1) {
-            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
-        } else {
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
-        }
+        return returnStr(objectMap, insert);
     }
 
     @PutMapping(value = "/{apiName}/update", produces = {"application/javascript", "application/json"})
@@ -94,13 +90,7 @@ public class ResourceController {
                                  @RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int update = configResourceManager.update(apiName, obj, request);
-        if(update > 0) {
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else if(update == -1) {
-            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
-        } else {
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
-        }
+        return returnStr(objectMap, update);
     }
 
     @DeleteMapping(value = "/{apiName}/delete", produces = {"application/javascript", "application/json"})
@@ -109,13 +99,7 @@ public class ResourceController {
                                  @RequestParam("id") Long id, HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int delete = configResourceManager.delete(apiName, id, request);
-        if(delete > 0) {
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else if(delete == -1) {
-            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
-        } else {
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
-        }
+        return returnStr(objectMap, delete);
     }
 
     @DeleteMapping(value = "/{apiName}/deleteBatch", produces = {"application/javascript", "application/json"})
@@ -124,13 +108,7 @@ public class ResourceController {
                                       @RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<String, Object>();
         int delete = configResourceManager.deleteBatch(apiName, ids, request);
-        if(delete > 0) {
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else if(delete == -1) {
-            return returnJson(objectMap, ErpInfo.TEST_USER.name, ErpInfo.TEST_USER.code);
-        } else {
-            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
-        }
+        return returnStr(objectMap, delete);
     }
 
     @GetMapping(value = "/{apiName}/checkIsNameExist")
