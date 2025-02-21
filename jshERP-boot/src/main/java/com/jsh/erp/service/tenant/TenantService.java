@@ -1,4 +1,4 @@
-package com.jsh.erp.service;
+package com.jsh.erp.service.tenant;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -11,7 +11,6 @@ import com.jsh.erp.datasource.mappers.TenantMapper;
 import com.jsh.erp.datasource.mappers.TenantMapperEx;
 import com.jsh.erp.datasource.mappers.UserBusinessMapperEx;
 import com.jsh.erp.datasource.mappers.UserMapperEx;
-import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
@@ -27,7 +26,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

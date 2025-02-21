@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Tenant;
 import com.jsh.erp.datasource.entities.TenantEx;
-import com.jsh.erp.service.TenantService;
+import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;

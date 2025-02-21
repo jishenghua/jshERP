@@ -11,7 +11,7 @@ import com.jsh.erp.datasource.mappers.DepotItemMapperEx;
 import com.jsh.erp.datasource.vo.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
-import com.jsh.erp.service.AccountService;
+import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.service.accountItem.AccountItemService;
 import com.jsh.erp.service.depot.DepotService;
