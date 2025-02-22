@@ -1,6 +1,5 @@
 package com.jsh.erp.datasource.mappers;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.entities.AccountVo4Sum;
 import com.jsh.erp.datasource.entities.DepotHead;
@@ -18,8 +17,7 @@ public interface AccountMapperEx {
             @Param("name") String name,
             @Param("serialNo") String serialNo);
 
-    IPage<AccountVo4List> selectByConditionAccount(
-            IPage<AccountVo4List> page,
+    List<AccountVo4List> selectByConditionAccount(
             @Param("name") String name,
             @Param("serialNo") String serialNo,
             @Param("remark") String remark);
@@ -54,8 +52,8 @@ public interface AccountMapperEx {
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("forceFlag") Boolean forceFlag,
-            @Param("offset") Long offset,
-            @Param("rows") Long rows);
+            @Param("offset") Integer offset,
+            @Param("rows") Integer rows);
 
     List<DepotHead> getManyAccountSumByParam(
             @Param("beginTime") String beginTime,

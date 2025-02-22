@@ -1,7 +1,8 @@
 package com.jsh.erp.service.account;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.jsh.erp.base.PageDomain;
+import com.jsh.erp.base.TableSupport;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
@@ -13,6 +14,7 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -99,10 +101,11 @@ public class AccountService {
         return list;
     }
 
-    public IPage<AccountVo4List> select(IPage<AccountVo4List> page, String name, String serialNo, String remark) throws Exception{
-        IPage<AccountVo4List> iPage = null;
+    public List<AccountVo4List> select(String name, String serialNo, String remark) throws Exception{
+        List<AccountVo4List> list = null;
         try{
-            iPage = accountMapperEx.selectByConditionAccount(page, name, serialNo, remark);
+            PageUtils.startPage();
+            list = accountMapperEx.selectByConditionAccount(name, serialNo, remark);
             String timeStr = Tools.getCurrentMonth();
             String bTime = Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME;
             String eTime = Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME;
@@ -113,8 +116,9 @@ public class AccountService {
             Map<Long, BigDecimal> currentAccountSumMap = new HashMap<>();
             Map<Long, BigDecimal> currentAccountSumByHeadMap = new HashMap<>();
             Map<Long, BigDecimal> currentAccountSumByDetailMap = new HashMap<>();
-            long offset = (page.getCurrent() - 1) * page.getSize();
-            long rows = page.getSize();
+            PageDomain pageDomain = TableSupport.buildPageRequest();
+            int offset = (pageDomain.getCurrentPage() - 1) * pageDomain.getPageSize();
+            int rows = pageDomain.getPageSize();
             List<AccountVo4Sum> thisMonthAmountList = accountMapperEx.getAccountSumByParam(name, serialNo, bTime, eTime, forceFlag, offset, rows);
             List<AccountVo4Sum> currentAmountList = accountMapperEx.getAccountSumByParam(name, serialNo, null, null, forceFlag, offset, rows);
             List<DepotHead> thisMonthManyAmountList = accountMapperEx.getManyAccountSumByParam(bTime, eTime, forceFlag);
@@ -129,8 +133,8 @@ public class AccountService {
                 currentAccountSumByHeadMap.put(currentAmount.getId(), currentAmount.getAccountSumByHead());
                 currentAccountSumByDetailMap.put(currentAmount.getId(), currentAmount.getAccountSumByDetail());
             }
-            if (null != iPage.getRecords()) {
-                for (AccountVo4List al : iPage.getRecords()) {
+            if (null != list) {
+                for (AccountVo4List al : list) {
                     DecimalFormat df = new DecimalFormat(".##");
                     BigDecimal thisMonthAmount = thisMonthAccountSumMap.get(al.getId())
                             .add(thisMonthAccountSumByHeadMap.get(al.getId()))
@@ -152,7 +156,7 @@ public class AccountService {
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return iPage;
+        return list;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -436,10 +440,11 @@ public class AccountService {
         return sb.toString();
     }
 
-    public IPage<AccountVo4List> listWithBalance(IPage<AccountVo4List> page, String name, String serialNo) throws Exception {
-        IPage<AccountVo4List> iPage = null;
+    public List<AccountVo4List> listWithBalance(String name, String serialNo) throws Exception {
+        List<AccountVo4List> list = null;
         try{
-            iPage = accountMapperEx.selectByConditionAccount(page, name, serialNo, null);
+            PageUtils.startPage();
+            list = accountMapperEx.selectByConditionAccount(name, serialNo, null);
             String timeStr = Tools.getCurrentMonth();
             String bTime = Tools.firstDayOfMonth(timeStr) + BusinessConstants.DAY_FIRST_TIME;
             String eTime = Tools.lastDayOfMonth(timeStr) + BusinessConstants.DAY_LAST_TIME;
@@ -450,8 +455,9 @@ public class AccountService {
             Map<Long, BigDecimal> currentAccountSumMap = new HashMap<>();
             Map<Long, BigDecimal> currentAccountSumByHeadMap = new HashMap<>();
             Map<Long, BigDecimal> currentAccountSumByDetailMap = new HashMap<>();
-            long offset = (page.getCurrent() - 1) * page.getSize();
-            long rows = page.getSize();
+            PageDomain pageDomain = TableSupport.buildPageRequest();
+            int offset = (pageDomain.getCurrentPage() - 1) * pageDomain.getPageSize();
+            int rows = pageDomain.getPageSize();
             List<AccountVo4Sum> thisMonthAmountList = accountMapperEx.getAccountSumByParam(name, serialNo, bTime, eTime, forceFlag, offset, rows);
             List<AccountVo4Sum> currentAmountList = accountMapperEx.getAccountSumByParam(name, serialNo, null, null, forceFlag, offset, rows);
             List<DepotHead> thisMonthManyAmountList = accountMapperEx.getManyAccountSumByParam(bTime, eTime, forceFlag);
@@ -466,8 +472,8 @@ public class AccountService {
                 currentAccountSumByHeadMap.put(currentAmount.getId(), currentAmount.getAccountSumByHead());
                 currentAccountSumByDetailMap.put(currentAmount.getId(), currentAmount.getAccountSumByDetail());
             }
-            if (null != iPage.getRecords()) {
-                for (AccountVo4List al : iPage.getRecords()) {
+            if (null != list) {
+                for (AccountVo4List al : list) {
                     DecimalFormat df = new DecimalFormat(".##");
                     BigDecimal thisMonthAmount = thisMonthAccountSumMap.get(al.getId())
                             .add(thisMonthAccountSumByHeadMap.get(al.getId()))
@@ -489,7 +495,7 @@ public class AccountService {
         } catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return iPage;
+        return list;
     }
 
     public Map<String, Object> getStatistics(String name, String serialNo) {

@@ -2,15 +2,17 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.service.account.AccountService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
-import com.jsh.erp.utils.*;
+import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.Constants;
+import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 @RestController
 @RequestMapping(value = "/account")
 @Api(tags = {"账户管理"})
-public class AccountController {
+public class AccountController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Resource
@@ -59,30 +60,13 @@ public class AccountController {
 
     @GetMapping(value = "/list")
     @ApiOperation(value = "获取信息列表")
-    public String getList(@RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
-                          @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
-                          @RequestParam(value = Constants.SEARCH, required = false) String search,
-                          HttpServletRequest request)throws Exception {
-        Map<String, Object> objectMap = new HashMap<>();
-        if (pageSize != null && pageSize <= 0) {
-            pageSize = 10;
-        }
+    public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 HttpServletRequest request)throws Exception {
         String name = StringUtil.getInfo(search, "name");
         String serialNo = StringUtil.getInfo(search, "serialNo");
         String remark = StringUtil.getInfo(search, "remark");
-        IPage<AccountVo4List> page = new Page<>();
-        page.setCurrent(currentPage);
-        page.setSize(pageSize);
-        IPage<AccountVo4List> list = accountService.select(page, name, serialNo, remark);
-        if (list != null) {
-            objectMap.put("total", list.getTotal());
-            objectMap.put("rows", list.getRecords());
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else {
-            objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
-            objectMap.put("rows", new ArrayList<Object>());
-            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
-        }
+        List<AccountVo4List> list = accountService.select(name, serialNo, remark);
+        return getDataTable(list);
     }
 
     @PostMapping(value = "/add")
@@ -267,28 +251,11 @@ public class AccountController {
      */
     @GetMapping(value = "/listWithBalance")
     @ApiOperation(value = "获取带余额的报表")
-    public BaseResponseInfo listWithBalance(@RequestParam("name") String name,
+    public TableDataInfo listWithBalance(@RequestParam("name") String name,
                                             @RequestParam("serialNo") String serialNo,
-                                            @RequestParam("currentPage") Integer currentPage,
-                                            @RequestParam("pageSize") Integer pageSize,
                                             HttpServletRequest request) throws Exception {
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            Map<String, Object> map = new HashMap<>();
-            IPage<AccountVo4List> page = new Page<>();
-            page.setCurrent(currentPage);
-            page.setSize(pageSize);
-            IPage<AccountVo4List> list = accountService.listWithBalance(page, StringUtil.toNull(name), StringUtil.toNull(serialNo));
-            map.put("rows", list.getRecords());
-            map.put("total", list.getTotal());
-            res.code = 200;
-            res.data = map;
-        } catch(Exception e){
-            logger.error(e.getMessage(), e);
-            res.code = 500;
-            res.data = "获取数据失败";
-        }
-        return res;
+        List<AccountVo4List> list = accountService.listWithBalance(StringUtil.toNull(name), StringUtil.toNull(serialNo));
+        return getDataTable(list);
     }
 
     /**
