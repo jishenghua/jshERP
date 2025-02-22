@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface TenantMapperEx {
 
-    IPage<TenantEx> selectByConditionTenant(
-            IPage<TenantEx> page,
+    List<TenantEx> selectByConditionTenant(
             @Param("loginName") String loginName,
             @Param("type") String type,
             @Param("enabled") String enabled,

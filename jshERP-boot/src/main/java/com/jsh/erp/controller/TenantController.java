@@ -3,6 +3,8 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Tenant;
 import com.jsh.erp.datasource.entities.TenantEx;
@@ -18,6 +20,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
@@ -29,7 +32,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 @RestController
 @RequestMapping(value = "/tenant")
 @Api(tags = {"租户管理"})
-public class TenantController {
+public class TenantController extends BaseController {
 
     @Resource
     private TenantService tenantService;
@@ -50,31 +53,14 @@ public class TenantController {
 
     @GetMapping(value = "/list")
     @ApiOperation(value = "获取信息列表")
-    public String getList(@RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
-                                 @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
-                                 @RequestParam(value = Constants.SEARCH, required = false) String search,
+    public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
                                  HttpServletRequest request)throws Exception {
-        Map<String, Object> objectMap = new HashMap<>();
-        if (pageSize != null && pageSize <= 0) {
-            pageSize = 10;
-        }
         String loginName = StringUtil.getInfo(search, "loginName");
         String type = StringUtil.getInfo(search, "type");
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
-        IPage<TenantEx> page = new Page<>();
-        page.setCurrent(currentPage);
-        page.setSize(pageSize);
-        IPage<TenantEx> list = tenantService.select(page, loginName, type, enabled, remark);
-        if (list != null) {
-            objectMap.put("rows", list.getRecords());
-            objectMap.put("total", list.getTotal());
-            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-        } else {
-            objectMap.put("rows", new ArrayList<Object>());
-            objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
-            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
-        }
+        List<TenantEx> list = tenantService.select(loginName, type, enabled, remark);
+        return getDataTable(list);
     }
 
     @PostMapping(value = "/add")

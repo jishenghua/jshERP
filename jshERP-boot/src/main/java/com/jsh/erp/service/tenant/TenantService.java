@@ -14,6 +14,7 @@ import com.jsh.erp.datasource.mappers.UserMapperEx;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -75,22 +76,23 @@ public class TenantService {
         return list;
     }
 
-    public IPage<TenantEx> select(IPage<TenantEx> page, String loginName, String type, String enabled, String remark)throws Exception {
-        IPage<TenantEx> iPage = null;
+    public List<TenantEx> select(String loginName, String type, String enabled, String remark)throws Exception {
+        List<TenantEx> list = null;
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                iPage = tenantMapperEx.selectByConditionTenant(page, loginName, type, enabled, remark);
-                if (null != iPage.getRecords()) {
-                    for (TenantEx tenantEx : iPage.getRecords()) {
+                PageUtils.startPage();
+                list = tenantMapperEx.selectByConditionTenant(loginName, type, enabled, remark);
+                if (null != list) {
+                    for (TenantEx tenantEx : list) {
                         tenantEx.setCreateTimeStr(Tools.getCenternTime(tenantEx.getCreateTime()));
                         tenantEx.setExpireTimeStr(Tools.getCenternTime(tenantEx.getExpireTime()));
                     }
                 }
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return iPage;
+        return list;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
