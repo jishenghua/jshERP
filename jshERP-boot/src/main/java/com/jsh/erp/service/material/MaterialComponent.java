@@ -2,8 +2,6 @@ package com.jsh.erp.service.material;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.service.ICommonQuery;
-import com.jsh.erp.service.depot.DepotResource;
-import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.StringUtil;

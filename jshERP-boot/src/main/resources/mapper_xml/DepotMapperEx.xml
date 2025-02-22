@@ -23,28 +23,6 @@
         </if>
         and ifnull(dep.delete_Flag,'0') !='1'
         order by dep.sort asc, dep.id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
-    </select>
-    <select id="countsByDepot" resultType="java.lang.Long">
-        SELECT
-        COUNT(dep.id)
-        FROM jsh_depot dep
-        left join jsh_user usr on usr.id=dep.principal and ifnull(usr.status,'0') not in('1','2')
-        WHERE 1=1
-        <if test="name != null">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and dep.name like #{bindName}
-        </if>
-        <if test="type != null">
-            and dep.type=#{type}
-        </if>
-        <if test="remark != null">
-            <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and dep.remark like #{bindRemark}
-        </if>
-        and ifnull(dep.delete_Flag,'0') !='1'
     </select>
 
     <update id="batchDeleteDepotByIds">

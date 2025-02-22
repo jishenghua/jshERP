@@ -83,24 +83,14 @@ public class PersonService {
         return list;
     }
 
-    public List<Person> select(String name, String type, int offset, int rows)throws Exception {
+    public List<Person> select(String name, String type)throws Exception {
         List<Person> list=null;
         try{
-            list=personMapperEx.selectByConditionPerson(name, type, offset, rows);
+            list=personMapperEx.selectByConditionPerson(name, type);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countPerson(String name, String type)throws Exception {
-        Long result=null;
-        try{
-            result=personMapperEx.countsByPerson(name, type);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

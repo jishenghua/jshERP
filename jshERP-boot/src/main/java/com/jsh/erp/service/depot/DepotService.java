@@ -91,24 +91,14 @@ public class DepotService {
         return list;
     }
 
-    public List<DepotEx> select(String name, Integer type, String remark, int offset, int rows)throws Exception {
+    public List<DepotEx> select(String name, Integer type, String remark)throws Exception {
         List<DepotEx> list=null;
         try{
-            list=depotMapperEx.selectByConditionDepot(name, type, remark, offset, rows);
+            list=depotMapperEx.selectByConditionDepot(name, type, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countDepot(String name, Integer type, String remark)throws Exception {
-        Long result=null;
-        try{
-            result=depotMapperEx.countsByDepot(name, type, remark);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

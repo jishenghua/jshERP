@@ -14,24 +14,8 @@
         </if>
         and ifnull(delete_flag,'0') !='1'
         order by sort asc, id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
     </select>
-    <select id="countsByPerson" resultType="java.lang.Long">
-        SELECT
-        COUNT(id)
-        FROM jsh_person
-        WHERE 1=1
-        <if test="name != null and name != ''">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and name like #{bindName}
-        </if>
-        <if test="type != null and type != ''">
-            and type=#{type}
-        </if>
-        and ifnull(delete_flag,'0') !='1'
-    </select>
+
     <update id="batchDeletePersonByIds">
         update jsh_person
         set delete_flag='1'
