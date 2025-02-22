@@ -2,19 +2,16 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Function;
+import com.jsh.erp.datasource.entities.FunctionEx;
 import com.jsh.erp.datasource.entities.SystemConfig;
-import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.entities.UserBusiness;
-import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
+import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -30,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * @author ji-sheng-hua  jshERP
@@ -37,7 +35,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RestController
 @RequestMapping(value = "/function")
 @Api(tags = {"功能管理"})
-public class FunctionController {
+public class FunctionController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(FunctionController.class);
 
     @Resource
@@ -48,6 +46,76 @@ public class FunctionController {
 
     @Resource
     private SystemConfigService systemConfigService;
+
+    @GetMapping(value = "/info")
+    @ApiOperation(value = "根据id获取信息")
+    public String getList(@RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        Function function = functionService.getFunction(id);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(function != null) {
+            objectMap.put("info", function);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取信息列表")
+    public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 HttpServletRequest request)throws Exception {
+        String name = StringUtil.getInfo(search, "name");
+        String type = StringUtil.getInfo(search, "type");
+        List<FunctionEx> list = functionService.select(name, type);
+        return getDataTable(list);
+    }
+
+    @PostMapping(value = "/add")
+    @ApiOperation(value = "新增")
+    public String addResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int insert = functionService.insertFunction(obj, request);
+        return returnStr(objectMap, insert);
+    }
+
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "修改")
+    public String updateResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int update = functionService.updateFunction(obj, request);
+        return returnStr(objectMap, update);
+    }
+
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = functionService.deleteFunction(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = functionService.batchDeleteFunction(ids, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @GetMapping(value = "/checkIsNameExist")
+    @ApiOperation(value = "检查名称是否存在")
+    public String checkIsNameExist(@RequestParam Long id, @RequestParam(value ="name", required = false) String name,
+                                   HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int exist = functionService.checkIsNameExist(id, name);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
 
     @GetMapping(value = "/checkIsNumberExist")
     @ApiOperation(value = "检查编号是否存在")

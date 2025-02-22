@@ -19,25 +19,8 @@
         </if>
         and ifnull(fa.delete_flag,'0') !='1'
         order by fa.sort asc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
     </select>
-    <select id="countsByFunction" resultType="java.lang.Long">
-        select
-        count(fa.id)
-        from jsh_function fa
-        left join jsh_function fb on fa.parent_number = fb.number
-        WHERE 1=1
-        <if test="name != null">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and fa.name like #{bindName}
-        </if>
-        <if test="type != null">
-            and fa.type=#{type}
-        </if>
-        and ifnull(fa.delete_flag,'0') !='1'
-    </select>
+
     <update id="batchDeleteFunctionByIds">
         update jsh_function
         set delete_flag='1'

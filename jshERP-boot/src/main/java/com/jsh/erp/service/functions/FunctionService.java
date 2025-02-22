@@ -77,28 +77,16 @@ public class FunctionService {
         return list;
     }
 
-    public List<FunctionEx> select(String name, String type, int offset, int rows)throws Exception {
+    public List<FunctionEx> select(String name, String type)throws Exception {
         List<FunctionEx> list=null;
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                list = functionMapperEx.selectByConditionFunction(name, type, offset, rows);
+                list = functionMapperEx.selectByConditionFunction(name, type);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countFunction(String name, String type)throws Exception {
-        Long result=null;
-        try{
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = functionMapperEx.countsByFunction(name, type);
-            }
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
