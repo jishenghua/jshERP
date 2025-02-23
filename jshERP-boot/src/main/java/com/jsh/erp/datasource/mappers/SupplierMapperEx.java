@@ -14,15 +14,6 @@ public interface SupplierMapperEx {
             @Param("type") String type,
             @Param("phonenum") String phonenum,
             @Param("telephone") String telephone,
-            @Param("creatorArray") String[] creatorArray,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    Long countsBySupplier(
-            @Param("supplier") String supplier,
-            @Param("type") String type,
-            @Param("phonenum") String phonenum,
-            @Param("telephone") String telephone,
             @Param("creatorArray") String[] creatorArray);
 
     List<Supplier> findByAll(

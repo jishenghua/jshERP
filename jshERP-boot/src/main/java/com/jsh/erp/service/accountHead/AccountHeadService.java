@@ -12,12 +12,12 @@ import com.jsh.erp.datasource.mappers.AccountMapper;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.accountItem.AccountItemService;
-import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.supplier.SupplierService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -96,14 +96,15 @@ public class AccountHeadService {
 
     public List<AccountHeadVo4ListEx> select(String type, String billNo, String beginTime, String endTime,
                                              Long organId, Long creator, Long handsPersonId, Long accountId, String status,
-                                             String remark, String number, int offset, int rows) throws Exception{
-        List<AccountHeadVo4ListEx> resList = new ArrayList<>();
+                                             String remark, String number) throws Exception{
+        List<AccountHeadVo4ListEx> list = new ArrayList<>();
         try{
             String [] creatorArray = getCreatorArray();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<AccountHeadVo4ListEx> list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, offset, rows);
+            PageUtils.startPage();
+            list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number);
             if (null != list) {
                 for (AccountHeadVo4ListEx ah : list) {
                     if(ah.getChangeAmount() != null) {
@@ -127,29 +128,12 @@ public class AccountHeadService {
                     if(ah.getBillTime() !=null) {
                         ah.setBillTimeStr(getCenternTime(ah.getBillTime()));
                     }
-                    resList.add(ah);
                 }
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return resList;
-    }
-
-    public Long countAccountHead(String type, String billNo, String beginTime, String endTime,
-                                 Long organId, Long creator, Long handsPersonId, Long accountId, String status,
-                                 String remark, String number) throws Exception{
-        Long result=null;
-        try{
-            String [] creatorArray = getCreatorArray();
-            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
-            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
+        return list;
     }
 
     /**

@@ -8,16 +8,11 @@ import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
-import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
-import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ExcelUtils;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
+import com.jsh.erp.utils.*;
 import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
@@ -96,11 +91,12 @@ public class SupplierService {
         return list;
     }
 
-    public List<Supplier> select(String supplier, String type, String phonenum, String telephone, int offset, int rows) throws Exception{
-        List<Supplier> resList = new ArrayList<Supplier>();
+    public List<Supplier> select(String supplier, String type, String phonenum, String telephone) throws Exception{
+        List<Supplier> list = new ArrayList<>();
         try{
             String [] creatorArray = depotHeadService.getCreatorArray();
-            List<Supplier> list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, creatorArray, offset, rows);
+            PageUtils.startPage();
+            list = supplierMapperEx.selectByConditionSupplier(supplier, type, phonenum, telephone, creatorArray);
             for(Supplier s : list) {
                 Integer supplierId = s.getId().intValue();
                 String beginTime = Tools.getYearBegin();
@@ -144,23 +140,11 @@ public class SupplierService {
                 } else if(("供应商").equals(s.getType())) {
                     s.setAllNeedPay(sum);
                 }
-                resList.add(s);
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return resList;
-    }
-
-    public Long countSupplier(String supplier, String type, String phonenum, String telephone) throws Exception{
-        Long result=null;
-        try{
-            String [] creatorArray = depotHeadService.getCreatorArray();
-            result=supplierMapperEx.countsBySupplier(supplier, type, phonenum, telephone, creatorArray);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
+        return list;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

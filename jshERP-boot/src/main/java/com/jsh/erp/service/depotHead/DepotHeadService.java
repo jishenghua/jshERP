@@ -27,6 +27,7 @@ import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
 import com.jsh.erp.utils.ExcelUtils;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import jxl.Workbook;
@@ -114,8 +115,8 @@ public class DepotHeadService {
     }
 
     public List<DepotHeadVo4List> select(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkApply, String linkNumber,
-           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark, int offset, int rows) throws Exception {
-        List<DepotHeadVo4List> resList = new ArrayList<>();
+           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception {
+        List<DepotHeadVo4List> list = new ArrayList<>();
         try{
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
             Long userId = userService.getUserId(request);
@@ -132,9 +133,10 @@ public class DepotHeadService {
             Map<Long,String> accountMap = accountService.getAccountMap();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            List<DepotHeadVo4List> list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt,
+            PageUtils.startPage();
+            list = depotHeadMapperEx.selectByConditionDepotHead(type, subType, creatorArray, hasDebt,
                     statusArray, purchaseStatusArray, number, linkApply, linkNumber, beginTime, endTime,
-                    materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark, offset, rows);
+                    materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark);
             if (null != list) {
                 List<Long> idList = new ArrayList<>();
                 List<String> numberList = new ArrayList<>();
@@ -221,35 +223,12 @@ public class DepotHeadService {
                         dh.setTotalPrice(null);
                         dh.setDiscountLastMoney(null);
                     }
-                    resList.add(dh);
                 }
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return resList;
-    }
-
-    public Long countDepotHead(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkApply, String linkNumber,
-           String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
-        Long result=null;
-        try{
-            String [] depotArray = getDepotArray(subType);
-            String [] creatorArray = getCreatorArray();
-            String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
-            String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
-            String [] organArray = getOrganArray(subType, purchaseStatus);
-            //以销定购，查看全部数据
-            creatorArray = StringUtil.isNotEmpty(purchaseStatus) ? null: creatorArray;
-            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
-            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, hasDebt,
-                    statusArray, purchaseStatusArray, number, linkApply, linkNumber, beginTime, endTime,
-                   materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
+        return list;
     }
 
     /**

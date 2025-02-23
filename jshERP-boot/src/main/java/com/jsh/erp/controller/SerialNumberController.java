@@ -24,8 +24,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * Description
- *
- * @Author: cjl
+ * @Author: jsh
  * @Date: 2019/1/22 10:29
  */
 @RestController
@@ -42,14 +41,7 @@ public class SerialNumberController {
     private DepotItemService depotItemService;
 
     /**
-     * create by: cjl
-     * description:
-     *批量添加序列号
-     * create time: 2019/1/29 15:11
-     * @Param: materialName
-     * @Param: serialNumberPrefix
-     * @Param: batAddTotal
-     * @Param: remark
+     * create by: jsh
      * @return java.lang.Object
      */
     @PostMapping("/batAddSerialNumber")

@@ -36,11 +36,9 @@
             and user.login_name like #{bindLoginName}
         </if>
         order by rel.user_blng_orga_dspl_seq,user.id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
         ) tb
     </select>
+
     <select id="countsByUser" resultType="java.lang.Long">
         select count(user.id)
         FROM jsh_user user

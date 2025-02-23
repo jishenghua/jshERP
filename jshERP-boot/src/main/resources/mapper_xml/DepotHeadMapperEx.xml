@@ -159,114 +159,12 @@
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
         group by dh.id
-        order by dh.id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>) tb
+        order by dh.id desc) tb
         left join jsh_depot_head jdh on jdh.id=tb.id and ifnull(jdh.delete_flag,'0') !='1'
         left join jsh_supplier s on jdh.organ_id=s.id and ifnull(s.delete_flag,'0') !='1'
         left join jsh_user u on jdh.creator=u.id
         left join jsh_account a on jdh.account_id=a.id and ifnull(a.delete_flag,'0') !='1'
         order by jdh.id desc
-    </select>
-
-    <select id="countsByDepotHead" resultType="java.lang.Long">
-        select
-        count(1) from
-        (select distinct dh.id from jsh_depot_head dh
-        left join jsh_depot_item di on dh.Id = di.header_id and ifnull(di.delete_flag,'0') !='1'
-        left join jsh_material m on di.material_id = m.Id and ifnull(m.delete_Flag,'0') !='1'
-        left join jsh_material_extend me on di.material_extend_id = me.id and ifnull(me.delete_flag,'0') !='1'
-        WHERE 1=1
-        <if test="type != null">
-            and dh.type=#{type}
-        </if>
-        <if test="subType != null">
-            and dh.sub_type=#{subType}
-        </if>
-        <if test="statusArray != null and statusArray !=''">
-            and dh.status in (
-            <foreach collection="statusArray" item="status" separator=",">
-                #{status}
-            </foreach>
-            )
-        </if>
-        <if test="purchaseStatusArray != null and purchaseStatusArray !=''">
-            and dh.purchase_status in (
-            <foreach collection="purchaseStatusArray" item="purchaseStatus" separator=",">
-                #{purchaseStatus}
-            </foreach>
-            )
-        </if>
-        <if test="number != null">
-            <bind name="bindNumber" value="'%'+number+'%'"/>
-            and dh.number like #{bindNumber}
-        </if>
-        <if test="linkApply != null">
-            <bind name="bindLinkApply" value="'%'+linkApply+'%'"/>
-            and dh.link_apply like #{bindLinkApply}
-        </if>
-        <if test="linkNumber != null">
-            <bind name="bindLinkNumber" value="'%'+linkNumber+'%'"/>
-            and dh.link_number like #{bindLinkNumber}
-        </if>
-        <if test="beginTime != null">
-            and dh.oper_time >= #{beginTime}
-        </if>
-        <if test="endTime != null">
-            and dh.oper_time &lt;= #{endTime}
-        </if>
-        <if test="materialParam != null and materialParam !=''">
-            <bind name="bindKey" value="'%'+materialParam+'%'"/>
-            and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
-            or m.color like #{bindKey} or m.mfrs like #{bindKey} or m.brand like #{bindKey} or m.other_field1 like #{bindKey}
-            or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
-        </if>
-        <if test="organId != null">
-            and dh.organ_id=#{organId}
-        </if>
-        <if test="organArray != null and organArray !=''">
-            and dh.organ_id in (
-            <foreach collection="organArray" item="organId" separator=",">
-                #{organId}
-            </foreach>
-            )
-        </if>
-        <if test="creator != null">
-            and dh.creator=#{creator}
-        </if>
-        <if test="depotId != null">
-            and di.depot_id=#{depotId}
-        </if>
-        <if test="depotArray != null and depotArray !=''">
-            and di.depot_id in (
-            <foreach collection="depotArray" item="depotId" separator=",">
-                #{depotId}
-            </foreach>
-            )
-        </if>
-        <if test="creatorArray != null">
-            and dh.creator in (
-            <foreach collection="creatorArray" item="creator" separator=",">
-                #{creator}
-            </foreach>
-            )
-        </if>
-        <if test="accountId != null">
-            <bind name="bindAccountId" value="'%'+accountId+'%'"/>
-            and (dh.account_id=#{accountId} or dh.account_id_list like #{bindAccountId})
-        </if>
-        <if test="hasDebt != null and hasDebt ==1">
-            and (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))>0)
-        </if>
-        <if test="hasDebt != null and hasDebt ==0">
-            and (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))=0)
-        </if>
-        <if test="remark != null and remark !=''">
-            <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
-        </if>
-        and ifnull(dh.delete_Flag,'0') !='1') tb
     </select>
 
     <select id="findMaterialsListMapByHeaderIdList" resultType="com.jsh.erp.datasource.vo.MaterialsListVo">

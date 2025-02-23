@@ -8,7 +8,6 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.CopyObjectResult;
 import com.aliyun.oss.model.PutObjectRequest;
-import com.aliyun.oss.model.PutObjectResult;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.datasource.entities.SystemConfigExample;
@@ -19,10 +18,7 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.platformConfig.PlatformConfigService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.ExcelUtils;
-import com.jsh.erp.utils.FileUtils;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
+import com.jsh.erp.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -92,24 +88,15 @@ public class SystemConfigService {
         }
         return list;
     }
-    public List<SystemConfig> select(String companyName, int offset, int rows)throws Exception {
+    public List<SystemConfig> select(String companyName)throws Exception {
         List<SystemConfig> list=null;
         try{
-            list=systemConfigMapperEx.selectByConditionSystemConfig(companyName, offset, rows);
+            PageUtils.startPage();
+            list=systemConfigMapperEx.selectByConditionSystemConfig(companyName);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countSystemConfig(String companyName)throws Exception {
-        Long result=null;
-        try{
-            result=systemConfigMapperEx.countsBySystemConfig(companyName);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

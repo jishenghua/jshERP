@@ -1,27 +1,31 @@
 package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jsh.erp.constants.BusinessConstants;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.AccountHeadVo4Body;
 import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
 import com.jsh.erp.service.accountHead.AccountHeadService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * @author jishenghua 752*718*920
@@ -29,11 +33,61 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RestController
 @RequestMapping(value = "/accountHead")
 @Api(tags = {"财务管理"})
-public class AccountHeadController {
+public class AccountHeadController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(AccountHeadController.class);
 
     @Resource
     private AccountHeadService accountHeadService;
+
+    @GetMapping(value = "/info")
+    @ApiOperation(value = "根据id获取信息")
+    public String getList(@RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        AccountHead accountHead = accountHeadService.getAccountHead(id);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(accountHead != null) {
+            objectMap.put("info", accountHead);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取信息列表")
+    public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 HttpServletRequest request)throws Exception {
+        String type = StringUtil.getInfo(search, "type");
+        String billNo = StringUtil.getInfo(search, "billNo");
+        String beginTime = StringUtil.getInfo(search, "beginTime");
+        String endTime = StringUtil.getInfo(search, "endTime");
+        Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
+        Long creator = StringUtil.parseStrLong(StringUtil.getInfo(search, "creator"));
+        Long handsPersonId = StringUtil.parseStrLong(StringUtil.getInfo(search, "handsPersonId"));
+        Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
+        String status = StringUtil.getInfo(search, "status");
+        String remark = StringUtil.getInfo(search, "remark");
+        String number = StringUtil.getInfo(search, "number");
+        List<AccountHeadVo4ListEx> list = accountHeadService.select(type, billNo, beginTime, endTime, organId, creator,
+                handsPersonId, accountId, status, remark, number);
+        return getDataTable(list);
+    }
+
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = accountHeadService.deleteAccountHead(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = accountHeadService.batchDeleteAccountHead(ids, request);
+        return returnStr(objectMap, delete);
+    }
 
     /**
      * 批量设置状态-审核或者反审核

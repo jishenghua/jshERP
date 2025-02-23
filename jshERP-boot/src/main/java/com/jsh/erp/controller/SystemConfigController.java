@@ -2,14 +2,15 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.SystemConfig;
 import com.jsh.erp.service.depot.DepotService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.FileUtils;
-import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -29,7 +30,13 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * Description
@@ -39,17 +46,8 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/systemConfig")
 @Api(tags = {"系统参数"})
-public class SystemConfigController {
+public class SystemConfigController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(SystemConfigController.class);
-
-    @Resource
-    private UserService userService;
-
-    @Resource
-    private DepotService depotService;
-
-    @Resource
-    private UserBusinessService userBusinessService;
 
     @Resource
     private SystemConfigService systemConfigService;
@@ -65,6 +63,75 @@ public class SystemConfigController {
 
     @Value(value="${spring.servlet.multipart.max-request-size}")
     private Long maxRequestSize;
+
+    @GetMapping(value = "/info")
+    @ApiOperation(value = "根据id获取信息")
+    public String getList(@RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        SystemConfig systemConfig = systemConfigService.getSystemConfig(id);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(systemConfig != null) {
+            objectMap.put("info", systemConfig);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取信息列表")
+    public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 HttpServletRequest request)throws Exception {
+        String companyName = StringUtil.getInfo(search, "companyName");
+        List<SystemConfig> list = systemConfigService.select(companyName);
+        return getDataTable(list);
+    }
+
+    @PostMapping(value = "/add")
+    @ApiOperation(value = "新增")
+    public String addResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int insert = systemConfigService.insertSystemConfig(obj, request);
+        return returnStr(objectMap, insert);
+    }
+
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "修改")
+    public String updateResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int update = systemConfigService.updateSystemConfig(obj, request);
+        return returnStr(objectMap, update);
+    }
+
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = systemConfigService.deleteSystemConfig(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = systemConfigService.batchDeleteSystemConfig(ids, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @GetMapping(value = "/checkIsNameExist")
+    @ApiOperation(value = "检查名称是否存在")
+    public String checkIsNameExist(@RequestParam Long id, @RequestParam(value ="name", required = false) String name,
+                                   HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int exist = systemConfigService.checkIsNameExist(id, name);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
 
     /**
      * 获取当前租户的配置信息

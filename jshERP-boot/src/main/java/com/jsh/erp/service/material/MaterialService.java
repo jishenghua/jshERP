@@ -125,8 +125,7 @@ public class MaterialService {
         if(StringUtil.isNotEmpty(mpList)){
             mpArr= mpList.split(",");
         }
-        List<MaterialVo4Unit> resList = new ArrayList<>();
-        List<MaterialVo4Unit> list =null;
+        List<MaterialVo4Unit> list = new ArrayList<>();
         try{
             List<Long> idList = new ArrayList<>();
             if(StringUtil.isNotEmpty(categoryId)){
@@ -148,13 +147,12 @@ public class MaterialService {
                     m.setBigUnitInitialStock(getBigUnitStock(m.getInitialStock(), m.getUnitId()));
                     m.setStock(currentStockMap.get(m.getId())!=null? currentStockMap.get(m.getId()): BigDecimal.ZERO);
                     m.setBigUnitStock(getBigUnitStock(m.getStock(), m.getUnitId()));
-                    resList.add(m);
                 }
             }
-        }catch(Exception e){
+        } catch(Exception e){
             JshException.readFail(logger, e);
         }
-        return resList;
+        return list;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

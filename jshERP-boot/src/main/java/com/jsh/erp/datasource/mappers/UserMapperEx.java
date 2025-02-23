@@ -15,9 +15,7 @@ public interface UserMapperEx {
 
     List<UserEx> selectByConditionUser(
             @Param("userName") String userName,
-            @Param("loginName") String loginName,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
+            @Param("loginName") String loginName);
 
     Long countsByUser(
             @Param("userName") String userName,

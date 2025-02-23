@@ -3,6 +3,8 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Tenant;
@@ -15,10 +17,7 @@ import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.RandImageUtil;
-import com.jsh.erp.utils.Tools;
+import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -29,12 +28,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * @author ji_sheng_hua 管伊佳erp
@@ -42,7 +39,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RestController
 @RequestMapping(value = "/user")
 @Api(tags = {"用户管理"})
-public class UserController {
+public class UserController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Value("${manage.roleId}")
@@ -62,6 +59,76 @@ public class UserController {
 
     private static String SUCCESS = "操作成功";
     private static String ERROR = "操作失败";
+
+    @GetMapping(value = "/info")
+    @ApiOperation(value = "根据id获取信息")
+    public String getList(@RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        User user = userService.getUser(id);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(user != null) {
+            objectMap.put("info", user);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取信息列表")
+    public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 HttpServletRequest request)throws Exception {
+        String userName = StringUtil.getInfo(search, "userName");
+        String loginName = StringUtil.getInfo(search, "loginName");
+        List<UserEx> list = userService.select(userName, loginName);
+        return getDataTable(list);
+    }
+
+    @PostMapping(value = "/add")
+    @ApiOperation(value = "新增")
+    public String addResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int insert = userService.insertUser(obj, request);
+        return returnStr(objectMap, insert);
+    }
+
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "修改")
+    public String updateResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int update = userService.updateUser(obj, request);
+        return returnStr(objectMap, update);
+    }
+
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = userService.deleteUser(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = userService.batchDeleteUser(ids, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @GetMapping(value = "/checkIsNameExist")
+    @ApiOperation(value = "检查名称是否存在")
+    public String checkIsNameExist(@RequestParam Long id, @RequestParam(value ="name", required = false) String name,
+                                   HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int exist = userService.checkIsNameExist(id, name);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
 
     @PostMapping(value = "/login")
     @ApiOperation(value = "登录")

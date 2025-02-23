@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * @author ji_sheng_hua jshERP
@@ -31,6 +32,66 @@ public class UserBusinessController {
     @Resource
     private UserBusinessService userBusinessService;
 
+    @GetMapping(value = "/info")
+    @ApiOperation(value = "根据id获取信息")
+    public String getList(@RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        UserBusiness userBusiness = userBusinessService.getUserBusiness(id);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(userBusiness != null) {
+            objectMap.put("info", userBusiness);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @PostMapping(value = "/add")
+    @ApiOperation(value = "新增")
+    public String addResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int insert = userBusinessService.insertUserBusiness(obj, request);
+        return returnStr(objectMap, insert);
+    }
+
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "修改")
+    public String updateResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int update = userBusinessService.updateUserBusiness(obj, request);
+        return returnStr(objectMap, update);
+    }
+
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = userBusinessService.deleteUserBusiness(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = userBusinessService.batchDeleteUserBusiness(ids, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @GetMapping(value = "/checkIsNameExist")
+    @ApiOperation(value = "检查名称是否存在")
+    public String checkIsNameExist(@RequestParam Long id, @RequestParam(value ="name", required = false) String name,
+                                   HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int exist = userBusinessService.checkIsNameExist(id, name);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
+    
     /**
      * 获取信息
      * @param keyId

@@ -7,7 +7,7 @@ import com.jsh.erp.service.functions.FunctionService;
 import com.jsh.erp.service.platformConfig.PlatformConfigService;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.role.RoleService;
-import com.jsh.erp.utils.HttpClient;
+import com.jsh.erp.utils.*;
 import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -22,9 +22,6 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.orgaUserRel.OrgaUserRelService;
 import com.jsh.erp.service.tenant.TenantService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
-import com.jsh.erp.utils.ExceptionCodeConstants;
-import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -112,14 +109,15 @@ public class UserService {
         return list;
     }
 
-    public List<UserEx> select(String userName, String loginName, int offset, int rows)throws Exception {
+    public List<UserEx> select(String userName, String loginName)throws Exception {
         List<UserEx> list=null;
         try {
             //先校验是否登录，然后才能查询用户数据
             HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
             Long userId = this.getUserId(request);
             if(userId!=null) {
-                list = userMapperEx.selectByConditionUser(userName, loginName, offset, rows);
+                PageUtils.startPage();
+                list = userMapperEx.selectByConditionUser(userName, loginName);
                 for (UserEx ue : list) {
                     String userType = "";
                     if (ue.getId().equals(ue.getTenantId())) {
@@ -155,15 +153,7 @@ public class UserService {
         }
         return result;
     }
-    /**
-     * create by: cjl
-     * description:
-     * 添加事务控制
-     * create time: 2019/1/11 14:30
-     * @Param: beanJson
-     * @Param: request
-     * @return int
-     */
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertUser(JSONObject obj, HttpServletRequest request)throws Exception {
         User user = JSONObject.parseObject(obj.toJSONString(), User.class);
@@ -185,15 +175,7 @@ public class UserService {
         }
         return result;
     }
-    /**
-     * create by: cjl
-     * description:
-     * 添加事务控制
-     * create time: 2019/1/11 14:31
-     * @Param: beanJson
-     * @Param: id
-     * @return int
-     */
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUser(JSONObject obj, HttpServletRequest request) throws Exception{
         User user = JSONObject.parseObject(obj.toJSONString(), User.class);
@@ -207,14 +189,7 @@ public class UserService {
         }
         return result;
     }
-    /**
-     * create by: cjl
-     * description:
-     * 添加事务控制
-     * create time: 2019/1/11 14:32
-     * @Param: user
-     * @return int
-     */
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUserByObj(User user) throws Exception{
         logService.insertLog("用户",
@@ -228,15 +203,7 @@ public class UserService {
         }
         return result;
     }
-    /**
-     * create by: cjl
-     * description:
-     *  添加事务控制
-     * create time: 2019/1/11 14:33
-     * @Param: md5Pwd
-     * @Param: id
-     * @return int
-     */
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int resetPwd(String md5Pwd, Long id) throws Exception{
         int result=0;

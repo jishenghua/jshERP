@@ -42,7 +42,6 @@ public class SerialNumberService {
     @Resource
     private LogService logService;
 
-
     public SerialNumber getSerialNumber(long id)throws Exception {
         SerialNumber result=null;
         try{
@@ -79,141 +78,30 @@ public class SerialNumberService {
 
     public List<SerialNumberEx> select(String serialNumber, String materialName, Integer offset, Integer rows)throws Exception {
         return null;
-
-    }
-
-    public Long countSerialNumber(String serialNumber,String materialName)throws Exception {
-        return null;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertSerialNumber(JSONObject obj, HttpServletRequest request)throws Exception {
-        int result=0;
-        try{
-            SerialNumberEx serialNumberEx = JSONObject.parseObject(obj.toJSONString(), SerialNumberEx.class);
-            /**处理商品id*/
-            serialNumberEx.setMaterialId(getSerialNumberMaterialIdByBarCode(serialNumberEx.getMaterialCode()));
-            //删除标记,默认未删除
-            serialNumberEx.setDeleteFlag(BusinessConstants.DELETE_FLAG_EXISTS);
-            //已卖出，默认未否
-            serialNumberEx.setIsSell(BusinessConstants.IS_SELL_HOLD);
-            Date date=new Date();
-            serialNumberEx.setCreateTime(date);
-            serialNumberEx.setUpdateTime(date);
-            User userInfo=userService.getCurrentUser();
-            serialNumberEx.setCreator(userInfo==null?null:userInfo.getId());
-            serialNumberEx.setUpdater(userInfo==null?null:userInfo.getId());
-            result = serialNumberMapperEx.addSerialNumber(serialNumberEx);
-            logService.insertLog("序列号",BusinessConstants.LOG_OPERATION_TYPE_ADD,
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
+        return 0;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateSerialNumber(JSONObject obj, HttpServletRequest request) throws Exception{
-        SerialNumberEx serialNumberEx = JSONObject.parseObject(obj.toJSONString(), SerialNumberEx.class);
-        int result=0;
-        try{
-            serialNumberEx.setMaterialId(getSerialNumberMaterialIdByBarCode(serialNumberEx.getMaterialCode()));
-            Date date=new Date();
-            serialNumberEx.setUpdateTime(date);
-            User userInfo=userService.getCurrentUser();
-            serialNumberEx.setUpdater(userInfo==null?null:userInfo.getId());
-            result = serialNumberMapperEx.updateSerialNumber(serialNumberEx);
-            logService.insertLog("序列号",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(serialNumberEx.getId()).toString(),
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
+        return 0;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteSerialNumber(Long id, HttpServletRequest request)throws Exception {
-        return batchDeleteSerialNumberByIds(id.toString());
+        return 0;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteSerialNumber(String ids, HttpServletRequest request)throws Exception {
-        return batchDeleteSerialNumberByIds(ids);
-    }
-
-    /**
-     *  逻辑删除序列号信息
-     * create time: 2019/3/27 17:43
-     * @Param: ids
-     * @return
-     */
-    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchDeleteSerialNumberByIds(String ids) throws Exception{
-        StringBuffer sb = new StringBuffer();
-        sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
-        List<SerialNumber> list = getSerialNumberListByIds(ids);
-        for(SerialNumber serialNumber: list){
-            sb.append("[").append(serialNumber.getSerialNumber()).append("]");
-        }
-        logService.insertLog("序列号", sb.toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-        User userInfo=userService.getCurrentUser();
-        String [] idArray=ids.split(",");
-        int result=0;
-        try{
-            result = serialNumberMapperEx.batchDeleteSerialNumberByIds(new Date(),userInfo==null?null:userInfo.getId(),idArray);
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
+        return 0;
     }
 
     public int checkIsNameExist(Long id, String serialNumber)throws Exception {
-        SerialNumberExample example = new SerialNumberExample();
-        example.createCriteria().andIdNotEqualTo(id).andSerialNumberEqualTo(serialNumber).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<SerialNumber> list=null;
-        try{
-            list=serialNumberMapper.selectByExample(example);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return list==null?0:list.size();
-    }
-
-    /**
-     *  根据商品名称判断商品名称是否有效
-     * @Param: materialName
-     * @return Long 满足使用条件的商品的id
-     */
-    public Long checkMaterialName(String materialName)throws Exception{
-        if(StringUtil.isNotEmpty(materialName)) {
-            List<Material> mlist=null;
-            try{
-                mlist = materialMapperEx.findByMaterialName(materialName);
-            }catch(Exception e){
-                JshException.readFail(logger, e);
-            }
-            if (mlist == null || mlist.size() < 1) {
-                //商品名称不存在
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_EXISTS_CODE,
-                        ExceptionConstants.MATERIAL_NOT_EXISTS_MSG);
-            }
-            if (mlist.size() > 1) {
-                //商品信息不唯一
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ONLY_CODE,
-                        ExceptionConstants.MATERIAL_NOT_ONLY_MSG);
-
-            }
-            //获得唯一商品
-            if (BusinessConstants.ENABLE_SERIAL_NUMBER_NOT_ENABLED.equals(mlist.get(0).getEnableSerialNumber())) {
-                //商品未开启序列号
-                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_CODE,
-                        ExceptionConstants.MATERIAL_NOT_ENABLE_SERIAL_NUMBER_MSG);
-            }
-            return mlist.get(0).getId();
-        }
-        return null;
+        return 0;
     }
 
     /**

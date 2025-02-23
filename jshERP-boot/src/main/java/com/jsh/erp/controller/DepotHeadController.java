@@ -2,6 +2,8 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.DepotHead;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * @author ji-sheng-hua 752*718*920
@@ -39,7 +42,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RestController
 @RequestMapping(value = "/depotHead")
 @Api(tags = {"单据管理"})
-public class DepotHeadController {
+public class DepotHeadController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(DepotHeadController.class);
 
     @Resource
@@ -56,6 +59,61 @@ public class DepotHeadController {
 
     @Resource
     private UserService userService;
+
+    @GetMapping(value = "/info")
+    @ApiOperation(value = "根据id获取信息")
+    public String getList(@RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        DepotHead depotHead = depotHeadService.getDepotHead(id);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(depotHead != null) {
+            objectMap.put("info", depotHead);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取信息列表")
+    public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 HttpServletRequest request)throws Exception {
+        String type = StringUtil.getInfo(search, "type");
+        String subType = StringUtil.getInfo(search, "subType");
+        String hasDebt = StringUtil.getInfo(search, "hasDebt");
+        String status = StringUtil.getInfo(search, "status");
+        String purchaseStatus = StringUtil.getInfo(search, "purchaseStatus");
+        String number = StringUtil.getInfo(search, "number");
+        String linkApply = StringUtil.getInfo(search, "linkApply");
+        String linkNumber = StringUtil.getInfo(search, "linkNumber");
+        String beginTime = StringUtil.getInfo(search, "beginTime");
+        String endTime = StringUtil.getInfo(search, "endTime");
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
+        Long creator = StringUtil.parseStrLong(StringUtil.getInfo(search, "creator"));
+        Long depotId = StringUtil.parseStrLong(StringUtil.getInfo(search, "depotId"));
+        Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
+        String remark = StringUtil.getInfo(search, "remark");
+        List<DepotHeadVo4List> list = depotHeadService.select(type, subType, hasDebt, status, purchaseStatus, number, linkApply, linkNumber,
+                beginTime, endTime, materialParam, organId, creator, depotId, accountId, remark);
+        return getDataTable(list);
+    }
+
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = depotHeadService.deleteDepotHead(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = depotHeadService.batchDeleteDepotHead(ids, request);
+        return returnStr(objectMap, delete);
+    }
 
     /**
      * 批量设置状态-审核或者反审核

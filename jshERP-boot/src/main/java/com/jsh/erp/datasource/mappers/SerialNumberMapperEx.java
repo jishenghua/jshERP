@@ -42,8 +42,6 @@ public interface SerialNumberMapperEx {
      * */
     int batAddSerialNumber(@Param("list") List<SerialNumberEx> list);
 
-    int batchDeleteSerialNumberByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
-
     List<SerialNumberEx> getEnableSerialNumberList(@Param("number") String number,
                                                  @Param("name") String name,
                                                  @Param("depotId") Long depotId,

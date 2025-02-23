@@ -14,6 +14,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,24 +81,15 @@ public class UnitService {
         return list;
     }
 
-    public List<Unit> select(String name, int offset, int rows)throws Exception {
+    public List<Unit> select(String name)throws Exception {
         List<Unit> list=null;
         try{
-            list=unitMapperEx.selectByConditionUnit(name, offset, rows);
+            PageUtils.startPage();
+            list=unitMapperEx.selectByConditionUnit(name);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countUnit(String name)throws Exception {
-        Long result=null;
-        try{
-            result=unitMapperEx.countsByUnit(name);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

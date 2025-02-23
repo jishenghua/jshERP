@@ -29,38 +29,6 @@
         </if>
         and ifnull(delete_flag,'0') !='1'
         order by sort asc, id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
-    </select>
-    <select id="countsBySupplier" resultType="java.lang.Long">
-        SELECT
-        COUNT(id)
-        FROM jsh_supplier
-        WHERE 1=1
-        <if test="supplier != null and supplier !=''">
-            <bind name="bindSupplier" value="'%'+supplier+'%'"/>
-            and supplier like #{bindSupplier}
-        </if>
-        <if test="type != null and type !=''">
-            and type=#{type}
-        </if>
-        <if test="phonenum != null and phonenum !=''">
-            <bind name="bindPhoneNum" value="'%'+phonenum+'%'"/>
-            and phone_num like #{bindPhoneNum}
-        </if>
-        <if test="telephone != null and telephone !=''">
-            <bind name="bindTelephone" value="'%'+telephone+'%'"/>
-            and telephone like #{bindTelephone}
-        </if>
-        <if test="creatorArray != null">
-            and creator in (
-            <foreach collection="creatorArray" item="creator" separator=",">
-                #{creator}
-            </foreach>
-            )
-        </if>
-        and ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="findByAll" parameterType="com.jsh.erp.datasource.entities.SupplierExample" resultMap="com.jsh.erp.datasource.mappers.SupplierMapper.BaseResultMap">

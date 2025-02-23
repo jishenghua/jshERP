@@ -64,9 +64,6 @@ const checkMaterialBarCode = (params)=>getAction("/materialsExtend/checkIsBarCod
 const batchUpdateMaterial = (params)=>postAction("/material/batchUpdate",params);
 const changeNameToPinYin = (params)=>postAction("/material/changeNameToPinYin",params);
 //序列号
-const addSerialNumber = (params)=>postAction("/serialNumber/add",params);
-const editSerialNumber = (params)=>putAction("/serialNumber/update",params);
-const checkSerialNumber = (params)=>getAction("/serialNumber/checkIsNameExist",params);
 const batAddSerialNumber = (params)=>postAction("/serialNumber/batAddSerialNumber",params);
 const getEnableSerialNumberList = (params)=>getAction("/serialNumber/getEnableSerialNumberList",params);
 //多属性
@@ -167,9 +164,6 @@ export {
   checkMaterialBarCode,
   batchUpdateMaterial,
   changeNameToPinYin,
-  addSerialNumber,
-  editSerialNumber,
-  checkSerialNumber,
   batAddSerialNumber,
   getEnableSerialNumberList,
   addMaterialAttribute,
