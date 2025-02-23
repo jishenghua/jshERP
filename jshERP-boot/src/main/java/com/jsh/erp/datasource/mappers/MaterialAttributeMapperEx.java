@@ -8,12 +8,7 @@ import java.util.List;
 public interface MaterialAttributeMapperEx {
 
     List<MaterialAttribute> selectByConditionMaterialAttribute(
-            @Param("attributeName") String attributeName,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    Long countsByMaterialAttribute(
-            @Param("attributeField") String attributeField);
+            @Param("attributeName") String attributeName);
 
     int batchDeleteMaterialAttributeByIds(
             @Param("ids") String ids[]);

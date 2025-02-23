@@ -16,16 +16,6 @@
         </if>
     </select>
 
-    <select id="countsByMaterialAttribute" resultType="java.lang.Long">
-        SELECT count(ma.id) from jsh_material_attribute ma
-        where 1=1
-        <if test="attributeName != null">
-            <bind name="bindAttributeName" value="'%'+attributeName+'%'"/>
-            and ma.attribute_name like #{bindAttributeName}
-        </if>
-        and ifnull(ma.delete_flag,'0') !='1'
-    </select>
-
     <update id="batchDeleteMaterialAttributeByIds">
         update jsh_material_attribute
         set delete_flag='1'

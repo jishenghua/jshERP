@@ -1,10 +1,12 @@
 package com.jsh.erp.service.materialCategory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.entities.Material;
+import com.jsh.erp.datasource.entities.MaterialCategory;
+import com.jsh.erp.datasource.entities.MaterialCategoryExample;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.MaterialCategoryMapper;
 import com.jsh.erp.datasource.mappers.MaterialCategoryMapperEx;
 import com.jsh.erp.datasource.mappers.MaterialMapperEx;
@@ -13,6 +15,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,24 +108,15 @@ public class MaterialCategoryService {
         return res;
     }
 
-    public List<MaterialCategory> select(String name, Integer parentId, int offset, int rows) throws Exception{
+    public List<MaterialCategory> select(String name, Integer parentId) throws Exception{
         List<MaterialCategory> list=null;
         try{
-            list=materialCategoryMapperEx.selectByConditionMaterialCategory(name, parentId, offset, rows);
+            PageUtils.startPage();
+            list=materialCategoryMapperEx.selectByConditionMaterialCategory(name, parentId);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countMaterialCategory(String name, Integer parentId) throws Exception{
-        Long result=null;
-        try{
-            result=materialCategoryMapperEx.countsByMaterialCategory(name, parentId);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

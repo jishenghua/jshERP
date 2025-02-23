@@ -2,8 +2,6 @@ package com.jsh.erp.service.serialNumber;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.service.ICommonQuery;
-import com.jsh.erp.service.material.MaterialResource;
-import com.jsh.erp.service.material.MaterialService;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.QueryUtils;
 import com.jsh.erp.utils.StringUtil;

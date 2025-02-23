@@ -12,6 +12,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,28 +62,17 @@ public class MaterialPropertyService {
         return list;
     }
 
-    public List<MaterialProperty> select(String name, int offset, int rows)throws Exception {
+    public List<MaterialProperty> select(String name)throws Exception {
         List<MaterialProperty>  list=null;
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                list = materialPropertyMapperEx.selectByConditionMaterialProperty(name, offset, rows);
+                PageUtils.startPage();
+                list = materialPropertyMapperEx.selectByConditionMaterialProperty(name);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countMaterialProperty(String name)throws Exception {
-        Long  result=null;
-        try{
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = materialPropertyMapperEx.countsByMaterialProperty(name);
-            }
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

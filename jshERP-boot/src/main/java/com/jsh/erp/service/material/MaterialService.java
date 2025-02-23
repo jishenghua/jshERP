@@ -18,10 +18,7 @@ import com.jsh.erp.service.materialExtend.MaterialExtendService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ExcelUtils;
-import com.jsh.erp.utils.PinYinUtil;
-import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.*;
 import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
@@ -122,7 +119,7 @@ public class MaterialService {
     public List<MaterialVo4Unit> select(String materialParam, String standard, String model, String color, String brand, String mfrs,
                                         String materialOther, String weight, String expiryNum, String enableSerialNumber,
                                         String enableBatchNumber, String position, String enabled, String remark, String categoryId,
-                                        String mpList, int offset, int rows)
+                                        String mpList)
             throws Exception{
         String[] mpArr = new String[]{};
         if(StringUtil.isNotEmpty(mpList)){
@@ -135,8 +132,9 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(categoryId)){
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
+            PageUtils.startPage();
             list= materialMapperEx.selectByConditionMaterial(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList, offset, rows);
+                    enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList);
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> initialStockMap = getInitialStockMapByMaterialList(list);
                 Map<Long,BigDecimal> currentStockMap = getCurrentStockMapByMaterialList(list);
@@ -157,24 +155,6 @@ public class MaterialService {
             JshException.readFail(logger, e);
         }
         return resList;
-    }
-
-    public Long countMaterial(String materialParam, String standard, String model, String color, String brand, String mfrs,
-                              String materialOther, String weight, String expiryNum, String enableSerialNumber,
-                              String enableBatchNumber, String position, String enabled, String remark, String categoryId,
-                              String mpList)throws Exception {
-        Long result =null;
-        try{
-            List<Long> idList = new ArrayList<>();
-            if(StringUtil.isNotEmpty(categoryId)){
-                idList = getListByParentId(Long.parseLong(categoryId));
-            }
-            result= materialMapperEx.countsByMaterial(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
-                    enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

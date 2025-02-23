@@ -33,26 +33,6 @@ public interface MaterialMapperEx {
             @Param("enabled") String enabled,
             @Param("remark") String remark,
             @Param("idList") List<Long> idList,
-            @Param("mpList") String mpList,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    Long countsByMaterial(
-            @Param("materialParam") String materialParam,
-            @Param("standard") String standard,
-            @Param("model") String model,
-            @Param("color") String color,
-            @Param("brand") String brand,
-            @Param("mfrs") String mfrs,
-            @Param("materialOther") String materialOther,
-            @Param("weight") String weight,
-            @Param("expiryNum") String expiryNum,
-            @Param("enableSerialNumber") String enableSerialNumber,
-            @Param("enableBatchNumber") String enableBatchNumber,
-            @Param("position") String position,
-            @Param("enabled") String enabled,
-            @Param("remark") String remark,
-            @Param("idList") List<Long> idList,
             @Param("mpList") String mpList);
 
     Long insertSelectiveEx(Material record);

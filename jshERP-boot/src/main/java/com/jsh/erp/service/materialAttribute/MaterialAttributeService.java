@@ -10,6 +10,7 @@ import com.jsh.erp.datasource.mappers.MaterialAttributeMapperEx;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MaterialAttributeService {
@@ -59,25 +58,15 @@ public class MaterialAttributeService {
         return list;
     }
 
-    public List<MaterialAttribute> select(String attributeName, int offset, int rows)
-            throws Exception{
+    public List<MaterialAttribute> select(String attributeName) throws Exception{
         List<MaterialAttribute> list = new ArrayList<>();
         try{
-            list = materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeName, offset, rows);
+            PageUtils.startPage();
+            list = materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeName);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countMaterialAttribute(String attributeField)throws Exception {
-        Long result =null;
-        try{
-            result= 5L;
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

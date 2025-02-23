@@ -17,12 +17,6 @@ import java.util.Map;
 public interface MaterialCategoryMapperEx {
     List<MaterialCategory> selectByConditionMaterialCategory(
             @Param("name") String name,
-            @Param("parentId") Integer parentId,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    Long countsByMaterialCategory(
-            @Param("name") String name,
             @Param("parentId") Integer parentId);
 
     List<TreeNode> getNodeTree(@Param("currentId")Long currentId);

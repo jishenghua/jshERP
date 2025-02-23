@@ -10,21 +10,8 @@
             and native_name like #{bindName}
         </if>
         and ifnull(delete_flag,'0') !='1'
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
     </select>
-    <select id="countsByMaterialProperty" resultType="java.lang.Long">
-        SELECT
-        COUNT(id)
-        FROM jsh_material_property
-        WHERE 1=1
-        <if test="name != null">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and native_name like #{bindName}
-        </if>
-        and ifnull(delete_flag,'0') !='1'
-    </select>
+
     <update id="batchDeleteMaterialPropertyByIds">
         update jsh_material_property
         set delete_flag='1'

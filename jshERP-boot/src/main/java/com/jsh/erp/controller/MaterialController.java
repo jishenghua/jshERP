@@ -2,6 +2,9 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
+import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialExtend;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.entities.Unit;
@@ -12,10 +15,7 @@ import com.jsh.erp.service.role.RoleService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.unit.UnitService;
 import com.jsh.erp.service.user.UserService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.PinYinUtil;
-import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * @author ji|sheng|hua jshERP
@@ -41,7 +42,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 @RestController
 @RequestMapping(value = "/material")
 @Api(tags = {"商品管理"})
-public class MaterialController {
+public class MaterialController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(MaterialController.class);
 
     @Resource
@@ -67,6 +68,91 @@ public class MaterialController {
 
     @Value(value="${file.uploadType}")
     private Long fileUploadType;
+
+    @GetMapping(value = "/info")
+    @ApiOperation(value = "根据id获取信息")
+    public String getList(@RequestParam("id") Long id,
+                          HttpServletRequest request) throws Exception {
+        Material material = materialService.getMaterial(id);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(material != null) {
+            objectMap.put("info", material);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @GetMapping(value = "/list")
+    @ApiOperation(value = "获取信息列表")
+    public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                 HttpServletRequest request)throws Exception {
+        String categoryId = StringUtil.getInfo(search, "categoryId");
+        String materialParam = StringUtil.getInfo(search, "materialParam");
+        String standard = StringUtil.getInfo(search, "standard");
+        String model = StringUtil.getInfo(search, "model");
+        String color = StringUtil.getInfo(search, "color");
+        String brand = StringUtil.getInfo(search, "brand");
+        String mfrs = StringUtil.getInfo(search, "mfrs");
+        String materialOther = StringUtil.getInfo(search, "materialOther");
+        String weight = StringUtil.getInfo(search, "weight");
+        String expiryNum = StringUtil.getInfo(search, "expiryNum");
+        String enableSerialNumber = StringUtil.getInfo(search, "enableSerialNumber");
+        String enableBatchNumber = StringUtil.getInfo(search, "enableBatchNumber");
+        String position = StringUtil.getInfo(search, "position");
+        String enabled = StringUtil.getInfo(search, "enabled");
+        String remark = StringUtil.getInfo(search, "remark");
+        String mpList = StringUtil.getInfo(search, "mpList");
+        List<MaterialVo4Unit> list = materialService.select(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
+                enableSerialNumber, enableBatchNumber, position, enabled, remark, categoryId, mpList);
+        return getDataTable(list);
+    }
+
+    @PostMapping(value = "/add")
+    @ApiOperation(value = "新增")
+    public String addResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int insert = materialService.insertMaterial(obj, request);
+        return returnStr(objectMap, insert);
+    }
+
+    @PutMapping(value = "/update")
+    @ApiOperation(value = "修改")
+    public String updateResource(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int update = materialService.updateMaterial(obj, request);
+        return returnStr(objectMap, update);
+    }
+
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = materialService.deleteMaterial(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = materialService.batchDeleteMaterial(ids, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @GetMapping(value = "/checkIsNameExist")
+    @ApiOperation(value = "检查名称是否存在")
+    public String checkIsNameExist(@RequestParam Long id, @RequestParam(value ="name", required = false) String name,
+                                   HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int exist = materialService.checkIsNameExist(id, name);
+        if(exist > 0) {
+            objectMap.put("status", true);
+        } else {
+            objectMap.put("status", false);
+        }
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
 
     /**
      * 检查商品是否存在
