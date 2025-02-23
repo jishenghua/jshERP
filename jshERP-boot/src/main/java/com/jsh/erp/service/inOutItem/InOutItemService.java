@@ -14,6 +14,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,24 +80,15 @@ public class InOutItemService {
         return list;
     }
 
-    public List<InOutItem> select(String name, String type, String remark, int offset, int rows)throws Exception {
+    public List<InOutItem> select(String name, String type, String remark)throws Exception {
         List<InOutItem> list=null;
         try{
-            list=inOutItemMapperEx.selectByConditionInOutItem(name, type, remark, offset, rows);
+            PageUtils.startPage();
+            list=inOutItemMapperEx.selectByConditionInOutItem(name, type, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countInOutItem(String name, String type, String remark)throws Exception {
-        Long result=null;
-        try{
-            result=inOutItemMapperEx.countsByInOutItem(name, type, remark);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

@@ -14,6 +14,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.depotHead.DepotHeadService;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -77,12 +78,13 @@ public class MsgService {
         return list;
     }
 
-    public List<MsgEx> select(String name, int offset, int rows)throws Exception {
+    public List<MsgEx> select(String name)throws Exception {
         List<MsgEx> list=null;
         try{
             User userInfo = userService.getCurrentUser();
             if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
-                list = msgMapperEx.selectByConditionMsg(userInfo.getId(), name, offset, rows);
+                PageUtils.startPage();
+                list = msgMapperEx.selectByConditionMsg(userInfo.getId(), name);
                 if (null != list) {
                     for (MsgEx msgEx : list) {
                         if (msgEx.getCreateTime() != null) {
@@ -98,22 +100,6 @@ public class MsgService {
                     ExceptionConstants.DATA_READ_FAIL_MSG);
         }
         return list;
-    }
-
-    public Long countMsg(String name)throws Exception {
-        Long result=null;
-        try{
-            User userInfo = userService.getCurrentUser();
-            if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
-                result = msgMapperEx.countsByMsg(userInfo.getId(), name);
-            }
-        }catch(Exception e){
-            logger.error("异常码[{}],异常提示[{}],异常[{}]",
-                    ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
-            throw new BusinessRunTimeException(ExceptionConstants.DATA_READ_FAIL_CODE,
-                    ExceptionConstants.DATA_READ_FAIL_MSG);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

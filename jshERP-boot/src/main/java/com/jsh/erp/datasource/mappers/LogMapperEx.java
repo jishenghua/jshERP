@@ -17,18 +17,6 @@ public interface LogMapperEx {
             @Param("tenantType") String tenantType,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
-            @Param("content") String content,
-            @Param("offset") Integer offset,
-            @Param("rows") Integer rows);
-
-    Long countsByLog(
-            @Param("operation") String operation,
-            @Param("userInfo") String userInfo,
-            @Param("clientIp") String clientIp,
-            @Param("tenantLoginName") String tenantLoginName,
-            @Param("tenantType") String tenantType,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
             @Param("content") String content);
 
     Long getCountByIpAndDate(

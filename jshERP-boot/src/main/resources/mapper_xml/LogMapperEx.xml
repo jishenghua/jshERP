@@ -41,45 +41,6 @@
             and l.content like #{bindContent}
         </if>
         order by l.create_time desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
-    </select>
-    <select id="countsByLog" resultType="java.lang.Long">
-        SELECT
-        COUNT(1)
-        FROM jsh_log l
-        left join jsh_user u on l.user_id = u.id
-        left join jsh_tenant t on l.tenant_id=t.tenant_id
-        WHERE 1=1
-        <if test="operation != null">
-            <bind name="bindOperation" value="'%'+operation+'%'"/>
-            and l.operation like #{bindOperation}
-        </if>
-        <if test="userInfo != null">
-            <bind name="bindUserInfo" value="'%'+userInfo+'%'"/>
-            and (u.username like #{bindUserInfo} or u.login_name like #{bindUserInfo})
-        </if>
-        <if test="clientIp != null">
-            <bind name="bindClientIp" value="'%'+clientIp+'%'"/>
-            and l.client_ip like #{bindClientIp}
-        </if>
-        <if test="tenantLoginName != null">
-            and t.login_name = #{tenantLoginName}
-        </if>
-        <if test="tenantType != null">
-            and t.type = #{tenantType}
-        </if>
-        <if test="beginTime != null">
-            and l.create_time &gt;= #{beginTime}
-        </if>
-        <if test="endTime != null">
-            and l.create_time &lt;= #{endTime}
-        </if>
-        <if test="content != null">
-            <bind name="bindContent" value="'%'+content+'%'"/>
-            and l.content like #{bindContent}
-        </if>
     </select>
 
     <select id="getCountByIpAndDate" resultType="java.lang.Long">

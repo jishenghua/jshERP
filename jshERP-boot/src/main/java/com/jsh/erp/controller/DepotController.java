@@ -49,7 +49,6 @@ public class DepotController extends BaseController {
     @Resource
     private MaterialService materialService;
 
-
     @GetMapping(value = "/info")
     @ApiOperation(value = "根据id获取信息")
     public String getList(@RequestParam("id") Long id,

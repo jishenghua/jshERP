@@ -12,6 +12,7 @@ import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
 import com.jsh.erp.service.userBusiness.UserBusinessService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +95,7 @@ public class DepotService {
     public List<DepotEx> select(String name, Integer type, String remark)throws Exception {
         List<DepotEx> list=null;
         try{
+            PageUtils.startPage();
             list=depotMapperEx.selectByConditionDepot(name, type, remark);
         }catch(Exception e){
             JshException.readFail(logger, e);

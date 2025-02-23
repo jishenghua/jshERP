@@ -2,17 +2,15 @@ package com.jsh.erp.service.log;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.Log;
 import com.jsh.erp.datasource.entities.LogExample;
-import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.LogMapper;
 import com.jsh.erp.datasource.mappers.LogMapperEx;
 import com.jsh.erp.datasource.vo.LogVo4List;
-import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.redis.RedisService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
@@ -64,13 +62,14 @@ public class LogService {
     }
 
     public List<LogVo4List> select(String operation, String userInfo, String clientIp, String tenantLoginName, String tenantType,
-                                   String beginTime, String endTime, String content, int offset, int rows)throws Exception {
+                                   String beginTime, String endTime, String content)throws Exception {
         List<LogVo4List> list=null;
         try{
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            PageUtils.startPage();
             list=logMapperEx.selectByConditionLog(operation, userInfo, clientIp, tenantLoginName, tenantType, beginTime, endTime,
-                    content, offset, rows);
+                    content);
             if (null != list) {
                 for (LogVo4List log : list) {
                     log.setCreateTimeStr(Tools.getCenternTime(log.getCreateTime()));
@@ -80,19 +79,6 @@ public class LogService {
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countLog(String operation, String userInfo, String clientIp, String tenantLoginName, String tenantType,
-                         String beginTime, String endTime, String content)throws Exception {
-        Long result=null;
-        try{
-            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
-            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
-            result=logMapperEx.countsByLog(operation, userInfo, clientIp, tenantLoginName, tenantType, beginTime, endTime, content);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

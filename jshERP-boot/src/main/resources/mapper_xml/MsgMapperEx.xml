@@ -16,24 +16,6 @@
             and msg_title like #{bindName}
         </if>
         order by create_time desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
-    </select>
-
-    <select id="countsByMsg" resultType="java.lang.Long">
-        SELECT
-        COUNT(id)
-        FROM jsh_msg
-        WHERE 1=1
-        and ifnull(delete_Flag,'0') !='1'
-        <if test="userId != null">
-            and user_id = #{userId}
-        </if>
-        <if test="name != null">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and msg_title like #{bindName}
-        </if>
     </select>
 
     <update id="batchDeleteMsgByIds">

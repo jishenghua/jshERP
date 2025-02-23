@@ -12,6 +12,7 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.systemConfig.SystemConfigService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +82,7 @@ public class FunctionService {
         List<FunctionEx> list=null;
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
+                PageUtils.startPage();
                 list = functionMapperEx.selectByConditionFunction(name, type);
             }
         }catch(Exception e){

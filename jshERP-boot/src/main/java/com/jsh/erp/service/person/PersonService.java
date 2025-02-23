@@ -15,6 +15,7 @@ import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +87,7 @@ public class PersonService {
     public List<Person> select(String name, String type)throws Exception {
         List<Person> list=null;
         try{
+            PageUtils.startPage();
             list=personMapperEx.selectByConditionPerson(name, type);
         }catch(Exception e){
             JshException.readFail(logger, e);

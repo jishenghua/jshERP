@@ -18,28 +18,8 @@
         </if>
         and ifnull(delete_flag,'0') !='1'
         order by sort asc, id desc
-        <if test="offset != null and rows != null">
-            limit #{offset},#{rows}
-        </if>
     </select>
-    <select id="countsByInOutItem" resultType="java.lang.Long">
-        SELECT
-        COUNT(id)
-        FROM jsh_in_out_item
-        WHERE 1=1
-        <if test="name != null">
-            <bind name="bindName" value="'%'+name+'%'"/>
-            and name like #{bindName}
-        </if>
-        <if test="type != null">
-            and type=#{type}
-        </if>
-        <if test="remark != null">
-            <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and remark like #{bindRemark}
-        </if>
-        and ifnull(delete_flag,'0') !='1'
-    </select>
+
     <update id="batchDeleteInOutItemByIds">
         update jsh_in_out_item
         set delete_flag='1'
