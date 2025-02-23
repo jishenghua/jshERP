@@ -2,8 +2,6 @@ package com.jsh.erp.service.orgaUserRel;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.service.ICommonQuery;
-import com.jsh.erp.service.organization.OrganizationResource;
-import com.jsh.erp.service.organization.OrganizationService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

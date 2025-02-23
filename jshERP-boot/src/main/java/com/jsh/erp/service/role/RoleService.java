@@ -11,6 +11,7 @@ import com.jsh.erp.datasource.mappers.RoleMapperEx;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.log.LogService;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,10 +95,11 @@ public class RoleService {
         return list;
     }
 
-    public List<RoleEx> select(String name, String description, int offset, int rows)throws Exception {
+    public List<RoleEx> select(String name, String description)throws Exception {
         List<RoleEx> list=null;
         try{
-            list=roleMapperEx.selectByConditionRole(name, description, offset, rows);
+            PageUtils.startPage();
+            list=roleMapperEx.selectByConditionRole(name, description);
             for(RoleEx roleEx: list) {
                 String priceLimit = roleEx.getPriceLimit();
                 if(StringUtil.isNotEmpty(priceLimit)) {
@@ -115,16 +117,6 @@ public class RoleService {
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countRole(String name, String description)throws Exception {
-        Long result=null;
-        try{
-            result=roleMapperEx.countsByRole(name, description);
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

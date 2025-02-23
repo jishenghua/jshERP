@@ -3,7 +3,6 @@ package com.jsh.erp.service.organization;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.MaterialProperty;
 import com.jsh.erp.datasource.entities.Organization;
 import com.jsh.erp.datasource.entities.OrganizationExample;
 import com.jsh.erp.datasource.entities.User;
@@ -29,10 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Description
- *
- * @Author: cjl
- * @Date: 2019/3/6 15:10
+ * @Author: jsh
  */
 @Service
 public class OrganizationService {

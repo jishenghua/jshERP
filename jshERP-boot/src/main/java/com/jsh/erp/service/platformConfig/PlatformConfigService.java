@@ -8,6 +8,7 @@ import com.jsh.erp.datasource.mappers.PlatformConfigMapper;
 import com.jsh.erp.datasource.mappers.PlatformConfigMapperEx;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,28 +58,17 @@ public class PlatformConfigService {
         return list;
     }
 
-    public List<PlatformConfig> select(String platformKey, int offset, int rows)throws Exception {
+    public List<PlatformConfig> select(String platformKey)throws Exception {
         List<PlatformConfig> list=null;
         try{
             if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                list = platformConfigMapperEx.selectByConditionPlatformConfig(platformKey, offset, rows);
+                PageUtils.startPage();
+                list = platformConfigMapperEx.selectByConditionPlatformConfig(platformKey);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
-    }
-
-    public Long countPlatformConfig(String platformKey)throws Exception {
-        Long result=null;
-        try{
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = platformConfigMapperEx.countsByPlatformConfig(platformKey);
-            }
-        }catch(Exception e){
-            JshException.readFail(logger, e);
-        }
-        return result;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)

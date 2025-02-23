@@ -3,10 +3,12 @@ package com.jsh.erp.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
-import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.MaterialProperty;
 import com.jsh.erp.service.materialProperty.MaterialPropertyService;
-import com.jsh.erp.utils.*;
+import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.Constants;
+import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class MaterialPropertyController extends BaseController {
     public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
                                  HttpServletRequest request)throws Exception {
         String name = StringUtil.getInfo(search, "name");
-        List<?> list = materialPropertyService.select(name);
+        List<MaterialProperty> list = materialPropertyService.select(name);
         return getDataTable(list);
     }
 
