@@ -7,7 +7,7 @@ import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.MaterialCategory;
 import com.jsh.erp.datasource.vo.TreeNode;
-import com.jsh.erp.service.materialCategory.MaterialCategoryService;
+import com.jsh.erp.service.MaterialCategoryService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.MaterialAttribute;
-import com.jsh.erp.service.materialAttribute.MaterialAttributeService;
+import com.jsh.erp.service.MaterialAttributeService;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;

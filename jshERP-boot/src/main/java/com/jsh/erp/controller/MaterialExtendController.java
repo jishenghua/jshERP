@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.MaterialExtend;
 import com.jsh.erp.datasource.vo.MaterialExtendVo4List;
-import com.jsh.erp.service.materialExtend.MaterialExtendService;
+import com.jsh.erp.service.MaterialExtendService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;

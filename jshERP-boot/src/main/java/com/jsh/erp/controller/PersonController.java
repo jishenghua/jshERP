@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Person;
-import com.jsh.erp.service.person.PersonService;
+import com.jsh.erp.service.PersonService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;

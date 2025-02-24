@@ -1,7 +1,6 @@
 package com.jsh.erp.controller;
 
-import com.jsh.erp.service.depotHead.DepotHeadService;
-import com.jsh.erp.service.sequence.SequenceService;
+import com.jsh.erp.service.SequenceService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

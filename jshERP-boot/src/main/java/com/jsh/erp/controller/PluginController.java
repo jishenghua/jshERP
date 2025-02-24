@@ -5,7 +5,7 @@ import com.gitee.starblues.integration.operator.PluginOperator;
 import com.gitee.starblues.integration.operator.module.PluginInfo;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.User;
-import com.jsh.erp.service.user.UserService;
+import com.jsh.erp.service.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ComputerInfo;
 import com.jsh.erp.utils.StringUtil;

@@ -2,7 +2,7 @@ package com.jsh.erp.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.UserBusiness;
-import com.jsh.erp.service.userBusiness.UserBusinessService;
+import com.jsh.erp.service.UserBusinessService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.ErpInfo;
 import io.swagger.annotations.Api;

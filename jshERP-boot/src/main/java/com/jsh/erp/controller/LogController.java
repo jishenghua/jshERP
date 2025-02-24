@@ -5,7 +5,7 @@ import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Log;
 import com.jsh.erp.datasource.vo.LogVo4List;
-import com.jsh.erp.service.log.LogService;
+import com.jsh.erp.service.LogService;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;

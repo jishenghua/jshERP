@@ -5,7 +5,7 @@ import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Tenant;
 import com.jsh.erp.datasource.entities.TenantEx;
-import com.jsh.erp.service.tenant.TenantService;
+import com.jsh.erp.service.TenantService;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
 import com.jsh.erp.utils.StringUtil;

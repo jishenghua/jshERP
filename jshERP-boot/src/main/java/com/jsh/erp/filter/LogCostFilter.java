@@ -1,6 +1,6 @@
 package com.jsh.erp.filter;
 
-import com.jsh.erp.service.redis.RedisService;
+import com.jsh.erp.service.RedisService;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;

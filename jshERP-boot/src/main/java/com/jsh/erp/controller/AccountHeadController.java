@@ -7,7 +7,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.AccountHead;
 import com.jsh.erp.datasource.entities.AccountHeadVo4Body;
 import com.jsh.erp.datasource.entities.AccountHeadVo4ListEx;
-import com.jsh.erp.service.accountHead.AccountHeadService;
+import com.jsh.erp.service.AccountHeadService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;

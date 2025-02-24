@@ -5,7 +5,7 @@ import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Msg;
 import com.jsh.erp.datasource.entities.MsgEx;
-import com.jsh.erp.service.msg.MsgService;
+import com.jsh.erp.service.MsgService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
