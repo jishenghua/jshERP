@@ -216,6 +216,28 @@ public class DepotHeadService {
         return list;
     }
 
+    public Long countDepotHead(String type, String subType, String hasDebt, String status, String purchaseStatus, String number, String linkApply, String linkNumber,
+                               String beginTime, String endTime, String materialParam, Long organId, Long creator, Long depotId, Long accountId, String remark) throws Exception{
+        Long result=null;
+        try{
+            String [] depotArray = getDepotArray(subType);
+            String [] creatorArray = getCreatorArray();
+            String [] statusArray = StringUtil.isNotEmpty(status) ? status.split(",") : null;
+            String [] purchaseStatusArray = StringUtil.isNotEmpty(purchaseStatus) ? purchaseStatus.split(",") : null;
+            String [] organArray = getOrganArray(subType, purchaseStatus);
+            //以销定购，查看全部数据
+            creatorArray = StringUtil.isNotEmpty(purchaseStatus) ? null: creatorArray;
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            result=depotHeadMapperEx.countsByDepotHead(type, subType, creatorArray, hasDebt,
+                    statusArray, purchaseStatusArray, number, linkApply, linkNumber, beginTime, endTime,
+                    materialParam, organId, organArray, creator, depotId, depotArray, accountId, remark);
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     /**
      * 根据单据类型获取仓库数组
      * @param subType

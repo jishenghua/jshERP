@@ -130,6 +130,22 @@ public class AccountHeadService {
         return list;
     }
 
+    public Long countAccountHead(String type, String billNo, String beginTime, String endTime,
+                                 Long organId, Long creator, Long handsPersonId, Long accountId, String status,
+                                 String remark, String number) throws Exception{
+        Long result=null;
+        try{
+            String [] creatorArray = getCreatorArray();
+            beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+            result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo,
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number);
+        } catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return result;
+    }
+
     /**
      * 根据角色类型获取操作员数组
      * @return
