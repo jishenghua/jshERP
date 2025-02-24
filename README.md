@@ -25,7 +25,7 @@
 * 核心框架：SpringBoot 2.0.0
 * 持久层框架：Mybatis 1.3.2
 * 日志管理：SLF4J 1.7
-* 前端框架：Vue 2.6.10
+* 前端框架：Vue 2.7.16
 * UI框架: Ant-Design-Vue 1.5.2
 * 模板框架: Jeecg-Boot 2.2.0
 * 项目管理框架: Maven 3.2.3
