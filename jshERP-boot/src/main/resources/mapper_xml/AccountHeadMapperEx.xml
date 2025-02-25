@@ -67,6 +67,9 @@
                 and dh.number like #{bindNumber}
             </if>
         </if>
+        <if test="inOutItemId != null">
+            and ai.in_out_item_id=#{inOutItemId}
+        </if>
         and ifnull(ah.delete_flag,'0') !='1'
         order by ah.id desc
     </select>
@@ -125,6 +128,9 @@
                 <bind name="bindNumber" value="'%'+number+'%'"/>
                 and dh.number like #{bindNumber}
             </if>
+        </if>
+        <if test="inOutItemId != null">
+            and ai.in_out_item_id=#{inOutItemId}
         </if>
         and ifnull(ah.delete_flag,'0') !='1') tb
     </select>

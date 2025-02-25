@@ -68,8 +68,9 @@ public class AccountHeadController extends BaseController {
         String status = StringUtil.getInfo(search, "status");
         String remark = StringUtil.getInfo(search, "remark");
         String number = StringUtil.getInfo(search, "number");
+        Long inOutItemId = StringUtil.parseStrLong(StringUtil.getInfo(search, "inOutItemId"));
         List<AccountHeadVo4ListEx> list = accountHeadService.select(type, billNo, beginTime, endTime, organId, creator,
-                handsPersonId, accountId, status, remark, number);
+                handsPersonId, accountId, status, remark, number, inOutItemId);
         return getDataTable(list);
     }
 

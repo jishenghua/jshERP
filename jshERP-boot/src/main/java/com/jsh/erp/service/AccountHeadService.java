@@ -90,7 +90,7 @@ public class AccountHeadService {
 
     public List<AccountHeadVo4ListEx> select(String type, String billNo, String beginTime, String endTime,
                                              Long organId, Long creator, Long handsPersonId, Long accountId, String status,
-                                             String remark, String number) throws Exception{
+                                             String remark, String number, Long inOutItemId) throws Exception{
         List<AccountHeadVo4ListEx> list = new ArrayList<>();
         try{
             String [] creatorArray = getCreatorArray();
@@ -98,7 +98,7 @@ public class AccountHeadService {
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             PageUtils.startPage();
             list = accountHeadMapperEx.selectByConditionAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number);
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, inOutItemId);
             if (null != list) {
                 for (AccountHeadVo4ListEx ah : list) {
                     if(ah.getChangeAmount() != null) {
@@ -132,14 +132,14 @@ public class AccountHeadService {
 
     public Long countAccountHead(String type, String billNo, String beginTime, String endTime,
                                  Long organId, Long creator, Long handsPersonId, Long accountId, String status,
-                                 String remark, String number) throws Exception{
+                                 String remark, String number, Long inOutItemId) throws Exception{
         Long result=null;
         try{
             String [] creatorArray = getCreatorArray();
             beginTime = Tools.parseDayToTime(beginTime,BusinessConstants.DAY_FIRST_TIME);
             endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             result = accountHeadMapperEx.countsByAccountHead(type, creatorArray, billNo,
-                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number);
+                    beginTime, endTime, organId, creator, handsPersonId, accountId, status, remark, number, inOutItemId);
         } catch(Exception e){
             JshException.readFail(logger, e);
         }

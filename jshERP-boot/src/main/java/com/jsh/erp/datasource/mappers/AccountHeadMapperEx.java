@@ -24,7 +24,8 @@ public interface AccountHeadMapperEx {
             @Param("accountId") Long accountId,
             @Param("status") String status,
             @Param("remark") String remark,
-            @Param("number") String number);
+            @Param("number") String number,
+            @Param("inOutItemId") Long inOutItemId);
 
     Long countsByAccountHead(
             @Param("type") String type,
@@ -38,7 +39,8 @@ public interface AccountHeadMapperEx {
             @Param("accountId") Long accountId,
             @Param("status") String status,
             @Param("remark") String remark,
-            @Param("number") String number);
+            @Param("number") String number,
+            @Param("inOutItemId") Long inOutItemId);
 
     List<AccountHeadVo4ListEx> getDetailByNumber(
             @Param("billNo") String billNo);
