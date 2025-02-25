@@ -74,67 +74,6 @@
         order by ah.id desc
     </select>
 
-    <select id="countsByAccountHead" resultType="java.lang.Long">
-        SELECT
-        COUNT(1) from
-        (select distinct ah.* FROM jsh_account_head ah
-        left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
-        left join jsh_depot_head dh on dh.id=ai.bill_id and ifnull(dh.delete_flag,'0') !='1'
-        WHERE 1=1
-        <if test="billNo != null">
-            <bind name="bindBillNo" value="'%'+billNo+'%'"/>
-            and ah.bill_no like #{bindBillNo}
-        </if>
-        <if test="type != null">
-            and ah.type=#{type}
-        </if>
-        <if test="beginTime != null">
-            and ah.bill_time &gt;= #{beginTime}
-        </if>
-        <if test="endTime != null">
-            and ah.bill_time &lt;= #{endTime}
-        </if>
-        <if test="organId != null">
-            and ah.organ_id=#{organId}
-        </if>
-        <if test="handsPersonId != null">
-            and ah.hands_person_id=#{handsPersonId}
-        </if>
-        <if test="creator != null">
-            and ah.creator=#{creator}
-        </if>
-        <if test="creatorArray != null">
-            and ah.creator in (
-            <foreach collection="creatorArray" item="creator" separator=",">
-                #{creator}
-            </foreach>
-            )
-        </if>
-        <if test="accountId != null">
-            and ah.account_id=#{accountId}
-        </if>
-        <if test="status != null and status != ''">
-            and ah.status=#{status}
-        </if>
-        <if test="remark != null and remark !=''">
-            <bind name="bindRemark" value="'%'+remark+'%'"/>
-            and ah.remark like #{bindRemark}
-        </if>
-        <if test="number != null and number !=''">
-            <if test="number == 'QiChu'">
-                and ai.bill_id is null
-            </if>
-            <if test="number != 'QiChu'">
-                <bind name="bindNumber" value="'%'+number+'%'"/>
-                and dh.number like #{bindNumber}
-            </if>
-        </if>
-        <if test="inOutItemId != null">
-            and ai.in_out_item_id=#{inOutItemId}
-        </if>
-        and ifnull(ah.delete_flag,'0') !='1') tb
-    </select>
-
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.AccountHeadExample" resultMap="ResultMapEx">
         select ah.*, s.supplier OrganName, p.Name HandsPersonName, a.Name AccountName
         from jsh_account_head ah

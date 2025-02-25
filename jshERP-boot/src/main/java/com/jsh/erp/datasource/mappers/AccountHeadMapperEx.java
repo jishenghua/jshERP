@@ -27,21 +27,6 @@ public interface AccountHeadMapperEx {
             @Param("number") String number,
             @Param("inOutItemId") Long inOutItemId);
 
-    Long countsByAccountHead(
-            @Param("type") String type,
-            @Param("creatorArray") String[] creatorArray,
-            @Param("billNo") String billNo,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("organId") Long organId,
-            @Param("creator") Long creator,
-            @Param("handsPersonId") Long handsPersonId,
-            @Param("accountId") Long accountId,
-            @Param("status") String status,
-            @Param("remark") String remark,
-            @Param("number") String number,
-            @Param("inOutItemId") Long inOutItemId);
-
     List<AccountHeadVo4ListEx> getDetailByNumber(
             @Param("billNo") String billNo);
 

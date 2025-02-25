@@ -36,27 +36,6 @@ public interface DepotHeadMapperEx {
             @Param("accountId") Long accountId,
             @Param("remark") String remark);
 
-    Long countsByDepotHead(
-            @Param("type") String type,
-            @Param("subType") String subType,
-            @Param("creatorArray") String[] creatorArray,
-            @Param("hasDebt") String hasDebt,
-            @Param("statusArray") String[] statusArray,
-            @Param("purchaseStatusArray") String[] purchaseStatusArray,
-            @Param("number") String number,
-            @Param("linkApply") String linkApply,
-            @Param("linkNumber") String linkNumber,
-            @Param("beginTime") String beginTime,
-            @Param("endTime") String endTime,
-            @Param("materialParam") String materialParam,
-            @Param("organId") Long organId,
-            @Param("organArray") String[] organArray,
-            @Param("creator") Long creator,
-            @Param("depotId") Long depotId,
-            @Param("depotArray") String[] depotArray,
-            @Param("accountId") Long accountId,
-            @Param("remark") String remark);
-
     List<MaterialsListVo> findMaterialsListMapByHeaderIdList(
             @Param("idList") List<Long> idList);
 
