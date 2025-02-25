@@ -1,5 +1,7 @@
-import {findFinancialDetailByNumber, findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail,
-  getUserList, getPersonByType, getAccount, getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
+import {
+  findFinancialDetailByNumber, findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail,
+  getUserList, getPersonByType, getAccount, getCurrentSystemConfig, getPlatformConfigByKey, findInOutItemByParam
+} from '@/api/api'
 import { getCheckFlag, getFormatDate, getPrevMonthFormatDate } from '@/utils/util'
 import Vue from 'vue'
 import moment from 'moment'
@@ -20,6 +22,7 @@ export const FinancialListMixin = {
       userList: [],
       personList: [],
       accountList: [],
+      inOutItemList: [],
       queryParam: {
         beginTime: getPrevMonthFormatDate(3),
         endTime: getFormatDate(),
@@ -162,8 +165,14 @@ export const FinancialListMixin = {
     initAccount() {
       getAccount({}).then((res)=>{
         if(res && res.code === 200) {
-          let list = res.data.accountList
-          this.accountList = list
+          this.accountList = res.data.accountList
+        }
+      })
+    },
+    initInOutItem(type) {
+      findInOutItemByParam({type:type}).then((res)=>{
+        if(res) {
+          this.inOutItemList = res
         }
       })
     },

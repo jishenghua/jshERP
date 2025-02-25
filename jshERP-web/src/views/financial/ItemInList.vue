@@ -82,6 +82,15 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="收入项目" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择收入项目" showSearch optionFilterProp="children" v-model="queryParam.inOutItemId">
+                      <a-select-option v-for="(item,index) in inOutItemList" :key="index" :value="item.id">
+                        {{ item.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="单据备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入单据备注" v-model="queryParam.remark"></a-input>
                   </a-form-item>
@@ -176,6 +185,7 @@
           creator: undefined,
           handsPersonId: undefined,
           accountId: undefined,
+          inOutItemId: undefined,
           status: undefined,
           remark: ""
         },
@@ -217,6 +227,7 @@
       this.initUser()
       this.initPerson()
       this.initAccount()
+      this.initInOutItem('in')
     },
     methods: {
     }
