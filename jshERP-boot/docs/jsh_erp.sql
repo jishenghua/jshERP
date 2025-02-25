@@ -778,7 +778,7 @@ CREATE TABLE `jsh_supplier` (
   `all_need_pay` decimal(24,6) DEFAULT NULL COMMENT '累计应付',
   `fax` varchar(30) DEFAULT NULL COMMENT '传真',
   `telephone` varchar(30) DEFAULT NULL COMMENT '手机',
-  `address` varchar(50) DEFAULT NULL COMMENT '地址',
+  `address` varchar(100) DEFAULT NULL COMMENT '地址',
   `tax_num` varchar(50) DEFAULT NULL COMMENT '纳税人识别号',
   `bank_name` varchar(50) DEFAULT NULL COMMENT '开户行',
   `account_number` varchar(50) DEFAULT NULL COMMENT '账号',

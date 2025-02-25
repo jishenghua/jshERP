@@ -1629,3 +1629,10 @@ alter table jsh_tenant add delete_flag varchar(1) DEFAULT '0' COMMENT '删除标
 -- 更新菜单：把计量单位更新为多单位
 -- --------------------------------------------------------
 update jsh_function set name='多单位' where number='010103';
+
+-- --------------------------------------------------------
+-- 时间 2025年2月25日
+-- by jishenghua
+-- 给地址字段调整长度
+-- --------------------------------------------------------
+alter table jsh_supplier change address address varchar(100) DEFAULT NULL COMMENT '地址';
