@@ -39,12 +39,11 @@
     </resultMap>
 
     <select id="selectByConditionMaterial" parameterType="com.jsh.erp.datasource.entities.MaterialExample" resultMap="ResultMapList">
-        select m.*,u.name unitName, mc.name categoryName, me.bar_code,
-        me.purchase_decimal, me.commodity_decimal, me.wholesale_decimal,me.low_decimal,me.sku
-        FROM jsh_material m
-        left JOIN jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
-        left JOIN jsh_unit u on m.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
-        left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        select jm.*, u.name unitName, mc.name categoryName, jme.bar_code,
+        jme.purchase_decimal, jme.commodity_decimal, jme.wholesale_decimal, jme.low_decimal, jme.sku
+        from (select m.id, min(me.id) meId
+        from jsh_material m
+        left join jsh_material_extend me on m.id = me.material_id and ifnull(me.delete_Flag,'0') !='1'
         where 1=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
@@ -106,7 +105,12 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
-        order by m.id desc
+        order by m.id desc) tb
+        left join jsh_material jm on tb.id = jm.id and ifnull(jm.delete_Flag,'0') !='1'
+        left join jsh_material_extend jme on tb.meId = jme.id and ifnull(jme.delete_Flag,'0') !='1'
+        left join jsh_unit u on jm.unit_id = u.id and ifnull(u.delete_Flag,'0') !='1'
+        left join jsh_material_category mc on jm.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
+        order by tb.id desc
     </select>
 
     <insert id="insertSelectiveEx" parameterType="com.jsh.erp.datasource.entities.Material" useGeneratedKeys="true" keyProperty="id">
