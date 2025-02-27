@@ -444,8 +444,4 @@ public class StringUtil {
         return originStr.replaceAll("(?i)" + regex, "");
     }
 
-    public static void main(String[] args) {
-        int i = 10/3;
-        System.out.println(i);
-    }
 }

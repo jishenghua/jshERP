@@ -667,25 +667,9 @@ public class Tools {
     }
 
     public static void main(String[] args) {
-        String aa = "的付的反对法的发的说法";
-        char[] bb = aa.toCharArray();
-        for (char c : bb) {
-            System.out.println(c);
-        }
-        System.out.println(getBeforeMonth(1));
-
-        try {
-            System.out.println(md5Encryp("guest"));
-            System.out.println(md5Encryp("admin"));
-        } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-        }
-
-        String value = "2333";
-        System.out.println(checkStrIsNum(value));
-
-        for (int i = 0; i < 100; i++) {
-            System.out.print(getRandomChar() + "  ||    ");
-        }
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(date);
+        System.out.println(dateString);
     }
 }
