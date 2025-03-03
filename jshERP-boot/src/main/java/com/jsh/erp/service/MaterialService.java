@@ -1307,12 +1307,15 @@ public class MaterialService {
     }
 
     public String getMaxBarCode() {
-        String maxBarCodeOld = materialMapperEx.getMaxBarCode();
-        if(StringUtil.isNotEmpty(maxBarCodeOld)) {
-            return Long.parseLong(maxBarCodeOld)+"";
-        } else {
-            return "1000";
-        }
+        List<String> barCodeOldList = materialMapperEx.getBarCodeList();
+        // 使用 Stream API 处理条码列表
+        OptionalLong maxBarcode = barCodeOldList.stream()
+                .filter(StringUtil::isNumeric)   // 过滤掉非数字条码
+                .mapToLong(Long::parseLong)      // 将字符串转换为 Long 类型
+                .max();                          // 获取最大值
+        // 如果存在最大值，返回它；否则返回 1000L
+        Long maxBarCodeOld = maxBarcode.orElse(1000L);
+        return maxBarCodeOld + "";
     }
 
     public List<String> getMaterialNameList() {

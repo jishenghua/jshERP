@@ -98,7 +98,7 @@ public interface MaterialMapperEx {
 
     List<Material> getMaterialListByUnitIds(@Param("unitIds") String[] unitIds);
 
-    String getMaxBarCode();
+    List<String> getBarCodeList();
 
     List<MaterialVo4Unit> getMaterialByMeId(
             @Param("meId") Long meId);

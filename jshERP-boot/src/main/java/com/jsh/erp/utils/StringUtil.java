@@ -444,4 +444,17 @@ public class StringUtil {
         return originStr.replaceAll("(?i)" + regex, "");
     }
 
+    /**
+     * 判断字符串是否为纯数字
+     * @param str 输入的字符串
+     * @return 如果字符串为纯数字，返回 true；否则返回 false
+     */
+    public static boolean isNumeric(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        // 使用正则表达式判断字符串是否为纯数字
+        return str.matches("\\d+");
+    }
+
 }
