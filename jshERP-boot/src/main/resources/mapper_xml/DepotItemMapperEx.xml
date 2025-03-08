@@ -376,7 +376,9 @@
             and dh.oper_time &lt;= #{endTime}
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        group by m.id
+        group by m.id, me.bar_code, m.name, m.mfrs, m.model, m.standard, m.brand,
+        m.other_field1,m.other_field2,m.other_field3,m.unit, u.basic_unit, m.color, m.unit_id, u.name,
+        me.purchase_decimal, mcs.current_unit_price
         order by m.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
@@ -473,7 +475,8 @@
             and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        group by m.id
+        group by m.id, me.bar_code, m.name, m.mfrs, m.model, m.standard,
+        m.other_field1,m.other_field2,m.other_field3, m.unit, u.basic_unit, m.color, m.brand, u.name
         order by m.id desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}

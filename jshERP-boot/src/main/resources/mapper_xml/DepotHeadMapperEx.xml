@@ -482,7 +482,8 @@
             and (dh.sub_type!='采购' and dh.sub_type!='采购退货' and dh.sub_type!='销售' and dh.sub_type!='销售退货')
         </if>
         and ifnull(dh.delete_flag,'0') !='1'
-        group by di.material_id
+        group by di.material_id, me.bar_code, m.name,m.model,m.standard,m.color,m.brand,m.mfrs,
+        mc.name, m.unit, u.basic_unit
         <if test="column == 'createTime'">
             order by materialId desc
         </if>
