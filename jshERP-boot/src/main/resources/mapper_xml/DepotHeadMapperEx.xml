@@ -815,7 +815,7 @@
     </select>
 
     <select id="getStatementAccount" resultType="com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount">
-        select * from
+        select *, (preBackInMoney+preBackOutMoney) as preBackMoney, (backInMoney+backOutMoney) as backMoney from
         (select s.id, s.supplier, s.contacts, s.telephone, s.phone_num, s.email,
             -- 起始期初金额
             (case when s.type='供应商' then ifnull(s.begin_need_pay,0) else ifnull(s.begin_need_get,0) end) begin_need,
@@ -835,12 +835,18 @@
             and dh.type=#{typeBack} and dh.sub_type=#{subTypeBack}
             and dh.oper_time &lt;= #{beginTime}
             and ifnull(dh.delete_flag,'0') !='1') preReturnDebtMoney,
-            -- 上期收付款
-            (select (case when ah.type='收款' then ifnull(sum(ai.each_amount),0) else 0-ifnull(sum(ai.each_amount),0) end) from jsh_account_item ai
+            -- 上期收款
+            (select ifnull(sum(ai.each_amount),0) from jsh_account_item ai
             left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
-            where ah.organ_id=s.id and ah.type=#{billType}
+            where ah.organ_id=s.id and ah.type='收款'
             and ah.bill_time &lt;= #{beginTime}
-            and ifnull(ai.delete_flag,'0') !='1') preBackMoney,
+            and ifnull(ai.delete_flag,'0') !='1') preBackInMoney,
+            -- 上期付款
+            (select 0-ifnull(sum(ai.each_amount),0) from jsh_account_item ai
+            left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+            where ah.organ_id=s.id and ah.type='付款'
+            and ah.bill_time &lt;= #{beginTime}
+            and ifnull(ai.delete_flag,'0') !='1') preBackOutMoney,
             -- 本期欠款
             (select
             ifnull(sum(dh.discount_last_money),0)+ifnull(sum(dh.other_money),0)-ifnull(sum(dh.deposit),0)-abs(ifnull(sum(dh.change_amount),0))
@@ -857,12 +863,18 @@
             and dh.type=#{typeBack} and dh.sub_type=#{subTypeBack}
             and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
             and ifnull(dh.delete_flag,'0') !='1') returnDebtMoney,
-            -- 本期收付款
-            (select (case when ah.type='收款' then ifnull(sum(ai.each_amount),0) else 0-ifnull(sum(ai.each_amount),0) end) from jsh_account_item ai
+            -- 本期收款
+            (select ifnull(sum(ai.each_amount),0) from jsh_account_item ai
             left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
-            where ah.organ_id=s.id and ah.type=#{billType}
+            where ah.organ_id=s.id and ah.type='收款'
             and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
-            and ifnull(ai.delete_flag,'0') !='1') backMoney
+            and ifnull(ai.delete_flag,'0') !='1') backInMoney,
+            -- 本期付款
+            (select 0-ifnull(sum(ai.each_amount),0) from jsh_account_item ai
+            left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+            where ah.organ_id=s.id and ah.type='付款'
+            and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
+            and ifnull(ai.delete_flag,'0') !='1') backOutMoney
         from jsh_supplier s
         where s.enabled=1
         and s.type=#{supplierType}
@@ -878,12 +890,12 @@
         </if>
         and ifnull(s.delete_flag,'0') !='1') tb
         <if test="hasDebt == 1">
-            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackInMoney-preBackOutMoney+debtMoney-returnDebtMoney-backInMoney-backOutMoney!=0
         </if>
         <if test="hasDebt == 0">
-            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney=0
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackInMoney-preBackOutMoney+debtMoney-returnDebtMoney-backInMoney-backOutMoney=0
         </if>
-        order by begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney desc
+        order by begin_need+preDebtMoney-preReturnDebtMoney-preBackInMoney-preBackOutMoney+debtMoney-returnDebtMoney-backInMoney-backOutMoney desc
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
         </if>
@@ -910,12 +922,18 @@
             and dh.type=#{typeBack} and dh.sub_type=#{subTypeBack}
             and dh.oper_time &lt;= #{beginTime}
             and ifnull(dh.delete_flag,'0') !='1') preReturnDebtMoney,
-            -- 上期收付款
-            (select (case when ah.type='收款' then ifnull(sum(ai.each_amount),0) else 0-ifnull(sum(ai.each_amount),0) end) from jsh_account_item ai
+            -- 上期收款
+            (select ifnull(sum(ai.each_amount),0) from jsh_account_item ai
             left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
-            where ah.organ_id=s.id and ah.type=#{billType}
+            where ah.organ_id=s.id and ah.type='收款'
             and ah.bill_time &lt;= #{beginTime}
-            and ifnull(ai.delete_flag,'0') !='1') preBackMoney,
+            and ifnull(ai.delete_flag,'0') !='1') preBackInMoney,
+            -- 上期付款
+            (select 0-ifnull(sum(ai.each_amount),0) from jsh_account_item ai
+            left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+            where ah.organ_id=s.id and ah.type='付款'
+            and ah.bill_time &lt;= #{beginTime}
+            and ifnull(ai.delete_flag,'0') !='1') preBackOutMoney,
             -- 本期欠款
             (select
             ifnull(sum(dh.discount_last_money),0)+ifnull(sum(dh.other_money),0)-ifnull(sum(dh.deposit),0)-abs(ifnull(sum(dh.change_amount),0))
@@ -932,12 +950,18 @@
             and dh.type=#{typeBack} and dh.sub_type=#{subTypeBack}
             and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
             and ifnull(dh.delete_flag,'0') !='1') returnDebtMoney,
-            -- 本期收付款
-            (select (case when ah.type='收款' then ifnull(sum(ai.each_amount),0) else 0-ifnull(sum(ai.each_amount),0) end) from jsh_account_item ai
+            -- 本期收款
+            (select ifnull(sum(ai.each_amount),0) from jsh_account_item ai
             left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
-            where ah.organ_id=s.id and ah.type=#{billType}
+            where ah.organ_id=s.id and ah.type='收款'
             and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
-            and ifnull(ai.delete_flag,'0') !='1') backMoney
+            and ifnull(ai.delete_flag,'0') !='1') backInMoney,
+            -- 本期付款
+            (select 0-ifnull(sum(ai.each_amount),0) from jsh_account_item ai
+            left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+            where ah.organ_id=s.id and ah.type='付款'
+            and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
+            and ifnull(ai.delete_flag,'0') !='1') backOutMoney
         from jsh_supplier s
         where s.enabled=1
         and s.type=#{supplierType}
@@ -953,16 +977,16 @@
         </if>
         and ifnull(s.delete_flag,'0') !='1') tb
         <if test="hasDebt == 1">
-            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackInMoney-preBackOutMoney+debtMoney-returnDebtMoney-backInMoney-backOutMoney!=0
         </if>
         <if test="hasDebt == 0">
-            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney=0
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackInMoney-preBackOutMoney+debtMoney-returnDebtMoney-backInMoney-backOutMoney=0
         </if>
     </select>
 
     <select id="getStatementAccountTotalPay" resultType="com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount">
-        select sum(begin_need) begin_need, sum(preDebtMoney) preDebtMoney, sum(preReturnDebtMoney) preReturnDebtMoney, sum(preBackMoney) preBackMoney,
-               sum(debtMoney) debtMoney, sum(returnDebtMoney) returnDebtMoney, sum(backMoney) backMoney from
+        select sum(begin_need) begin_need, sum(preDebtMoney) preDebtMoney, sum(preReturnDebtMoney) preReturnDebtMoney, sum(preBackInMoney+preBackOutMoney) preBackMoney,
+               sum(debtMoney) debtMoney, sum(returnDebtMoney) returnDebtMoney, sum(backInMoney+backOutMoney) backMoney from
         (select s.id,
             (case when s.type='供应商' then ifnull(s.begin_need_pay,0) else ifnull(s.begin_need_get,0) end) begin_need,
             (select
@@ -979,11 +1003,16 @@
             and dh.type=#{typeBack} and dh.sub_type=#{subTypeBack}
             and dh.oper_time &lt;= #{beginTime}
             and ifnull(dh.delete_flag,'0') !='1') preReturnDebtMoney,
-            (select (case when ah.type='收款' then ifnull(sum(ai.each_amount),0) else 0-ifnull(sum(ai.each_amount),0) end) from jsh_account_item ai
+            (select ifnull(sum(ai.each_amount),0) from jsh_account_item ai
             left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
-            where ah.organ_id=s.id and ah.type=#{billType}
+            where ah.organ_id=s.id and ah.type='收款'
             and ah.bill_time &lt;= #{beginTime}
-            and ifnull(ai.delete_flag,'0') !='1') preBackMoney,
+            and ifnull(ai.delete_flag,'0') !='1') preBackInMoney,
+            (select 0-ifnull(sum(ai.each_amount),0) from jsh_account_item ai
+            left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+            where ah.organ_id=s.id and ah.type='付款'
+            and ah.bill_time &lt;= #{beginTime}
+            and ifnull(ai.delete_flag,'0') !='1') preBackOutMoney,
             (select
             ifnull(sum(dh.discount_last_money),0)+ifnull(sum(dh.other_money),0)-ifnull(sum(dh.deposit),0)-abs(ifnull(sum(dh.change_amount),0))
             from jsh_depot_head dh
@@ -998,11 +1027,16 @@
             and dh.type=#{typeBack} and dh.sub_type=#{subTypeBack}
             and dh.oper_time>#{beginTime} and dh.oper_time &lt;= #{endTime}
             and ifnull(dh.delete_flag,'0') !='1') returnDebtMoney,
-            (select (case when ah.type='收款' then ifnull(sum(ai.each_amount),0) else 0-ifnull(sum(ai.each_amount),0) end) from jsh_account_item ai
+            (select ifnull(sum(ai.each_amount),0) from jsh_account_item ai
             left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
-            where ah.organ_id=s.id and ah.type=#{billType}
+            where ah.organ_id=s.id and ah.type='收款'
             and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
-            and ifnull(ai.delete_flag,'0') !='1') backMoney
+            and ifnull(ai.delete_flag,'0') !='1') backInMoney,
+            (select 0-ifnull(sum(ai.each_amount),0) from jsh_account_item ai
+            left join jsh_account_head ah on ai.header_id=ah.id and ifnull(ah.delete_flag,'0') !='1'
+            where ah.organ_id=s.id and ah.type='付款'
+            and ah.bill_time>#{beginTime} and ah.bill_time &lt;= #{endTime}
+            and ifnull(ai.delete_flag,'0') !='1') backOutMoney
         from jsh_supplier s
         where s.enabled=1
         and s.type=#{supplierType}
@@ -1018,10 +1052,10 @@
         </if>
         and ifnull(s.delete_flag,'0') !='1') tb
         <if test="hasDebt == 1">
-            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney!=0
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackInMoney-preBackOutMoney+debtMoney-returnDebtMoney-backInMoney-backOutMoney!=0
         </if>
         <if test="hasDebt == 0">
-            where begin_need+preDebtMoney-preReturnDebtMoney-preBackMoney+debtMoney-returnDebtMoney-backMoney=0
+            where begin_need+preDebtMoney-preReturnDebtMoney-preBackInMoney-preBackOutMoney+debtMoney-returnDebtMoney-backInMoney-backOutMoney=0
         </if>
     </select>
 
