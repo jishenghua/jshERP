@@ -612,7 +612,8 @@
     </select>
 
     <select id="getListWithStock" resultMap="ResultMapListWithStock">
-        select m.*, me.commodity_unit unitName, mc.name categoryName, me.bar_code mBarCode,
+        select m.id, m.name, m.standard, m.model, m.color, m.brand, m.mfrs, m.position,
+               me.commodity_unit unitName, mc.name categoryName, me.bar_code mBarCode,
         ifnull(me.purchase_decimal,0) purchaseDecimal,
         ifnull(mcs.current_unit_price,0) currentUnitPrice,
         ifnull(sum(mcs.current_number),0) currentStock,
@@ -649,9 +650,10 @@
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        group by m.id
+        group by m.id, m.name, m.standard, m.model, m.color, m.brand, m.mfrs, m.position,
+        me.commodity_unit, mc.name, me.bar_code, me.purchase_decimal, mcs.current_unit_price
         <if test="zeroStock == 0">
-            having currentStock!=0
+            having ifnull(sum(mcs.current_number),0)!=0
         </if>
         <if test="column == 'createTime'">
             order by m.id desc
@@ -698,7 +700,7 @@
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id
         <if test="zeroStock == 0">
-            having currentStock!=0
+            having ifnull(sum(mcs.current_number),0)!=0
         </if>
         ) tb
     </select>
