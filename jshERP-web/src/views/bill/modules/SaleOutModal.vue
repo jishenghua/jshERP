@@ -458,7 +458,7 @@
         this.$refs.linkBillList.show('其它', '销售订单', '客户', "1,3")
         this.$refs.linkBillList.title = "请选择销售订单"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark, depotId) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark, depotId, accountId, salesMan) {
         let that = this
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
@@ -503,8 +503,10 @@
               'discountLastMoney': discountLastMoney,
               'deposit': deposit,
               'changeAmount': changeAmount,
+              'accountId': accountId,
               'remark': remark
             })
+            this.personList.value = salesMan
           })
           //判断后进行仓库的切换
           if(depotId) {

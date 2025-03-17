@@ -398,7 +398,7 @@
         this.$refs.linkBillList.show('出库', '销售', '客户', "1,2,3")
         this.$refs.linkBillList.title = "请选择销售出库"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark, depotId, accountId, salesMan) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
@@ -436,8 +436,10 @@
               'discountMoney': discountMoney,
               'discountLastMoney': discountLastMoney,
               'changeAmount': discountLastMoney,
+              'accountId': accountId,
               'remark': remark
             })
+            this.personList.value = salesMan
           })
         }
       },

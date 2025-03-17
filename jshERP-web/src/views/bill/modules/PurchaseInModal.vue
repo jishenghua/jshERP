@@ -441,7 +441,7 @@
         this.$refs.linkBillList.show('其它', '采购订单', '供应商', "1,3")
         this.$refs.linkBillList.title = "请选择采购订单"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark, depotId) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark, depotId, accountId) {
         let that = this
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
@@ -486,6 +486,7 @@
               'discountLastMoney': discountLastMoney,
               'deposit': deposit,
               'changeAmount': changeAmount,
+              'accountId': accountId,
               'remark': remark
             })
           })
