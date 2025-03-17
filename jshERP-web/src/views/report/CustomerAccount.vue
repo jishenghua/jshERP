@@ -44,7 +44,9 @@
                   {{firstTotal}} {{lastTotal}}
                 </a-form-item>
               </a-col>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="欠款情况" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select v-model="queryParam.hasDebt">
@@ -53,8 +55,8 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- table区域-begin -->

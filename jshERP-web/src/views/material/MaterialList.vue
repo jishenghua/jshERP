@@ -35,7 +35,9 @@
                   </a>
                 </a-col>
               </span>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="型号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入型号查询" v-model="queryParam.model"></a-input>
@@ -105,8 +107,8 @@
                     <a-input placeholder="请输入备注查询" v-model="queryParam.remark"></a-input>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- 操作按钮区域 -->

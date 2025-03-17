@@ -42,7 +42,9 @@
                   <span>总库存：{{currentStock}}，总库存金额：{{currentStockPrice}}，总重量：{{currentWeight}}</span>
                 </a-form-item>
               </a-col>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="5" :sm="24">
                   <a-form-item label="类别" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
@@ -63,8 +65,8 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- table区域-begin -->

@@ -39,7 +39,9 @@
                   <span>实际采购金额：{{realityPriceTotal}}</span>
                 </a-form-item>
               </a-col>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择供应商" v-model="queryParam.organId"
@@ -78,8 +80,8 @@
                     </a-tree-select>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- table区域-begin -->

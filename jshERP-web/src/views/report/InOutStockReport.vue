@@ -39,7 +39,9 @@
                   <span>本期总结存：{{totalStockStr}}，总结存金额：{{totalCountMoneyStr}}</span>
                 </a-form-item>
               </a-col>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="仓库" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select
@@ -61,8 +63,8 @@
                     </a-tree-select>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- table区域-begin -->

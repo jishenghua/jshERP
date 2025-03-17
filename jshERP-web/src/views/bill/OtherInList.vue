@@ -39,7 +39,9 @@
                   </a>
                 </a-col>
               </span>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
@@ -86,8 +88,8 @@
                     <a-input placeholder="请输入单据备注" v-model="queryParam.remark"></a-input>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- 操作按钮区域 -->

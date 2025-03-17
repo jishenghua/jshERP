@@ -37,14 +37,16 @@
                   </a>
                 </span>
               </a-col>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input v-model="queryParam.remark" placeholder="请输入备注"></a-input>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- 操作按钮区域 -->

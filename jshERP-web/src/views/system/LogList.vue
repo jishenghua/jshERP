@@ -38,7 +38,9 @@
                   </a>
                 </span>
               </a-col>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="操作员" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入操作员账号或姓名" v-model="queryParam.userInfo"></a-input>
@@ -63,8 +65,8 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- table区域-begin -->

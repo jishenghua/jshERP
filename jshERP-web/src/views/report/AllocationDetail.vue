@@ -43,7 +43,9 @@
                   <span>总数量：{{operNumberTotalStr}}，总金额：{{allPriceTotalStr}}</span>
                 </a-form-item>
               </a-col>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="24">
                   <a-form-item label="单据编号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入单据编号" v-model="queryParam.number"></a-input>
@@ -96,8 +98,8 @@
                     <a-input placeholder="请输入备注" v-model="queryParam.remark"></a-input>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- table区域-begin -->
