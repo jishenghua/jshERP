@@ -3,8 +3,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import { ACCESS_TOKEN } from "@/store/mutation-types"
   import {mixinDevice} from '@/utils/mixin.js'
 
   export default {
@@ -31,15 +29,17 @@
           this.height = document.documentElement.clientHeight-100
         }
         console.log("------url------"+url)
-        console.log("------token------"+Vue.ls.get(ACCESS_TOKEN))
         if (url !== null && url !== undefined) {
-          //外部url加入token
-          let token = Vue.ls.get(ACCESS_TOKEN);
           if(url) {
             url = url.replace('/system','')
+            if(url.indexOf('.html') === -1) {
+              //地址不以.html结尾的，需要重新构造url
+              let urlArr = url.split('/')
+              url = '/' + urlArr[1] + '/' + urlArr[2] + '/' + urlArr[2] + '.html?t=' + urlArr[3]
+            }
             url = document.location.protocol + '//' + window.location.host + url
           }
-          this.url = url + '?token=' + token;
+          this.url = url
         }
       }
     }
