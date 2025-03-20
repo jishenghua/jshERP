@@ -1029,7 +1029,7 @@ export const BillModalMixin = {
       if(this.model && this.model.number) {
         getPlatformConfigByKey({ "platformKey": "send_workflow_url" }).then((res) => {
           if (res && res.code === 200) {
-            let sendWorkflowUrl = res.data.platformValue + '?no=' + this.model.number + '&type=1'
+            let sendWorkflowUrl = res.data.platformValue + '&no=' + this.model.number + '&type=1'
             this.$refs.modalWorkflow.show(this.model, sendWorkflowUrl, this.model.number, 1, 320)
             this.$refs.modalWorkflow.title = "发起流程"
           }
