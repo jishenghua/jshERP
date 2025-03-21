@@ -1668,6 +1668,7 @@ public class DepotHeadService {
             depotHead.setAccountId(null);
             depotHead.setAccountIdList(null);
             depotHead.setAccountMoneyList(null);
+            depotHead.setFileName(null);
             depotHead.setSalesMan(null);
             depotHead.setStatus("0");
             depotHead.setTenantId(null);
