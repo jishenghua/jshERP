@@ -455,32 +455,6 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 获取随机校验码【后续会废弃】
-     * @param response
-     * @param key
-     * @return
-     */
-    @GetMapping(value = "/randomImage/{key}")
-    @ApiOperation(value = "获取随机校验码【后续会废弃】")
-    public BaseResponseInfo randomImage(HttpServletResponse response,@PathVariable String key){
-        BaseResponseInfo res = new BaseResponseInfo();
-        try {
-            Map<String, Object> data = new HashMap<>();
-            String codeNum = Tools.getCharAndNum(4);
-            String base64 = RandImageUtil.generate(codeNum);
-            data.put("codeNum", codeNum);
-            data.put("base64", base64);
-            res.code = 200;
-            res.data = data;
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            res.code = 500;
-            res.data = "获取失败";
-        }
-        return res;
-    }
-
-    /**
      * 获取随机校验码
      * @param response
      * @return
