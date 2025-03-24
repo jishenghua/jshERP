@@ -118,6 +118,23 @@
               </a-col>
             </a-row>
             <a-row class="form-row" :gutter="24">
+              <a-col :lg="6" :md="6" :sm="6" v-if="mpShort.otherField1.enabled">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">
+                  <a-input v-decorator.trim="[ 'otherField1' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="6" :md="6" :sm="6" v-if="mpShort.otherField2.enabled">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField2.name">
+                  <a-input v-decorator.trim="[ 'otherField2' ]" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="6" :md="6" :sm="6" v-if="mpShort.otherField3.enabled">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField3.name">
+                  <a-input v-decorator.trim="[ 'otherField3' ]" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号" data-step="13" data-title="序列号"
                   data-intro="此处是商品的序列号开关，如果选择了有，则在采购入库单据需要录入该商品的序列号，在销售出库单据需要选择该商品的序列号进行出库">
@@ -220,30 +237,7 @@
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane key="2" tab="扩展信息" forceRender>
-            <a-row v-if="mpShort.otherField1.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">
-                  <a-input v-decorator.trim="[ 'otherField1' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-if="mpShort.otherField2.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField2.name">
-                  <a-input v-decorator.trim="[ 'otherField2' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <a-row v-if="mpShort.otherField3.enabled" class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField3.name">
-                  <a-input v-decorator.trim="[ 'otherField3' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-tab-pane>
-          <a-tab-pane key="3" tab="库存数量" forceRender>
+          <a-tab-pane key="2" tab="库存数量" forceRender>
             <j-editable-table
               ref="editableDepotTable"
               :loading="depotTable.loading"
@@ -263,7 +257,7 @@
             <!-- 表单区域 -->
             <batch-set-stock-modal ref="stockModalForm" @ok="batchSetStockModalFormOk"></batch-set-stock-modal>
           </a-tab-pane>
-          <a-tab-pane key="4" tab="图片信息" forceRender>
+          <a-tab-pane key="3" tab="图片信息" forceRender>
             <a-row class="form-row" :gutter="24" style="padding-top:20px">
               <a-col :lg="18" :md="18" :sm="24">
                 <a-form-item :labelCol="{xs: { span: 24 },sm: { span: 3 }}" :wrapperCol="{xs: { span: 24 },sm: { span: 20 }}" label="图片信息">
@@ -1117,15 +1111,15 @@
             this.mpShort.mfrs.name = mpList[i].anotherName
             this.mpShort.mfrs.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "自定义1") {
+          if (mpList[i].nativeName === "扩展1") {
             this.mpShort.otherField1.name = mpList[i].anotherName
             this.mpShort.otherField1.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "自定义2") {
+          if (mpList[i].nativeName === "扩展2") {
             this.mpShort.otherField2.name = mpList[i].anotherName
             this.mpShort.otherField2.enabled = mpList[i].enabled
           }
-          if (mpList[i].nativeName === "自定义3") {
+          if (mpList[i].nativeName === "扩展3") {
             this.mpShort.otherField3.name = mpList[i].anotherName
             this.mpShort.otherField3.enabled = mpList[i].enabled
           }
