@@ -70,9 +70,17 @@
             <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
             and m.mfrs like #{bindMfrs}
         </if>
-        <if test="materialOther != null and materialOther !=''">
-            <bind name="bindOther" value="'%'+materialOther+'%'"/>
-            and (m.other_field1 like #{bindOther} or m.other_field2 like #{bindOther} or m.other_field3 like #{bindOther})
+        <if test="otherField1 != null and otherField1 !=''">
+            <bind name="bindOtherField1" value="'%'+otherField1+'%'"/>
+            and m.other_field1 like #{bindOtherField1}
+        </if>
+        <if test="otherField2 != null and otherField2!=''">
+            <bind name="bindOtherField2" value="'%'+otherField2+'%'"/>
+            and m.other_field2 like #{bindOtherField2}
+        </if>
+        <if test="otherField3 != null and otherField3 !=''">
+            <bind name="bindOtherField3" value="'%'+otherField3+'%'"/>
+            and m.other_field3 like #{bindOtherField3}
         </if>
         <if test="weight != null and weight !=''">
             and m.weight = #{weight}
@@ -330,6 +338,18 @@
             <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
             and m.mfrs like #{bindMfrs}
         </if>
+        <if test="otherField1 != null and otherField1 !=''">
+            <bind name="bindOtherField1" value="'%'+otherField1+'%'"/>
+            and m.other_field1 like #{bindOtherField1}
+        </if>
+        <if test="otherField2 != null and otherField2!=''">
+            <bind name="bindOtherField2" value="'%'+otherField2+'%'"/>
+            and m.other_field2 like #{bindOtherField2}
+        </if>
+        <if test="otherField3 != null and otherField3 !=''">
+            <bind name="bindOtherField3" value="'%'+otherField3+'%'"/>
+            and m.other_field3 like #{bindOtherField3}
+        </if>
         <if test="idList.size()>0">
             and m.category_id in
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
@@ -374,6 +394,18 @@
         <if test="mfrs != null and mfrs !=''">
             <bind name="bindMfrs" value="'%'+mfrs+'%'"/>
             and m.mfrs like #{bindMfrs}
+        </if>
+        <if test="otherField1 != null and otherField1 !=''">
+            <bind name="bindOtherField1" value="'%'+otherField1+'%'"/>
+            and m.other_field1 like #{bindOtherField1}
+        </if>
+        <if test="otherField2 != null and otherField2!=''">
+            <bind name="bindOtherField2" value="'%'+otherField2+'%'"/>
+            and m.other_field2 like #{bindOtherField2}
+        </if>
+        <if test="otherField3 != null and otherField3 !=''">
+            <bind name="bindOtherField3" value="'%'+otherField3+'%'"/>
+            and m.other_field3 like #{bindOtherField3}
         </if>
         <if test="idList.size()>0">
             and m.category_id in

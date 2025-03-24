@@ -652,6 +652,9 @@ export const BillModalMixin = {
       this.changeFormTypes(this.materialTable.columns, 'brand', 0)
       this.changeFormTypes(this.materialTable.columns, 'mfrs', 0)
       this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
+      this.changeFormTypes(this.materialTable.columns, 'otherField1', 0)
+      this.changeFormTypes(this.materialTable.columns, 'otherField1', 0)
+      this.changeFormTypes(this.materialTable.columns, 'otherField1', 0)
       this.changeFormTypes(this.materialTable.columns, 'sku', 0)
     },
     //使得sku、序列号、批号、到期日等为显示
@@ -670,6 +673,15 @@ export const BillModalMixin = {
       }
       if(info.materialOther) {
         this.changeFormTypes(this.materialTable.columns, 'materialOther', 1)
+      }
+      if(info.otherField1) {
+        this.changeFormTypes(this.materialTable.columns, 'otherField1', 1)
+      }
+      if(info.otherField2) {
+        this.changeFormTypes(this.materialTable.columns, 'otherField2', 1)
+      }
+      if(info.otherField3) {
+        this.changeFormTypes(this.materialTable.columns, 'otherField3', 1)
       }
       if(info.sku) {
         this.changeFormTypes(this.materialTable.columns, 'sku', 1)

@@ -109,7 +109,7 @@ public class MaterialService {
     }
 
     public List<MaterialVo4Unit> select(String materialParam, String standard, String model, String color, String brand, String mfrs,
-                                        String materialOther, String weight, String expiryNum, String enableSerialNumber,
+                                        String otherField1, String otherField2, String otherField3, String weight, String expiryNum, String enableSerialNumber,
                                         String enableBatchNumber, String position, String enabled, String remark, String categoryId,
                                         String mpList)
             throws Exception{
@@ -124,7 +124,8 @@ public class MaterialService {
                 idList = getListByParentId(Long.parseLong(categoryId));
             }
             PageUtils.startPage();
-            list= materialMapperEx.selectByConditionMaterial(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
+            list= materialMapperEx.selectByConditionMaterial(materialParam, standard, model, color, brand, mfrs,
+                    otherField1, otherField2, otherField3, weight, expiryNum,
                     enableSerialNumber, enableBatchNumber, position, enabled, remark, idList, mpList);
             if (null != list && list.size()>0) {
                 Map<Long,BigDecimal> initialStockMap = getInitialStockMapByMaterialList(list);
@@ -416,8 +417,8 @@ public class MaterialService {
     }
 
     public List<MaterialVo4Unit> findBySelectWithBarCode(Long categoryId, String q, String standardOrModel, String color,
-                                                         String brand, String mfrs, String enableSerialNumber, String enableBatchNumber,
-                                                         Integer offset, Integer rows) throws Exception{
+                                                         String brand, String mfrs, String otherField1, String otherField2, String otherField3,
+                                                         String enableSerialNumber, String enableBatchNumber, Integer offset, Integer rows) throws Exception{
         List<MaterialVo4Unit> list =null;
         try{
             List<Long> idList = new ArrayList<>();
@@ -430,7 +431,7 @@ public class MaterialService {
                 q = q.trim();
             }
             list=  materialMapperEx.findBySelectWithBarCode(idList, q, standardOrModel, color, brand, mfrs,
-                    enableSerialNumber, enableBatchNumber, offset, rows);
+                    otherField1, otherField2, otherField3, enableSerialNumber, enableBatchNumber, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -438,7 +439,8 @@ public class MaterialService {
     }
 
     public int findBySelectWithBarCodeCount(Long categoryId, String q, String standardOrModel, String color,
-                                            String brand, String mfrs, String enableSerialNumber, String enableBatchNumber) throws Exception{
+                                            String brand, String mfrs, String otherField1, String otherField2, String otherField3,
+                                            String enableSerialNumber, String enableBatchNumber) throws Exception{
         int result=0;
         try{
             List<Long> idList = new ArrayList<>();
@@ -450,7 +452,7 @@ public class MaterialService {
                 q = q.replace("'", "");
             }
             result = materialMapperEx.findBySelectWithBarCodeCount(idList, q, standardOrModel, color, brand, mfrs,
-                    enableSerialNumber, enableBatchNumber);
+                    otherField1, otherField2, otherField3, enableSerialNumber, enableBatchNumber);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE,ExceptionConstants.DATA_READ_FAIL_MSG,e);

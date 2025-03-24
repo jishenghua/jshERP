@@ -59,6 +59,21 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="扩展1" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入扩展1查询" v-model="queryParam.otherField1"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="扩展2" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入扩展2查询" v-model="queryParam.otherField2"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="扩展3" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入扩展3查询" v-model="queryParam.otherField3"></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择状态" v-model="queryParam.enabled">
                       <a-select-option value="1">启用</a-select-option>
@@ -254,7 +269,9 @@
           color:'',
           brand:'',
           mfrs:'',
-          materialOther:'',
+          otherField1:'',
+          otherField2:'',
+          otherField3:'',
           weight:'',
           expiryNum:'',
           enabled: undefined,
@@ -292,7 +309,9 @@
           {title: '品牌', dataIndex: 'brand', width: 100, ellipsis:true},
           {title: '助记码', dataIndex: 'mnemonic', width: 80, ellipsis:true},
           {title: '类别', dataIndex: 'categoryName', width: 100, ellipsis:true},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
+          {title: '扩展1', dataIndex: 'otherField1', width: 100, ellipsis:true},
+          {title: '扩展2', dataIndex: 'otherField2', width: 100, ellipsis:true},
+          {title: '扩展3', dataIndex: 'otherField3', width: 100, ellipsis:true},
           {title: '单位', dataIndex: 'unit', width: 100, ellipsis:true,
             customRender:function (t,r,index) {
               if (r) {

@@ -94,7 +94,9 @@ public class MaterialController extends BaseController {
         String color = StringUtil.getInfo(search, "color");
         String brand = StringUtil.getInfo(search, "brand");
         String mfrs = StringUtil.getInfo(search, "mfrs");
-        String materialOther = StringUtil.getInfo(search, "materialOther");
+        String otherField1 = StringUtil.getInfo(search, "otherField1");
+        String otherField2 = StringUtil.getInfo(search, "otherField2");
+        String otherField3 = StringUtil.getInfo(search, "otherField3");
         String weight = StringUtil.getInfo(search, "weight");
         String expiryNum = StringUtil.getInfo(search, "expiryNum");
         String enableSerialNumber = StringUtil.getInfo(search, "enableSerialNumber");
@@ -103,8 +105,8 @@ public class MaterialController extends BaseController {
         String enabled = StringUtil.getInfo(search, "enabled");
         String remark = StringUtil.getInfo(search, "remark");
         String mpList = StringUtil.getInfo(search, "mpList");
-        List<MaterialVo4Unit> list = materialService.select(materialParam, standard, model, color, brand, mfrs, materialOther, weight, expiryNum,
-                enableSerialNumber, enableBatchNumber, position, enabled, remark, categoryId, mpList);
+        List<MaterialVo4Unit> list = materialService.select(materialParam, standard, model, color, brand, mfrs, otherField1, otherField2,
+                otherField3, weight, expiryNum, enableSerialNumber, enableBatchNumber, position, enabled, remark, categoryId, mpList);
         return getDataTable(list);
     }
 
@@ -304,6 +306,9 @@ public class MaterialController extends BaseController {
                                   @RequestParam(value = "color", required = false) String color,
                                   @RequestParam(value = "brand", required = false) String brand,
                                   @RequestParam(value = "mfrs", required = false) String mfrs,
+                                  @RequestParam(value = "otherField1", required = false) String otherField1,
+                                  @RequestParam(value = "otherField2", required = false) String otherField2,
+                                  @RequestParam(value = "otherField3", required = false) String otherField3,
                                   @RequestParam(value = "enableSerialNumber", required = false) String enableSerialNumber,
                                   @RequestParam(value = "enableBatchNumber", required = false) String enableBatchNumber,
                                   @RequestParam("page") Integer currentPage,
@@ -316,10 +321,11 @@ public class MaterialController extends BaseController {
                 mpArr= mpList.split(",");
             }
             List<MaterialVo4Unit> dataList = materialService.findBySelectWithBarCode(categoryId, q, StringUtil.toNull(standardOrModel),
-                    StringUtil.toNull(color), StringUtil.toNull(brand), StringUtil.toNull(mfrs), enableSerialNumber, enableBatchNumber,
-                    (currentPage-1)*pageSize, pageSize);
+                    StringUtil.toNull(color), StringUtil.toNull(brand), StringUtil.toNull(mfrs), StringUtil.toNull(otherField1), StringUtil.toNull(otherField2), StringUtil.toNull(otherField3),
+                    enableSerialNumber, enableBatchNumber, (currentPage-1)*pageSize, pageSize);
             int total = materialService.findBySelectWithBarCodeCount(categoryId, q, StringUtil.toNull(standardOrModel),
-                    StringUtil.toNull(color), StringUtil.toNull(brand), StringUtil.toNull(mfrs), enableSerialNumber, enableBatchNumber);
+                    StringUtil.toNull(color), StringUtil.toNull(brand), StringUtil.toNull(mfrs), StringUtil.toNull(otherField1), StringUtil.toNull(otherField2), StringUtil.toNull(otherField3),
+                    enableSerialNumber, enableBatchNumber);
             object.put("total", total);
             JSONArray dataArray = new JSONArray();
             //存放数据json数组
@@ -373,6 +379,9 @@ public class MaterialController extends BaseController {
                     }
                     item.put("stock", stock);
                     item.put("expand", materialService.getMaterialOtherByParam(mpArr, material));
+                    item.put("otherField1", material.getOtherField1());
+                    item.put("otherField2", material.getOtherField2());
+                    item.put("otherField3", material.getOtherField3());
                     item.put("imgName", material.getImgName());
                     if(fileUploadType == 2) {
                         item.put("imgSmall", "small");
