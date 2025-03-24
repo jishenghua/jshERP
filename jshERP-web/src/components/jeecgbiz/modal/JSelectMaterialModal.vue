@@ -49,7 +49,9 @@
                   </a>
                 </a-col>
               </span>
-              <template v-if="toggleSearchStatus">
+            </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
                 <a-col :md="6" :sm="8">
                   <a-form-item label="颜色" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                     <a-input placeholder="请输入颜色" v-model="queryParam.color"></a-input>
@@ -88,8 +90,8 @@
                     </a-select>
                   </a-form-item>
                 </a-col>
-              </template>
-            </a-row>
+              </a-row>
+            </template>
           </a-form>
           <a-table
             ref="table"
