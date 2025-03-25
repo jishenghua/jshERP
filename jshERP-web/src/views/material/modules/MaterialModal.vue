@@ -118,17 +118,17 @@
               </a-col>
             </a-row>
             <a-row class="form-row" :gutter="24">
-              <a-col :lg="6" :md="6" :sm="6" v-if="mpShort.otherField1.enabled">
+              <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">
                   <a-input v-decorator.trim="[ 'otherField1' ]" />
                 </a-form-item>
               </a-col>
-              <a-col :lg="6" :md="6" :sm="6" v-if="mpShort.otherField2.enabled">
+              <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField2.name">
                   <a-input v-decorator.trim="[ 'otherField2' ]" />
                 </a-form-item>
               </a-col>
-              <a-col :lg="6" :md="6" :sm="6" v-if="mpShort.otherField3.enabled">
+              <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField3.name">
                   <a-input v-decorator.trim="[ 'otherField3' ]" />
                 </a-form-item>
@@ -1107,21 +1107,14 @@
       loadParseMaterialProperty() {
         let mpList = Vue.ls.get('materialPropertyList')
         for (let i = 0; i < mpList.length; i++) {
-          if (mpList[i].nativeName === "制造商") {
-            this.mpShort.mfrs.name = mpList[i].anotherName
-            this.mpShort.mfrs.enabled = mpList[i].enabled
-          }
           if (mpList[i].nativeName === "扩展1") {
             this.mpShort.otherField1.name = mpList[i].anotherName
-            this.mpShort.otherField1.enabled = mpList[i].enabled
           }
           if (mpList[i].nativeName === "扩展2") {
             this.mpShort.otherField2.name = mpList[i].anotherName
-            this.mpShort.otherField2.enabled = mpList[i].enabled
           }
           if (mpList[i].nativeName === "扩展3") {
             this.mpShort.otherField3.name = mpList[i].anotherName
-            this.mpShort.otherField3.enabled = mpList[i].enabled
           }
         }
       },

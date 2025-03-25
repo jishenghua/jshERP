@@ -59,17 +59,17 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="扩展1" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-form-item :label="queryTitle.mp1" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入扩展1查询" v-model="queryParam.otherField1"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="扩展2" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-form-item :label="queryTitle.mp2" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入扩展2查询" v-model="queryParam.otherField2"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="扩展3" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-form-item :label="queryTitle.mp3" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入扩展3查询" v-model="queryParam.otherField3"></a-input>
                   </a-form-item>
                 </a-col>
@@ -260,6 +260,11 @@
           span: 18,
           offset: 1
         },
+        queryTitle: {
+          mp1: '扩展1',
+          mp2: '扩展2',
+          mp3: '扩展3'
+        },
         // 查询条件
         queryParam: {
           categoryId: undefined,
@@ -289,7 +294,7 @@
         // 实际列
         columns:[],
         // 默认索引
-        defDataIndex:['action','mBarCode','name','standard','model','color','categoryName','materialOther','unit', 'stock',
+        defDataIndex:['action','mBarCode','name','standard','model','color','categoryName','unit', 'stock',
           'purchaseDecimal','commodityDecimal','wholesaleDecimal','lowDecimal','enabled'],
         // 默认列
         defColumns: [
@@ -358,7 +363,8 @@
     created() {
       this.model = Object.assign({}, {});
       this.initColumnsSetting()
-      this.loadTreeData();
+      this.loadTreeData()
+      this.handleChangeOtherField()
     },
     computed: {
       importExcelUrl: function () {
@@ -390,6 +396,29 @@
       handleRestDefault() {
         Vue.ls.remove('materialColumns')
         this.initColumnsSetting()
+      },
+      //动态替换扩展字段
+      handleChangeOtherField() {
+        let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+        if(mpStr) {
+          let mpArr = mpStr.split(',')
+          if(mpArr.length ===3) {
+            this.queryTitle.mp1 = mpArr[0]
+            this.queryTitle.mp2 = mpArr[1]
+            this.queryTitle.mp3 = mpArr[2]
+            for (let i = 0; i < this.defColumns.length; i++) {
+              if(this.defColumns[i].dataIndex === 'otherField1') {
+                this.defColumns[i].title = mpArr[0]
+              }
+              if(this.defColumns[i].dataIndex === 'otherField2') {
+                this.defColumns[i].title = mpArr[1]
+              }
+              if(this.defColumns[i].dataIndex === 'otherField3') {
+                this.defColumns[i].title = mpArr[2]
+              }
+            }
+          }
+        }
       },
       loadTreeData(){
         let that = this;

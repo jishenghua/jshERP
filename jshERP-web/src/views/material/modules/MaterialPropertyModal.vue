@@ -17,13 +17,7 @@
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
-            <a-input placeholder="请输入名称" v-decorator.trim="[ 'nativeName' ]" :readOnly="model.id"/>
-          </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否启用">
-            <a-switch checked-children="启用" un-checked-children="禁用" v-model="enabledSwitch" @change="onChange"></a-switch>
-          </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">
-            <a-input placeholder="请输入排序" v-decorator.trim="[ 'sort', validatorRules.sort]" />
+            {{model.nativeName}}
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="别名">
             <a-input placeholder="请输入别名" v-decorator.trim="[ 'anotherName' ]" />
@@ -36,7 +30,7 @@
 <script>
   import pick from 'lodash.pick'
   import {mixinDevice} from '@/utils/mixin'
-  import {editMaterialProperty } from '@/api/api'
+  import {addOrUpdateMaterialProperty } from '@/api/api'
   export default {
     name: "MaterialPropertyModal",
     mixins: [mixinDevice],
@@ -45,7 +39,6 @@
         title:"操作",
         visible: false,
         model: {},
-        enabledSwitch: true, //是否启用
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -69,9 +62,6 @@
     created () {
     },
     methods: {
-      onChange(checked) {
-        this.model.enabled = checked
-      },
       add () {
         this.edit({});
       },
@@ -79,11 +69,8 @@
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
-        if(record.enabled!=null){
-          this.enabledSwitch = record.enabled?true:false;
-        }
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'nativeName', 'enabled', 'sort', 'anotherName'))
+          this.form.setFieldsValue(pick(this.model,'nativeName', 'anotherName'))
         });
       },
       close () {
@@ -99,7 +86,7 @@
             let formData = Object.assign(this.model, values);
             let obj;
             if(this.model.id){
-              obj=editMaterialProperty(formData);
+              obj=addOrUpdateMaterialProperty(formData);
             }
             obj.then((res)=>{
               if(res.code === 200){

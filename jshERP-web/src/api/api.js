@@ -46,7 +46,7 @@ const addDepot = (params)=>postAction("/depot/add",params);
 const editDepot = (params)=>putAction("/depot/update",params);
 const checkDepot = (params)=>getAction("/depot/checkIsNameExist",params);
 //商品属性
-const editMaterialProperty = (params)=>putAction("/materialProperty/update",params);
+const addOrUpdateMaterialProperty = (params)=>postAction("/materialProperty/addOrUpdate",params);
 //商品类型
 const queryMaterialCategoryTreeList = (params)=>getAction("/materialCategory/getMaterialCategoryTree",params);
 const queryMaterialCategoryById = (params)=>getAction("/materialCategory/findById",params);
@@ -149,7 +149,7 @@ export {
   addDepot,
   editDepot,
   checkDepot,
-  editMaterialProperty,
+  addOrUpdateMaterialProperty,
   queryMaterialCategoryTreeList,
   queryMaterialCategoryById,
   checkMaterialCategory,

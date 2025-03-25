@@ -149,7 +149,6 @@ export const JeecgListMixin = {
       });
       return str;
     },
-
     onSelectChange(selectedRowKeys, selectionRows) {
       this.selectedRowKeys = selectedRowKeys;
       this.selectionRows = selectionRows;

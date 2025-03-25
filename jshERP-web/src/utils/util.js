@@ -418,14 +418,12 @@ export function replaceAll(text, checker, replacer) {
  */
 export function getMpListShort(thisRows, checker, replacer) {
   let mPropertyListShort = ''
-  let nativeNameStr = ''
+  let anotherNameStr = ''
   for (let i = 0; i < thisRows.length; i++) {
-    if (thisRows[i].enabled) {
-      nativeNameStr += thisRows[i].nativeName + ",";
-    }
+    anotherNameStr += thisRows[i].anotherName + ",";
   }
-  if (nativeNameStr) {
-    mPropertyListShort = nativeNameStr.substring(0, nativeNameStr.length - 1);
+  if (anotherNameStr) {
+    mPropertyListShort = anotherNameStr.substring(0, anotherNameStr.length - 1);
   }
   return mPropertyListShort
 }
