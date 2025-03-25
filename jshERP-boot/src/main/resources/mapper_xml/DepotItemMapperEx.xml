@@ -1043,7 +1043,8 @@
         </if>
         and m.enable_batch_number =1
         and di.delete_flag!=1) tb
-        group by batch_number
+        group by id, bar_code, name, standard, model, unit_id,
+        commodity_unit, batch_number, expiration_date
         order by expiration_date asc
     </select>
 
