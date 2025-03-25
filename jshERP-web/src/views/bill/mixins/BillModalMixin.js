@@ -586,7 +586,7 @@ export const BillModalMixin = {
           operNumber = row.operNumber-0 //数量
           taxRate = row.taxRate-0 //税率
           allPrice = value-0
-          unitPrice = (allPrice/operNumber).toFixed(2)-0 //单价
+          unitPrice = (allPrice/operNumber).toFixed(4)-0 //单价
           taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
           taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
           target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
@@ -609,13 +609,13 @@ export const BillModalMixin = {
           taxLastMoney = value-0
           taxRate = row.taxRate-0 //税率
           if(taxRate) {
-            unitPrice = (taxLastMoney/operNumber/(1+taxRate*0.01)).toFixed(2)-0
+            unitPrice = (taxLastMoney/operNumber/(1+taxRate*0.01)).toFixed(4)-0
             allPrice = (unitPrice*operNumber).toFixed(2)-0
             taxMoney =(taxLastMoney-allPrice).toFixed(2)-0
           } else {
             //税率为0的情况，特殊处理
             allPrice = taxLastMoney
-            unitPrice = (allPrice/operNumber).toFixed(2)-0 //单价
+            unitPrice = (allPrice/operNumber).toFixed(4)-0 //单价
             taxMoney = 0
           }
           target.setValues([{rowKey: row.id, values: {unitPrice: unitPrice, allPrice: allPrice, taxMoney: taxMoney}}])
