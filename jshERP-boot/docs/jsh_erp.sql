@@ -540,6 +540,7 @@ CREATE TABLE `jsh_material_property` (
   `enabled` bit(1) DEFAULT NULL COMMENT '是否启用',
   `sort` varchar(10) DEFAULT NULL COMMENT '排序',
   `another_name` varchar(50) DEFAULT NULL COMMENT '别名',
+  `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='产品扩展字段表';
@@ -547,10 +548,6 @@ CREATE TABLE `jsh_material_property` (
 -- ----------------------------
 -- Records of jsh_material_property
 -- ----------------------------
-INSERT INTO `jsh_material_property` VALUES ('1', '制造商', '', '01', '制造商', '0');
-INSERT INTO `jsh_material_property` VALUES ('2', '自定义1', '', '02', '自定义1', '0');
-INSERT INTO `jsh_material_property` VALUES ('3', '自定义2', '', '03', '自定义2', '0');
-INSERT INTO `jsh_material_property` VALUES ('4', '自定义3', '', '04', '自定义3', '0');
 
 -- ----------------------------
 -- Table structure for jsh_msg

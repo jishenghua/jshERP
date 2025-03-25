@@ -13,4 +13,10 @@ public interface MaterialPropertyMapperEx {
             @Param("name") String name);
 
     int batchDeleteMaterialPropertyByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
+    int getCountByNativeName(@Param("nativeName") String nativeName);
+
+    void updateMaterialPropertyByNativeName(
+            @Param("nativeName") String nativeName,
+            @Param("anotherName") String anotherName);
 }

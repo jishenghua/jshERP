@@ -27,8 +27,8 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 /**
  * Description
  *
- * @Author: qiankunpingtai
- * @Date: 2019/3/29 15:24
+ * @Author: jsh
+ * @Date: 2025/3/25 15:24
  */
 @RestController
 @RequestMapping(value = "/materialProperty")
@@ -77,6 +77,23 @@ public class MaterialPropertyController extends BaseController {
         Map<String, Object> objectMap = new HashMap<>();
         int update = materialPropertyService.updateMaterialProperty(obj, request);
         return returnStr(objectMap, update);
+    }
+
+    @PostMapping(value = "/addOrUpdate")
+    @ApiOperation(value = "新增或修改")
+    public String addOrUpdate(@RequestBody JSONObject obj, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String nativeName = obj.getString("nativeName");
+        String anotherName = obj.getString("anotherName");
+        boolean exist = materialPropertyService.checkIsNativeNameExist(nativeName);
+        int res;
+        if(!exist) {
+            obj.put("id", null);
+            res = materialPropertyService.insertMaterialProperty(obj, request);
+        } else {
+            res = materialPropertyService.updateMaterialPropertyByNativeName(nativeName, anotherName);
+        }
+        return returnStr(objectMap, res);
     }
 
     @DeleteMapping(value = "/delete")

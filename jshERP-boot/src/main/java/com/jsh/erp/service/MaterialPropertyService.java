@@ -18,8 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MaterialPropertyService {
@@ -58,11 +57,34 @@ public class MaterialPropertyService {
     }
 
     public List<MaterialProperty> select(String name)throws Exception {
-        List<MaterialProperty>  list=null;
+        List<MaterialProperty> list = new ArrayList<>();
         try{
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                PageUtils.startPage();
-                list = materialPropertyMapperEx.selectByConditionMaterialProperty(name);
+            MaterialProperty mp1 = new MaterialProperty();
+            MaterialProperty mp2 = new MaterialProperty();
+            MaterialProperty mp3 = new MaterialProperty();
+            mp1.setId(1L);
+            mp1.setNativeName("扩展1");
+            mp1.setAnotherName("扩展1");
+            list.add(mp1);
+            mp2.setId(2L);
+            mp2.setNativeName("扩展2");
+            mp2.setAnotherName("扩展2");
+            list.add(mp2);
+            mp3.setId(3L);
+            mp3.setNativeName("扩展3");
+            mp3.setAnotherName("扩展3");
+            list.add(mp3);
+            PageUtils.startPage();
+            List<MaterialProperty> mpList = materialPropertyMapperEx.selectByConditionMaterialProperty(name);
+            Map<String, String> mpMap = new HashMap<>();
+            for(MaterialProperty mp: mpList) {
+                mpMap.put(mp.getNativeName(), mp.getAnotherName());
+            }
+            //给list里面的别名和排序做更新
+            for(MaterialProperty item: list) {
+                if(mpMap.get(item.getNativeName())!=null) {
+                    item.setAnotherName(mpMap.get(item.getNativeName()));
+                }
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
@@ -75,11 +97,9 @@ public class MaterialPropertyService {
         MaterialProperty materialProperty = JSONObject.parseObject(obj.toJSONString(), MaterialProperty.class);
         int  result=0;
         try{
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = materialPropertyMapper.insertSelective(materialProperty);
-                logService.insertLog("商品属性",
-                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialProperty.getNativeName()).toString(), request);
-            }
+            result = materialPropertyMapper.insertSelective(materialProperty);
+            logService.insertLog("商品属性",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(materialProperty.getNativeName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -91,11 +111,9 @@ public class MaterialPropertyService {
         MaterialProperty materialProperty = JSONObject.parseObject(obj.toJSONString(), MaterialProperty.class);
         int  result=0;
         try{
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
-                logService.insertLog("商品属性",
-                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialProperty.getNativeName()).toString(), request);
-            }
+            result = materialPropertyMapper.updateByPrimaryKeySelective(materialProperty);
+            logService.insertLog("商品属性",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(materialProperty.getNativeName()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -118,12 +136,10 @@ public class MaterialPropertyService {
         String [] idArray=ids.split(",");
         int  result=0;
         try{
-            if(BusinessConstants.DEFAULT_MANAGER.equals(userService.getCurrentUser().getLoginName())) {
-                result = materialPropertyMapperEx.batchDeleteMaterialPropertyByIds(new Date(), userInfo == null ? null : userInfo.getId(), idArray);
-                logService.insertLog("商品属性",
-                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
-                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            }
+            result = materialPropertyMapperEx.batchDeleteMaterialPropertyByIds(new Date(), userInfo == null ? null : userInfo.getId(), idArray);
+            logService.insertLog("商品属性",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(ids).toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -132,5 +148,15 @@ public class MaterialPropertyService {
 
     public int checkIsNameExist(Long id, String name)throws Exception {
         return 0;
+    }
+
+    public boolean checkIsNativeNameExist(String nativeName) {
+        int count = materialPropertyMapperEx.getCountByNativeName(nativeName);
+        return count>0;
+    }
+
+    public int updateMaterialPropertyByNativeName(String nativeName, String anotherName) {
+        materialPropertyMapperEx.updateMaterialPropertyByNativeName(nativeName, anotherName);
+        return 1;
     }
 }

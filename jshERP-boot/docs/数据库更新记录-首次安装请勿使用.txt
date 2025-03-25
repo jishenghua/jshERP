@@ -1636,3 +1636,11 @@ update jsh_function set name='多单位' where number='010103';
 -- 给地址字段调整长度
 -- --------------------------------------------------------
 alter table jsh_supplier change address address varchar(100) DEFAULT NULL COMMENT '地址';
+
+-- --------------------------------------------------------
+-- 时间 2025年3月25日
+-- by jishenghua
+-- 给产品扩展字段表增加租户id字段
+-- 另外注意：需要手动把商品属性菜单分配给租户角色
+-- --------------------------------------------------------
+alter table jsh_material_property add tenant_id bigint(20) DEFAULT NULL COMMENT '租户id' after another_name;
