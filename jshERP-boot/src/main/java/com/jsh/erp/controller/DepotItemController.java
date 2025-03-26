@@ -192,7 +192,7 @@ public class DepotItemController {
     @GetMapping(value = "/getDetailList")
     @ApiOperation(value = "单据明细列表")
     public BaseResponseInfo getDetailList(@RequestParam("headerId") Long headerId,
-                              @RequestParam("mpList") String mpList,
+                              @RequestParam(value = "mpList", required = false) String mpList,
                               @RequestParam(value = "linkType", required = false) String linkType,
                               @RequestParam(value = "isReadOnly", required = false) String isReadOnly,
                               HttpServletRequest request)throws Exception {
@@ -205,7 +205,6 @@ public class DepotItemController {
             if(headerId != 0) {
                 dataList = depotItemService.getDetailList(headerId);
             }
-            String[] mpArr = mpList.split(",");
             JSONObject outer = new JSONObject();
             outer.put("total", dataList.size());
             //存放数据json数组
