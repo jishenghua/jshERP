@@ -168,7 +168,9 @@
             { title: '颜色', key: 'color', width: '6%', type: FormTypes.normal },
             { title: '品牌', key: 'brand', width: '6%', type: FormTypes.normal },
             { title: '制造商', key: 'mfrs', width: '6%', type: FormTypes.normal },
-            { title: '扩展信息', key: 'materialOther', width: '6%', type: FormTypes.normal },
+            { title: '扩展1', key: 'otherField1', width: '4%', type: FormTypes.normal },
+            { title: '扩展2', key: 'otherField2', width: '4%', type: FormTypes.normal },
+            { title: '扩展3', key: 'otherField3', width: '4%', type: FormTypes.normal },
             { title: '单位', key: 'unit', width: '6%', type: FormTypes.normal },
             { title: '多属性', key: 'sku', width: '10%', type: FormTypes.normal },
             { title: '数量', key: 'operNumber', width: '6%', type: FormTypes.inputNumber, statistics: true,
@@ -245,6 +247,7 @@
         this.initSystemConfig()
         this.initPlatform()
         this.initQuickBtn()
+        this.handleChangeOtherField()
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {

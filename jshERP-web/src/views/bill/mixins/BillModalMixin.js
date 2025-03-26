@@ -634,7 +634,9 @@ export const BillModalMixin = {
         color: mInfo.color,
         brand: mInfo.brand,
         mfrs: mInfo.mfrs,
-        materialOther: mInfo.materialOther,
+        otherField1: mInfo.otherField1,
+        otherField2: mInfo.otherField2,
+        otherField3: mInfo.otherField3,
         unit: mInfo.commodityUnit,
         sku: mInfo.sku,
         operNumber: 1,
@@ -651,10 +653,9 @@ export const BillModalMixin = {
       this.changeFormTypes(this.materialTable.columns, 'color', 0)
       this.changeFormTypes(this.materialTable.columns, 'brand', 0)
       this.changeFormTypes(this.materialTable.columns, 'mfrs', 0)
-      this.changeFormTypes(this.materialTable.columns, 'materialOther', 0)
       this.changeFormTypes(this.materialTable.columns, 'otherField1', 0)
-      this.changeFormTypes(this.materialTable.columns, 'otherField1', 0)
-      this.changeFormTypes(this.materialTable.columns, 'otherField1', 0)
+      this.changeFormTypes(this.materialTable.columns, 'otherField2', 0)
+      this.changeFormTypes(this.materialTable.columns, 'otherField3', 0)
       this.changeFormTypes(this.materialTable.columns, 'sku', 0)
     },
     //使得sku、序列号、批号、到期日等为显示
@@ -670,9 +671,6 @@ export const BillModalMixin = {
       }
       if(info.mfrs) {
         this.changeFormTypes(this.materialTable.columns, 'mfrs', 1)
-      }
-      if(info.materialOther) {
-        this.changeFormTypes(this.materialTable.columns, 'materialOther', 1)
       }
       if(info.otherField1) {
         this.changeFormTypes(this.materialTable.columns, 'otherField1', 1)
@@ -1084,6 +1082,26 @@ export const BillModalMixin = {
             this.quickBtn.member = btnStrList[i].url === '/system/member'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.member
             this.quickBtn.account = btnStrList[i].url === '/system/account'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.account
             this.quickBtn.depot = btnStrList[i].url === '/system/depot'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.depot
+          }
+        }
+      }
+    },
+    //动态替换扩展字段
+    handleChangeOtherField() {
+      let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+      if(mpStr) {
+        let mpArr = mpStr.split(',')
+        if(mpArr.length ===3) {
+          for (let i = 0; i < this.materialTable.columns.length; i++) {
+            if(this.materialTable.columns[i].key === 'otherField1') {
+              this.materialTable.columns[i].title = mpArr[0]
+            }
+            if(this.materialTable.columns[i].key === 'otherField2') {
+              this.materialTable.columns[i].title = mpArr[1]
+            }
+            if(this.materialTable.columns[i].key === 'otherField3') {
+              this.materialTable.columns[i].title = mpArr[2]
+            }
           }
         }
       }

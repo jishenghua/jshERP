@@ -60,17 +60,17 @@
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item :label="queryTitle.mp1" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入扩展1查询" v-model="queryParam.otherField1"></a-input>
+                    <a-input :placeholder="'请输入'+ queryTitle.mp1 +'查询'" v-model="queryParam.otherField1"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item :label="queryTitle.mp2" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入扩展2查询" v-model="queryParam.otherField2"></a-input>
+                    <a-input :placeholder="'请输入'+ queryTitle.mp2 +'查询'" v-model="queryParam.otherField2"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
                   <a-form-item :label="queryTitle.mp3" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-input placeholder="请输入扩展3查询" v-model="queryParam.otherField3"></a-input>
+                    <a-input :placeholder="'请输入'+ queryTitle.mp3 +'查询'" v-model="queryParam.otherField3"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">

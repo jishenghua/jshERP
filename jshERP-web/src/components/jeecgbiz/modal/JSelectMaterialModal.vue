@@ -75,18 +75,18 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="8">
-                  <a-form-item label="扩展1" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                    <a-input placeholder="请输入扩展1" v-model="queryParam.otherField1"></a-input>
+                  <a-form-item :label="queryTitle.mp1" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                    <a-input :placeholder="'请输入'+ queryTitle.mp1" v-model="queryParam.otherField1"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="8">
-                  <a-form-item label="扩展2" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                    <a-input placeholder="请输入扩展2" v-model="queryParam.otherField2"></a-input>
+                  <a-form-item :label="queryTitle.mp2" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                    <a-input :placeholder="'请输入'+ queryTitle.mp2" v-model="queryParam.otherField2"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="8">
-                  <a-form-item label="扩展3" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
-                    <a-input placeholder="请输入扩展3" v-model="queryParam.otherField3"></a-input>
+                  <a-form-item :label="queryTitle.mp3" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                    <a-input :placeholder="'请输入'+ queryTitle.mp3" v-model="queryParam.otherField3"></a-input>
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
@@ -162,6 +162,11 @@
     data() {
       return {
         modalWidth: 1450,
+        queryTitle: {
+          mp1: '扩展1',
+          mp2: '扩展2',
+          mp3: '扩展3'
+        },
         queryParam: {
           q: '',
           standardOrModel: '',
@@ -248,6 +253,7 @@
     created() {
       // 该方法触发屏幕自适应
       this.resetScreenSize()
+      this.handleChangeOtherField()
     },
     methods: {
       initBarCode() {
@@ -308,6 +314,29 @@
           this.scrollTrigger = {x: 800};
         } else {
           this.scrollTrigger = {};
+        }
+      },
+      //动态替换扩展字段
+      handleChangeOtherField() {
+        let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+        if(mpStr) {
+          let mpArr = mpStr.split(',')
+          if(mpArr.length ===3) {
+            this.queryTitle.mp1 = mpArr[0]
+            this.queryTitle.mp2 = mpArr[1]
+            this.queryTitle.mp3 = mpArr[2]
+            for (let i = 0; i < this.columns.length; i++) {
+              if(this.columns[i].dataIndex === 'otherField1') {
+                this.columns[i].title = mpArr[0]
+              }
+              if(this.columns[i].dataIndex === 'otherField2') {
+                this.columns[i].title = mpArr[1]
+              }
+              if(this.columns[i].dataIndex === 'otherField3') {
+                this.columns[i].title = mpArr[2]
+              }
+            }
+          }
         }
       },
       showModal(barCode) {

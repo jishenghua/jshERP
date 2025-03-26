@@ -1236,6 +1236,8 @@
           detailList: '/depotItem/getDetailList',
           batchSetStatusUrl: "/depotHead/batchSetStatus"
         },
+        //扩展信息标题
+        otherFieldTitle: '',
         //表头
         columns:[],
         //列定义
@@ -1249,7 +1251,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '序列号', dataIndex: 'snList', width:300},
@@ -1272,7 +1276,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '序列号', dataIndex: 'snList', width:300},
@@ -1294,7 +1300,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
@@ -1309,7 +1317,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1331,7 +1341,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '序列号', dataIndex: 'snList', width:300},
@@ -1358,7 +1370,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '序列号', dataIndex: 'snList', width:300},
@@ -1384,7 +1398,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1406,7 +1422,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '序列号', dataIndex: 'snList', width:300},
@@ -1433,7 +1451,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '序列号', dataIndex: 'snList', width:300},
@@ -1460,7 +1480,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '序列号', dataIndex: 'snList', width:300},
@@ -1483,7 +1505,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '序列号', dataIndex: 'snList', width:300},
@@ -1506,7 +1530,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '调入仓库', dataIndex: 'anotherDepotName'},
           { title: '单位', dataIndex: 'unit'},
@@ -1528,7 +1554,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1547,7 +1575,9 @@
           { title: '颜色', dataIndex: 'color'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1564,7 +1594,9 @@
           { title: '型号', dataIndex: 'model'},
           { title: '品牌', dataIndex: 'brand'},
           { title: '制造商', dataIndex: 'mfrs'},
-          { title: '扩展信息', dataIndex: 'materialOther'},
+          { title: '扩展1', dataIndex: 'otherField1'},
+          { title: '扩展2', dataIndex: 'otherField2'},
+          { title: '扩展3', dataIndex: 'otherField3'},
           { title: '库存', dataIndex: 'stock'},
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
@@ -1618,6 +1650,8 @@
         } else if (type === '盘点复盘') {
           this.defColumns = this.stockCheckReplayColumns
         }
+        //动态替换扩展字段
+        this.handleChangeOtherField()
         //判断序列号、批号、有效期、多属性、重量、仓位货架是否有值
         let needAddkeywords = []
         for (let i = 0; i < ds.length; i++) {
@@ -1699,6 +1733,27 @@
             }
           }
           this.columns = currentCol
+        }
+      },
+      //动态替换扩展字段
+      handleChangeOtherField() {
+        let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+        if(mpStr) {
+          let mpArr = mpStr.split(',')
+          if(mpArr.length ===3) {
+            this.otherFieldTitle = mpStr
+            for (let i = 0; i < this.defColumns.length; i++) {
+              if(this.defColumns[i].dataIndex === 'otherField1') {
+                this.defColumns[i].title = mpArr[0]
+              }
+              if(this.defColumns[i].dataIndex === 'otherField2') {
+                this.defColumns[i].title = mpArr[1]
+              }
+              if(this.defColumns[i].dataIndex === 'otherField3') {
+                this.defColumns[i].title = mpArr[2]
+              }
+            }
+          }
         }
       },
       initPlatform() {
@@ -1882,11 +1937,11 @@
       //零售出库|零售退货入库
       retailExportExcel() {
         let list = []
-        let head = '仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,备注'
+        let head = '仓库名称,条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit,
             ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
           list.push(item)
         }
@@ -1897,11 +1952,11 @@
       //请购单
       applyExportExcel() {
         let list = []
-        let head = '条码,名称,规格,型号,颜色,扩展信息,单位,多属性,原数量,已采购,数量,备注'
+        let head = '条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',单位,多属性,原数量,已采购,数量,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.unit, ds.sku,
+          item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.unit, ds.sku,
             ds.preNumber, ds.finishNumber, ds.operNumber, ds.remark)
           list.push(item)
         }
@@ -1920,11 +1975,11 @@
           finishType = '已出库'
           organType = '客户：'
         }
-        let head = '条码,名称,规格,型号,颜色,扩展信息,库存,单位,多属性,数量,' + finishType + ',单价,金额,税率(%),税额,价税合计,备注'
+        let head = '条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,单位,多属性,数量,' + finishType + ',单价,金额,税率(%),税额,价税合计,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit, ds.sku,
+          item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit, ds.sku,
             ds.operNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark)
           list.push(item)
         }
@@ -1941,11 +1996,11 @@
         } else if(this.billType === '销售出库' || this.billType === '销售退货入库') {
           organType = '客户：'
         }
-        let head = '仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注'
+        let head = '仓库名称,条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,税率(%),税额,价税合计,重量,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit,
             ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.weight, ds.remark)
           list.push(item)
         }
@@ -1964,11 +2019,11 @@
         } else if(this.billType === '其它出库') {
           organType = '客户：'
         }
-        let head = '仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,备注'
+        let head = '仓库名称,条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,单位,序列号,批号,有效期,多属性,数量,单价,金额,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit,
             ds.snList, ds.batchNumber, ds.expirationDate, ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
           list.push(item)
         }
@@ -1979,11 +2034,11 @@
       //调拨出库
       allocationOutExportExcel() {
         let list = []
-        let head = '仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,调入仓库,单位,多属性,数量,单价,金额,备注'
+        let head = '仓库名称,条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,调入仓库,单位,多属性,数量,单价,金额,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.anotherDepotName, ds.unit,
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.anotherDepotName, ds.unit,
             ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
           list.push(item)
         }
@@ -1993,11 +2048,11 @@
       //组装单|拆卸单
       assembleExportExcel() {
         let list = []
-        let head = ['商品类型,仓库名称,条码,名称,规格,型号,颜色,扩展信息,库存,单位,多属性,数量,单价,金额,备注']
+        let head = ['商品类型,仓库名称,条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,单位,多属性,数量,单价,金额,备注']
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.mType, ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.materialOther, ds.stock, ds.unit,
+          item.push(ds.mType, ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit,
             ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
           list.push(item)
         }
@@ -2007,11 +2062,11 @@
       //盘点复盘
       stockCheckReplayExportExcel() {
         let list = []
-        let head = '仓库名称,条码,名称,规格,型号,扩展信息,库存,单位,多属性,数量,单价,金额,备注'
+        let head = '仓库名称,条码,名称,规格,型号,' + this.otherFieldTitle + ',库存,单位,多属性,数量,单价,金额,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.materialOther, ds.stock, ds.unit,
+          item.push(ds.depotName, ds.barCode, ds.name, ds.standard, ds.model, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit,
             ds.sku, ds.operNumber, ds.unitPrice, ds.allPrice, ds.remark)
           list.push(item)
         }
