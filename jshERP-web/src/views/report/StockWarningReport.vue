@@ -143,7 +143,7 @@
         tabKey: "1",
         pageName: 'stockWarningReport',
         // 默认索引
-        defDataIndex:['rowIndex','depotName','barCode','mname','mstandard','mmodel','materialOther','materialUnit','currentNumber',
+        defDataIndex:['rowIndex','depotName','barCode','mname','mstandard','mmodel','materialUnit','currentNumber',
           'lowSafeStock','highSafeStock','lowCritical','highCritical'],
         // 默认列
         defColumns: [
@@ -161,7 +161,9 @@
           {title: '颜色', dataIndex: 'mcolor', width: 50, ellipsis:true},
           {title: '品牌', dataIndex: 'brand', width: 80, ellipsis:true},
           {title: '制造商', dataIndex: 'mmfrs', width: 80, ellipsis:true},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 100, ellipsis:true},
+          {title: '扩展1', dataIndex: 'motherField1', width: 80, ellipsis:true},
+          {title: '扩展2', dataIndex: 'motherField2', width: 80, ellipsis:true},
+          {title: '扩展3', dataIndex: 'motherField3', width: 80, ellipsis:true},
           {title: '单位', dataIndex: 'materialUnit', width: 60, ellipsis:true},
           {title: '库存', dataIndex: 'currentNumber', sorter: (a, b) => a.currentNumber - b.currentNumber, width: 80},
           {title: '最低安全库存', dataIndex: 'lowSafeStock', sorter: (a, b) => a.lowSafeStock - b.lowSafeStock, width: 100},
@@ -178,6 +180,7 @@
       this.getDepotData()
       this.loadCategoryTreeData()
       this.initColumnsSetting()
+      this.handleChangeOtherField(0)
     },
     methods: {
       getQueryParams() {
@@ -210,14 +213,40 @@
           }
         })
       },
+      //动态替换扩展字段
+      handleChangeOtherField(showQuery) {
+        let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+        if(mpStr) {
+          let mpArr = mpStr.split(',')
+          if(mpArr.length ===3) {
+            if(showQuery) {
+              this.queryTitle.mp1 = mpArr[0]
+              this.queryTitle.mp2 = mpArr[1]
+              this.queryTitle.mp3 = mpArr[2]
+            }
+            for (let i = 0; i < this.defColumns.length; i++) {
+              if(this.defColumns[i].dataIndex === 'motherField1') {
+                this.defColumns[i].title = mpArr[0]
+              }
+              if(this.defColumns[i].dataIndex === 'motherField2') {
+                this.defColumns[i].title = mpArr[1]
+              }
+              if(this.defColumns[i].dataIndex === 'motherField3') {
+                this.defColumns[i].title = mpArr[2]
+              }
+            }
+          }
+        }
+      },
       exportExcel() {
         let list = []
-        let head = '仓库,条码,名称,规格,型号,颜色,品牌,制造商,扩展信息,单位,库存,最低安全库存,最高安全库存,建议入库量,建议出库量'
+        let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+        let head = '仓库,条码,名称,规格,型号,颜色,品牌,制造商,' + mpStr + ',单位,库存,最低安全库存,最高安全库存,建议入库量,建议出库量'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
           item.push(ds.depotName, ds.barCode, ds.mname, ds.mstandard, ds.mmodel, ds.mcolor, ds.brand, ds.mmfrs,
-            ds.materialOther, ds.materialUnit, ds.currentNumber, ds.lowSafeStock, ds.highSafeStock, ds.lowCritical, ds.highCritical)
+            ds.motherField1, ds.motherField2, ds.motherField3, ds.materialUnit, ds.currentNumber, ds.lowSafeStock, ds.highSafeStock, ds.lowCritical, ds.highCritical)
           list.push(item)
         }
         let tip = '库存预警查询'

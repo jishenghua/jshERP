@@ -195,7 +195,7 @@
         tabKey: "1",
         pageName: 'retailOutReport',
         // 默认索引
-        defDataIndex:['rowIndex','barCode','materialName','materialStandard','materialModel','materialOther','materialUnit',
+        defDataIndex:['rowIndex','barCode','materialName','materialStandard','materialModel','materialUnit',
           'outSum','outSumPrice','inSum','inSumPrice','outInSumPrice'],
         // 默认列
         defColumns: [
@@ -212,7 +212,9 @@
           {title: '颜色', dataIndex: 'materialColor', width: 60, ellipsis:true},
           {title: '品牌', dataIndex: 'materialBrand', width: 80, ellipsis:true},
           {title: '制造商', dataIndex: 'materialMfrs', width: 80, ellipsis:true},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 150, ellipsis:true},
+          {title: '扩展1', dataIndex: 'otherField1', width: 80, ellipsis:true},
+          {title: '扩展2', dataIndex: 'otherField2', width: 80, ellipsis:true},
+          {title: '扩展3', dataIndex: 'otherField3', width: 80, ellipsis:true},
           {title: '单位', dataIndex: 'materialUnit', width: 80, ellipsis:true},
           {title: '零售数量', dataIndex: 'outSum', sorter: (a, b) => a.outSum - b.outSum, width: 80},
           {title: '零售金额', dataIndex: 'outSumPrice', sorter: (a, b) => a.outSumPrice - b.outSumPrice, width: 80},
@@ -231,6 +233,7 @@
       this.loadAllOrgaData()
       this.loadCategoryTreeData()
       this.initColumnsSetting()
+      this.handleChangeOtherField(0)
     },
     methods: {
       moment,
@@ -319,12 +322,13 @@
       },
       exportExcel() {
         let list = []
-        let head = '条码,名称,规格,型号,颜色,品牌,制造商,扩展信息,单位,零售数量,零售金额,退货数量,退货金额,实际零售金额'
+        let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+        let head = '条码,名称,规格,型号,颜色,品牌,制造商,' + mpStr + ',单位,零售数量,零售金额,退货数量,退货金额,实际零售金额'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
           item.push(ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialColor, ds.materialBrand,
-            ds.materialMfrs, ds.materialOther, ds.materialUnit, ds.outSum,
+            ds.materialMfrs, ds.otherField1, ds.otherField2, ds.otherField3, ds.materialUnit, ds.outSum,
             ds.outSumPrice, ds.inSum, ds.inSumPrice, ds.outInSumPrice)
           list.push(item)
         }

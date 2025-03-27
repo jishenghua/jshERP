@@ -364,7 +364,7 @@
       this.model = Object.assign({}, {});
       this.initColumnsSetting()
       this.loadTreeData()
-      this.handleChangeOtherField()
+      this.handleChangeOtherField(1)
     },
     computed: {
       importExcelUrl: function () {
@@ -396,29 +396,6 @@
       handleRestDefault() {
         Vue.ls.remove('materialColumns')
         this.initColumnsSetting()
-      },
-      //动态替换扩展字段
-      handleChangeOtherField() {
-        let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
-        if(mpStr) {
-          let mpArr = mpStr.split(',')
-          if(mpArr.length ===3) {
-            this.queryTitle.mp1 = mpArr[0]
-            this.queryTitle.mp2 = mpArr[1]
-            this.queryTitle.mp3 = mpArr[2]
-            for (let i = 0; i < this.defColumns.length; i++) {
-              if(this.defColumns[i].dataIndex === 'otherField1') {
-                this.defColumns[i].title = mpArr[0]
-              }
-              if(this.defColumns[i].dataIndex === 'otherField2') {
-                this.defColumns[i].title = mpArr[1]
-              }
-              if(this.defColumns[i].dataIndex === 'otherField3') {
-                this.defColumns[i].title = mpArr[2]
-              }
-            }
-          }
-        }
       },
       loadTreeData(){
         let that = this;

@@ -182,8 +182,8 @@
         totalCountMoneyStr: '0',
         pageName: 'inOutStockReport',
         // 默认索引
-        defDataIndex:['rowIndex','barCode','materialName','materialStandard','materialModel','materialOther','unitName',
-          'unitPrice','prevSum','inSum','outSum','thisSum','thisAllPrice'],
+        defDataIndex:['rowIndex','barCode','materialName','materialStandard','materialModel','unitName','unitPrice',
+          'prevSum','inSum','outSum','thisSum','thisAllPrice'],
         // 默认列
         defColumns: [
           {
@@ -199,7 +199,9 @@
           {title: '颜色', dataIndex: 'materialColor', width: 50, ellipsis:true},
           {title: '品牌', dataIndex: 'materialBrand', width: 80, ellipsis:true},
           {title: '制造商', dataIndex: 'materialMfrs', width: 80, ellipsis:true},
-          {title: '扩展信息', dataIndex: 'materialOther', width: 80, ellipsis:true},
+          {title: '扩展1', dataIndex: 'otherField1', width: 50, ellipsis:true},
+          {title: '扩展2', dataIndex: 'otherField2', width: 50, ellipsis:true},
+          {title: '扩展3', dataIndex: 'otherField3', width: 50, ellipsis:true},
           {title: '单位', dataIndex: 'unitName', width: 60, ellipsis:true},
           {title: '成本价', dataIndex: 'unitPrice', sorter: (a, b) => a.unitPrice - b.unitPrice, width: 60},
           {title: '上期结存数量', dataIndex: 'prevSum', sorter: (a, b) => a.prevSum - b.prevSum, width: 80},
@@ -221,6 +223,7 @@
       this.loadTreeData()
       this.getTotalCountMoney()
       this.initColumnsSetting()
+      this.handleChangeOtherField(0)
     },
     methods: {
       moment,
@@ -292,12 +295,13 @@
       },
       exportExcel() {
         let list = []
-        let head = '条码,名称,规格,型号,颜色,品牌,制造商,扩展信息,单位,成本价,上期结存数量,入库数量,出库数量,本期结存数量,结存金额'
+        let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+        let head = '条码,名称,规格,型号,颜色,品牌,制造商,' + mpStr + ',单位,成本价,上期结存数量,入库数量,出库数量,本期结存数量,结存金额'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
           item.push(ds.barCode, ds.materialName, ds.materialStandard, ds.materialModel, ds.materialColor, ds.materialBrand,
-            ds.materialMfrs, ds.materialOther, ds.unitName, ds.unitPrice,
+            ds.materialMfrs, ds.otherField1, ds.otherField2, ds.otherField3, ds.unitName, ds.unitPrice,
             ds.prevSum, ds.inSum, ds.outSum, ds.thisSum, ds.thisAllPrice)
           list.push(item)
         }
