@@ -480,7 +480,7 @@ public class MaterialController extends BaseController {
             materialService.exportExcel(StringUtil.toNull(categoryId), StringUtil.toNull(materialParam), StringUtil.toNull(color),
                     StringUtil.toNull(materialOther), StringUtil.toNull(weight),
                     StringUtil.toNull(expiryNum), StringUtil.toNull(enabled), StringUtil.toNull(enableSerialNumber),
-                    StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), response);
+                    StringUtil.toNull(enableBatchNumber), StringUtil.toNull(remark), mpList, response);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
