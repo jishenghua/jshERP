@@ -332,7 +332,7 @@ public class DepotItemController {
                                       @RequestParam("beginTime") String beginTime,
                                       @RequestParam("endTime") String endTime,
                                       @RequestParam("materialParam") String materialParam,
-                                      @RequestParam("mpList") String mpList,
+                                      @RequestParam(value = "mpList", required = false) String mpList,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
@@ -347,7 +347,6 @@ public class DepotItemController {
             List<Long> depotList = parseListByDepotIds(depotIds);
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getInOutStock(StringUtil.toNull(materialParam),
                     categoryIdList, endTime,(currentPage-1)*pageSize, pageSize);
-            String[] mpArr = mpList.split(",");
             int total = depotItemService.getInOutStockCount(StringUtil.toNull(materialParam), categoryIdList, endTime);
             map.put("total", total);
             //存放数据json数组
@@ -364,8 +363,9 @@ public class DepotItemController {
                     item.put("materialMfrs", diEx.getMMfrs());
                     item.put("materialBrand", diEx.getBrand());
                     //扩展信息
-                    String materialOther = depotItemService.getOtherInfo(mpArr, diEx);
-                    item.put("materialOther", materialOther);
+                    item.put("otherField1", diEx.getMOtherField1());
+                    item.put("otherField2", diEx.getMOtherField2());
+                    item.put("otherField3", diEx.getMOtherField3());
                     item.put("unitId", diEx.getUnitId());
                     item.put("unitName", null!=diEx.getUnitId() ? diEx.getMaterialUnit()+"[多单位]" : diEx.getMaterialUnit());
                     BigDecimal prevSum = depotItemService.getStockByParamWithDepotList(depotList,mId,null,beginTime);
@@ -509,7 +509,7 @@ public class DepotItemController {
                                   @RequestParam(value = "categoryId", required = false) Long categoryId,
                                   @RequestParam(value = "organizationId", required = false) Long organizationId,
                                   @RequestParam("materialParam") String materialParam,
-                                  @RequestParam("mpList") String mpList,
+                                  @RequestParam(value = "mpList",required = false) String mpList,
                                   HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -529,7 +529,6 @@ public class DepotItemController {
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBuyOrSale(StringUtil.toNull(materialParam),
                     "buy", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
-            String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBuyOrSaleCount(StringUtil.toNull(materialParam),
                     "buy", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             map.put("total", total);
@@ -548,8 +547,9 @@ public class DepotItemController {
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
                     //扩展信息
-                    String materialOther = depotItemService.getOtherInfo(mpArr, diEx);
-                    item.put("materialOther", materialOther);
+                    item.put("otherField1", diEx.getMOtherField1());
+                    item.put("otherField2", diEx.getMOtherField2());
+                    item.put("otherField3", diEx.getMOtherField3());
                     item.put("materialColor", diEx.getMColor());
                     item.put("materialBrand", diEx.getBrand());
                     item.put("materialMfrs", diEx.getMMfrs());
@@ -602,7 +602,7 @@ public class DepotItemController {
                                       @RequestParam(value = "categoryId", required = false) Long categoryId,
                                       @RequestParam(value = "organizationId", required = false) Long organizationId,
                                       @RequestParam("materialParam") String materialParam,
-                                      @RequestParam("mpList") String mpList,
+                                      @RequestParam(value = "mpList", required = false) String mpList,
                                       HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -622,7 +622,6 @@ public class DepotItemController {
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBuyOrSale(StringUtil.toNull(materialParam),
                     "retail", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
-            String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBuyOrSaleCount(StringUtil.toNull(materialParam),
                     "retail", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             map.put("total", total);
@@ -641,8 +640,9 @@ public class DepotItemController {
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
                     //扩展信息
-                    String materialOther = depotItemService.getOtherInfo(mpArr, diEx);
-                    item.put("materialOther", materialOther);
+                    item.put("otherField1", diEx.getMOtherField1());
+                    item.put("otherField2", diEx.getMOtherField2());
+                    item.put("otherField3", diEx.getMOtherField3());
                     item.put("materialColor", diEx.getMColor());
                     item.put("materialBrand", diEx.getBrand());
                     item.put("materialMfrs", diEx.getMMfrs());
@@ -696,7 +696,7 @@ public class DepotItemController {
                                     @RequestParam(value = "categoryId", required = false) Long categoryId,
                                     @RequestParam(value = "organizationId", required = false) Long organizationId,
                                     @RequestParam("materialParam") String materialParam,
-                                    @RequestParam("mpList") String mpList,
+                                    @RequestParam(value = "mpList", required = false) String mpList,
                                     HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
@@ -716,7 +716,6 @@ public class DepotItemController {
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
             List<DepotItemVo4WithInfoEx> dataList = depotItemService.getListWithBuyOrSale(StringUtil.toNull(materialParam),
                     "sale", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag, (currentPage-1)*pageSize, pageSize);
-            String[] mpArr = mpList.split(",");
             int total = depotItemService.getListWithBuyOrSaleCount(StringUtil.toNull(materialParam),
                     "sale", beginTime, endTime, creatorArray, organId, organArray, categoryList, depotList, forceFlag);
             map.put("total", total);
@@ -735,8 +734,9 @@ public class DepotItemController {
                     item.put("materialModel", diEx.getMModel());
                     item.put("materialStandard", diEx.getMStandard());
                     //扩展信息
-                    String materialOther = depotItemService.getOtherInfo(mpArr, diEx);
-                    item.put("materialOther", materialOther);
+                    item.put("otherField1", diEx.getMOtherField1());
+                    item.put("otherField2", diEx.getMOtherField2());
+                    item.put("otherField3", diEx.getMOtherField3());
                     item.put("materialColor", diEx.getMColor());
                     item.put("materialBrand", diEx.getBrand());
                     item.put("materialMfrs", diEx.getMMfrs());
@@ -796,7 +796,7 @@ public class DepotItemController {
                                                   @RequestParam("materialParam") String materialParam,
                                                   @RequestParam(value = "depotId", required = false) Long depotId,
                                                   @RequestParam(value = "categoryId", required = false) Long categoryId,
-                                                  @RequestParam("mpList") String mpList)throws Exception {
+                                                  @RequestParam(value = "mpList", required = false) String mpList)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<String, Object>();
         try {
@@ -824,7 +824,6 @@ public class DepotItemController {
                     diEx.setMOtherField1(disw.getMOtherField1());
                     diEx.setMOtherField2(disw.getMOtherField2());
                     diEx.setMOtherField3(disw.getMOtherField3());
-                    disw.setMaterialOther(depotItemService.getOtherInfo(mpArr, diEx));
                     disw.setMaterialUnit(getUName(disw.getMaterialUnit(), disw.getUnitName()));
                     if(null!=disw.getLowSafeStock() && disw.getCurrentNumber().compareTo(disw.getLowSafeStock())<0) {
                         disw.setLowCritical(disw.getLowSafeStock().subtract(disw.getCurrentNumber()));

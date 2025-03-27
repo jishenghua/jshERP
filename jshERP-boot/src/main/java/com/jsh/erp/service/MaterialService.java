@@ -480,7 +480,7 @@ public class MaterialService {
             otherMaterialMap.putIfAbsent(me.getMaterialId(), me);
         }
         String nameStr = "名称*,规格,型号,颜色,品牌,类别,基础重量(kg),保质期(天),基本单位*,副单位,基本条码*,副条码,比例,多属性," +
-                "采购价,零售价,销售价,最低售价,状态*,序列号,批号,仓位货架,制造商,自定义1,自定义2,自定义3,备注";
+                "采购价,零售价,销售价,最低售价,状态*,序列号,批号,仓位货架,制造商,扩展1,扩展2,扩展3,备注";
         List<String> nameList = StringUtil.strToStringList(nameStr);
         //仓库列表
         List<Depot> depotList = depotService.getAllList();
