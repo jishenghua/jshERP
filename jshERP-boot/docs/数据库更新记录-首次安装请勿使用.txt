@@ -1644,3 +1644,10 @@ alter table jsh_supplier change address address varchar(100) DEFAULT NULL COMMEN
 -- 另外注意：需要手动把商品属性菜单分配给租户角色
 -- --------------------------------------------------------
 alter table jsh_material_property add tenant_id bigint(20) DEFAULT NULL COMMENT '租户id' after another_name;
+
+-- --------------------------------------------------------
+-- 时间 2025年3月30日
+-- by jishenghua
+-- 给jsh_account_head表的文件字段增加长度
+-- --------------------------------------------------------
+alter table jsh_account_head change file_name file_name varchar(1000) DEFAULT NULL COMMENT '附件名称';
