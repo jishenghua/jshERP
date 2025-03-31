@@ -47,9 +47,20 @@ public class MaterialPropertyService {
     public List<MaterialProperty> getMaterialProperty()throws Exception {
         MaterialPropertyExample example = new MaterialPropertyExample();
         example.createCriteria().andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        List<MaterialProperty>  list=null;
+        List<MaterialProperty> list = new ArrayList<>();
         try{
-            list=materialPropertyMapper.selectByExample(example);
+            buildMaterialProperty(list);
+            List<MaterialProperty> mpList = materialPropertyMapper.selectByExample(example);
+            Map<String, String> mpMap = new HashMap<>();
+            for(MaterialProperty mp: mpList) {
+                mpMap.put(mp.getNativeName(), mp.getAnotherName());
+            }
+            //给list里面的别名和排序做更新
+            for(MaterialProperty item: list) {
+                if(mpMap.get(item.getNativeName())!=null) {
+                    item.setAnotherName(mpMap.get(item.getNativeName()));
+                }
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
@@ -59,21 +70,7 @@ public class MaterialPropertyService {
     public List<MaterialProperty> select(String name)throws Exception {
         List<MaterialProperty> list = new ArrayList<>();
         try{
-            MaterialProperty mp1 = new MaterialProperty();
-            MaterialProperty mp2 = new MaterialProperty();
-            MaterialProperty mp3 = new MaterialProperty();
-            mp1.setId(1L);
-            mp1.setNativeName("扩展1");
-            mp1.setAnotherName("扩展1");
-            list.add(mp1);
-            mp2.setId(2L);
-            mp2.setNativeName("扩展2");
-            mp2.setAnotherName("扩展2");
-            list.add(mp2);
-            mp3.setId(3L);
-            mp3.setNativeName("扩展3");
-            mp3.setAnotherName("扩展3");
-            list.add(mp3);
+            buildMaterialProperty(list);
             PageUtils.startPage();
             List<MaterialProperty> mpList = materialPropertyMapperEx.selectByConditionMaterialProperty(name);
             Map<String, String> mpMap = new HashMap<>();
@@ -90,6 +87,24 @@ public class MaterialPropertyService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    private void buildMaterialProperty(List<MaterialProperty> list) {
+        MaterialProperty mp1 = new MaterialProperty();
+        MaterialProperty mp2 = new MaterialProperty();
+        MaterialProperty mp3 = new MaterialProperty();
+        mp1.setId(1L);
+        mp1.setNativeName("扩展1");
+        mp1.setAnotherName("扩展1");
+        list.add(mp1);
+        mp2.setId(2L);
+        mp2.setNativeName("扩展2");
+        mp2.setAnotherName("扩展2");
+        list.add(mp2);
+        mp3.setId(3L);
+        mp3.setNativeName("扩展3");
+        mp3.setAnotherName("扩展3");
+        list.add(mp3);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
