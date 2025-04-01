@@ -101,7 +101,7 @@ public interface DepotItemMapperEx {
     BigDecimal buyOrSaleNumber(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("MId") Long MId,
+            @Param("meId") Long meId,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,
@@ -114,7 +114,7 @@ public interface DepotItemMapperEx {
     BigDecimal buyOrSalePrice(
             @Param("type") String type,
             @Param("subType") String subType,
-            @Param("MId") Long MId,
+            @Param("meId") Long meId,
             @Param("beginTime") String beginTime,
             @Param("endTime") String endTime,
             @Param("creatorArray") String[] creatorArray,

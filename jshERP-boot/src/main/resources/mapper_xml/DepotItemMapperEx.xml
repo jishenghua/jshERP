@@ -412,7 +412,7 @@
     </select>
 
     <select id="getListWithBuyOrSale" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
-        select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
+        select m.id MId, di.material_extend_id, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard,
         m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.brand, u.name unit_name
         from jsh_material m
@@ -475,7 +475,7 @@
             and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        group by m.id, me.bar_code, m.name, m.mfrs, m.model, m.standard,
+        group by m.id, di.material_extend_id, me.bar_code, m.name, m.mfrs, m.model, m.standard,
         m.other_field1,m.other_field2,m.other_field3, m.unit, u.basic_unit, m.color, m.brand, u.name
         order by m.id desc
         <if test="offset != null and rows != null">
@@ -484,7 +484,7 @@
     </select>
 
     <select id="getListWithBuyOrSaleCount" resultType="java.lang.Integer">
-        select count(1) from (select m.id
+        select count(1) from (select m.id, di.material_extend_id
         from jsh_material m
         left join jsh_depot_item di on di.material_id=m.id  and ifnull(m.delete_Flag,'0') !='1'
         left join jsh_material_extend me on me.id=di.material_extend_id  and ifnull(me.delete_Flag,'0') !='1'
@@ -544,7 +544,7 @@
             and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         and ifnull(di.delete_flag,'0') !='1'
-        group by m.id) cc
+        group by m.id, di.material_extend_id) cc
     </select>
 
     <select id="buyOrSaleNumber" resultType="java.math.BigDecimal">
@@ -553,7 +553,7 @@
         and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
-        and di.material_id =#{MId}
+        and di.material_extend_id =#{meId}
         <if test="creatorArray != null">
             and dh.creator in (
             <foreach collection="creatorArray" item="creator" separator=",">
@@ -590,8 +590,8 @@
         and dh.type=#{type} and dh.sub_type=#{subType}
         and dh.oper_time &gt;= #{beginTime}
         and dh.oper_time &lt;= #{endTime}
-        <if test="MId != null">
-            and di.material_id =#{MId}
+        <if test="meId != null">
+            and di.material_extend_id =#{meId}
         </if>
         <if test="creatorArray != null">
             and dh.creator in (

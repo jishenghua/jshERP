@@ -334,14 +334,14 @@ public class DepotItemService {
         return result;
     }
 
-    public BigDecimal buyOrSale(String type, String subType, Long MId, String beginTime, String endTime,
+    public BigDecimal buyOrSale(String type, String subType, Long meId, String beginTime, String endTime,
                                 String[] creatorArray, Long organId, String [] organArray, List<Long> depotList, Boolean forceFlag, String sumType) throws Exception{
         BigDecimal result= BigDecimal.ZERO;
         try{
             if (SUM_TYPE.equals(sumType)) {
-                result= depotItemMapperEx.buyOrSaleNumber(type, subType, MId, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, sumType);
+                result= depotItemMapperEx.buyOrSaleNumber(type, subType, meId, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, sumType);
             } else {
-                result= depotItemMapperEx.buyOrSalePrice(type, subType, MId, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, sumType);
+                result= depotItemMapperEx.buyOrSalePrice(type, subType, meId, beginTime, endTime, creatorArray, organId, organArray, depotList, forceFlag, sumType);
             }
         }catch(Exception e){
             JshException.readFail(logger, e);
