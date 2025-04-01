@@ -350,9 +350,9 @@
         },
         mpShort: {
           mfrs: {},
-          otherField1: {},
-          otherField2: {},
-          otherField3: {}
+          otherField1: { name: '扩展1' },
+          otherField2: { name: '扩展2' },
+          otherField3: { name: '扩展3' }
         },
         meTable: {
           loading: false,
