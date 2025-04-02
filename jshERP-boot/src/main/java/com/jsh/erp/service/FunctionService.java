@@ -242,27 +242,24 @@ public class FunctionService {
         Long roleId = 0L;
         String fc = "";
         User userInfo = userService.getCurrentUser();
-        //只返回非租户的map，如果是租户就返回空数组
-        if(!userInfo.getId().equals(userInfo.getTenantId())) {
-            //获取当前用户所有的角色id
-            List<UserBusiness> roleList = userBusinessService.getBasicData(userInfo.getTenantId().toString(), "UserRole");
-            if(roleList!=null && roleList.size()>0){
-                String value = roleList.get(0).getValue();
-                if(StringUtil.isNotEmpty(value)){
-                    String roleIdStr = value.replace("[", "").replace("]", "");
-                    roleId = Long.parseLong(roleIdStr);
-                }
+        //获取当前用户所有的角色id
+        List<UserBusiness> roleList = userBusinessService.getBasicData(userInfo.getTenantId().toString(), "UserRole");
+        if(roleList!=null && roleList.size()>0){
+            String value = roleList.get(0).getValue();
+            if(StringUtil.isNotEmpty(value)){
+                String roleIdStr = value.replace("[", "").replace("]", "");
+                roleId = Long.parseLong(roleIdStr);
             }
-            //当前用户所拥有的功能列表，格式如：[1][2][5]
-            List<UserBusiness> funList = userBusinessService.getBasicData(roleId.toString(), "RoleFunctions");
-            if(funList!=null && funList.size()>0){
-                fc = funList.get(0).getValue();
-            }
-            if(StringUtil.isNotEmpty(fc)) {
-                fc = fc.substring(1, fc.length() - 1);
-                fc = fc.replace("][",",");
-                funIdList = StringUtil.strToLongList(fc);
-            }
+        }
+        //当前用户所拥有的功能列表，格式如：[1][2][5]
+        List<UserBusiness> funList = userBusinessService.getBasicData(roleId.toString(), "RoleFunctions");
+        if(funList!=null && funList.size()>0){
+            fc = funList.get(0).getValue();
+        }
+        if(StringUtil.isNotEmpty(fc)) {
+            fc = fc.substring(1, fc.length() - 1);
+            fc = fc.replace("][",",");
+            funIdList = StringUtil.strToLongList(fc);
         }
         return funIdList;
     }

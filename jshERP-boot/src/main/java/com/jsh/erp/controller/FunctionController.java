@@ -170,11 +170,13 @@ public class FunctionController extends BaseController {
             if(list.size()>0) {
                 approvalFlag = list.get(0).getMultiLevelApprovalFlag();
             }
+
             List<Function> dataList = functionService.getRoleFunction(pNumber);
             if (dataList.size() != 0) {
+                User userInfo = userService.getCurrentUser();
                 //获取当前用户所属的租户所拥有的功能id的map
                 Map<Long, Long> funIdMap = functionService.getCurrentTenantFunIdMap();
-                dataArray = getMenuByFunction(dataList, fc, approvalFlag, funIdMap);
+                dataArray = getMenuByFunction(dataList, fc, approvalFlag, funIdMap, userInfo);
                 //增加首页菜单项
                 JSONObject homeItem = new JSONObject();
                 homeItem.put("id", 0);
@@ -190,11 +192,11 @@ public class FunctionController extends BaseController {
         return dataArray;
     }
 
-    public JSONArray getMenuByFunction(List<Function> dataList, String fc, String approvalFlag, Map<Long, Long> funIdMap) throws Exception {
+    public JSONArray getMenuByFunction(List<Function> dataList, String fc, String approvalFlag, Map<Long, Long> funIdMap, User userInfo) throws Exception {
         JSONArray dataArray = new JSONArray();
         for (Function function : dataList) {
-            //如果funIdMap有值（说明不是租户）需要校验，防止分配下级用户的功能权限，大于租户的权限
-            if(funIdMap == null || funIdMap.get(function.getId())!=null) {
+            //如果不是超管也不是租户就需要校验，防止分配下级用户的功能权限，大于租户的权限
+            if("admin".equals(userInfo.getLoginName()) || userInfo.getId().equals(userInfo.getTenantId()) || funIdMap.get(function.getId())!=null) {
                 //如果关闭多级审核，遇到任务审核菜单直接跳过
                 if("0".equals(approvalFlag) && "/workflow".equals(function.getUrl())) {
                     continue;
@@ -207,7 +209,7 @@ public class FunctionController extends BaseController {
                 item.put("url", function.getUrl());
                 item.put("component", function.getComponent());
                 if (newList.size()>0) {
-                    JSONArray childrenArr = getMenuByFunction(newList, fc, approvalFlag, funIdMap);
+                    JSONArray childrenArr = getMenuByFunction(newList, fc, approvalFlag, funIdMap, userInfo);
                     if(childrenArr.size()>0) {
                         item.put("children", childrenArr);
                         dataArray.add(item);
