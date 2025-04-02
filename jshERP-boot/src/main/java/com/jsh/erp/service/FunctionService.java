@@ -2,10 +2,7 @@ package com.jsh.erp.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
-import com.jsh.erp.datasource.entities.Function;
-import com.jsh.erp.datasource.entities.FunctionEx;
-import com.jsh.erp.datasource.entities.FunctionExample;
-import com.jsh.erp.datasource.entities.User;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.FunctionMapper;
 import com.jsh.erp.datasource.mappers.FunctionMapperEx;
 import com.jsh.erp.exception.JshException;
@@ -20,9 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class FunctionService {
@@ -33,10 +28,16 @@ public class FunctionService {
 
     @Resource
     private FunctionMapperEx functionMapperEx;
+
     @Resource
     private UserService userService;
+
+    @Resource
+    private UserBusinessService userBusinessService;
+
     @Resource
     private SystemConfigService systemConfigService;
+
     @Resource
     private LogService logService;
 
@@ -193,7 +194,7 @@ public class FunctionService {
         return list;
     }
 
-    public List<Function> findRoleFunction(String pnumber)throws Exception{
+    public List<Function> findRoleFunction(String pnumber, List<Long> funIdList)throws Exception{
         List<Function> list=null;
         try{
             Boolean multiLevelApprovalFlag = systemConfigService.getMultiLevelApprovalFlag();
@@ -205,6 +206,9 @@ public class FunctionService {
                 if(!multiLevelApprovalFlag) {
                     criteria.andUrlNotEqualTo("/workflow");
                 }
+            }
+            if(funIdList!=null && funIdList.size()>0) {
+                criteria.andIdIn(funIdList);
             }
             example.setOrderByClause("Sort");
             list =functionsMapper.selectByExample(example);
@@ -227,5 +231,104 @@ public class FunctionService {
             JshException.readFail(logger, e);
         }
         return list;
+    }
+
+    /**
+     * 获取当前用户所属的租户所拥有的功能id列表
+     * @return
+     */
+    public List<Long> getCurrentTenantFunIdList() throws Exception {
+        List<Long> funIdList = new ArrayList<>();
+        Long roleId = 0L;
+        String fc = "";
+        User userInfo = userService.getCurrentUser();
+        //只返回非租户的map，如果是租户就返回空数组
+        if(!userInfo.getId().equals(userInfo.getTenantId())) {
+            //获取当前用户所有的角色id
+            List<UserBusiness> roleList = userBusinessService.getBasicData(userInfo.getTenantId().toString(), "UserRole");
+            if(roleList!=null && roleList.size()>0){
+                String value = roleList.get(0).getValue();
+                if(StringUtil.isNotEmpty(value)){
+                    String roleIdStr = value.replace("[", "").replace("]", "");
+                    roleId = Long.parseLong(roleIdStr);
+                }
+            }
+            //当前用户所拥有的功能列表，格式如：[1][2][5]
+            List<UserBusiness> funList = userBusinessService.getBasicData(roleId.toString(), "RoleFunctions");
+            if(funList!=null && funList.size()>0){
+                fc = funList.get(0).getValue();
+            }
+            if(StringUtil.isNotEmpty(fc)) {
+                fc = fc.substring(1, fc.length() - 1);
+                fc = fc.replace("][",",");
+                funIdList = StringUtil.strToLongList(fc);
+            }
+        }
+        return funIdList;
+    }
+
+    /**
+     * 获取当前用户所属的租户所拥有的功能id的map
+     * @return
+     */
+    public Map<Long, Long> getCurrentTenantFunIdMap() throws Exception {
+        Map<Long, Long> funIdMap = new HashMap<>();
+        List<Long> list = getCurrentTenantFunIdList();
+        if(list.size()>0) {
+            for (Long funId : list) {
+                funIdMap.put(funId, funId);
+            }
+            return funIdMap;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 获取当前用户所拥有的功能id列表
+     * @return
+     */
+    public List<Long> getCurrentUserFunIdList() throws Exception {
+        List<Long> funIdList = new ArrayList<>();
+        Long roleId = 0L;
+        String fc = "";
+        User userInfo = userService.getCurrentUser();
+        //获取当前用户所有的角色id
+        List<UserBusiness> roleList = userBusinessService.getBasicData(userInfo.getId().toString(), "UserRole");
+        if(roleList!=null && roleList.size()>0){
+            String value = roleList.get(0).getValue();
+            if(StringUtil.isNotEmpty(value)){
+                String roleIdStr = value.replace("[", "").replace("]", "");
+                roleId = Long.parseLong(roleIdStr);
+            }
+        }
+        //当前用户所拥有的功能列表，格式如：[1][2][5]
+        List<UserBusiness> funList = userBusinessService.getBasicData(roleId.toString(), "RoleFunctions");
+        if(funList!=null && funList.size()>0){
+            fc = funList.get(0).getValue();
+        }
+        if(StringUtil.isNotEmpty(fc)) {
+            fc = fc.substring(1, fc.length() - 1);
+            fc = fc.replace("][",",");
+            funIdList = StringUtil.strToLongList(fc);
+        }
+        return funIdList;
+    }
+
+    /**
+     * 获取当前用户所拥有的功能id的map
+     * @return
+     */
+    public Map<Long, Long> getCurrentUserFunIdMap() throws Exception {
+        Map<Long, Long> funIdMap = new HashMap<>();
+        List<Long> list = getCurrentUserFunIdList();
+        if(list.size()>0) {
+            for(Long funId: list) {
+                funIdMap.put(funId, funId);
+            }
+            return funIdMap;
+        } else {
+            return null;
+        }
     }
 }
