@@ -120,17 +120,17 @@
             <a-row class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">
-                  <a-input v-decorator.trim="[ 'otherField1' ]" />
+                  <a-input :placeholder="'请输入'+ mpShort.otherField1.name" v-decorator.trim="[ 'otherField1' ]" />
                 </a-form-item>
               </a-col>
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField2.name">
-                  <a-input v-decorator.trim="[ 'otherField2' ]" />
+                  <a-input :placeholder="'请输入'+ mpShort.otherField2.name" v-decorator.trim="[ 'otherField2' ]" />
                 </a-form-item>
               </a-col>
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField3.name">
-                  <a-input v-decorator.trim="[ 'otherField3' ]" />
+                  <a-input :placeholder="'请输入'+ mpShort.otherField3.name" v-decorator.trim="[ 'otherField3' ]" />
                 </a-form-item>
               </a-col>
             </a-row>
