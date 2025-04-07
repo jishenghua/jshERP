@@ -174,9 +174,7 @@
             <span slot="action" slot-scope="text, record">
               <a @click="handleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
-              <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-                <a>删除</a>
-              </a-popconfirm>
+              <a v-if="btnEnableList.indexOf(1)>-1" @click="handleCopyAdd(record)">复制</a>
             </span>
             <template slot="customPic" slot-scope="text, record">
               <a-popover placement="right" trigger="click">
@@ -480,13 +478,26 @@
           this.$refs.batchSetInfoModalForm.title = "批量编辑";
         }
       },
+      handleAdd: function () {
+        this.$refs.modalForm.action = "add";
+        this.$refs.modalForm.add();
+        this.$refs.modalForm.title = "新增";
+        this.$refs.modalForm.disableSubmit = false;
+      },
       handleEdit: function (record) {
+        this.$refs.modalForm.action = "edit";
         this.$refs.modalForm.edit(record);
         this.$refs.modalForm.title = "编辑";
         this.$refs.modalForm.disableSubmit = false;
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.showOkFlag = false
         }
+      },
+      handleCopyAdd(record) {
+        this.$refs.modalForm.action = "copyAdd";
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "复制新增";
+        this.$refs.modalForm.disableSubmit = false;
       },
       getImgUrl(imgName, type) {
         if(imgName && imgName.split(',')) {

@@ -288,9 +288,16 @@
   import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import { checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList,
-    getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList, changeNameToPinYin } from '@/api/api'
-  import { removeByVal, autoJumpNextInput, handleIntroJs } from '@/utils/util'
+  import {
+    changeNameToPinYin,
+    checkMaterial,
+    checkMaterialBarCode,
+    getMaterialAttributeNameList,
+    getMaterialAttributeValueListById,
+    getMaxBarCode,
+    queryMaterialCategoryTreeList
+  } from '@/api/api'
+  import { autoJumpNextInput, handleIntroJs, removeByVal } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -316,6 +323,7 @@
         width: '1300px',
         visible: false,
         modalStyle: '',
+        action: '',
         categoryTree: [],
         unitList: [],
         depotList: [],
@@ -495,9 +503,11 @@
         if(JSON.stringify(record) === '{}') {
           this.fileList = []
         } else {
-          setTimeout(() => {
-            this.fileList = record.imgName
-          }, 5)
+          if(this.action === 'edit') {
+            setTimeout(() => {
+              this.fileList = record.imgName
+            }, 5)
+          }
         }
         this.$nextTick(() => {
           this.form.setFieldsValue(pick(this.model, 'name', 'standard', 'unit', 'unitId', 'model', 'color', 'brand', 'mnemonic',
@@ -545,6 +555,21 @@
             }
           }
           tab.dataSource = res.data.rows || []
+          //复制新增商品-初始化条码信息
+          if(this.action === 'copyAdd') {
+            getMaxBarCode({}).then((res)=> {
+              if (res && res.code === 200) {
+                let maxBarCode = res.data.barCode - 0
+                let meTableData = []
+                for (let i = 0; i < tab.dataSource.length; i++) {
+                  let meInfo = tab.dataSource[i]
+                  meInfo.barCode = maxBarCode + i + 1
+                  meTableData.push(meInfo)
+                }
+                tab.dataSource = meTableData
+              }
+            })
+          }
         }).finally(() => {
           tab.loading = false
         })
@@ -609,6 +634,13 @@
       },
       /** 发起新增或修改的请求 */
       requestAddOrEdit(formData) {
+        //复制新增商品-初始化id和租户id
+        if(this.action === 'copyAdd') {
+          this.model.id = ''
+          this.model.tenantId = ''
+          formData.id = ''
+          formData.tenantId = ''
+        }
         if(formData.meList.length === 0) {
           this.$message.warning('抱歉，请输入条码信息！');
           return;
