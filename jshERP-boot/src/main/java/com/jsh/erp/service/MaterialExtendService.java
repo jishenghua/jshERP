@@ -107,7 +107,9 @@ public class MaterialExtendService {
                     bf.append(",");
                 }
             }
-            this.batchDeleteMaterialExtendByIds(bf.toString(), request);
+            if(StringUtil.isNotEmpty(bf.toString())) {
+                this.batchDeleteMaterialExtendByIds(bf.toString(), request);
+            }
         }
         if (null != insertedJson) {
             for (int i = 0; i < insertedJson.size(); i++) {
