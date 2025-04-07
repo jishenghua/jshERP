@@ -73,6 +73,8 @@ public class MaterialService {
     @Value(value="${file.uploadType}")
     private Long fileUploadType;
 
+    private static final Integer EXPORT_LIMIT = 10000;
+
     public Material getMaterial(long id)throws Exception {
         Material result=null;
         try{
@@ -472,6 +474,10 @@ public class MaterialService {
         //查询商品主条码相关列表
         List<MaterialVo4Unit> dataList = materialMapperEx.exportExcel(materialParam, color, materialOther, weight, expiryNum, enabled, enableSerialNumber,
                 enableBatchNumber, remark, idList);
+        if (null != dataList && dataList.size() > EXPORT_LIMIT) {
+            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXPORT_LIMIT_CODE,
+                    ExceptionConstants.MATERIAL_EXPORT_LIMIT_MSG);
+        }
         //查询商品副条码相关列表
         Map<Long, MaterialExtend> otherMaterialMap = new HashMap<>();
         List<MaterialExtend> otherDataList = materialMapperEx.getOtherMaterialList();
