@@ -598,6 +598,41 @@ public class DepotHeadService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchForceClose(String ids, HttpServletRequest request) throws Exception {
+        int result = 0;
+        StringBuilder billNoStr = new StringBuilder();
+        List<Long> idList = StringUtil.strToLongList(ids);
+        for(Long id: idList) {
+            DepotHead depotHead = getDepotHead(id);
+            //状态里面不包含部分不能强制结单
+            if(!"3".equals(depotHead.getStatus())) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_FORCE_CLOSE_FAILED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_FORCE_CLOSE_FAILED_MSG, depotHead.getNumber()));
+            } else {
+                billNoStr.append(depotHead.getNumber()).append(" ");
+            }
+        }
+        if(idList.size()>0) {
+            DepotHead depotHead = new DepotHead();
+            //完成状态
+            depotHead.setStatus("2");
+            //给备注后面追加：强制结单
+            String remark = StringUtil.isNotEmpty(depotHead.getRemark())? depotHead.getRemark() + "[强制结单]": "[强制结单]";
+            depotHead.setRemark(remark);
+            DepotHeadExample example = new DepotHeadExample();
+            example.createCriteria().andIdIn(idList);
+            result = depotHeadMapper.updateByExampleSelective(depotHead, example);
+            //记录日志
+            String billNos = billNoStr.toString();
+            if(StringUtil.isNotEmpty(billNos)) {
+                logService.insertLog("单据", "强制结单：" + billNos,
+                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            }
+        }
+        return result;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(String status, String depotHeadIDs)throws Exception {
         int result = 0;
         List<Long> dhIds = new ArrayList<>();

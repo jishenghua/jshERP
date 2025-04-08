@@ -115,6 +115,19 @@ public class DepotHeadController extends BaseController {
         return returnStr(objectMap, delete);
     }
 
+    @PostMapping(value = "/forceCloseBatch")
+    @ApiOperation(value = "强制结单")
+    public String forceCloseBatch(@RequestBody JSONObject jsonObject, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String ids = jsonObject.getString("ids");
+        int res = depotHeadService.batchForceClose(ids, request);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
     /**
      * 批量设置状态-审核或者反审核
      * @param jsonObject
