@@ -128,6 +128,19 @@ public class DepotHeadController extends BaseController {
         }
     }
 
+    @PostMapping(value = "/forceClosePurchaseBatch")
+    @ApiOperation(value = "强制结单-以销定购")
+    public String forceClosePurchaseBatch(@RequestBody JSONObject jsonObject, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String ids = jsonObject.getString("ids");
+        int res = depotHeadService.batchForceClosePurchase(ids, request);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
     /**
      * 批量设置状态-审核或者反审核
      * @param jsonObject
