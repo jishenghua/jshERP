@@ -108,6 +108,7 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
+          <a-button v-if="inOutManageFlag && btnEnableList.indexOf(1)>-1" icon="issues-close" @click="batchForceClose">强制结单</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
           <a-button v-if="isShowExcel && btnEnableList.indexOf(3)>-1" icon="download" @click="handleExport">导出</a-button>
@@ -218,6 +219,8 @@
           remark: ""
         },
         prefixNo: 'XSTH',
+        //出入库管理开关，适合独立仓管场景
+        inOutManageFlag: false,
         labelCol: {
           span: 5
         },
@@ -280,6 +283,7 @@
           list: "/depotHead/list",
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
+          forceCloseBatch: "/depotHead/forceCloseBatch",
           batchSetStatusUrl: "/depotHead/batchSetStatus"
         }
       }
