@@ -231,37 +231,6 @@ export const JeecgListMixin = {
         });
       }
     },
-    batchForceClose: function () {
-      if(!this.url.forceCloseBatch){
-        this.$message.error("请设置url.forceCloseBatch属性!")
-        return
-      }
-      if (this.selectedRowKeys.length <= 0) {
-        this.$message.warning('请选择一条记录！')
-      } else {
-        let ids = "";
-        for (let a = 0; a < this.selectedRowKeys.length; a++) {
-          ids += this.selectedRowKeys[a] + ","
-        }
-        let that = this
-        this.$confirm({
-          title: "确认强制结单",
-          content: "是否强制结单选中数据?",
-          onOk: function () {
-            that.loading = true
-            postAction(that.url.forceCloseBatch, {ids: ids}).then((res) => {
-              if(res.code === 200){
-                that.loadData()
-              } else {
-                that.$message.warning(res.data.message)
-              }
-            }).finally(() => {
-              that.loading = false
-            });
-          }
-        });
-      }
-    },
     handleDelete: function (id) {
       if(!this.url.delete){
         this.$message.error("请设置url.delete属性!")

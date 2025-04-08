@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {getAction } from '@/api/manage'
+import { getAction, postAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
 import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount, waitBillCount,
   getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
@@ -106,6 +106,68 @@ export const BillListMixin = {
         this.$refs.modalDetail.isCanBackCheck = false
       }
       this.handleDetail(record, type, prefixNo);
+    },
+    batchForceClose: function () {
+      if(!this.url.forceCloseBatch){
+        this.$message.error("请设置url.forceCloseBatch属性!")
+        return
+      }
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warning('请选择一条记录！')
+      } else {
+        let ids = "";
+        for (let a = 0; a < this.selectedRowKeys.length; a++) {
+          ids += this.selectedRowKeys[a] + ","
+        }
+        let that = this
+        this.$confirm({
+          title: "确认强制结单",
+          content: "是否强制结单选中数据?",
+          onOk: function () {
+            that.loading = true
+            postAction(that.url.forceCloseBatch, {ids: ids}).then((res) => {
+              if(res.code === 200){
+                that.loadData()
+              } else {
+                that.$message.warning(res.data.message)
+              }
+            }).finally(() => {
+              that.loading = false
+            });
+          }
+        });
+      }
+    },
+    batchForceClosePurchase: function () {
+      if(!this.url.forceClosePurchaseBatch){
+        this.$message.error("请设置url.forceClosePurchaseBatch属性!")
+        return
+      }
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warning('请选择一条记录！')
+      } else {
+        let ids = "";
+        for (let a = 0; a < this.selectedRowKeys.length; a++) {
+          ids += this.selectedRowKeys[a] + ","
+        }
+        let that = this
+        this.$confirm({
+          title: "确认强制结单(以销定购)",
+          content: "是否强制结单选中数据?",
+          onOk: function () {
+            that.loading = true
+            postAction(that.url.forceClosePurchaseBatch, {ids: ids}).then((res) => {
+              if(res.code === 200){
+                that.loadData()
+              } else {
+                that.$message.warning(res.data.message)
+              }
+            }).finally(() => {
+              that.loading = false
+            });
+          }
+        });
+      }
     },
     handleApprove(record) {
       this.$refs.modalForm.action = "approve";
