@@ -1651,3 +1651,10 @@ alter table jsh_material_property add tenant_id bigint(20) DEFAULT NULL COMMENT 
 -- 给jsh_account_head表的文件字段增加长度
 -- --------------------------------------------------------
 alter table jsh_account_head change file_name file_name varchar(1000) DEFAULT NULL COMMENT '附件名称';
+
+-- --------------------------------------------------------
+-- 时间 2025年4月9日
+-- by jishenghua
+-- 给商品表增加多属性字段，里面存多属性的数组
+-- --------------------------------------------------------
+alter table jsh_material add attribute varchar(1000) DEFAULT NULL COMMENT '属性信息' after position;

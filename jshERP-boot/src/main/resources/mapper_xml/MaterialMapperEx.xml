@@ -190,6 +190,9 @@
             <if test="position != null">
                 position,
             </if>
+            <if test="attribute != null">
+                attribute,
+            </if>
             <if test="tenantId != null">
                 tenant_id,
             </if>
@@ -263,6 +266,9 @@
             </if>
             <if test="position != null">
                 #{position,jdbcType=VARCHAR},
+            </if>
+            <if test="attribute != null">
+                #{attribute,jdbcType=VARCHAR},
             </if>
             <if test="tenantId != null">
                 #{tenantId,jdbcType=BIGINT},

@@ -154,6 +154,8 @@ public class MaterialService {
     public int insertMaterial(JSONObject obj, HttpServletRequest request)throws Exception {
         Material m = JSONObject.parseObject(obj.toJSONString(), Material.class);
         m.setEnabled(true);
+        //构造多属性数组字符串
+        m.setAttribute(parseAttributeBySku(obj));
         try{
             materialMapperEx.insertSelectiveEx(m);
             Long mId = m.getId();
@@ -196,6 +198,8 @@ public class MaterialService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateMaterial(JSONObject obj, HttpServletRequest request) throws Exception{
         Material material = JSONObject.parseObject(obj.toJSONString(), Material.class);
+        //构造多属性数组字符串
+        material.setAttribute(parseAttributeBySku(obj));
         try{
             materialMapper.updateByPrimaryKeySelective(material);
             if(material.getUnitId() == null) {
@@ -1461,5 +1465,27 @@ public class MaterialService {
 
     public MaterialExtend getMaterialExtendBySerialNumber(String serialNumber) {
         return materialMapperEx.getMaterialExtendBySerialNumber(serialNumber);
+    }
+
+    /**
+     * 构造多属性数组字符串
+     * @param obj
+     * @return
+     */
+    public String parseAttributeBySku(JSONObject obj) {
+        if(obj!=null) {
+            JSONObject attributeObj = new JSONObject();
+            JSONArray manySku = obj.getJSONArray("manySku");
+            JSONArray skuOne = obj.getJSONArray("skuOne");
+            JSONArray skuTwo = obj.getJSONArray("skuTwo");
+            JSONArray skuThree = obj.getJSONArray("skuThree");
+            attributeObj.put("manySku", manySku);
+            attributeObj.put("skuOne", skuOne);
+            attributeObj.put("skuTwo", skuTwo);
+            attributeObj.put("skuThree", skuThree);
+            return attributeObj.toJSONString();
+        } else {
+            return null;
+        }
     }
 }

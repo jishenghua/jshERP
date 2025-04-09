@@ -47,6 +47,8 @@ public class Material {
 
     private String position;
 
+    private String attribute;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -225,6 +227,14 @@ public class Material {
 
     public void setPosition(String position) {
         this.position = position == null ? null : position.trim();
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(String attribute) {
+        this.attribute = attribute == null ? null : attribute.trim();
     }
 
     public Long getTenantId() {

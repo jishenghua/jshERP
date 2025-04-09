@@ -23,9 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -95,6 +93,21 @@ public class MaterialExtendService {
                         insertedJson.add(tempJson);
                     } else {
                         updatedJson.add(tempJson);
+                    }
+                }
+                //针对多属性商品要考虑到有条码被删的情况，需要和原来的条码明细进行对比
+                //1.先查询原来的条码列表
+                List<MaterialExtendVo4List> meList = materialExtendMapperEx.getDetailList(materialId);
+                //2.构造新的条码列表map
+                Map<String, String> barCodeMap = new HashMap<>();
+                for (int i = 0; i < meArr.size(); i++) {
+                    JSONObject tempJson = meArr.getJSONObject(i);
+                    barCodeMap.put(tempJson.getString("barCode"),tempJson.getString("barCode"));
+                }
+                //3.如果老的条码在新的里面不存在，则丢入删除队列
+                for(MaterialExtendVo4List me: meList) {
+                    if(barCodeMap.get(me.getBarCode()) == null) {
+                        deletedJson.add(me.getId());
                     }
                 }
             }
