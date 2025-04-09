@@ -374,7 +374,7 @@ CREATE TABLE `jsh_material` (
   `enable_serial_number` varchar(1) DEFAULT '0' COMMENT '是否开启序列号，0否，1是',
   `enable_batch_number` varchar(1) DEFAULT '0' COMMENT '是否开启批号，0否，1是',
   `position` varchar(100) DEFAULT NULL COMMENT '仓位货架',
-  `attribute` varchar(1000) DEFAULT NULL COMMENT '属性信息',
+  `attribute` varchar(1000) DEFAULT NULL COMMENT '多属性信息',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`),
