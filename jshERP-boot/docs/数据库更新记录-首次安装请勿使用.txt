@@ -1657,4 +1657,4 @@ alter table jsh_account_head change file_name file_name varchar(1000) DEFAULT NU
 -- by jishenghua
 -- 给商品表增加多属性字段，里面存多属性的数组
 -- --------------------------------------------------------
-alter table jsh_material add attribute varchar(1000) DEFAULT NULL COMMENT '属性信息' after position;
+alter table jsh_material add attribute varchar(1000) DEFAULT NULL COMMENT '多属性信息' after position;
