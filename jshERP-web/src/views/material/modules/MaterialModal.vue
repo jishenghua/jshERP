@@ -559,8 +559,6 @@
             this.attributeStatus = false
           }
           let params = { materialId: this.model.id }
-          //编辑商品的时候多属性字段可以修改
-          this.meTable.columns[2].readonly = false
           this.requestMeTableData(this.url.materialsExtendList, params, this.meTable)
           this.requestDepotTableData(this.url.depotWithStock, { mId: this.model.id }, this.depotTable)
         } else {
