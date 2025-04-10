@@ -218,7 +218,7 @@
                 :height="300"
                 :minWidth="1000"
                 :maxHeight="300"
-                :rowNumber="false"
+                :rowNumber="true"
                 :rowSelection="true"
                 :actionButton="true"
                 @valueChange="onValueChange"
