@@ -28,7 +28,8 @@
         </a-form>
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="属性值">
-            <a-textarea :rows="2" placeholder="请输入属性值（用竖线隔开，比如：红色|橙色|黄色|绿色）" v-decorator.trim="[ 'attributeValue', validatorRules.attributeValue]" />
+            <a-textarea :rows="5" placeholder="请输入属性值" v-decorator.trim="[ 'attributeValue', validatorRules.attributeValue]" />
+            注意：属性值请用竖线隔开，比如：红色|橙色|黄色|绿色
           </a-form-item>
         </a-form>
       </a-spin>
