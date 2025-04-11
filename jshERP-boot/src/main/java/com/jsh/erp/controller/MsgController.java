@@ -57,11 +57,7 @@ public class MsgController extends BaseController {
                                  HttpServletRequest request)throws Exception {
         String name = StringUtil.getInfo(search, "name");
         List<MsgEx> list = msgService.select(name);
-        if(list!=null && list.size()>0) {
-            return getDataTable(list);
-        } else {
-            return null;
-        }
+        return getDataTable(list);
     }
 
     @PostMapping(value = "/add")
