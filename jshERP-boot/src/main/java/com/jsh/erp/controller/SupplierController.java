@@ -69,9 +69,10 @@ public class SupplierController extends BaseController {
                                  HttpServletRequest request)throws Exception {
         String supplier = StringUtil.getInfo(search, "supplier");
         String type = StringUtil.getInfo(search, "type");
+        String contacts = StringUtil.getInfo(search, "contacts");
         String phonenum = StringUtil.getInfo(search, "phonenum");
         String telephone = StringUtil.getInfo(search, "telephone");
-        List<Supplier> list = supplierService.select(supplier, type, phonenum, telephone);
+        List<Supplier> list = supplierService.select(supplier, type, contacts, phonenum, telephone);
         return getDataTable(list);
     }
 

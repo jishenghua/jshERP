@@ -12,6 +12,10 @@
         <if test="type != null and type !=''">
             and type=#{type}
         </if>
+        <if test="contacts != null and contacts !=''">
+            <bind name="bindContacts" value="'%'+contacts+'%'"/>
+            and contacts like #{bindContacts}
+        </if>
         <if test="phonenum != null and phonenum !=''">
             <bind name="bindPhoneNum" value="'%'+phonenum+'%'"/>
             and phone_num like #{bindPhoneNum}
