@@ -1107,10 +1107,18 @@ public class DepotItemService {
                             currentUnitPrice = item.getUnitPrice();
                         }
                     } else {
-                        currentNumber = currentNumber.add(basicNumber);
                         //数量*当前的成本单价
+                        currentNumber = currentNumber.add(basicNumber);
                         currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
                     }
+                }
+                //特殊情况：1-组装单 2-拆卸单 3-盘点复盘
+                if(BusinessConstants.SUB_TYPE_ASSEMBLE.equals(item.getSubType())||
+                        BusinessConstants.SUB_TYPE_DISASSEMBLE.equals(item.getSubType())||
+                        BusinessConstants.SUB_TYPE_REPLAY.equals(item.getSubType())) {
+                    //数量*当前的成本单价
+                    currentNumber = currentNumber.add(basicNumber);
+                    currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
                 }
                 //防止单价金额溢出
                 if(currentUnitPrice.compareTo(BigDecimal.valueOf(100000000))>0 || currentUnitPrice.compareTo(BigDecimal.valueOf(-100000000))<0) {
