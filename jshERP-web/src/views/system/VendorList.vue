@@ -13,22 +13,35 @@
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
+                <a-form-item label="联系人" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-input placeholder="请输入联系人查询" v-model="queryParam.contacts"></a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
                 <a-form-item label="手机号码" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-input placeholder="请输入手机号码查询" v-model="queryParam.telephone"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :md="6" :sm="24">
-                <a-form-item label="联系电话" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-input placeholder="请输入联系电话查询" v-model="queryParam.phonenum"></a-input>
-                </a-form-item>
-              </a-col>
-              <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-                <a-col :md="6" :sm="24">
+                <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
                   <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-                </a-col>
-              </span>
+                  <a @click="handleToggleSearch" style="margin-left: 8px">
+                    {{ toggleSearchStatus ? '收起' : '展开' }}
+                    <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                  </a>
+                </span>
+              </a-col>
             </a-row>
+            <template v-if="toggleSearchStatus">
+              <a-row :gutter="24">
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="联系电话" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-input placeholder="请输入联系电话查询" v-model="queryParam.phonenum"></a-input>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </template>
           </a-form>
         </div>
         <!-- 操作按钮区域 -->
@@ -104,6 +117,7 @@
         queryParam: {
           supplier:'',
           type:'供应商',
+          contacts:'',
           telephone:'',
           phonenum:''
         },
