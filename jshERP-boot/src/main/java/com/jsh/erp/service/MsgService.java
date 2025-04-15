@@ -88,6 +88,8 @@ public class MsgService {
                         }
                     }
                 }
+            } else {
+                list = new ArrayList<>();
             }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
