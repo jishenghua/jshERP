@@ -268,10 +268,39 @@ public class DepotService {
         return id;
     }
 
+    /**
+     * 根据单个仓库查询
+     * @param depotId
+     * @return
+     * @throws Exception
+     */
     public List<Long> parseDepotList(Long depotId) throws Exception {
         List<Long> depotList = new ArrayList<>();
         if(depotId !=null) {
             depotList.add(depotId);
+        } else {
+            //未选择仓库时默认为当前用户有权限的仓库
+            JSONArray depotArr = findDepotByCurrentUser();
+            for(Object obj: depotArr) {
+                JSONObject object = JSONObject.parseObject(obj.toString());
+                depotList.add(object.getLong("id"));
+            }
+        }
+        return depotList;
+    }
+
+    /**
+     * 根据多个仓库查询
+     * @param depotIdArr
+     * @return
+     * @throws Exception
+     */
+    public List<Long> parseDepotListByArr(String[] depotIdArr) throws Exception {
+        List<Long> depotList = new ArrayList<>();
+        if(depotIdArr !=null) {
+            for (int i = 0; i < depotIdArr.length; i++) {
+                depotList.add(Long.parseLong(depotIdArr[i]));
+            }
         } else {
             //未选择仓库时默认为当前用户有权限的仓库
             JSONArray depotArr = findDepotByCurrentUser();

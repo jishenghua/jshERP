@@ -169,11 +169,11 @@ public class DepotItemService {
 
     public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(String depotIds, Boolean forceFlag, Boolean inOutManageFlag, String sku, String batchNumber,
                                                                                       String number, String beginTime, String endTime, Long mId, Integer offset, Integer rows)throws Exception {
-        Long depotId = null;
+        String[] depotIdArrOld = null;
         if(StringUtil.isNotEmpty(depotIds)) {
-            depotId = Long.parseLong(depotIds);
+            depotIdArrOld = depotIds.split(",");
         }
-        List<Long> depotList = depotService.parseDepotList(depotId);
+        List<Long> depotList = depotService.parseDepotListByArr(depotIdArrOld);
         Long[] depotIdArray = StringUtil.listToLongArray(depotList);
         List<DepotItemVo4DetailByTypeAndMId> list =null;
         try{
@@ -186,11 +186,11 @@ public class DepotItemService {
 
     public Long findDetailByDepotIdsAndMaterialIdCount(String depotIds, Boolean forceFlag, Boolean inOutManageFlag, String sku, String batchNumber,
                                                        String number, String beginTime, String endTime, Long mId)throws Exception {
-        Long depotId = null;
+        String[] depotIdArrOld = null;
         if(StringUtil.isNotEmpty(depotIds)) {
-            depotId = Long.parseLong(depotIds);
+            depotIdArrOld = depotIds.split(",");
         }
-        List<Long> depotList = depotService.parseDepotList(depotId);
+        List<Long> depotList = depotService.parseDepotListByArr(depotIdArrOld);
         Long[] depotIdArray = StringUtil.listToLongArray(depotList);
         Long result =null;
         try{
