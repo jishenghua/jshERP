@@ -689,7 +689,7 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id, m.name, m.standard, m.model, m.color, m.brand, m.mfrs, m.position,
-        me.commodity_unit, mc.name, me.bar_code, me.purchase_decimal, mcs.current_unit_price
+        me.commodity_unit, mc.name, me.bar_code, ifnull(me.purchase_decimal,0), ifnull(mcs.current_unit_price,0)
         <if test="zeroStock == 0">
             having ifnull(sum(mcs.current_number),0)!=0
         </if>
