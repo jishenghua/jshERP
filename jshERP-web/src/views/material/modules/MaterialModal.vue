@@ -17,7 +17,7 @@
     </template>
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-        <a-tabs default-active-key="1" size="small">
+        <a-tabs v-model:activeKey="activeKey" size="small">
           <a-tab-pane key="1" tab="基本信息" id="materialHeadModal" forceRender>
             <a-row class="form-row" :gutter="24">
               <a-col :md="6" :sm="24">
@@ -329,6 +329,7 @@
         visible: false,
         modalStyle: '',
         action: '',
+        activeKey: '1',
         categoryTree: [],
         unitList: [],
         depotList: [],
