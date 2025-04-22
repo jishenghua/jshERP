@@ -533,32 +533,35 @@ export const BillModalMixin = {
           }
           break;
         case "batchNumber":
-          batchNumber = value
-          let depotItemId = ''
-          if(this.model.id) {
-            //只有在保存之后的编辑页面下才获取明细id
-            let rowId = row.id
-            if(rowId.length<=19) {
-              depotItemId = rowId-0
-            }
-          }
-          getBatchNumberList({name:'', depotItemId: depotItemId, depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
-            if (res && res.code === 200) {
-              if(res.data && res.data.rows) {
-                let info = res.data.rows[0]
-                operNumber = info.totalNum
-                taxRate = row.taxRate-0 //税率
-                unitPrice = row.unitPrice-0 //单价
-                allPrice = (unitPrice*operNumber).toFixed(2)-0
-                taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
-                taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
-                target.setValues([{rowKey: row.id, values: {expirationDate: info.expirationDateStr, operNumber: operNumber,
-                    allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
-                target.recalcAllStatisticsColumns()
-                that.autoChangePrice(target)
+          //只针对销售出库、采购退货、其它出库
+          if(this.prefixNo === 'XSCK' || this.prefixNo === 'CGTH' || this.prefixNo === 'QTCK') {
+            batchNumber = value
+            let depotItemId = ''
+            if(this.model.id) {
+              //只有在保存之后的编辑页面下才获取明细id
+              let rowId = row.id
+              if(rowId.length<=19) {
+                depotItemId = rowId-0
               }
             }
-          })
+            getBatchNumberList({name:'', depotItemId: depotItemId, depotId: row.depotId, barCode: row.barCode, batchNumber: batchNumber}).then((res) => {
+              if (res && res.code === 200) {
+                if(res.data && res.data.rows) {
+                  let info = res.data.rows[0]
+                  operNumber = info.totalNum
+                  taxRate = row.taxRate-0 //税率
+                  unitPrice = row.unitPrice-0 //单价
+                  allPrice = (unitPrice*operNumber).toFixed(2)-0
+                  taxMoney =((taxRate*0.01)*allPrice).toFixed(2)-0
+                  taxLastMoney = (allPrice + taxMoney).toFixed(2)-0
+                  target.setValues([{rowKey: row.id, values: {expirationDate: info.expirationDateStr, operNumber: operNumber,
+                      allPrice: allPrice, taxMoney: taxMoney, taxLastMoney: taxLastMoney}}])
+                  target.recalcAllStatisticsColumns()
+                  that.autoChangePrice(target)
+                }
+              }
+            })
+          }
           break;
         case "operNumber":
           operNumber = value-0
