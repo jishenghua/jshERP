@@ -164,6 +164,7 @@
             :scroll="scroll"
             :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+            @expand="onExpand"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
               <a @click="myHandleDetail(record, '采购入库', prefixNo)">查看</a>
@@ -192,6 +193,16 @@
               <a-tag v-if="status == '3'" color="blue">部分入库</a-tag>
               <a-tag v-if="status == '9'" color="orange">审核中</a-tag>
             </template>
+            <a-table
+              bordered
+              size="small"
+              slot="expandedRowRender"
+              slot-scope="record"
+              :loading="record.loading"
+              :columns="detailColumns"
+              :dataSource="record.childrens"
+              :pagination="false">
+            </a-table>
           </a-table>
         </div>
         <!-- table区域-end -->

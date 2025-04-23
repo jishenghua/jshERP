@@ -3,8 +3,9 @@ import { getAction, postAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
 import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount, waitBillCount,
   getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
-import { getCheckFlag, getFormatDate, getPrevMonthFormatDate } from '@/utils/util'
+import { getCheckFlag, getFormatDate, getMpListShort, getPrevMonthFormatDate } from '@/utils/util'
 import moment from 'moment'
+import pick from 'lodash.pick'
 
 export const BillListMixin = {
   data () {
@@ -24,9 +25,376 @@ export const BillListMixin = {
       userList: [],
       accountList: [],
       // 实际索引
-      settingDataIndex:[],
+      settingDataIndex: [],
       // 实际列
       columns:[],
+      // 明细表头
+      detailColumns:[],
+      // 列定义
+      defColumns: [],
+      retailOutColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '序列号', dataIndex: 'snList', width:300},
+        { title: '批号', dataIndex: 'batchNumber'},
+        { title: '有效期', dataIndex: 'expirationDate'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      retailBackColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '序列号', dataIndex: 'snList', width:300},
+        { title: '批号', dataIndex: 'batchNumber'},
+        { title: '有效期', dataIndex: 'expirationDate'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      purchaseApplyColumns: [
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '已采购', dataIndex: 'finishNumber'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      purchaseOrderColumns: [
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '已采购', dataIndex: 'finishNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '税率(%)', dataIndex: 'taxRate'},
+        { title: '税额', dataIndex: 'taxMoney'},
+        { title: '价税合计', dataIndex: 'taxLastMoney'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      purchaseInColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '序列号', dataIndex: 'snList', width:300},
+        { title: '批号', dataIndex: 'batchNumber'},
+        { title: '有效期', dataIndex: 'expirationDate'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '已入库', dataIndex: 'finishNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '税率(%)', dataIndex: 'taxRate'},
+        { title: '税额', dataIndex: 'taxMoney'},
+        { title: '价税合计', dataIndex: 'taxLastMoney'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      purchaseBackColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '序列号', dataIndex: 'snList', width:300},
+        { title: '批号', dataIndex: 'batchNumber'},
+        { title: '有效期', dataIndex: 'expirationDate'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '已出库', dataIndex: 'finishNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '税率(%)', dataIndex: 'taxRate'},
+        { title: '税额', dataIndex: 'taxMoney'},
+        { title: '价税合计', dataIndex: 'taxLastMoney'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      saleOrderColumns: [
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '已销售', dataIndex: 'finishNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '税率(%)', dataIndex: 'taxRate'},
+        { title: '税额', dataIndex: 'taxMoney'},
+        { title: '价税合计', dataIndex: 'taxLastMoney'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      saleOutColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '序列号', dataIndex: 'snList', width:300},
+        { title: '批号', dataIndex: 'batchNumber'},
+        { title: '有效期', dataIndex: 'expirationDate'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '已出库', dataIndex: 'finishNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '税率(%)', dataIndex: 'taxRate'},
+        { title: '税额', dataIndex: 'taxMoney'},
+        { title: '价税合计', dataIndex: 'taxLastMoney'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      saleBackColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '序列号', dataIndex: 'snList', width:300},
+        { title: '批号', dataIndex: 'batchNumber'},
+        { title: '有效期', dataIndex: 'expirationDate'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '已入库', dataIndex: 'finishNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '税率(%)', dataIndex: 'taxRate'},
+        { title: '税额', dataIndex: 'taxMoney'},
+        { title: '价税合计', dataIndex: 'taxLastMoney'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      otherInColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '序列号', dataIndex: 'snList', width:300},
+        { title: '批号', dataIndex: 'batchNumber'},
+        { title: '有效期', dataIndex: 'expirationDate'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      otherOutColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '序列号', dataIndex: 'snList', width:300},
+        { title: '批号', dataIndex: 'batchNumber'},
+        { title: '有效期', dataIndex: 'expirationDate'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      allocationOutColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '调入仓库', dataIndex: 'anotherDepotName'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '重量', dataIndex: 'weight'},
+        { title: '仓位货架', dataIndex: 'position'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      assembleColumns: [
+        { title: '商品类型', dataIndex: 'mType'},
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      disassembleColumns: [
+        { title: '商品类型', dataIndex: 'mType'},
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '颜色', dataIndex: 'color'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
+      stockCheckReplayColumns: [
+        { title: '仓库名称', dataIndex: 'depotName'},
+        { title: '条码', dataIndex: 'barCode'},
+        { title: '名称', dataIndex: 'name'},
+        { title: '规格', dataIndex: 'standard'},
+        { title: '型号', dataIndex: 'model'},
+        { title: '品牌', dataIndex: 'brand'},
+        { title: '制造商', dataIndex: 'mfrs'},
+        { title: '扩展1', dataIndex: 'otherField1'},
+        { title: '扩展2', dataIndex: 'otherField2'},
+        { title: '扩展3', dataIndex: 'otherField3'},
+        { title: '库存', dataIndex: 'stock'},
+        { title: '单位', dataIndex: 'unit'},
+        { title: '多属性', dataIndex: 'sku'},
+        { title: '数量', dataIndex: 'operNumber'},
+        { title: '单价', dataIndex: 'unitPrice'},
+        { title: '金额', dataIndex: 'allPrice'},
+        { title: '备注', dataIndex: 'remark'}
+      ],
       queryParam: {
         beginTime: getPrevMonthFormatDate(3),
         endTime: getFormatDate(),
@@ -38,7 +406,6 @@ export const BillListMixin = {
     importExcelUrl: function(){
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
     },
-
     isBatchDelEnabled: function () {
       for (let i = 0; i < this.selectedRowKeys.length; i++) {
         if (!this.selectionRows[i].actionsEnabled.delete) {
@@ -311,6 +678,163 @@ export const BillListMixin = {
       let search = this.getQueryParams().search
       this.$refs.billExcelIframe.show(this.model, this.billExcelUrl + '?search=' + search + '&type=1', 150)
       this.$refs.billExcelIframe.title = "确认导出"
+    },
+    // 展开/折叠行
+    onExpand(expanded, record) {
+      let showType = 'basic'
+      if(record.subType === '采购' || record.subType === '采购退货' || record.subType === '销售' || record.subType === '销售退货') {
+        if (record.status === '3') {
+          showType = 'other'
+        }
+      } else {
+        if (record.status === '3') {
+          showType = 'basic'
+        } else if (record.purchaseStatus === '3') {
+          showType = 'purchase'
+        }
+      }
+      let isReadOnly = '1'
+      if(record.subType === '组装单' || record.subType === '拆卸单') {
+        isReadOnly = '0'
+      }
+      let params = {
+        headerId: record.id,
+        mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+        linkType: showType,
+        isReadOnly: isReadOnly
+      }
+      let url = '/depotItem/getDetailList'
+      this.requestSubTableData(record, url, params)
+    },
+    requestSubTableData(record, url, params, success) {
+      record.loading = true
+      getAction(url, params).then(res => {
+        if(res && res.code === 200){
+          record.childrens = res.data.rows
+          this.initSetting(record, record.childrens)
+          record.loading = false
+          typeof success === 'function' ? success(res) : ''
+        }
+      }).finally(() => {
+        record.loading = false
+      })
+    },
+    initSetting(record, ds) {
+      if (this.prefixNo === 'LSCK') {
+        this.defColumns = this.retailOutColumns
+      } else if (this.prefixNo === 'LSTH') {
+        this.defColumns = this.retailBackColumns
+      } else if (this.prefixNo === 'QGD') {
+        this.defColumns = this.purchaseApplyColumns
+      } else if (this.prefixNo === 'CGDD') {
+        this.defColumns = this.purchaseOrderColumns
+      } else if (this.prefixNo === 'CGRK') {
+        this.defColumns = this.purchaseInColumns
+      } else if (this.prefixNo === 'CGTH') {
+        this.defColumns = this.purchaseBackColumns
+      } else if (this.prefixNo === 'XSDD') {
+        this.defColumns = this.saleOrderColumns
+      } else if (this.prefixNo === 'XSCK') {
+        this.defColumns = this.saleOutColumns
+      } else if (this.prefixNo === 'XSTH') {
+        this.defColumns = this.saleBackColumns
+      } else if (this.prefixNo === 'QTRK') {
+        this.defColumns = this.otherInColumns
+      } else if (this.prefixNo === 'QTCK') {
+        this.defColumns = this.otherOutColumns
+      } else if (this.prefixNo === 'DBCK') {
+        this.defColumns = this.allocationOutColumns
+      } else if (this.prefixNo === 'ZZD') {
+        this.defColumns = this.assembleColumns
+      } else if (this.prefixNo === 'CXD') {
+        this.defColumns = this.disassembleColumns
+      } else if (this.prefixNo === 'PDFP') {
+        this.defColumns = this.stockCheckReplayColumns
+      }
+      //动态替换扩展字段
+      this.handleChangeOtherField()
+      //判断序列号、批号、有效期、多属性、重量、仓位货架是否有值
+      let needAddkeywords = []
+      for (let i = 0; i < ds.length; i++) {
+        if(ds[i].snList) {
+          needAddkeywords.push('snList')
+        }
+        if(ds[i].batchNumber) {
+          needAddkeywords.push('batchNumber')
+        }
+        if(ds[i].expirationDate) {
+          needAddkeywords.push('expirationDate')
+        }
+        if(ds[i].sku) {
+          needAddkeywords.push('sku')
+        }
+        if(ds[i].weight) {
+          needAddkeywords.push('weight')
+        }
+        if(ds[i].position) {
+          needAddkeywords.push('position')
+        }
+        if(ds[i].brand) {
+          needAddkeywords.push('brand')
+        }
+        if(ds[i].mfrs) {
+          needAddkeywords.push('mfrs')
+        }
+      }
+      let currentCol = []
+      if(record.status === '3') {
+        //部分采购|部分销售的时候显示全部列
+        for(let i=0; i<this.defColumns.length; i++){
+          currentCol.push(this.defColumns[i])
+        }
+        this.detailColumns = currentCol
+      } else if(record.purchaseStatus === '3') {
+        //将已出库的标题转为已采购，针对销售订单转采购订单的场景
+        for(let i=0; i<this.defColumns.length; i++){
+          let info = {}
+          info.title = this.defColumns[i].title
+          info.dataIndex = this.defColumns[i].dataIndex
+          if(this.defColumns[i].width) {
+            info.width = this.defColumns[i].width
+          }
+          if(this.defColumns[i].dataIndex === 'finishNumber') {
+            info.title = '已采购'
+          }
+          if(this.defColumns[i].dataIndex === 'barCode') {
+            info.scopedSlots = { customRender: 'customBarCode' }
+          }
+          currentCol.push(info)
+        }
+        this.detailColumns = currentCol
+      } else {
+        for(let i=0; i<this.defColumns.length; i++){
+          //移除列
+          let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position','brand','mfrs']
+          if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
+            let info = {}
+            info.title = this.defColumns[i].title
+            info.dataIndex = this.defColumns[i].dataIndex
+            if(this.defColumns[i].width) {
+              info.width = this.defColumns[i].width
+            }
+            if(this.defColumns[i].dataIndex === 'barCode') {
+              info.scopedSlots = { customRender: 'customBarCode' }
+            }
+            currentCol.push(info)
+          }
+          //添加有数据的列
+          if(needAddkeywords.indexOf(this.defColumns[i].dataIndex)>-1) {
+            let info = {}
+            info.title = this.defColumns[i].title
+            info.dataIndex = this.defColumns[i].dataIndex
+            if(this.defColumns[i].width) {
+              info.width = this.defColumns[i].width
+            }
+            currentCol.push(info)
+          }
+        }
+        this.detailColumns = currentCol
+      }
     }
   }
 }
