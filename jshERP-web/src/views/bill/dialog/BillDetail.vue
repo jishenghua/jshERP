@@ -1680,7 +1680,8 @@
             needAddkeywords.push('mfrs')
           }
         }
-        let currentCol = [{title:'#',dataIndex:'',align:'center',customRender:function(t,r,index){return parseInt(index)+1;}}]
+        let currentCol = [{title:'#',dataIndex:'',align:'center',customRender:function(t,r,index){
+          return index === ds.length-1?'':parseInt(index)+1}}]
         if(record.status === '3') {
           //部分采购|部分销售的时候显示全部列
           for(let i=0; i<this.defColumns.length; i++){
