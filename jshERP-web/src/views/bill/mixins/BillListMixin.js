@@ -719,15 +719,11 @@ export const BillListMixin = {
             showType = 'purchase'
           }
         }
-        let isReadOnly = '1'
-        if(record.subType === '组装单' || record.subType === '拆卸单') {
-          isReadOnly = '0'
-        }
         let params = {
           headerId: record.id,
           mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
           linkType: showType,
-          isReadOnly: isReadOnly
+          isReadOnly: '0'
         }
         let url = '/depotItem/getDetailList'
         this.requestSubTableData(record, url, params)
@@ -863,6 +859,26 @@ export const BillListMixin = {
           }
         }
         this.detailColumns = currentCol
+      }
+    },
+    //动态替换扩展字段
+    handleChangeOtherField() {
+      let mpStr = getMpListShort(Vue.ls.get('materialPropertyList'))
+      if(mpStr) {
+        let mpArr = mpStr.split(',')
+        if(mpArr.length ===3) {
+          for (let i = 0; i < this.defDetailColumns.length; i++) {
+            if(this.defDetailColumns[i].dataIndex === 'otherField1') {
+              this.defDetailColumns[i].title = mpArr[0]
+            }
+            if(this.defDetailColumns[i].dataIndex === 'otherField2') {
+              this.defDetailColumns[i].title = mpArr[1]
+            }
+            if(this.defDetailColumns[i].dataIndex === 'otherField3') {
+              this.defDetailColumns[i].title = mpArr[2]
+            }
+          }
+        }
       }
     }
   }
