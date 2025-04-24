@@ -164,6 +164,7 @@
             :scroll="scroll"
             :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+            :expandedRowKeys="expandedRowKeys"
             @expand="onExpand"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
@@ -201,6 +202,7 @@
               :loading="record.loading"
               :columns="detailColumns"
               :dataSource="record.childrens"
+              :row-key="record => record.id"
               :pagination="false">
             </a-table>
           </a-table>

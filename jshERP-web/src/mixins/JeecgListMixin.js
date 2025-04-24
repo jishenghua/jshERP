@@ -469,13 +469,13 @@ export const JeecgListMixin = {
         header: {
           cell: (h, props, children) => {
             const { key, ...restProps } = props
+            // 父表格列宽拖拽逻辑
             const col = column.find((col) => {
               const k = col.dataIndex || col.key
               return k === key
             })
-
             if (!col || !col.width) {
-              return h('th', { ...restProps }, [...children])
+              return h('th', { ...restProps }, children)
             }
 
             const dragProps = {
@@ -496,7 +496,7 @@ export const JeecgListMixin = {
               },
             }
             const drag = h(VueDraggableResizable, { ...dragProps })
-            return h('th', { ...restProps, class: 'resize-table-th' }, [...children, drag])
+            return h('th', { ...restProps, class: 'resize-table-th' }, [children, drag])
           },
         }
       }

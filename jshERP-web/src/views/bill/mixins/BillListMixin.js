@@ -26,12 +26,14 @@ export const BillListMixin = {
       accountList: [],
       // 实际索引
       settingDataIndex: [],
+      // 存储展开的行key
+      expandedRowKeys: [],
       // 实际列
       columns:[],
       // 明细表头
       detailColumns:[],
       // 列定义
-      defColumns: [],
+      defDetailColumns: [],
       retailOutColumns: [
         { title: '仓库名称', dataIndex: 'depotName'},
         { title: '条码', dataIndex: 'barCode'},
@@ -420,6 +422,28 @@ export const BillListMixin = {
     this.isShowExcel = Vue.ls.get('isShowExcel');
   },
   methods: {
+    loadData(arg) {
+      // 重置展开状态
+      this.expandedRowKeys = []
+      if (arg === 1) {
+        this.ipagination.current = 1
+      }
+      let params = this.getQueryParams() //查询条件
+      this.loading = true
+      getAction(this.url.list, params).then((res) => {
+        if (res.code===200) {
+          this.dataSource = res.data.rows
+          this.ipagination.total = res.data.total
+          this.tableAddTotalRow(this.columns, this.dataSource)
+        } else if(res.code===510){
+          this.$message.warning(res.data)
+        } else {
+          this.$message.warning(res.data.message)
+        }
+        this.loading = false
+        this.onClearSelected()
+      })
+    },
     myHandleAdd() {
       this.$refs.modalForm.action = "add";
       if(this.btnEnableList.indexOf(2)===-1) {
@@ -549,7 +573,7 @@ export const BillListMixin = {
         endTime: getFormatDate(),
         createTimeRange: [moment(getPrevMonthFormatDate(3)), moment(getFormatDate())]
       }
-      this.loadData(1);
+      this.loadData(1)
     },
     onDateChange: function (value, dateString) {
       this.queryParam.beginTime=dateString[0]
@@ -681,30 +705,35 @@ export const BillListMixin = {
     },
     // 展开/折叠行
     onExpand(expanded, record) {
-      let showType = 'basic'
-      if(record.subType === '采购' || record.subType === '采购退货' || record.subType === '销售' || record.subType === '销售退货') {
-        if (record.status === '3') {
-          showType = 'other'
+      if (expanded) {
+        this.expandedRowKeys = [...new Set([...this.expandedRowKeys, record.id])]
+        let showType = 'basic'
+        if(record.subType === '采购' || record.subType === '采购退货' || record.subType === '销售' || record.subType === '销售退货') {
+          if (record.status === '3') {
+            showType = 'other'
+          }
+        } else {
+          if (record.status === '3') {
+            showType = 'basic'
+          } else if (record.purchaseStatus === '3') {
+            showType = 'purchase'
+          }
         }
+        let isReadOnly = '1'
+        if(record.subType === '组装单' || record.subType === '拆卸单') {
+          isReadOnly = '0'
+        }
+        let params = {
+          headerId: record.id,
+          mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
+          linkType: showType,
+          isReadOnly: isReadOnly
+        }
+        let url = '/depotItem/getDetailList'
+        this.requestSubTableData(record, url, params)
       } else {
-        if (record.status === '3') {
-          showType = 'basic'
-        } else if (record.purchaseStatus === '3') {
-          showType = 'purchase'
-        }
+        this.expandedRowKeys = this.expandedRowKeys.filter(key => key !== record.id)
       }
-      let isReadOnly = '1'
-      if(record.subType === '组装单' || record.subType === '拆卸单') {
-        isReadOnly = '0'
-      }
-      let params = {
-        headerId: record.id,
-        mpList: getMpListShort(Vue.ls.get('materialPropertyList')),  //扩展属性
-        linkType: showType,
-        isReadOnly: isReadOnly
-      }
-      let url = '/depotItem/getDetailList'
-      this.requestSubTableData(record, url, params)
     },
     requestSubTableData(record, url, params, success) {
       record.loading = true
@@ -721,35 +750,35 @@ export const BillListMixin = {
     },
     initSetting(record, ds) {
       if (this.prefixNo === 'LSCK') {
-        this.defColumns = this.retailOutColumns
+        this.defDetailColumns = this.retailOutColumns
       } else if (this.prefixNo === 'LSTH') {
-        this.defColumns = this.retailBackColumns
+        this.defDetailColumns = this.retailBackColumns
       } else if (this.prefixNo === 'QGD') {
-        this.defColumns = this.purchaseApplyColumns
+        this.defDetailColumns = this.purchaseApplyColumns
       } else if (this.prefixNo === 'CGDD') {
-        this.defColumns = this.purchaseOrderColumns
+        this.defDetailColumns = this.purchaseOrderColumns
       } else if (this.prefixNo === 'CGRK') {
-        this.defColumns = this.purchaseInColumns
+        this.defDetailColumns = this.purchaseInColumns
       } else if (this.prefixNo === 'CGTH') {
-        this.defColumns = this.purchaseBackColumns
+        this.defDetailColumns = this.purchaseBackColumns
       } else if (this.prefixNo === 'XSDD') {
-        this.defColumns = this.saleOrderColumns
+        this.defDetailColumns = this.saleOrderColumns
       } else if (this.prefixNo === 'XSCK') {
-        this.defColumns = this.saleOutColumns
+        this.defDetailColumns = this.saleOutColumns
       } else if (this.prefixNo === 'XSTH') {
-        this.defColumns = this.saleBackColumns
+        this.defDetailColumns = this.saleBackColumns
       } else if (this.prefixNo === 'QTRK') {
-        this.defColumns = this.otherInColumns
+        this.defDetailColumns = this.otherInColumns
       } else if (this.prefixNo === 'QTCK') {
-        this.defColumns = this.otherOutColumns
+        this.defDetailColumns = this.otherOutColumns
       } else if (this.prefixNo === 'DBCK') {
-        this.defColumns = this.allocationOutColumns
+        this.defDetailColumns = this.allocationOutColumns
       } else if (this.prefixNo === 'ZZD') {
-        this.defColumns = this.assembleColumns
+        this.defDetailColumns = this.assembleColumns
       } else if (this.prefixNo === 'CXD') {
-        this.defColumns = this.disassembleColumns
+        this.defDetailColumns = this.disassembleColumns
       } else if (this.prefixNo === 'PDFP') {
-        this.defColumns = this.stockCheckReplayColumns
+        this.defDetailColumns = this.stockCheckReplayColumns
       }
       //动态替换扩展字段
       this.handleChangeOtherField()
@@ -784,51 +813,51 @@ export const BillListMixin = {
       let currentCol = []
       if(record.status === '3') {
         //部分采购|部分销售的时候显示全部列
-        for(let i=0; i<this.defColumns.length; i++){
-          currentCol.push(this.defColumns[i])
+        for(let i=0; i<this.defDetailColumns.length; i++){
+          currentCol.push(this.defDetailColumns[i])
         }
         this.detailColumns = currentCol
       } else if(record.purchaseStatus === '3') {
         //将已出库的标题转为已采购，针对销售订单转采购订单的场景
-        for(let i=0; i<this.defColumns.length; i++){
+        for(let i=0; i<this.defDetailColumns.length; i++){
           let info = {}
-          info.title = this.defColumns[i].title
-          info.dataIndex = this.defColumns[i].dataIndex
-          if(this.defColumns[i].width) {
-            info.width = this.defColumns[i].width
+          info.title = this.defDetailColumns[i].title
+          info.dataIndex = this.defDetailColumns[i].dataIndex
+          if(this.defDetailColumns[i].width) {
+            info.width = this.defDetailColumns[i].width
           }
-          if(this.defColumns[i].dataIndex === 'finishNumber') {
+          if(this.defDetailColumns[i].dataIndex === 'finishNumber') {
             info.title = '已采购'
           }
-          if(this.defColumns[i].dataIndex === 'barCode') {
+          if(this.defDetailColumns[i].dataIndex === 'barCode') {
             info.scopedSlots = { customRender: 'customBarCode' }
           }
           currentCol.push(info)
         }
         this.detailColumns = currentCol
       } else {
-        for(let i=0; i<this.defColumns.length; i++){
+        for(let i=0; i<this.defDetailColumns.length; i++){
           //移除列
           let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position','brand','mfrs']
-          if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
+          if(needRemoveKeywords.indexOf(this.defDetailColumns[i].dataIndex)===-1) {
             let info = {}
-            info.title = this.defColumns[i].title
-            info.dataIndex = this.defColumns[i].dataIndex
-            if(this.defColumns[i].width) {
-              info.width = this.defColumns[i].width
+            info.title = this.defDetailColumns[i].title
+            info.dataIndex = this.defDetailColumns[i].dataIndex
+            if(this.defDetailColumns[i].width) {
+              info.width = this.defDetailColumns[i].width
             }
-            if(this.defColumns[i].dataIndex === 'barCode') {
+            if(this.defDetailColumns[i].dataIndex === 'barCode') {
               info.scopedSlots = { customRender: 'customBarCode' }
             }
             currentCol.push(info)
           }
           //添加有数据的列
-          if(needAddkeywords.indexOf(this.defColumns[i].dataIndex)>-1) {
+          if(needAddkeywords.indexOf(this.defDetailColumns[i].dataIndex)>-1) {
             let info = {}
-            info.title = this.defColumns[i].title
-            info.dataIndex = this.defColumns[i].dataIndex
-            if(this.defColumns[i].width) {
-              info.width = this.defColumns[i].width
+            info.title = this.defDetailColumns[i].title
+            info.dataIndex = this.defDetailColumns[i].dataIndex
+            if(this.defDetailColumns[i].width) {
+              info.width = this.defDetailColumns[i].width
             }
             currentCol.push(info)
           }
