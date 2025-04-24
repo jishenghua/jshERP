@@ -548,7 +548,14 @@ export const BillModalMixin = {
               if (res && res.code === 200) {
                 if(res.data && res.data.rows) {
                   let info = res.data.rows[0]
-                  operNumber = info.totalNum
+                  let preNumber = row.preNumber-0 //原数量
+                  let finishNumber = row.finishNumber-0 //已出库
+                  let totalNum = info.totalNum-0 //批次数量
+                  if(totalNum > preNumber - finishNumber) {
+                    operNumber = preNumber - finishNumber
+                  } else {
+                    operNumber = totalNum
+                  }
                   taxRate = row.taxRate-0 //税率
                   unitPrice = row.unitPrice-0 //单价
                   allPrice = (unitPrice*operNumber).toFixed(2)-0
