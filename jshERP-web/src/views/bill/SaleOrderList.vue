@@ -136,6 +136,8 @@
             :scroll="scroll"
             :loading="loading"
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+            :expandedRowKeys="expandedRowKeys"
+            @expand="onExpand"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
               <a @click="myHandleDetail(record, '销售订单', prefixNo)">查看</a>
@@ -160,6 +162,17 @@
               <a-tag v-if="purchaseStatus == '2'" color="cyan">完成采购</a-tag>
               <a-tag v-if="purchaseStatus == '3'" color="blue">部分采购</a-tag>
             </template>
+            <a-table
+              bordered
+              size="small"
+              slot="expandedRowRender"
+              slot-scope="record"
+              :loading="record.loading"
+              :columns="detailColumns"
+              :dataSource="record.childrens"
+              :row-key="record => record.id"
+              :pagination="false">
+            </a-table>
           </a-table>
         </div>
         <!-- table区域-end -->
