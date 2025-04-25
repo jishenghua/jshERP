@@ -551,8 +551,12 @@ export const BillModalMixin = {
                   let preNumber = row.preNumber-0 //原数量
                   let finishNumber = row.finishNumber-0 //已出库
                   let totalNum = info.totalNum-0 //批次数量
-                  if(totalNum > preNumber - finishNumber) {
-                    operNumber = preNumber - finishNumber
+                  if(preNumber > 0) {
+                    if(totalNum > preNumber - finishNumber) {
+                      operNumber = preNumber - finishNumber
+                    } else {
+                      operNumber = totalNum
+                    }
                   } else {
                     operNumber = totalNum
                   }
