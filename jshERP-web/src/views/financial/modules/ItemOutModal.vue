@@ -25,6 +25,11 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="往来单位">
               <a-select placeholder="请选择往来单位" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                <div slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <a-divider style="margin: 4px 0;" />
+                  <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initOrgan"><a-icon type="reload" /> 刷新列表</div>
+                </div>
                 <a-select-option v-for="(item,index) in organList" :key="index" :value="item.id">
                   {{ item.supplier }}
                 </a-select-option>
@@ -48,8 +53,8 @@
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="quickBtn.person" style="padding: 4px 8px; cursor: pointer;"
-                       @mousedown="e => e.preventDefault()" @click="addPerson"><a-icon type="plus" /> 新增经手人</div>
+                  <div v-if="quickBtn.person" class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="addPerson"><a-icon type="plus" /> 新增经手人</div>
+                  <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initPerson"><a-icon type="reload" /> 刷新</div>
                 </div>
                 <a-select-option v-for="(item,index) in personList" :key="index" :value="item.id">
                   {{ item.name }}
@@ -72,7 +77,8 @@
           @valueChange="onValueChange">
           <template #inOutItemAdd>
             <a-divider v-if="quickBtn.inOutItem" style="margin: 4px 0;" />
-            <div v-if="quickBtn.inOutItem" style="padding: 4px 8px; cursor: pointer;" @click="addInOutItem('out')"><a-icon type="plus" /> 新增收支项目</div>
+            <div v-if="quickBtn.inOutItem" class="dropdown-btn" @click="addInOutItem('out')"><a-icon type="plus" /> 新增收支项目</div>
+            <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initInOutItem('out')"><a-icon type="reload" /> 刷新列表</div>
           </template>
         </j-editable-table>
         <a-row class="form-row" :gutter="24">
