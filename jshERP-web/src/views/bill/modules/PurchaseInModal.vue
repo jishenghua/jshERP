@@ -146,8 +146,8 @@
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />
-                  <div v-if="quickBtn.account" style="padding: 4px 8px; cursor: pointer;"
-                       @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增结算账户</div>
+                  <div v-if="quickBtn.account" class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="addAccount"><a-icon type="plus" /> 新增</div>
+                  <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initAccount(0)"><a-icon type="reload" /> 刷新</div>
                 </div>
                 <a-select-option v-for="(item,index) in accountList" :key="index" :value="item.id">
                   {{ item.name }}
