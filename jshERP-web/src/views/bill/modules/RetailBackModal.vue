@@ -89,7 +89,8 @@
               </template>
               <template #depotAdd>
                 <a-divider v-if="quickBtn.depot" style="margin: 4px 0;" />
-                <div v-if="quickBtn.depot" style="padding: 4px 8px; cursor: pointer;" @click="addDepot"><a-icon type="plus" /> 新增仓库</div>
+                <div v-if="quickBtn.depot" class="dropdown-btn" @click="addDepot"><a-icon type="plus" /> 新增</div>
+                <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initDepot"><a-icon type="reload" /> 刷新</div>
               </template>
             </j-editable-table>
             <a-row class="form-row" :gutter="24">
