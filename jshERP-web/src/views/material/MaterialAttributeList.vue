@@ -47,6 +47,9 @@
                 <a>删除</a>
               </a-popconfirm>
             </span>
+            <template slot="customRenderAttributeValue" slot-scope="attributeValue">
+              <a-tag  v-for="(item,index) in getTagArr(attributeValue)" color="blue">{{item}}</a-tag>
+            </template>
           </a-table>
         </div>
         <!-- table区域-end -->
@@ -97,8 +100,10 @@
             align:"center",
             scopedSlots: { customRender: 'action' },
           },
-          {title: '属性名', dataIndex: 'attributeName', width: 200},
-          {title: '属性值（用竖线隔开）', dataIndex: 'attributeValue', width: 500}
+          {title: '属性名', dataIndex: 'attributeName', width: 150},
+          {title: '属性值', dataIndex: 'attributeValue', width: 750,
+            scopedSlots: { customRender: 'customRenderAttributeValue' }
+          }
         ],
         url: {
           list: "/materialAttribute/list",
@@ -111,6 +116,9 @@
 
     },
     methods: {
+      getTagArr(attributeValue) {
+        return attributeValue.split('|')
+      },
       handleEdit: function (record) {
         this.$refs.modalForm.edit(record);
         this.$refs.modalForm.title = "编辑";
