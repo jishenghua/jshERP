@@ -192,11 +192,6 @@
         },
         confirmLoading: false,
         validatorRules:{
-          organId:{
-            rules: [
-              { required: true, message: '请选择客户!' }
-            ]
-          },
           billTime:{
             rules: [
               { required: true, message: '请选择单据日期!' }
