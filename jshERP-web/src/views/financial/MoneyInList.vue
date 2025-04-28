@@ -100,7 +100,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleWaitBill" icon="link">待收款({{waitTotal}})</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleWaitNeed('客户')" icon="link">待收款({{waitTotal}})</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
@@ -145,6 +145,7 @@
         <!-- 表单区域 -->
         <money-in-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></money-in-modal>
         <financial-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></financial-detail>
+        <wait-need-list ref="waitNeedList" @ok="modalFormOk" @close="modalFormClose"></wait-need-list>
         <bill-excel-iframe ref="billExcelIframe" @ok="modalFormOk" @close="modalFormClose"></bill-excel-iframe>
       </a-card>
     </a-col>
@@ -153,6 +154,7 @@
 <script>
   import MoneyInModal from './modules/MoneyInModal'
   import FinancialDetail from './dialog/FinancialDetail'
+  import WaitNeedList from './dialog/WaitNeedList'
   import BillExcelIframe from '@/components/tools/BillExcelIframe'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { FinancialListMixin } from './mixins/FinancialListMixin'
@@ -164,6 +166,7 @@
     components: {
       MoneyInModal,
       FinancialDetail,
+      WaitNeedList,
       BillExcelIframe,
       JDate
     },

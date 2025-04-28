@@ -187,8 +187,8 @@ export const FinancialListMixin = {
         }
       })
     },
-    initGetNeedCount(supplierType) {
-      getNeedCount({supplierType: supplierType}).then((res)=>{
+    initGetNeedCount(type) {
+      getNeedCount({type: type}).then((res)=>{
         if(res && res.code === 200) {
           this.waitTotal = res.data.needCount
         }
@@ -203,6 +203,9 @@ export const FinancialListMixin = {
     },
     onDateOk(value) {
       console.log(value);
+    },
+    handleWaitNeed(organType) {
+      this.$refs.waitNeedList.show(organType)
     },
     //导出单据
     handleExport() {

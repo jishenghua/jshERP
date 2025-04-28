@@ -934,13 +934,13 @@ public class DepotHeadService {
         String typeBack = "";
         String subTypeBack = "";
         String billType = "";
-        if (("vendor").equals(supplierType)) {
+        if (("供应商").equals(supplierType)) {
             type = "入库";
             subType = "采购";
             typeBack = "出库";
             subTypeBack = "采购退货";
             billType = "付款";
-        } else if (("customer").equals(supplierType)) {
+        } else if (("客户").equals(supplierType)) {
             type = "出库";
             subType = "销售";
             typeBack = "入库";

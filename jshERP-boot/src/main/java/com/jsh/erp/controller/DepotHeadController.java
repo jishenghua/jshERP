@@ -502,10 +502,16 @@ public class DepotHeadController extends BaseController {
      */
     @GetMapping(value = "/getNeedCount")
     @ApiOperation(value = "获取待收款或付款的条数")
-    public BaseResponseInfo getNeedCount(@RequestParam("supplierType") String supplierType, HttpServletRequest request)throws Exception {
+    public BaseResponseInfo getNeedCount(@RequestParam("type") String type, HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            String supplierType = "";
+            if (("vendor").equals(type)) {
+                supplierType = "供应商";
+            } else if (("customer").equals(type)) {
+                supplierType = "客户";
+            }
             int needCount = depotHeadService.getNeedCount(supplierType);
             map.put("needCount", needCount);
             res.code = 200;
