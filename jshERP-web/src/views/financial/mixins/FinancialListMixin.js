@@ -1,6 +1,16 @@
 import {
-  findFinancialDetailByNumber, findBySelectSup, findBySelectCus, findBySelectOrgan, findBySelectRetail,
-  getUserList, getPersonByType, getAccount, getCurrentSystemConfig, getPlatformConfigByKey, findInOutItemByParam
+  findFinancialDetailByNumber,
+  findBySelectSup,
+  findBySelectCus,
+  findBySelectOrgan,
+  findBySelectRetail,
+  getUserList,
+  getPersonByType,
+  getAccount,
+  getCurrentSystemConfig,
+  getPlatformConfigByKey,
+  findInOutItemByParam,
+  getNeedCount
 } from '@/api/api'
 import { getCheckFlag, getFormatDate, getPrevMonthFormatDate } from '@/utils/util'
 import Vue from 'vue'
@@ -15,6 +25,7 @@ export const FinancialListMixin = {
       isShowExcel: false,
       billExcelUrl: '',
       prefixNo: '',
+      waitTotal: 0,
       supList: [],
       cusList: [],
       organList: [],
@@ -173,6 +184,13 @@ export const FinancialListMixin = {
       findInOutItemByParam({type:type}).then((res)=>{
         if(res) {
           this.inOutItemList = res
+        }
+      })
+    },
+    initGetNeedCount(supplierType) {
+      getNeedCount({supplierType: supplierType}).then((res)=>{
+        if(res && res.code === 200) {
+          this.waitTotal = res.data.needCount
         }
       })
     },
