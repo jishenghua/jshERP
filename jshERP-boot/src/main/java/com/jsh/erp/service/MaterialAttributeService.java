@@ -57,11 +57,11 @@ public class MaterialAttributeService {
         return list;
     }
 
-    public List<MaterialAttribute> select(String attributeName) throws Exception{
+    public List<MaterialAttribute> select(String attributeName, String attributeValue) throws Exception{
         List<MaterialAttribute> list = new ArrayList<>();
         try{
             PageUtils.startPage();
-            list = materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeName);
+            list = materialAttributeMapperEx.selectByConditionMaterialAttribute(attributeName, attributeValue);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

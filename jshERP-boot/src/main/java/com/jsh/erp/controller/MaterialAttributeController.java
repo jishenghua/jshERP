@@ -55,7 +55,8 @@ public class MaterialAttributeController extends BaseController {
     public TableDataInfo getList(@RequestParam(value = Constants.SEARCH, required = false) String search,
                                  HttpServletRequest request)throws Exception {
         String attributeName = StringUtil.getInfo(search, "attributeName");
-        List<MaterialAttribute> list = materialAttributeService.select(attributeName);
+        String attributeValue = StringUtil.getInfo(search, "attributeValue");
+        List<MaterialAttribute> list = materialAttributeService.select(attributeName, attributeValue);
         return getDataTable(list);
     }
 

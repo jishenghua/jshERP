@@ -9,6 +9,10 @@
             <bind name="bindAttributeName" value="'%'+attributeName+'%'"/>
             and ma.attribute_name like #{bindAttributeName}
         </if>
+        <if test="attributeValue != null">
+            <bind name="bindAttributeValue" value="'%'+attributeValue+'%'"/>
+            and ma.attribute_value like #{bindAttributeValue}
+        </if>
         and ifnull(ma.delete_flag,'0') !='1'
         order by ma.id desc
     </select>
