@@ -13,6 +13,11 @@
                   <a-input placeholder="请输入属性名查询" v-model="queryParam.attributeName"></a-input>
                 </a-form-item>
               </a-col>
+              <a-col :md="6" :sm="8">
+                <a-form-item label="属性值" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
+                  <a-input placeholder="请输入属性值查询" v-model="queryParam.attributeValue"></a-input>
+                </a-form-item>
+              </a-col>
               <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
                 <a-col :md="6" :sm="24">
                   <a-button type="primary" @click="searchQuery">查询</a-button>
@@ -80,7 +85,10 @@
           offset: 1
         },
         // 查询条件
-        queryParam: {attributeName:''},
+        queryParam: {
+          attributeName:'',
+          attributeValue:''
+        },
         // 表头
         columns: [
           {
