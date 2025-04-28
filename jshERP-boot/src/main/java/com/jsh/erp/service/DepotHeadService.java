@@ -928,6 +928,32 @@ public class DepotHeadService {
         return list;
     }
 
+    public int getNeedCount(String supplierType) throws Exception {
+        String type = "";
+        String subType = "";
+        String typeBack = "";
+        String subTypeBack = "";
+        String billType = "";
+        if (("vendor").equals(supplierType)) {
+            type = "入库";
+            subType = "采购";
+            typeBack = "出库";
+            subTypeBack = "采购退货";
+            billType = "付款";
+        } else if (("customer").equals(supplierType)) {
+            type = "出库";
+            subType = "销售";
+            typeBack = "入库";
+            subTypeBack = "销售退货";
+            billType = "收款";
+        }
+        String beginTime = Tools.parseDayToTime(Tools.getYearBegin(), BusinessConstants.DAY_FIRST_TIME);
+        String endTime = Tools.getCenternTime(new Date());
+        String [] organArray = getOrganArray(subType, "");
+        return getStatementAccountCount(beginTime, endTime, null, organArray,
+                1, supplierType, type, subType,typeBack, subTypeBack, billType);
+    }
+
     public List<DepotHeadVo4List> getDetailByNumber(String number, HttpServletRequest request)throws Exception {
         List<DepotHeadVo4List> resList = new ArrayList<>();
         try{

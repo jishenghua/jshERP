@@ -496,6 +496,29 @@ public class DepotHeadController extends BaseController {
     }
 
     /**
+     * 获取待收款或付款的条数
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getNeedCount")
+    @ApiOperation(value = "获取待收款或付款的条数")
+    public BaseResponseInfo getNeedCount(@RequestParam("supplierType") String supplierType, HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        Map<String, Object> map = new HashMap<>();
+        try {
+            int needCount = depotHeadService.getNeedCount(supplierType);
+            map.put("needCount", needCount);
+            res.code = 200;
+            res.data = map;
+        } catch(Exception e){
+            logger.error(e.getMessage(), e);
+            res.code = 500;
+            res.data = "获取数据失败";
+        }
+        return res;
+    }
+
+    /**
      * 根据编号查询单据信息
      * @param number
      * @param request
