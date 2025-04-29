@@ -300,8 +300,7 @@
     getMaterialAttributeNameList,
     getMaterialAttributeValueListById,
     getMaxBarCode,
-    queryMaterialCategoryTreeList
-  } from '@/api/api'
+    queryMaterialCategoryTreeList } from '@/api/api'
   import { autoJumpNextInput, handleIntroJs, removeByVal } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
