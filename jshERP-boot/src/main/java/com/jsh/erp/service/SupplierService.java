@@ -152,7 +152,7 @@ public class SupplierService {
             User userInfo=userService.getCurrentUser();
             supplier.setCreator(userInfo==null?null:userInfo.getId());
             result=supplierMapper.insertSelective(supplier);
-            //新增客户时给当前用户自动授权
+            //新增客户时给当前用户和租户自动授权
             setUserCustomerPermission(request, supplier);
             logService.insertLog("商家",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(supplier.getSupplier()).toString(),request);
@@ -523,7 +523,7 @@ public class SupplierService {
                 List<Supplier> list= supplierMapper.selectByExample(example);
                 if(list.size() <= 0) {
                     supplierMapper.insertSelective(supplier);
-                    //新增客户时给当前用户自动授权
+                    //新增客户时给当前用户和租户自动授权
                     setUserCustomerPermission(request, supplier);
                 } else {
                     Long id = list.get(0).getId();
@@ -618,34 +618,49 @@ public class SupplierService {
     }
 
     /**
-     * 新增客户时给当前用户自动授权
+     * 新增客户时给当前用户和租户自动授权
      * @param request
      * @param supplier
      * @throws Exception
      */
     private void setUserCustomerPermission(HttpServletRequest request, Supplier supplier) throws Exception {
         if("客户".equals(supplier.getType())) {
-            Long userId = userService.getUserId(request);
+            User user = userService.getCurrentUser();
             Supplier sInfo = supplierMapperEx.getSupplierByNameAndType(supplier.getSupplier(), supplier.getType());
             String ubKey = "[" + sInfo.getId() + "]";
-            List<UserBusiness> ubList = userBusinessService.getBasicData(userId.toString(), "UserCustomer");
-            if(ubList ==null || ubList.size() == 0) {
-                JSONObject ubObj = new JSONObject();
-                ubObj.put("type", "UserCustomer");
-                ubObj.put("keyId", userId);
-                ubObj.put("value", ubKey);
-                UserBusiness userBusiness = JSONObject.parseObject(ubObj.toJSONString(), UserBusiness.class);
-                userBusinessMapper.insertSelective(userBusiness);
-            } else {
-                UserBusiness ubInfo = ubList.get(0);
-                JSONObject ubObj = new JSONObject();
-                ubObj.put("id", ubInfo.getId());
-                ubObj.put("type", ubInfo.getType());
-                ubObj.put("keyId", ubInfo.getKeyId());
-                ubObj.put("value", ubInfo.getValue() + ubKey);
-                UserBusiness userBusiness = JSONObject.parseObject(ubObj.toJSONString(), UserBusiness.class);
-                userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+            //授权当前用户
+            setPermissionByParam(user.getId(), ubKey);
+            if(!user.getId().equals(user.getTenantId())) {
+                //授权当前租户
+                setPermissionByParam(user.getTenantId(), ubKey);
             }
+        }
+    }
+
+    /**
+     * 权限授权操作
+     * @param userId
+     * @param ubKey
+     * @throws Exception
+     */
+    private void setPermissionByParam(Long userId, String ubKey) throws Exception {
+        List<UserBusiness> ubList = userBusinessService.getBasicData(userId.toString(), "UserCustomer");
+        if(ubList ==null || ubList.size() == 0) {
+            JSONObject ubObj = new JSONObject();
+            ubObj.put("type", "UserCustomer");
+            ubObj.put("keyId", userId);
+            ubObj.put("value", ubKey);
+            UserBusiness userBusiness = JSONObject.parseObject(ubObj.toJSONString(), UserBusiness.class);
+            userBusinessMapper.insertSelective(userBusiness);
+        } else {
+            UserBusiness ubInfo = ubList.get(0);
+            JSONObject ubObj = new JSONObject();
+            ubObj.put("id", ubInfo.getId());
+            ubObj.put("type", ubInfo.getType());
+            ubObj.put("keyId", ubInfo.getKeyId());
+            ubObj.put("value", ubInfo.getValue() + ubKey);
+            UserBusiness userBusiness = JSONObject.parseObject(ubObj.toJSONString(), UserBusiness.class);
+            userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
         }
     }
 
