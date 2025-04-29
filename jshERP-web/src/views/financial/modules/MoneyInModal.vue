@@ -144,6 +144,7 @@
     <customer-modal ref="customerModalForm" @ok="customerModalFormOk"></customer-modal>
     <account-modal ref="accountModalForm" @ok="accountModalFormOk"></account-modal>
     <person-modal ref="personModalForm" @ok="personModalFormOk"></person-modal>
+    <wait-need-list ref="waitNeedList" @ok="waitNeedListOk"></wait-need-list>
     <workflow-iframe ref="modalWorkflow" @ok="workflowModalFormOk"></workflow-iframe>
   </j-modal>
 </template>
@@ -153,6 +154,7 @@
   import CustomerModal from '../../system/modules/CustomerModal'
   import AccountModal from '../../system/modules/AccountModal'
   import PersonModal from '../../system/modules/PersonModal'
+  import WaitNeedList from '../dialog/WaitNeedList'
   import WorkflowIframe from '@/components/tools/WorkflowIframe'
   import { FormTypes } from '@/utils/JEditableTableUtil'
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
@@ -167,6 +169,7 @@
       CustomerModal,
       AccountModal,
       PersonModal,
+      WaitNeedList,
       WorkflowIframe,
       JUpload,
       JDate,
@@ -240,6 +243,13 @@
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
+          if(this.actionWithOrgan) {
+            //自动弹出待收款客户列表
+            let that = this
+            setTimeout(function() {
+              that.$refs.waitNeedList.show('客户')
+            },1000)
+          }
         } else {
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {

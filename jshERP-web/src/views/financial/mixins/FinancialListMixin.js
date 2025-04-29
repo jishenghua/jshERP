@@ -60,7 +60,16 @@ export const FinancialListMixin = {
   },
   methods: {
     myHandleAdd() {
-      this.$refs.modalForm.action = "add";
+      this.$refs.modalForm.action = "add"
+      this.$refs.modalForm.actionWithOrgan = false
+      if(this.btnEnableList.indexOf(2)===-1) {
+        this.$refs.modalForm.isCanCheck = false
+      }
+      this.handleAdd();
+    },
+    myHandleAddWithOrgan() {
+      this.$refs.modalForm.action = "add"
+      this.$refs.modalForm.actionWithOrgan = true
       if(this.btnEnableList.indexOf(2)===-1) {
         this.$refs.modalForm.isCanCheck = false
       }
@@ -203,9 +212,6 @@ export const FinancialListMixin = {
     },
     onDateOk(value) {
       console.log(value);
-    },
-    handleWaitNeed(organType) {
-      this.$refs.waitNeedList.show(organType)
     },
     //导出单据
     handleExport() {

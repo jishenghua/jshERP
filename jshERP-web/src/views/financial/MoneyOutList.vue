@@ -100,7 +100,7 @@
         <!-- 操作按钮区域 -->
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
-          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleWaitNeed('供应商')" icon="link">待付款({{waitTotal}})</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAddWithOrgan" icon="link">待付款({{waitTotal}})</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
@@ -145,7 +145,6 @@
         <!-- 表单区域 -->
         <money-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></money-out-modal>
         <financial-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></financial-detail>
-        <wait-need-list ref="waitNeedList" @ok="modalFormOk" @close="modalFormClose"></wait-need-list>
         <bill-excel-iframe ref="billExcelIframe" @ok="modalFormOk" @close="modalFormClose"></bill-excel-iframe>
       </a-card>
     </a-col>
@@ -154,19 +153,18 @@
 <script>
   import MoneyOutModal from './modules/MoneyOutModal'
   import FinancialDetail from './dialog/FinancialDetail'
-  import WaitNeedList from './dialog/WaitNeedList'
   import BillExcelIframe from '@/components/tools/BillExcelIframe'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { FinancialListMixin } from './mixins/FinancialListMixin'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
+  import { getAction } from '@/api/manage'
   export default {
     name: "MoneyOutList",
     mixins:[JeecgListMixin, FinancialListMixin],
     components: {
       MoneyOutModal,
       FinancialDetail,
-      WaitNeedList,
       BillExcelIframe,
       JDate
     },
@@ -232,9 +230,28 @@
       this.initUser()
       this.initPerson()
       this.initAccount()
-      this.initGetNeedCount('vendor')
     },
     methods: {
+      loadData(arg) {
+        if (arg === 1) {
+          this.ipagination.current = 1
+        }
+        let params = this.getQueryParams() //查询条件
+        this.loading = true
+        getAction(this.url.list, params).then((res) => {
+          if (res.code===200) {
+            this.dataSource = res.data.rows
+            this.ipagination.total = res.data.total
+            this.initGetNeedCount('vendor')
+          } else if(res.code===510){
+            this.$message.warning(res.data)
+          } else {
+            this.$message.warning(res.data.message)
+          }
+          this.loading = false
+          this.onClearSelected()
+        })
+      }
     }
   }
 </script>

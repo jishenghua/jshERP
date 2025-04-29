@@ -64,6 +64,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { findBySelectCus, findBySelectSup } from '@/api/api'
   import { getFormatDate } from '@/utils/util'
+  import { getAction } from '@/api/manage'
   export default {
     name: 'WaitNeedList',
     mixins:[JeecgListMixin],
@@ -75,6 +76,7 @@
         organType: '',
         actionType: '',
         supList: [],
+        selectBillRows: [],
         queryParam: {
           organId: undefined,
           supplierType: '',
@@ -131,8 +133,6 @@
           this.queryParam.supplierType = '供应商'
           this.actionType = '付款'
         }
-        this.ipagination.pageSize = 100
-        this.ipagination.pageSizeOptions = ['100', '200', '300']
         this.loadData(1)
         this.initSupplier()
       },
@@ -152,8 +152,37 @@
           })
         }
       },
+      //选择供应商进行付款，选择客户进行收款
       handleAction(record) {
-
+        let type = ''
+        let subType = ''
+        if(this.organType === '客户') {
+          type = '出库'
+          subType = '销售'
+        } else if(this.organType === '供应商') {
+          type = '入库'
+          subType = '采购'
+        }
+        let params = {
+          search: {
+            organId: record.id,
+            materialParam: "",
+            number: "",
+            type: type,
+            subType: subType,
+            status: ""
+          },
+          currentPage: 1,
+          pageSize: 1000
+        }
+        getAction('/depotHead/debtList', params).then((res) => {
+          if (res.code === 200) {
+            this.selectBillRows = res.data.rows
+            this.$emit('ok', record.id, this.selectBillRows)
+            this.selectBillRows = []
+            this.close()
+          }
+        })
       },
       close () {
         this.$emit('close')

@@ -9,6 +9,7 @@ export const FinancialModalMixin = {
   data() {
     return {
       action: '',
+      actionWithOrgan: false,
       supList: [],
       cusList: [],
       retailList: [],
@@ -232,6 +233,14 @@ export const FinancialModalMixin = {
     },
     workflowModalFormOk() {
       this.close()
+    },
+    waitNeedListOk(organId, selectBillRows) {
+      if(organId) {
+        this.form.setFieldsValue({'organId': organId})
+      }
+      if (selectBillRows && selectBillRows.length > 0) {
+        this.requestSubTableDataEx(selectBillRows, this.accountTable);
+      }
     },
     onAdded(event) {
       let that = this
