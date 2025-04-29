@@ -234,12 +234,14 @@ export const FinancialModalMixin = {
     workflowModalFormOk() {
       this.close()
     },
-    waitNeedListOk(organId, selectBillRows) {
+    waitNeedListOk(organType, organId, selectBillRows) {
       if(organId) {
         this.form.setFieldsValue({'organId': organId})
       }
       if (selectBillRows && selectBillRows.length > 0) {
         this.requestSubTableDataEx(selectBillRows, this.accountTable);
+      } else {
+        this.selectBeginNeed(organType)
       }
     },
     onAdded(event) {
@@ -305,7 +307,7 @@ export const FinancialModalMixin = {
       }
       tab.dataSource = listEx
       this.$nextTick(() => {
-        this.form.setFieldsValue({'totalPrice':changeAmount, 'changeAmount':changeAmount})
+        this.form.setFieldsValue({'totalPrice':changeAmount.toFixed(2), 'changeAmount':changeAmount.toFixed(2)})
       });
       typeof success === 'function' ? success(res) : ''
       tab.loading = false
@@ -331,6 +333,9 @@ export const FinancialModalMixin = {
                 listEx.push(info)
                 that.accountTable.dataSource = listEx
                 let changeAmount = info.eachAmount
+                if(changeAmount) {
+                  changeAmount = changeAmount.toFixed(2)
+                }
                 that.$nextTick(() => {
                   that.form.setFieldsValue({'totalPrice':changeAmount, 'changeAmount':changeAmount})
                 })
@@ -343,6 +348,10 @@ export const FinancialModalMixin = {
       } else {
         that.$message.warning('请选择' + type + '！');
       }
+    },
+    //选择-待收款或者待付款
+    handleWaitNeed(type) {
+      this.$refs.waitNeedList.show(type)
     },
     //保存并审核
     handleOkAndCheck() {

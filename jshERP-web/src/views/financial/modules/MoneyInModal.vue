@@ -72,6 +72,8 @@
               <span class="gap"></span>
               <a-button type="primary" icon="plus" @click="selectBeginNeed('客户')">选择期初</a-button>
               <span class="gap"></span>
+              <a-button icon="link" @click="handleWaitNeed('客户')">待收款</a-button>
+              <span class="gap"></span>
               <a-button icon="minus" @click="handleClear">清空</a-button>
             </div>
           </a-col>

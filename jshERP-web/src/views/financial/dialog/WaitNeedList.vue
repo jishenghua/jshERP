@@ -178,7 +178,7 @@
         getAction('/depotHead/debtList', params).then((res) => {
           if (res.code === 200) {
             this.selectBillRows = res.data.rows
-            this.$emit('ok', record.id, this.selectBillRows)
+            this.$emit('ok', this.organType, record.id, this.selectBillRows)
             this.selectBillRows = []
             this.close()
           }
