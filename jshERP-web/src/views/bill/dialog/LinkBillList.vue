@@ -13,6 +13,11 @@
       @cancel="handleCancel"
       cancelText="关闭"
       style="top:20px;height: 95%;">
+      <template slot="footer">
+        <a-button @click="handleCancel">关闭(ESC)</a-button>
+        <a-button @click="handleBackBill" v-if="selectType === 'detail'">返回单据列表</a-button>
+        <a-button type="primary" @click="handleOk">确定</a-button>
+      </template>
       <!-- 查询区域 -->
       <div class="table-page-search-wrapper" v-if="selectType === 'list'">
         <!-- 搜索区域 -->
@@ -129,6 +134,7 @@
         selectBillDetailRows: [],
         showType: 'basic',
         selectType: 'list',
+        oldTitle: '',
         linkNumber: '',
         organId: '',
         accountId: '',
@@ -219,6 +225,7 @@
         this.queryParam.status = status
         this.model = Object.assign({}, {});
         this.visible = true;
+        this.selectedDetailRowKeys = []
         this.initColumns(subType, organType)
         this.loadData(1)
       },
@@ -231,6 +238,7 @@
         this.queryParam.purchaseStatus = purchaseStatus
         this.model = Object.assign({}, {});
         this.visible = true;
+        this.selectedDetailRowKeys = []
         this.initColumns(subType, organType)
         this.loadData(1)
       },
@@ -277,13 +285,19 @@
       onSelectDetailChange(selectedRowKeys) {
         this.selectedDetailRowKeys = selectedRowKeys;
       },
+      handleBackBill() {
+        this.selectType = 'list'
+        this.title = this.oldTitle
+        this.selectedDetailRowKeys = []
+      },
       handleOk () {
         if(this.selectType === 'list') {
           this.getDepotByCurrentUser()
           this.getSelectBillRows();
-          this.selectType = 'detail'
-          this.title = "请选择单据明细"
           if(this.selectBillRows && this.selectBillRows.length>0) {
+            this.selectType = 'detail'
+            this.oldTitle = this.title
+            this.title = "请选择单据明细"
             let record = this.selectBillRows[0]
             this.linkNumber = record.number
             this.organId = record.organId
@@ -294,6 +308,8 @@
             this.remark = record.remark
             this.initListColumns()
             this.loadDetailData(1)
+          } else {
+            this.$message.warning('抱歉，请选择单据！')
           }
         } else {
           if(this.selectedDetailRowKeys.length) {
