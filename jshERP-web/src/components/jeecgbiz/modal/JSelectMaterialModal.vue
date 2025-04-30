@@ -140,12 +140,11 @@
         </div>
       </a-col>
     </a-row>
-    <material-modal ref="modalForm" @ok="modalFormOk"></material-modal>
+    <material-modal ref="materialModalForm" @ok="modalFormOk"></material-modal>
   </a-modal>
 </template>
 
 <script>
-  import MaterialModal from '@/views/material/modules/MaterialModal'
   import { getAction, getFileAccessHttpUrl } from '@/api/manage'
   import {filterObj, getMpListShort} from '@/utils/util'
   import {getMaterialBySelect, queryMaterialCategoryTreeList} from '@/api/api'
@@ -157,7 +156,7 @@
     name: 'JSelectMaterialModal',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      MaterialModal
+      MaterialModal: () => import('@/views/material/modules/MaterialModal')
     },
     props: ['rows', 'multi', 'barCode'],
     data() {
@@ -375,8 +374,8 @@
         that.selectMaterialIds = [];
       },
       addMaterial() {
-        this.$refs.modalForm.add()
-        this.$refs.modalForm.title = '新增商品'
+        this.$refs.materialModalForm.add()
+        this.$refs.materialModalForm.title = '新增商品'
       },
       getImgUrl(imgName, type) {
         if(imgName && imgName.split(',')) {
