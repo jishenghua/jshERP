@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import { getAction, postAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
-import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount, waitBillCount,
-  getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
+import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount,
+  waitBillCount, getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
 import { getCheckFlag, getFormatDate, getMpListShort, getPrevMonthFormatDate } from '@/utils/util'
 import moment from 'moment'
 import pick from 'lodash.pick'

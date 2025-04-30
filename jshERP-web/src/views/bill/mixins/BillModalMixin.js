@@ -1,16 +1,6 @@
 import { FormTypes, getListData } from '@/utils/JEditableTableUtil'
-import {
-  findBySelectCus,
-  findBySelectRetail,
-  findBySelectSup,
-  findStockByDepotAndBarCode,
-  getAccount,
-  getBatchNumberList,
-  getCurrentSystemConfig,
-  getMaterialByBarCode,
-  getPersonByNumType,
-  getPlatformConfigByKey
-} from '@/api/api'
+import { findBySelectCus, findBySelectRetail, findBySelectSup, findStockByDepotAndBarCode, getAccount,
+  getBatchNumberList, getCurrentSystemConfig, getMaterialByBarCode, getPersonByNumType, getPlatformConfigByKey } from '@/api/api'
 import { getAction } from '@/api/manage'
 import { getCheckFlag, getMpListShort, getNowFormatDateTime } from '@/utils/util'
 import { USER_INFO } from '@/store/mutation-types'

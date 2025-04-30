@@ -293,14 +293,7 @@
   import UnitModal from '../../system/modules/UnitModal'
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
-  import {
-    changeNameToPinYin,
-    checkMaterial,
-    checkMaterialBarCode,
-    getMaterialAttributeNameList,
-    getMaterialAttributeValueListById,
-    getMaxBarCode,
-    queryMaterialCategoryTreeList } from '@/api/api'
+  import { changeNameToPinYin, checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
   import { autoJumpNextInput, handleIntroJs, removeByVal } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
