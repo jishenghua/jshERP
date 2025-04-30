@@ -145,6 +145,7 @@
 </template>
 
 <script>
+  import MaterialModal from '@/views/material/modules/MaterialModal'
   import { getAction, getFileAccessHttpUrl } from '@/api/manage'
   import {filterObj, getMpListShort} from '@/utils/util'
   import {getMaterialBySelect, queryMaterialCategoryTreeList} from '@/api/api'
@@ -156,7 +157,7 @@
     name: 'JSelectMaterialModal',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      MaterialModal: () => import('@/views/material/modules/MaterialModal')
+      MaterialModal
     },
     props: ['rows', 'multi', 'barCode'],
     data() {
