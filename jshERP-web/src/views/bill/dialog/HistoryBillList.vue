@@ -24,7 +24,7 @@
               <a-form-item :label="organLabel" :labelCol="{span: 5}" :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParam.organId" :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                   <a-select-option v-for="(item,index) in supplierList" :key="index" :value="item.id">
-                    {{ item.supplier }}
+                    {{ item.supplier + ' ' + item.phonenum }}
                   </a-select-option>
                 </a-select>
               </a-form-item>

@@ -47,7 +47,7 @@
                   <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择客户" showSearch optionFilterProp="children" v-model="queryParam.organId">
                       <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
-                        {{ item.supplier }}
+                        {{ item.supplier+ ' ' +item.phonenum  }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>

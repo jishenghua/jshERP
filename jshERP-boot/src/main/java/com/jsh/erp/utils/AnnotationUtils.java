@@ -5,6 +5,7 @@ import java.lang.annotation.Documented;
 
 /**
  * @author jishenghua qq752718920  2018-10-7 15:26:27
+ * @description 注解处理工具类
  */
 public class AnnotationUtils {
     public static <A extends Annotation> A getAnnotation(Class<?> cls, Class<A> annotationClass) {

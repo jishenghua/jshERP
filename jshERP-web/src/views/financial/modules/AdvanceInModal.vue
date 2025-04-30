@@ -26,7 +26,7 @@
               <a-select placeholder="请选择付款会员" v-decorator="[ 'organId', validatorRules.organId ]"
                 :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
                 <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
-                  {{ item.supplier }}
+                  {{ item.supplier + ' ' + item.phonenum }}
                 </a-select-option>
               </a-select>
             </a-form-item>

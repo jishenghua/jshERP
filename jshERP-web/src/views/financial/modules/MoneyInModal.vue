@@ -32,7 +32,7 @@
                   <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initCustomer"><a-icon type="reload" /> 刷新</div>
                 </div>
                 <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
-                  {{ item.supplier }}
+                  {{ item.supplier + ' ' + item.phonenum }}
                 </a-select-option>
               </a-select>
             </a-form-item>
