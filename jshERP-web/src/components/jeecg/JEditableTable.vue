@@ -26,6 +26,16 @@
             </template>
           </template>
         </div>
+        <div v-if="actionDeleteButton" class="action-button">
+          <template v-if="selectedRowIds.length>0">
+            <a-popconfirm
+              :title="`确定要移除这 ${selectedRowIds.length} 项吗?`"
+              @confirm="handleConfirmDelete">
+              <a-button type="primary" icon="minus" :disabled="disabled">移除行</a-button>
+              <span class="gap"></span>
+            </a-popconfirm>
+          </template>
+        </div>
       </a-col>
       <a-col>
         <slot name="buttonAfter" :target="getVM()"/>
@@ -834,6 +844,11 @@
       },
       // 是否显示操作按钮
       actionButton: {
+        type: Boolean,
+        default: false
+      },
+      // 是否显示删除按钮
+      actionDeleteButton: {
         type: Boolean,
         default: false
       },
