@@ -19,6 +19,8 @@ export const BillModalMixin = {
         value: ''
       },
       currentSelectDepotId: '',
+      transferParam: {},
+      defaultDepotId: '',
       depotList: [],
       accountList: [],
       accountIdList: [],

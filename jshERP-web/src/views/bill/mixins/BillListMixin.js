@@ -19,6 +19,7 @@ export const BillListMixin = {
       waitTotal: 0,
       dateFormat: 'YYYY-MM-DD',
       billExcelUrl: '',
+      defaultDepotId: '',
       supList: [],
       cusList: [],
       retailList: [],
@@ -397,6 +398,14 @@ export const BillListMixin = {
         { title: '金额', dataIndex: 'allPrice'},
         { title: '备注', dataIndex: 'remark'}
       ],
+      quickBtn: {
+        retailBack: false,
+        purchaseOrder: false,
+        purchaseIn: false,
+        purchaseBack: false,
+        saleOut: false,
+        saleBack: false
+      },
       queryParam: {
         beginTime: getPrevMonthFormatDate(3),
         endTime: getFormatDate(),
@@ -683,6 +692,75 @@ export const BillListMixin = {
           }
         }
       })
+    },
+    //加载快捷按钮：转入库、转出库等
+    initQuickBtn() {
+      let btnStrList = Vue.ls.get('winBtnStrList') //按钮功能列表 JSON字符串
+      if (btnStrList) {
+        for (let i = 0; i < btnStrList.length; i++) {
+          if (btnStrList[i].btnStr) {
+            this.quickBtn.retailBack = btnStrList[i].url === '/bill/retail_back'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.retailBack
+            this.quickBtn.purchaseOrder = btnStrList[i].url === '/bill/purchase_order'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.purchaseOrder
+            this.quickBtn.purchaseIn = btnStrList[i].url === '/bill/purchase_in'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.purchaseIn
+            this.quickBtn.purchaseBack = btnStrList[i].url === '/bill/purchase_back'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.purchaseBack
+            this.quickBtn.saleOut = btnStrList[i].url === '/bill/sale_out'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.saleOut
+            this.quickBtn.saleBack = btnStrList[i].url === '/bill/sale_back'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.saleBack
+          }
+        }
+      }
+    },
+    getDepotByCurrentUser() {
+      getAction('/depot/findDepotByCurrentUser').then((res) => {
+        if (res.code === 200) {
+          if (res.data.length === 1) {
+            this.defaultDepotId = res.data[0].id+''
+          } else {
+            for (let i = 0; i < res.data.length; i++) {
+              if(res.data[i].isDefault){
+                this.defaultDepotId = res.data[i].id+''
+              }
+            }
+          }
+        }
+      })
+    },
+    //跳转到下一个单据页面
+    transferBill(type) {
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warning('请选择一条记录！')
+      } else if (this.selectedRowKeys.length > 1) {
+        this.$message.warning('只能选择一条记录！')
+      } else {
+        let info = this.selectionRows[0]
+        if(info.status === '1' || info.status === '3') {
+          let param = {
+            headerId: info.id,
+            mpList : '',
+            linkType: 'basic'
+          }
+          getAction('/depotItem/getDetailList', param).then((res) => {
+            if (res.code === 200) {
+              let transferParam = {
+                list: res.data.rows,
+                number: info.number,
+                organId: info.organId,
+                discountMoney: info.discountMoney,
+                deposit: info.deposit,
+                remark: info.remark,
+                accountId: info.accountId,
+                salesMan: info.salesMan
+              }
+              this.$refs.transferModalForm.action = "add"
+              this.$refs.transferModalForm.transferParam = transferParam
+              this.$refs.transferModalForm.defaultDepotId = this.defaultDepotId
+              this.$refs.transferModalForm.add()
+              this.$refs.transferModalForm.title = type
+            }
+          })
+        } else {
+          this.$message.warning('该状态不能' + type + '！')
+        }
+      }
     },
     //列设置更改事件
     onColChange (checkedValues) {
