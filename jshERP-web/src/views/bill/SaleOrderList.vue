@@ -85,7 +85,7 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
-          <a-button v-if="quickBtn.purchaseIn && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转销售出库')">转销售出库</a-button>
+          <a-button v-if="quickBtn.saleOut && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转销售出库')">转销售出库</a-button>
           <a-tooltip title="可将状态是部分销售的单据强制完成">
             <a-button v-if="btnEnableList.indexOf(1)>-1" icon="issues-close" @click="batchForceClose">强制结单</a-button>
           </a-tooltip>

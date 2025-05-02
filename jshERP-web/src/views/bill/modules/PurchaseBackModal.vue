@@ -316,6 +316,10 @@
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
+          this.$nextTick(() => {
+            let tp = this.transferParam
+            this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discountMoney, tp.deposit, tp.remark, this.defaultDepotId, tp.accountId)
+          })
         } else {
           if(this.model.linkNumber) {
             this.rowCanEdit = false
@@ -412,8 +416,10 @@
             }
             info.linkId = info.id
             allTaxLastMoney += info.taxLastMoney
-            listEx.push(info)
-            this.changeColumnShow(info)
+            if(info.operNumber>0) {
+              listEx.push(info)
+              this.changeColumnShow(info)
+            }
           }
           this.materialTable.dataSource = listEx
           ///给优惠后金额重新赋值

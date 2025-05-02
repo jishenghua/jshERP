@@ -100,6 +100,7 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
+          <a-button v-if="quickBtn.retailBack && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转零售退货')">转零售退货</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
           <a-button v-if="isShowExcel && btnEnableList.indexOf(3)>-1" icon="download" @click="handleExport">导出</a-button>
@@ -179,6 +180,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <retail-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></retail-out-modal>
+        <retail-back-modal ref="transferModalForm" @ok="modalFormOk" @close="modalFormClose"></retail-back-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
         <bill-excel-iframe ref="billExcelIframe" @ok="modalFormOk" @close="modalFormClose"></bill-excel-iframe>
       </a-card>
@@ -188,6 +190,7 @@
 <!-- create ji sheng hua-->
 <script>
   import RetailOutModal from './modules/RetailOutModal'
+  import RetailBackModal from './modules/RetailBackModal'
   import BillDetail from './dialog/BillDetail'
   import BillExcelIframe from '@/components/tools/BillExcelIframe'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
@@ -200,6 +203,7 @@
     mixins:[JeecgListMixin,BillListMixin],
     components: {
       RetailOutModal,
+      RetailBackModal,
       BillDetail,
       BillExcelIframe,
       JEllipsis,
@@ -284,6 +288,8 @@
       this.getDepotData()
       this.initUser()
       this.initAccount()
+      this.initQuickBtn()
+      this.getDepotByCurrentUser()
     },
     methods: {
     }

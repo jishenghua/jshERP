@@ -300,6 +300,8 @@
           this.fileList = []
           this.$nextTick(() => {
             this.form.setFieldsValue({'getAmount':0, 'backAmount':0})
+            let tp = this.transferParam
+            this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discountMoney, tp.deposit, tp.remark)
           })
         } else {
           if(this.model.linkNumber) {
@@ -408,8 +410,10 @@
             let info = selectBillDetailRows[j];
             info.linkId = info.id
             allTaxLastMoney += info.allPrice
-            listEx.push(info)
-            this.changeColumnShow(info)
+            if(info.operNumber>0) {
+              listEx.push(info)
+              this.changeColumnShow(info)
+            }
           }
           this.materialTable.dataSource = listEx
           ///给优惠后金额重新赋值

@@ -116,6 +116,7 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
+          <a-button v-if="quickBtn.saleBack && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转销售退货')">转销售退货</a-button>
           <a-tooltip title="可将状态是部分出库的单据强制完成">
             <a-button v-if="inOutManageFlag && btnEnableList.indexOf(1)>-1" icon="issues-close" @click="batchForceClose">强制结单</a-button>
           </a-tooltip>
@@ -211,6 +212,7 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <sale-out-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></sale-out-modal>
+        <sale-back-modal ref="transferModalForm" @ok="modalFormOk" @close="modalFormClose"></sale-back-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
         <bill-excel-iframe ref="billExcelIframe" @ok="modalFormOk" @close="modalFormClose"></bill-excel-iframe>
       </a-card>
@@ -219,6 +221,7 @@
 </template>
 <script>
   import SaleOutModal from './modules/SaleOutModal'
+  import SaleBackModal from './modules/SaleBackModal'
   import BillDetail from './dialog/BillDetail'
   import BillExcelIframe from '@/components/tools/BillExcelIframe'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
@@ -231,6 +234,7 @@
     mixins:[JeecgListMixin,BillListMixin],
     components: {
       SaleOutModal,
+      SaleBackModal,
       BillDetail,
       BillExcelIframe,
       JEllipsis,
@@ -335,6 +339,8 @@
       this.getDepotData()
       this.initUser()
       this.initAccount()
+      this.initQuickBtn()
+      this.getDepotByCurrentUser()
     },
     methods: {
     }
