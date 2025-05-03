@@ -1956,21 +1956,21 @@
                 JE: item.allPrice, // 金额
                 DETAIL: item.remark // 备注
               })),
-              remark: this.model.remark, // 备注
-              totalCap: this.model.discountLastMoney, // 应收金额大写
-              userName: this.model.creatorName, // 制单人
-              deposit: this.model.deposit.toFixed(2), // 定金
-              discountLastMoney: this.model.discountLastMoney.toFixed(2), // 折扣金额
-              otherMoney: this.model.otherMoney.toFixed(2), // 其他金额
-              allMoney: (this.model.discountLastMoney + this.model.otherMoney).toFixed(2), // 总金额
+              remark: this.model.remark || '', // 备注
+              totalCap: this.model.discountLastMoney || 0, // 应收金额大写
+              userName: this.model.creatorName || '', // 制单人
+              deposit: (this.model.deposit || 0).toFixed(2), // 定金
+              discountLastMoney: (this.model.discountLastMoney || 0).toFixed(2), // 折扣金额
+              otherMoney: (this.model.otherMoney || 0).toFixed(2), // 其他金额
+              allMoney: ((this.model.discountLastMoney || 0) + (this.model.otherMoney || 0)).toFixed(2), // 总金额
               // 公司信息
-              companyName: res.data.companyName,
-              companyContacts: res.data.companyContacts,
-              companyAddress: res.data.companyAddress,
-              companyTel: res.data.companyTel,
-              companyFax: res.data.companyFax,
-              companyPostCode: res.data.companyPostCode,
-              saleAgreement: res.data.saleAgreement
+              companyName: res.data.companyName || '',
+              companyContacts: res.data.companyContacts || '',
+              companyAddress: res.data.companyAddress || '',
+              companyTel: res.data.companyTel || '',
+              companyFax: res.data.companyFax || '',
+              companyPostCode: res.data.companyPostCode || '',
+              saleAgreement: res.data.saleAgreement || ''
             }
             
             // 打印数据

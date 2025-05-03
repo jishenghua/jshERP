@@ -1,0 +1,9 @@
+/* Print styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    .page-break {
+        page-break-after: always;
+    }
+} 
