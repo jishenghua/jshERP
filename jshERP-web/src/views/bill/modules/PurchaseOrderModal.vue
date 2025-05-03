@@ -320,6 +320,8 @@
           this.fileList = []
           this.$nextTick(() => {
             handleIntroJs(this.prefixNo, 1)
+            let tp = this.transferParam
+            this.linkBillListOk(tp.list, tp.number, tp.organId)
           })
         } else {
           if(this.model.linkNumber) {
@@ -414,6 +416,7 @@
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)
         this.changeFormTypes(this.materialTable.columns, 'finishNumber', 1)
         if(selectBillDetailRows && selectBillDetailRows.length>0) {
+          let listEx = []
           let discountLastMoney = 0
           for(let j=0; j<selectBillDetailRows.length; j++) {
             let info = selectBillDetailRows[j];
@@ -427,8 +430,12 @@
               discountLastMoney += info.allPrice
             }
             info.linkId = info.id
-            this.changeColumnShow(info)
+            if(info.operNumber>0) {
+              listEx.push(info)
+              this.changeColumnShow(info)
+            }
           }
+          this.materialTable.dataSource = listEx
           //根据单号查询单据类型
           findBillDetailByNumber({'number':linkNumber}).then((res) => {
             if (res.code === 200) {
@@ -456,7 +463,6 @@
               'changeAmount': discountLastMoney.toFixed(2)
             })
           })
-          this.materialTable.dataSource = selectBillDetailRows
         }
       }
     }
