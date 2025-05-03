@@ -86,6 +86,7 @@
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
           <a-button v-if="quickBtn.saleOut && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转销售出库')">转销售出库</a-button>
+          <a-button v-if="quickBtn.purchaseOrder && purchaseBySaleFlag && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转采购订单-以销定购')">转采购订单-以销定购</a-button>
           <a-tooltip title="可将状态是部分销售的单据强制完成">
             <a-button v-if="btnEnableList.indexOf(1)>-1" icon="issues-close" @click="batchForceClose">强制结单</a-button>
           </a-tooltip>
@@ -180,6 +181,7 @@
         <!-- 表单区域 -->
         <sale-order-modal ref="modalForm" @ok="modalFormOk" @close="modalFormClose"></sale-order-modal>
         <sale-out-modal ref="transferModalForm" @ok="modalFormOk" @close="modalFormClose"></sale-out-modal>
+        <purchase-order-modal ref="transferPurchaseModalForm" @ok="modalFormOk" @close="modalFormClose"></purchase-order-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
         <bill-excel-iframe ref="billExcelIframe" @ok="modalFormOk" @close="modalFormClose"></bill-excel-iframe>
       </a-card>
@@ -189,6 +191,7 @@
 <script>
   import SaleOrderModal from './modules/SaleOrderModal'
   import SaleOutModal from './modules/SaleOutModal'
+  import PurchaseOrderModal from './modules/PurchaseOrderModal'
   import BillDetail from './dialog/BillDetail'
   import BillExcelIframe from '@/components/tools/BillExcelIframe'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
@@ -203,6 +206,7 @@
     components: {
       SaleOrderModal,
       SaleOutModal,
+      PurchaseOrderModal,
       BillDetail,
       BillExcelIframe,
       JEllipsis,

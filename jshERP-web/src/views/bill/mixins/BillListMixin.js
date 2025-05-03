@@ -750,11 +750,19 @@ export const BillListMixin = {
                 accountId: info.accountId,
                 salesMan: info.salesMan
               }
-              this.$refs.transferModalForm.action = "add"
-              this.$refs.transferModalForm.transferParam = transferParam
-              this.$refs.transferModalForm.defaultDepotId = this.defaultDepotId
-              this.$refs.transferModalForm.add()
-              this.$refs.transferModalForm.title = type
+              if(type === '转采购订单-以销定购') {
+                this.$refs.transferPurchaseModalForm.action = "add"
+                this.$refs.transferPurchaseModalForm.transferParam = transferParam
+                this.$refs.transferPurchaseModalForm.defaultDepotId = this.defaultDepotId
+                this.$refs.transferPurchaseModalForm.add()
+                this.$refs.transferPurchaseModalForm.title = type
+              } else {
+                this.$refs.transferModalForm.action = "add"
+                this.$refs.transferModalForm.transferParam = transferParam
+                this.$refs.transferModalForm.defaultDepotId = this.defaultDepotId
+                this.$refs.transferModalForm.add()
+                this.$refs.transferModalForm.title = type
+              }
             }
           })
         } else {
