@@ -733,10 +733,16 @@ export const BillListMixin = {
       } else {
         let info = this.selectionRows[0]
         if(info.status === '1' || info.status === '3') {
+          let linkType = 'basic'
+          if(type === '转采购订单-以销定购') {
+            linkType = 'purchase'
+          } else {
+            linkType = 'basic'
+          }
           let param = {
             headerId: info.id,
             mpList : '',
-            linkType: 'basic'
+            linkType: linkType
           }
           getAction('/depotItem/getDetailList', param).then((res) => {
             if (res.code === 200) {
