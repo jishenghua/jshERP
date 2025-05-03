@@ -1190,6 +1190,9 @@
   import FinancialDetail from '../../financial/dialog/FinancialDetail'
   import JUpload from '@/components/jeecg/JUpload'
   import Vue from 'vue'
+  import { saleOrderTemplate } from '../printTemplate/saleOrderTemplate'
+  import { hiprint } from 'vue-plugin-hiprint'
+
   export default {
     name: 'BillDetail',
     components: {
@@ -1604,7 +1607,8 @@
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
           { title: '备注', dataIndex: 'remark'}
-        ]
+        ],
+        hiprintTemplate: null,
       }
     },
     created () {
@@ -1616,6 +1620,12 @@
       this.tableWidthRetail = {
         'width': '100%'
       }
+    },
+    mounted() {
+      // 初始化 hiprint 模板
+      this.hiprintTemplate = new hiprint.PrintTemplate({
+        template: saleOrderTemplate
+      })
     },
     methods: {
       initSetting(record, type, ds) {
@@ -1775,7 +1785,7 @@
           if(res.code === 200 && res.data){
             this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
             let multiBillType = res.data.multiBillType
-            let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag
+            let multiLevelApprovalFlag = res.data.multiLevelApprovalFlag/1
             this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
             if(res.data.auditPrintFlag==='1') {
               if(this.model.status === '0' || this.model.status === '9') {
@@ -1926,12 +1936,51 @@
       },
       //三联打印预览
       handlePrint() {
-        getPlatformConfigByKey({"platformKey": "bill_print_url"}).then((res)=> {
-          if (res && res.code === 200) {
-            let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
-            let billPrintHeight = this.dataSource.length*50 + 600
-            this.$refs.modalDetail.show(this.model, billPrintUrl, billPrintHeight)
-            this.$refs.modalDetail.title = this.billType + "-三联打印预览"
+        // 获取系统配置
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data) {
+            // 准备打印数据
+            const printData = {
+              title: res.data.companyName + this.billType, // 单据表头
+              orderId: this.model.number, // 订单编号
+              name: this.model.organName, // 名称
+              tel: this.model.telephone, // 手机号
+              address: this.model.address, // 地址
+              operTimeStr: this.model.operTimeStr, // 单据日期
+              table: this.dataSource.map(item => ({
+                NAME: item.name, // 名称
+                SL: item.operNumber, // 数量
+                GG: item.model, // 型号
+                TM: item.barCode, // 条码
+                DJ: item.unitPrice, // 单价
+                JE: item.allPrice, // 金额
+                DETAIL: item.remark // 备注
+              })),
+              remark: this.model.remark, // 备注
+              totalCap: this.model.discountLastMoney, // 应收金额大写
+              userName: this.model.creatorName, // 制单人
+              deposit: this.model.deposit.toFixed(2), // 定金
+              discountLastMoney: this.model.discountLastMoney.toFixed(2), // 折扣金额
+              otherMoney: this.model.otherMoney.toFixed(2), // 其他金额
+              allMoney: (this.model.discountLastMoney + this.model.otherMoney).toFixed(2), // 总金额
+              // 公司信息
+              companyName: res.data.companyName,
+              companyContacts: res.data.companyContacts,
+              companyAddress: res.data.companyAddress,
+              companyTel: res.data.companyTel,
+              companyFax: res.data.companyFax,
+              companyPostCode: res.data.companyPostCode,
+              saleAgreement: res.data.saleAgreement
+            }
+            
+            // 打印数据
+            console.log('打印数据:', printData)
+            
+            // 打印预览
+            this.hiprintTemplate.print(printData, {
+              title: this.billType + "-三联打印预览",
+              preview: true
+            })
           }
         })
       },

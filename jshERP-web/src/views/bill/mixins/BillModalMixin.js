@@ -1068,6 +1068,7 @@ export const BillModalMixin = {
         getPlatformConfigByKey({"platformKey": "bill_print_url"}).then((res)=> {
           if (res && res.code === 200) {
             let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
+            console.log(billPrintUrl)
             let billPrintHeight = this.materialTable.dataSource.length*50 + 600
             this.$refs.modalPrint.show(this.model, billPrintUrl, billPrintHeight)
             this.$refs.modalPrint.title = billType + "-三联打印预览"
