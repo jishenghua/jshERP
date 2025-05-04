@@ -1652,7 +1652,7 @@
         }
         //动态替换扩展字段
         this.handleChangeOtherField()
-        //判断序列号、批号、有效期、多属性、重量、仓位货架是否有值
+        //判断序列号、批号、有效期、多属性、重量、仓位货架、扩展、备注等是否有值
         let needAddkeywords = []
         for (let i = 0; i < ds.length; i++) {
           if(ds[i].snList) {
@@ -1678,6 +1678,21 @@
           }
           if(ds[i].mfrs) {
             needAddkeywords.push('mfrs')
+          }
+          if(ds[i].otherField1) {
+            needAddkeywords.push('otherField1')
+          }
+          if(ds[i].otherField2) {
+            needAddkeywords.push('otherField2')
+          }
+          if(ds[i].otherField3) {
+            needAddkeywords.push('otherField3')
+          }
+          if(ds[i].taxRate) {
+            needAddkeywords.push('taxRate')
+          }
+          if(ds[i].remark) {
+            needAddkeywords.push('remark')
           }
         }
         let currentCol = [{title:'#',dataIndex:'',align:'center',customRender:function(t,r,index){
@@ -1709,7 +1724,8 @@
         } else {
           for(let i=0; i<this.defColumns.length; i++){
             //移除列
-            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position','brand','mfrs']
+            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position',
+              'brand','mfrs','otherField1','otherField2','otherField3','taxRate','remark']
             if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
               let info = {}
               info.title = this.defColumns[i].title
