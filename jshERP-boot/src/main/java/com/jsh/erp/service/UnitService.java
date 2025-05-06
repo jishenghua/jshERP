@@ -227,14 +227,16 @@ public class UnitService {
      * @return
      */
     public BigDecimal parseStockByUnit(BigDecimal stock, Unit unitInfo, String materialUnit) {
-        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
-            stock = stock.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);
-        }
-        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo()!=null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO)!=0) {
-            stock = stock.divide(unitInfo.getRatioTwo(),2,BigDecimal.ROUND_HALF_UP);
-        }
-        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree()!=null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO)!=0) {
-            stock = stock.divide(unitInfo.getRatioThree(),2,BigDecimal.ROUND_HALF_UP);
+        if(stock!=null) {
+            if (materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != null && unitInfo.getRatio().compareTo(BigDecimal.ZERO) != 0) {
+                stock = stock.divide(unitInfo.getRatio(), 2, BigDecimal.ROUND_HALF_UP);
+            }
+            if (materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO) != 0) {
+                stock = stock.divide(unitInfo.getRatioTwo(), 2, BigDecimal.ROUND_HALF_UP);
+            }
+            if (materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO) != 0) {
+                stock = stock.divide(unitInfo.getRatioThree(), 2, BigDecimal.ROUND_HALF_UP);
+            }
         }
         return stock;
     }
@@ -247,14 +249,16 @@ public class UnitService {
      * @return
      */
     public BigDecimal parseUnitPriceByUnit(BigDecimal unitPrice, Unit unitInfo, String materialUnit) {
-        if (materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != null && unitInfo.getRatio().compareTo(BigDecimal.ZERO) != 0) {
-            unitPrice = unitPrice.multiply(unitInfo.getRatio());
-        }
-        if (materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO) != 0) {
-            unitPrice = unitPrice.multiply(unitInfo.getRatioTwo());
-        }
-        if (materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO) != 0) {
-            unitPrice = unitPrice.multiply(unitInfo.getRatioThree());
+        if(unitPrice!=null) {
+            if (materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != null && unitInfo.getRatio().compareTo(BigDecimal.ZERO) != 0) {
+                unitPrice = unitPrice.multiply(unitInfo.getRatio());
+            }
+            if (materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO) != 0) {
+                unitPrice = unitPrice.multiply(unitInfo.getRatioTwo());
+            }
+            if (materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO) != 0) {
+                unitPrice = unitPrice.multiply(unitInfo.getRatioThree());
+            }
         }
         return unitPrice;
     }
@@ -267,14 +271,16 @@ public class UnitService {
      * @return
      */
     public BigDecimal parseAllPriceByUnit(BigDecimal allPrice, Unit unitInfo, String materialUnit) {
-        if (materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != null && unitInfo.getRatio().compareTo(BigDecimal.ZERO) != 0) {
-            allPrice = allPrice.divide(unitInfo.getRatio(), 2, BigDecimal.ROUND_HALF_UP);
-        }
-        if (materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO) != 0) {
-            allPrice = allPrice.divide(unitInfo.getRatioTwo(), 2, BigDecimal.ROUND_HALF_UP);
-        }
-        if (materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO) != 0) {
-            allPrice = allPrice.divide(unitInfo.getRatioThree(), 2, BigDecimal.ROUND_HALF_UP);
+        if(allPrice!=null) {
+            if (materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != null && unitInfo.getRatio().compareTo(BigDecimal.ZERO) != 0) {
+                allPrice = allPrice.divide(unitInfo.getRatio(), 2, BigDecimal.ROUND_HALF_UP);
+            }
+            if (materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo() != null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO) != 0) {
+                allPrice = allPrice.divide(unitInfo.getRatioTwo(), 2, BigDecimal.ROUND_HALF_UP);
+            }
+            if (materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree() != null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO) != 0) {
+                allPrice = allPrice.divide(unitInfo.getRatioThree(), 2, BigDecimal.ROUND_HALF_UP);
+            }
         }
         return allPrice;
     }
