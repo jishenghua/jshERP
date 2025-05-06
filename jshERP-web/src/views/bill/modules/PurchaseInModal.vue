@@ -355,8 +355,10 @@
           this.fileList = []
           this.$nextTick(() => {
             handleIntroJs(this.prefixNo, 1)
-            let tp = this.transferParam
-            this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discountMoney, tp.deposit, tp.remark, this.defaultDepotId, tp.accountId)
+            if(this.transferParam && this.transferParam.number) {
+              let tp = this.transferParam
+              this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discountMoney, tp.deposit, tp.remark, this.defaultDepotId, tp.accountId)
+            }
           })
         } else {
           if(this.model.linkNumber) {

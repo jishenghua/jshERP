@@ -300,8 +300,10 @@
           this.fileList = []
           this.$nextTick(() => {
             this.form.setFieldsValue({'getAmount':0, 'backAmount':0})
-            let tp = this.transferParam
-            this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discountMoney, tp.deposit, tp.remark)
+            if(this.transferParam && this.transferParam.number) {
+              let tp = this.transferParam
+              this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discountMoney, tp.deposit, tp.remark)
+            }
           })
         } else {
           if(this.model.linkNumber) {
