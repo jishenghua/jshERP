@@ -400,6 +400,9 @@
               })
             } else {
               this.payTypeList.push({"value":"现付", "text":"现付"})
+              this.$nextTick(() => {
+                this.form.setFieldsValue({'payType': '现付'})
+              })
             }
           }
         })
