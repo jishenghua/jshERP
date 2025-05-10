@@ -14,6 +14,7 @@
       <!--打印-->
       <a-button key="back" @click="handleCancel">取消(ESC)</a-button>
       <template v-if="isShowPrintBtn">
+        <a-button v-if="billPrintFlag" @click="handlePrintPro">三联打印新版预览</a-button>
         <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
         <!--此处为解决缓存问题-->
         <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
@@ -1177,6 +1178,7 @@
       </template>
     </a-form>
     <bill-print-iframe ref="modalDetail"></bill-print-iframe>
+    <bill-print-pro-iframe ref="modalProDetail"></bill-print-pro-iframe>
     <financial-detail ref="financialDetailModal"></financial-detail>
   </j-modal>
 </template>
@@ -1187,6 +1189,7 @@
   import { findBillDetailByNumber, findFinancialDetailByNumber, getPlatformConfigByKey, getCurrentSystemConfig} from '@/api/api'
   import { getMpListShort, getCheckFlag, exportXlsPost } from "@/utils/util"
   import BillPrintIframe from './BillPrintIframe'
+  import BillPrintProIframe from './BillPrintProIframe'
   import FinancialDetail from '../../financial/dialog/FinancialDetail'
   import JUpload from '@/components/jeecg/JUpload'
   import Vue from 'vue'
@@ -1194,6 +1197,7 @@
     name: 'BillDetail',
     components: {
       BillPrintIframe,
+      BillPrintProIframe,
       FinancialDetail,
       JUpload
     },
@@ -1939,6 +1943,17 @@
         } else {
           return ''
         }
+      },
+      //三联打印新版预览
+      handlePrintPro() {
+        getPlatformConfigByKey({"platformKey": "bill_print_pro_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
+            let billPrintHeight = document.documentElement.clientHeight - 260
+            this.$refs.modalProDetail.show(this.model, billPrintUrl, billPrintHeight)
+            this.$refs.modalProDetail.title = this.billType + "-三联打印新版预览"
+          }
+        })
       },
       //三联打印预览
       handlePrint() {
