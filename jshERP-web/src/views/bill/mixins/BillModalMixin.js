@@ -1054,6 +1054,21 @@ export const BillModalMixin = {
         this.$message.warning('请先保存单据后再提交流程！');
       }
     },
+    //三联打印新版预览
+    handlePrintPro(billType) {
+      if(this.model.id) {
+        getPlatformConfigByKey({"platformKey": "bill_print_pro_url"}).then((res)=> {
+          if (res && res.code === 200) {
+            let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
+            let billPrintHeight = document.documentElement.clientHeight - 260
+            this.$refs.modalPrintPro.show(this.model, billPrintUrl, billPrintHeight)
+            this.$refs.modalPrintPro.title = billType + "-三联打印新版预览"
+          }
+        })
+      } else {
+        this.$message.warning('请先保存单据后再打印！');
+      }
+    },
     //三联打印预览
     handlePrint(billType) {
       if(this.model.id) {
