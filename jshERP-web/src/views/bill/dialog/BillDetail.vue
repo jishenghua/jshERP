@@ -1699,8 +1699,16 @@
             needAddkeywords.push('remark')
           }
         }
-        let currentCol = [{title:'#',dataIndex:'',align:'center',customRender:function(t,r,index){
-          return index === ds.length-1?'':parseInt(index)+1}}]
+        let currentCol = [{title:'#',dataIndex:'',align:'center',
+          customRender:function(t,r,index){
+            if(r.mType) {
+              //组装和拆卸所有行都展示序号
+              return index === ds.length?'':parseInt(index)+1
+            } else {
+              return index === ds.length-1?'':parseInt(index)+1
+            }
+          }
+        }]
         if(record.status === '3') {
           //部分采购|部分销售的时候显示全部列
           for(let i=0; i<this.defColumns.length; i++){
