@@ -399,12 +399,12 @@ export const BillListMixin = {
         { title: '备注', dataIndex: 'remark'}
       ],
       quickBtn: {
-        retailBack: false,
-        purchaseOrder: false,
-        purchaseIn: false,
-        purchaseBack: false,
-        saleOut: false,
-        saleBack: false
+        retailBack: '',
+        purchaseOrder: '',
+        purchaseIn: '',
+        purchaseBack: '',
+        saleOut: '',
+        saleBack: ''
       },
       queryParam: {
         beginTime: getPrevMonthFormatDate(3),
@@ -699,12 +699,12 @@ export const BillListMixin = {
       if (btnStrList) {
         for (let i = 0; i < btnStrList.length; i++) {
           if (btnStrList[i].btnStr) {
-            this.quickBtn.retailBack = btnStrList[i].url === '/bill/retail_back'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.retailBack
-            this.quickBtn.purchaseOrder = btnStrList[i].url === '/bill/purchase_order'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.purchaseOrder
-            this.quickBtn.purchaseIn = btnStrList[i].url === '/bill/purchase_in'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.purchaseIn
-            this.quickBtn.purchaseBack = btnStrList[i].url === '/bill/purchase_back'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.purchaseBack
-            this.quickBtn.saleOut = btnStrList[i].url === '/bill/sale_out'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.saleOut
-            this.quickBtn.saleBack = btnStrList[i].url === '/bill/sale_back'?btnStrList[i].btnStr.indexOf(1)>-1:this.quickBtn.saleBack
+            this.quickBtn.retailBack = btnStrList[i].url === '/bill/retail_back'?btnStrList[i].btnStr:this.quickBtn.retailBack
+            this.quickBtn.purchaseOrder = btnStrList[i].url === '/bill/purchase_order'?btnStrList[i].btnStr:this.quickBtn.purchaseOrder
+            this.quickBtn.purchaseIn = btnStrList[i].url === '/bill/purchase_in'?btnStrList[i].btnStr:this.quickBtn.purchaseIn
+            this.quickBtn.purchaseBack = btnStrList[i].url === '/bill/purchase_back'?btnStrList[i].btnStr:this.quickBtn.purchaseBack
+            this.quickBtn.saleOut = btnStrList[i].url === '/bill/sale_out'?btnStrList[i].btnStr:this.quickBtn.saleOut
+            this.quickBtn.saleBack = btnStrList[i].url === '/bill/sale_back'?btnStrList[i].btnStr:this.quickBtn.saleBack
           }
         }
       }
@@ -725,7 +725,7 @@ export const BillListMixin = {
       })
     },
     //跳转到下一个单据页面
-    transferBill(type) {
+    transferBill(type, quickBtnStr) {
       if (this.selectedRowKeys.length <= 0) {
         this.$message.warning('请选择一条记录！')
       } else if (this.selectedRowKeys.length > 1) {
@@ -758,18 +758,22 @@ export const BillListMixin = {
               }
               if(type === '转采购订单-以销定购') {
                 this.$refs.transferPurchaseModalForm.action = "add"
-                this.$refs.transferPurchaseModalForm.isCanCheck = false
                 this.$refs.transferPurchaseModalForm.transferParam = transferParam
                 this.$refs.transferPurchaseModalForm.defaultDepotId = this.defaultDepotId
                 this.$refs.transferPurchaseModalForm.add()
                 this.$refs.transferPurchaseModalForm.title = type
+                if(quickBtnStr.indexOf(2)===-1) {
+                  this.$refs.transferPurchaseModalForm.isCanCheck = false
+                }
               } else {
                 this.$refs.transferModalForm.action = "add"
-                this.$refs.transferModalForm.isCanCheck = false
                 this.$refs.transferModalForm.transferParam = transferParam
                 this.$refs.transferModalForm.defaultDepotId = this.defaultDepotId
                 this.$refs.transferModalForm.add()
                 this.$refs.transferModalForm.title = type
+                if(quickBtnStr.indexOf(2)===-1) {
+                  this.$refs.transferModalForm.isCanCheck = false
+                }
               }
             }
           })
