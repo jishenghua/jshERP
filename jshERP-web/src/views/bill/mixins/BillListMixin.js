@@ -758,12 +758,14 @@ export const BillListMixin = {
               }
               if(type === '转采购订单-以销定购') {
                 this.$refs.transferPurchaseModalForm.action = "add"
+                this.$refs.transferPurchaseModalForm.isCanCheck = false
                 this.$refs.transferPurchaseModalForm.transferParam = transferParam
                 this.$refs.transferPurchaseModalForm.defaultDepotId = this.defaultDepotId
                 this.$refs.transferPurchaseModalForm.add()
                 this.$refs.transferPurchaseModalForm.title = type
               } else {
                 this.$refs.transferModalForm.action = "add"
+                this.$refs.transferModalForm.isCanCheck = false
                 this.$refs.transferModalForm.transferParam = transferParam
                 this.$refs.transferModalForm.defaultDepotId = this.defaultDepotId
                 this.$refs.transferModalForm.add()
