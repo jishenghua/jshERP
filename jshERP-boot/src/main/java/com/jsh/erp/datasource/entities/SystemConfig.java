@@ -43,6 +43,8 @@ public class SystemConfig {
 
     private String auditPrintFlag;
 
+    private String zeroChangeAmountFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -213,6 +215,14 @@ public class SystemConfig {
 
     public void setAuditPrintFlag(String auditPrintFlag) {
         this.auditPrintFlag = auditPrintFlag == null ? null : auditPrintFlag.trim();
+    }
+
+    public String getZeroChangeAmountFlag() {
+        return zeroChangeAmountFlag;
+    }
+
+    public void setZeroChangeAmountFlag(String zeroChangeAmountFlag) {
+        this.zeroChangeAmountFlag = zeroChangeAmountFlag == null ? null : zeroChangeAmountFlag.trim();
     }
 
     public Long getTenantId() {
