@@ -43,6 +43,8 @@ export const BillModalMixin = {
       isShowPrintBtn: true,
       /* 原始审核是否开启 */
       checkFlag: true,
+      //零收付款的场景开关
+      zeroChangeAmountFlag: false,
       validatorRules:{
         price:{
           rules: [
@@ -182,6 +184,7 @@ export const BillModalMixin = {
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
           this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
           this.inOutManageFlag = res.data.inOutManageFlag==='1'?true:false
+          this.zeroChangeAmountFlag = res.data.zeroChangeAmountFlag==='1'?true:false
           if(res.data.auditPrintFlag==='1') {
             if(this.model.status === '0' || this.model.status === '9') {
               this.isShowPrintBtn = false
@@ -738,6 +741,7 @@ export const BillModalMixin = {
         changeAmountNew = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:changeAmountNew
         this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
           'changeAmount':changeAmountNew,'debt':0})
+        this.setZeroChangeAmount()
       });
     },
     //改变优惠率
@@ -756,6 +760,7 @@ export const BillModalMixin = {
         changeAmountNew = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:changeAmountNew
         this.form.setFieldsValue({'discountMoney':discountMoneyNew,'discountLastMoney':discountLastMoneyNew,
           'changeAmount':changeAmountNew,'debt':0})
+        this.setZeroChangeAmount()
       });
     },
     //改变付款优惠
@@ -774,6 +779,7 @@ export const BillModalMixin = {
         changeAmountNew = this.prefixNo === 'CGDD' || this.prefixNo === 'XSDD'?0:changeAmountNew
         this.form.setFieldsValue({'discount':discountNew,'discountLastMoney':discountLastMoneyNew,
           'changeAmount':changeAmountNew,'debt':0})
+        this.setZeroChangeAmount()
       });
     },
     //其它费用
@@ -787,6 +793,7 @@ export const BillModalMixin = {
       }
       this.$nextTick(() => {
         this.form.setFieldsValue({'changeAmount':changeAmountNew, 'debt':0})
+        this.setZeroChangeAmount()
       });
     },
     //改变扣除订金
@@ -800,6 +807,7 @@ export const BillModalMixin = {
       }
       this.$nextTick(() => {
         this.form.setFieldsValue({'changeAmount':changeAmountNew, 'debt':0})
+        this.setZeroChangeAmount()
       });
     },
     //改变本次付款
@@ -880,11 +888,21 @@ export const BillModalMixin = {
                 changeAmountNew = this.prefixNo === 'XSDD'?0:changeAmountNew
                 this.form.setFieldsValue({'discount':discount,'discountMoney':discountMoney,'discountLastMoney':discountLastMoney,
                   'changeAmount':changeAmountNew,'debt':0})
+                this.setZeroChangeAmount()
               });
             }
           })
         }
       })
+    },
+    //切换收付款的金额为0
+    setZeroChangeAmount() {
+      if(this.prefixNo === 'CGRK'||this.prefixNo === 'CGTH'||this.prefixNo === 'XSCK'||this.prefixNo === 'XSTH') {
+        if(this.zeroChangeAmountFlag) {
+          let oldChangeAmount = this.form.getFieldValue('changeAmount')-0
+          this.form.setFieldsValue({'changeAmount':0, 'debt':oldChangeAmount})
+        }
+      }
     },
     scanEnter() {
       this.scanStatus = false

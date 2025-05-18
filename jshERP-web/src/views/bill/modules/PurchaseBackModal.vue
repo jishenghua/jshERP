@@ -194,6 +194,7 @@
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
+  import { getCurrentSystemConfig } from '@/api/api'
   export default {
     name: "PurchaseBackModal",
     mixins: [JEditableTableMixin, BillModalMixin],
@@ -445,6 +446,16 @@
               'changeAmount': discountLastMoney,
               'accountId': accountId,
               'remark': remark
+            })
+            getCurrentSystemConfig().then((res) => {
+              if (res.code === 200 && res.data) {
+                let flag = res.data.zeroChangeAmountFlag==='1'?true:false
+                if(flag) {
+                  //切换收付款的金额为0
+                  let oldChangeAmount = this.form.getFieldValue('changeAmount')-0
+                  this.form.setFieldsValue({'changeAmount':0, 'debt':oldChangeAmount})
+                }
+              }
             })
           })
         }

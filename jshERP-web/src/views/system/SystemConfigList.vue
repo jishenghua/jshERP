@@ -123,6 +123,14 @@
               （启用后，零售管理、采购管理、销售管理和仓库管理下的单据，都需要先审核之后才能进行打印）
             </a-form-item>
           </a-col>
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零收付款">
+              <a-switch checked-children="启用" un-checked-children="关闭" v-model="zeroChangeAmountFlagSwitch" @change="onZeroChangeAmountChange"></a-switch>
+              （启用后，销售出库单据新建时默认<b>本次收款</b>为0，采购入库单据同理）
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24" v-if="isShowApproval">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
@@ -178,6 +186,7 @@
         multiAccountFlagSwitch: false, //多账户
         moveAvgPriceFlagSwitch: false, //移动平均价
         auditPrintFlagSwitch: false, //先审核后打印
+        zeroChangeAmountFlagSwitch: false, //零收付款
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -278,6 +287,9 @@
               }
               if (record.auditPrintFlag != null) {
                 this.auditPrintFlagSwitch = record.auditPrintFlag == '1' ? true : false;
+              }
+              if (record.zeroChangeAmountFlag != null) {
+                this.zeroChangeAmountFlagSwitch = record.zeroChangeAmountFlag == '1' ? true : false;
               }
             }
           } else {
@@ -401,6 +413,10 @@
       },
       onAuditPrintChange(checked) {
         this.model.auditPrintFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onZeroChangeAmountChange(checked) {
+        this.model.zeroChangeAmountFlag = checked?'1':'0'
         this.handleChange()
       },
       //改变内容
