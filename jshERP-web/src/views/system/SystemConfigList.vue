@@ -48,15 +48,15 @@
         </a-row>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓库权限">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="分配仓库权限">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="depotFlagSwitch" @change="onDepotChange"></a-switch>
-              （启用后，需要到<b>用户管理</b>进行<b>分配仓库</b>）
+              （启用后，需要到<b>用户管理</b>进行<b>分配仓库</b>，针对专人管理仓库的场景）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户权限">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="分配客户权限">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerFlagSwitch" @change="onCustomerChange"></a-switch>
-              （启用后，需要到<b>用户管理</b>进行<b>分配客户</b>）
+              （启用后，需要到<b>用户管理</b>进行<b>分配客户</b>，针对销售员只能看自己客户的场景）
             </a-form-item>
           </a-col>
         </a-row>
@@ -64,7 +64,7 @@
           <a-col :lg="12" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支持负库存">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
-              （启用后，单据<b>支持负库存</b>录入）
+              （启用后，单据<b>支持负库存</b>录入，不会再提示库存不足）
             </a-form-item>
           </a-col>
           <a-col :lg="12" :md="12" :sm="24">
@@ -131,6 +131,12 @@
           </a-col>
         </a-row>
         <a-row class="form-row" :gutter="24">
+          <a-col :lg="12" :md="12" :sm="24">
+            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户静态单价">
+                <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerStaticPriceFlagSwitch" @change="onCustomerStaticPriceChange"></a-switch>
+              （启用后，客户的销售出库的单价不会从该客户历史单据的单价获取，而是只从商品信息获取）
+            </a-form-item>
+          </a-col>
           <a-col :lg="12" :md="12" :sm="24" v-if="isShowApproval">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
               <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
@@ -187,6 +193,7 @@
         moveAvgPriceFlagSwitch: false, //移动平均价
         auditPrintFlagSwitch: false, //先审核后打印
         zeroChangeAmountFlagSwitch: false, //零收付款
+        customerStaticPriceFlagSwitch: false, //客户静态单价
         labelCol: {
           xs: { span: 24 },
           sm: { span: 5 },
@@ -290,6 +297,9 @@
               }
               if (record.zeroChangeAmountFlag != null) {
                 this.zeroChangeAmountFlagSwitch = record.zeroChangeAmountFlag == '1' ? true : false;
+              }
+              if (record.customerStaticPriceFlag != null) {
+                this.customerStaticPriceFlagSwitch = record.customerStaticPriceFlag == '1' ? true : false;
               }
             }
           } else {
@@ -417,6 +427,10 @@
       },
       onZeroChangeAmountChange(checked) {
         this.model.zeroChangeAmountFlag = checked?'1':'0'
+        this.handleChange()
+      },
+      onCustomerStaticPriceChange(checked) {
+        this.model.customerStaticPriceFlag = checked?'1':'0'
         this.handleChange()
       },
       //改变内容

@@ -618,9 +618,14 @@ public class MaterialController extends BaseController {
                         if(organId == null) {
                             mvo.setBillPrice(mvo.getWholesaleDecimal());
                         } else {
-                            //查询最后一单的销售价,实现不同的客户不同的销售价
-                            BigDecimal lastUnitPrice = depotItemService.getLastUnitPriceByParam(organId, mvo.getMeId(), prefixNo);
-                            mvo.setBillPrice(lastUnitPrice!=null? lastUnitPrice : mvo.getWholesaleDecimal());
+                            if(systemConfigService.getCustomerStaticPriceFlag()) {
+                                //已经开启了客户静态单价的开关
+                                mvo.setBillPrice(mvo.getWholesaleDecimal());
+                            } else {
+                                //查询最后一单的销售价,实现不同的客户不同的销售价
+                                BigDecimal lastUnitPrice = depotItemService.getLastUnitPriceByParam(organId, mvo.getMeId(), prefixNo);
+                                mvo.setBillPrice(lastUnitPrice!=null? lastUnitPrice : mvo.getWholesaleDecimal());
+                            }
                         }
                         //销售价-给录入界面按权限屏蔽价格
                         if("QTCK".equals(prefixNo)) {
