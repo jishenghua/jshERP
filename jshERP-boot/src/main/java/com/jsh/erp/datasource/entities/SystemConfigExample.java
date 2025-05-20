@@ -1634,6 +1634,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andCustomerStaticPriceFlagIsNull() {
+            addCriterion("customer_static_price_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagIsNotNull() {
+            addCriterion("customer_static_price_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagEqualTo(String value) {
+            addCriterion("customer_static_price_flag =", value, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagNotEqualTo(String value) {
+            addCriterion("customer_static_price_flag <>", value, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagGreaterThan(String value) {
+            addCriterion("customer_static_price_flag >", value, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("customer_static_price_flag >=", value, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagLessThan(String value) {
+            addCriterion("customer_static_price_flag <", value, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagLessThanOrEqualTo(String value) {
+            addCriterion("customer_static_price_flag <=", value, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagLike(String value) {
+            addCriterion("customer_static_price_flag like", value, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagNotLike(String value) {
+            addCriterion("customer_static_price_flag not like", value, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagIn(List<String> values) {
+            addCriterion("customer_static_price_flag in", values, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagNotIn(List<String> values) {
+            addCriterion("customer_static_price_flag not in", values, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagBetween(String value1, String value2) {
+            addCriterion("customer_static_price_flag between", value1, value2, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCustomerStaticPriceFlagNotBetween(String value1, String value2) {
+            addCriterion("customer_static_price_flag not between", value1, value2, "customerStaticPriceFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

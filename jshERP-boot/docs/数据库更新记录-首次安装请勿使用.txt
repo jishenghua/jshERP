@@ -1672,3 +1672,10 @@ update jsh_function set name='基础资料' where number='0102';
 -- 给系统参数表增加零收付款启用标记，启用后，销售出库单据新建时默认本次收款为0，采购入库单据同理
 -- --------------------------------------------------------
 alter table jsh_system_config add zero_change_amount_flag varchar(1) DEFAULT '0' COMMENT '零收付款启用标记，0未启用，1启用' after audit_print_flag;
+
+-- --------------------------------------------------------
+-- 时间 2025年5月20日
+-- by jishenghua
+-- 给系统参数表增加客户静态单价启用标记，启用后，客户的销售出库单据单价不会从历史单据的单价获取，而是只从商品信息获取
+-- --------------------------------------------------------
+alter table jsh_system_config add customer_static_price_flag varchar(1) DEFAULT '0' COMMENT '客户静态单价启用标记，0未启用，1启用' after zero_change_amount_flag;

@@ -620,6 +620,23 @@ public class SystemConfigService {
     }
 
     /**
+     * 获取客户静态单价开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getCustomerStaticPriceFlag() throws Exception {
+        boolean customerStaticPriceFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getCustomerStaticPriceFlag();
+            if(("1").equals(flag)) {
+                customerStaticPriceFlag = true;
+            }
+        }
+        return customerStaticPriceFlag;
+    }
+
+    /**
      * Excel导出统一方法
      * @param title
      * @param head

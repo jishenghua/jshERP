@@ -24,6 +24,7 @@
     <result column="move_avg_price_flag" jdbcType="VARCHAR" property="moveAvgPriceFlag" />
     <result column="audit_print_flag" jdbcType="VARCHAR" property="auditPrintFlag" />
     <result column="zero_change_amount_flag" jdbcType="VARCHAR" property="zeroChangeAmountFlag" />
+    <result column="customer_static_price_flag" jdbcType="VARCHAR" property="customerStaticPriceFlag" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
     <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
   </resultMap>
@@ -90,7 +91,8 @@
     sale_agreement, depot_flag, customer_flag, minus_stock_flag, purchase_by_sale_flag, 
     multi_level_approval_flag, multi_bill_type, force_approval_flag, update_unit_price_flag, 
     over_link_bill_flag, in_out_manage_flag, multi_account_flag, move_avg_price_flag, 
-    audit_print_flag, zero_change_amount_flag, tenant_id, delete_flag
+    audit_print_flag, zero_change_amount_flag, customer_static_price_flag, tenant_id, 
+    delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.SystemConfigExample" resultMap="BaseResultMap">
     select
@@ -131,7 +133,8 @@
       force_approval_flag, update_unit_price_flag, 
       over_link_bill_flag, in_out_manage_flag, multi_account_flag, 
       move_avg_price_flag, audit_print_flag, zero_change_amount_flag, 
-      tenant_id, delete_flag)
+      customer_static_price_flag, tenant_id, delete_flag
+      )
     values (#{id,jdbcType=BIGINT}, #{companyName,jdbcType=VARCHAR}, #{companyContacts,jdbcType=VARCHAR}, 
       #{companyAddress,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyFax,jdbcType=VARCHAR}, 
       #{companyPostCode,jdbcType=VARCHAR}, #{saleAgreement,jdbcType=VARCHAR}, #{depotFlag,jdbcType=VARCHAR}, 
@@ -140,7 +143,8 @@
       #{forceApprovalFlag,jdbcType=VARCHAR}, #{updateUnitPriceFlag,jdbcType=VARCHAR}, 
       #{overLinkBillFlag,jdbcType=VARCHAR}, #{inOutManageFlag,jdbcType=VARCHAR}, #{multiAccountFlag,jdbcType=VARCHAR}, 
       #{moveAvgPriceFlag,jdbcType=VARCHAR}, #{auditPrintFlag,jdbcType=VARCHAR}, #{zeroChangeAmountFlag,jdbcType=VARCHAR}, 
-      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
+      #{customerStaticPriceFlag,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.SystemConfig">
     insert into jsh_system_config
@@ -210,6 +214,9 @@
       </if>
       <if test="zeroChangeAmountFlag != null">
         zero_change_amount_flag,
+      </if>
+      <if test="customerStaticPriceFlag != null">
+        customer_static_price_flag,
       </if>
       <if test="tenantId != null">
         tenant_id,
@@ -284,6 +291,9 @@
       </if>
       <if test="zeroChangeAmountFlag != null">
         #{zeroChangeAmountFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="customerStaticPriceFlag != null">
+        #{customerStaticPriceFlag,jdbcType=VARCHAR},
       </if>
       <if test="tenantId != null">
         #{tenantId,jdbcType=BIGINT},
@@ -368,6 +378,9 @@
       <if test="record.zeroChangeAmountFlag != null">
         zero_change_amount_flag = #{record.zeroChangeAmountFlag,jdbcType=VARCHAR},
       </if>
+      <if test="record.customerStaticPriceFlag != null">
+        customer_static_price_flag = #{record.customerStaticPriceFlag,jdbcType=VARCHAR},
+      </if>
       <if test="record.tenantId != null">
         tenant_id = #{record.tenantId,jdbcType=BIGINT},
       </if>
@@ -403,6 +416,7 @@
       move_avg_price_flag = #{record.moveAvgPriceFlag,jdbcType=VARCHAR},
       audit_print_flag = #{record.auditPrintFlag,jdbcType=VARCHAR},
       zero_change_amount_flag = #{record.zeroChangeAmountFlag,jdbcType=VARCHAR},
+      customer_static_price_flag = #{record.customerStaticPriceFlag,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
       delete_flag = #{record.deleteFlag,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -475,6 +489,9 @@
       <if test="zeroChangeAmountFlag != null">
         zero_change_amount_flag = #{zeroChangeAmountFlag,jdbcType=VARCHAR},
       </if>
+      <if test="customerStaticPriceFlag != null">
+        customer_static_price_flag = #{customerStaticPriceFlag,jdbcType=VARCHAR},
+      </if>
       <if test="tenantId != null">
         tenant_id = #{tenantId,jdbcType=BIGINT},
       </if>
@@ -507,6 +524,7 @@
       move_avg_price_flag = #{moveAvgPriceFlag,jdbcType=VARCHAR},
       audit_print_flag = #{auditPrintFlag,jdbcType=VARCHAR},
       zero_change_amount_flag = #{zeroChangeAmountFlag,jdbcType=VARCHAR},
+      customer_static_price_flag = #{customerStaticPriceFlag,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},
       delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}

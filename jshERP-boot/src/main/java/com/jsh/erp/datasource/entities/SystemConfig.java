@@ -45,6 +45,8 @@ public class SystemConfig {
 
     private String zeroChangeAmountFlag;
 
+    private String customerStaticPriceFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -223,6 +225,14 @@ public class SystemConfig {
 
     public void setZeroChangeAmountFlag(String zeroChangeAmountFlag) {
         this.zeroChangeAmountFlag = zeroChangeAmountFlag == null ? null : zeroChangeAmountFlag.trim();
+    }
+
+    public String getCustomerStaticPriceFlag() {
+        return customerStaticPriceFlag;
+    }
+
+    public void setCustomerStaticPriceFlag(String customerStaticPriceFlag) {
+        this.customerStaticPriceFlag = customerStaticPriceFlag == null ? null : customerStaticPriceFlag.trim();
     }
 
     public Long getTenantId() {
