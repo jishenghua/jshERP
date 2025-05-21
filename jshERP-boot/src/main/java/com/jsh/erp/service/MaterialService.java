@@ -513,28 +513,28 @@ public class MaterialService {
         }
         String[] names = StringUtil.listToStringArray(nameList);
         String title = "商品信息";
-        List<String[]> objects = new ArrayList<>();
+        List<Object[]> objects = new ArrayList<>();
         if (null != dataList) {
             for (MaterialVo4Unit m : dataList) {
-                String[] objs = new String[names.length];
+                Object[] objs = new Object[names.length];
                 objs[0] = m.getName();
                 objs[1] = m.getStandard();
                 objs[2] = m.getModel();
                 objs[3] = m.getColor();
                 objs[4] = m.getBrand();
                 objs[5] = m.getCategoryName();
-                objs[6] = m.getWeight() == null ? "" : m.getWeight().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[7] = m.getExpiryNum() == null ? "" : m.getExpiryNum().toString();
+                objs[6] = m.getWeight() == null ? "" : m.getWeight().setScale(3, BigDecimal.ROUND_HALF_UP);
+                objs[7] = m.getExpiryNum() == null ? "" : m.getExpiryNum();
                 objs[8] = m.getCommodityUnit();
                 objs[9] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getCommodityUnit();
                 objs[10] = m.getmBarCode();
                 objs[11] = otherMaterialMap.get(m.getId()) == null ? "" : otherMaterialMap.get(m.getId()).getBarCode();
-                objs[12] = m.getRatio() == null ? "" : m.getRatio().toString();
+                objs[12] = m.getRatio() == null ? "" : m.getRatio();
                 objs[13] = m.getSku();
-                objs[14] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[15] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[16] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
-                objs[17] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(3, BigDecimal.ROUND_HALF_UP).toString();
+                objs[14] = m.getPurchaseDecimal() == null ? "" : m.getPurchaseDecimal().setScale(3, BigDecimal.ROUND_HALF_UP);
+                objs[15] = m.getCommodityDecimal() == null ? "" : m.getCommodityDecimal().setScale(3, BigDecimal.ROUND_HALF_UP);
+                objs[16] = m.getWholesaleDecimal() == null ? "" : m.getWholesaleDecimal().setScale(3, BigDecimal.ROUND_HALF_UP);
+                objs[17] = m.getLowDecimal() == null ? "" : m.getLowDecimal().setScale(3, BigDecimal.ROUND_HALF_UP);
                 objs[18] = m.getEnabled() ? "1" : "0";
                 objs[19] = m.getEnableSerialNumber();
                 objs[20] = m.getEnableBatchNumber();
@@ -548,7 +548,7 @@ public class MaterialService {
                 int i = 27;
                 for(Depot depot: depotList) {
                     BigDecimal number = misMap.get(m.getId() + "_" + depot.getId());
-                    objs[i] = number == null ? "0" : number.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    objs[i] = number == null ? BigDecimal.ZERO : number.setScale(2, BigDecimal.ROUND_HALF_UP);
                     i++;
                 }
                 objects.add(objs);

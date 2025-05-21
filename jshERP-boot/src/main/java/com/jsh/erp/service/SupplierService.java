@@ -559,10 +559,10 @@ public class SupplierService {
             //会员
             String[] names = {"会员卡号*", "联系人", "手机号码", "联系电话", "电子邮箱", "备注", "排序", "状态*"};
             String title = "信息内容";
-            List<String[]> objects = new ArrayList<String[]>();
+            List<Object[]> objects = new ArrayList<>();
             if (null != dataList) {
                 for (Supplier s : dataList) {
-                    String[] objs = new String[names.length];
+                    Object[] objs = new Object[names.length];
                     objs[0] = s.getSupplier();
                     objs[1] = s.getContacts();
                     objs[2] = s.getTelephone();
@@ -588,10 +588,10 @@ public class SupplierService {
         String[] names = {"名称*", "联系人", "手机号码", "联系电话", "电子邮箱", "传真", beginNeedStr,
                 "纳税人识别号", "税率(%)", "开户行", "账号", "地址", "备注", "排序", "状态*"};
         String title = "信息内容";
-        List<String[]> objects = new ArrayList<String[]>();
+        List<Object[]> objects = new ArrayList<>();
         if (null != dataList) {
             for (Supplier s : dataList) {
-                String[] objs = new String[names.length];
+                Object[] objs = new Object[names.length];
                 objs[0] = s.getSupplier();
                 objs[1] = s.getContacts();
                 objs[2] = s.getTelephone();
@@ -599,12 +599,12 @@ public class SupplierService {
                 objs[4] = s.getEmail();
                 objs[5] = s.getFax();
                 if(("客户").equals(s.getType())) {
-                    objs[6] = s.getBeginNeedGet() == null? "" : s.getBeginNeedGet().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[6] = s.getBeginNeedGet() == null? "" : s.getBeginNeedGet().setScale(2,BigDecimal.ROUND_HALF_UP);
                 } else if(("供应商").equals(s.getType())) {
-                    objs[6] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                    objs[6] = s.getBeginNeedPay() == null? "" : s.getBeginNeedPay().setScale(2,BigDecimal.ROUND_HALF_UP);
                 }
                 objs[7] = s.getTaxNum();
-                objs[8] = s.getTaxRate() == null? "" : s.getTaxRate().setScale(2,BigDecimal.ROUND_HALF_UP).toString();
+                objs[8] = s.getTaxRate() == null? "" : s.getTaxRate().setScale(2,BigDecimal.ROUND_HALF_UP);
                 objs[9] = s.getBankName();
                 objs[10] = s.getAccountNumber();
                 objs[11] = s.getAddress();

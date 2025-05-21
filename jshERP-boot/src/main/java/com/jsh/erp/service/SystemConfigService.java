@@ -648,14 +648,14 @@ public class SystemConfigService {
     public void exportExcelByParam(String title, String head, String tip, JSONArray arr, HttpServletResponse response) throws Exception {
         List<String> nameList = StringUtil.strToStringList(head);
         String[] names = StringUtil.listToStringArray(nameList);
-        List<String[]> objects = new ArrayList<>();
+        List<Object[]> objects = new ArrayList<>();
         if (null != arr) {
             for (Object object: arr) {
                 List<Object> list = (List<Object>) object;
-                String[] objs = new String[names.length];
+                Object[] objs = new Object[names.length];
                 for (int i = 0; i < list.size(); i++) {
                     if(null != list.get(i)) {
-                        objs[i] = list.get(i).toString();
+                        objs[i] = list.get(i);
                     }
                 }
                 objects.add(objs);
