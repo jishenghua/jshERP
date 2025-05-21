@@ -252,6 +252,11 @@ export const FinancialModalMixin = {
         that.$refs.accountDataTable.resetScrollTop((target.rows.length+1)*that.$refs.accountDataTable.rowHeight)
       },1000)
     },
+    //删除一行或多行的时候触发
+    onDeleted(ids, target) {
+      target.recalcAllStatisticsColumns()
+      this.autoChangeAmount(target)
+    },
     //单元值改变一个字符就触发一次
     onValueChange(event) {
       let that = this

@@ -64,35 +64,37 @@
             </a-form-item>
           </a-col>
         </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <!-- 操作按钮 -->
-            <div class="action-button">
-              <a-button type="primary" icon="plus" @click="handleClickAdd">选择单据</a-button>
-              <span class="gap"></span>
-              <a-button type="primary" icon="plus" @click="selectBeginNeed('客户')">选择期初</a-button>
-              <span class="gap"></span>
-              <a-button icon="link" @click="handleWaitNeed('客户')">待收款</a-button>
-              <span class="gap"></span>
-              <a-button icon="minus" @click="handleClear">清空</a-button>
-            </div>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :span="24">
-            <j-editable-table
-              :ref="refKeys[0]"
-              :loading="accountTable.loading"
-              :columns="accountTable.columns"
-              :dataSource="accountTable.dataSource"
-              :minWidth="minWidth"
-              :maxHeight="300"
-              :rowNumber="true"
-              :rowSelection="false"
-              :actionButton="false"
-              @valueChange="onValueChange" />
-          </a-col>
-        </a-row>
+        <j-editable-table
+          :ref="refKeys[0]"
+          :loading="accountTable.loading"
+          :columns="accountTable.columns"
+          :dataSource="accountTable.dataSource"
+          :minWidth="minWidth"
+          :maxHeight="300"
+          :rowNumber="true"
+          :rowSelection="true"
+          :actionButton="false"
+          :actionDeleteButton="true"
+          @deleted="onDeleted"
+          @valueChange="onValueChange">
+          <template #buttonBefore>
+            <a-row :gutter="24" style="float:left;padding-bottom:8px;">
+              <a-col :md="12" :sm="24">
+                <a-button type="primary" icon="plus" @click="handleClickAdd">选择单据</a-button>
+              </a-col>
+              <a-col :md="12" :sm="24" style="padding-left:0">
+                <a-button type="primary" icon="plus" @click="selectBeginNeed('客户')">选择期初</a-button>
+              </a-col>
+            </a-row>
+          </template>
+          <template #buttonAfter>
+            <a-row :gutter="24" style="float:left;padding-bottom:8px;">
+              <a-col :md="12" :sm="24">
+                <a-button icon="link" @click="handleWaitNeed('客户')">待收款</a-button>
+              </a-col>
+            </a-row>
+          </template>
+        </j-editable-table>
         <a-row class="form-row" :gutter="24">
           <a-col :lg="24" :md="24" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="{xs: { span: 24 },sm: { span: 24 }}" label="">
@@ -302,9 +304,6 @@
         } else {
           this.$message.warning('请选择客户！');
         }
-      },
-      handleClear() {
-        this.accountTable.dataSource = []
       }
     }
   }
