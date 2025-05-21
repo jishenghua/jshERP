@@ -46,7 +46,7 @@
                   <a-form-item label="供应商" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择供应商" showSearch optionFilterProp="children" v-model="queryParam.organId">
                       <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
-                        {{ item.supplier + ' ' + item.phonenum }}
+                        {{ item.supplier + ' ' + item.telephone }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>

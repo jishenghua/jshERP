@@ -13,8 +13,8 @@
     style="top:20px;height: 95%;">
     <template slot="footer">
       <a-button @click="handleCancel">取消</a-button>
-      <a-button v-if="checkFlag && isCanCheck" :loading="confirmLoading" @click="handleOkAndCheck">保存并审核</a-button>
-      <a-button type="primary" :loading="confirmLoading" @click="handleOk">保存（Ctrl+S）</a-button>
+      <!--      <a-button  :loading="confirmLoading" @click="handleOk">保存（Ctrl+S）</a-button>-->
+      <a-button type="primary" v-if="checkFlag && isCanCheck" :loading="confirmLoading" @click="handleOkAndCheck">保存并审核</a-button>
       <!--发起多级审核-->
       <a-button v-if="!checkFlag" @click="handleWorkflow()" type="primary">提交流程</a-button>
     </template>
@@ -31,7 +31,7 @@
                   <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initOrgan"><a-icon type="reload" /> 刷新列表</div>
                 </div>
                 <a-select-option v-for="(item,index) in organList" :key="index" :value="item.id">
-                  {{ item.supplier + ' ' + item.phonenum }}
+                  {{ item.supplier + ' ' + item.telephone }}
                 </a-select-option>
               </a-select>
             </a-form-item>
@@ -224,6 +224,12 @@
         if (this.action === 'add') {
           this.addInit(this.prefixNo)
           this.fileList = []
+          // 设置默认往来单位
+          this.$nextTick(() => {
+            this.form.setFieldsValue({
+              organId: 635
+            })
+          })
         } else {
           this.model.billTime = this.model.billTimeStr
           this.$nextTick(() => {

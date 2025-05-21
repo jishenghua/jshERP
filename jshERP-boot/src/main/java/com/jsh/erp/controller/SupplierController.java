@@ -162,7 +162,7 @@ public class SupplierController extends BaseController {
                     if (!customerFlag || flag) {
                         item.put("id", supplier.getId());
                         item.put("supplier", supplier.getSupplier()); //客户名称
-                        item.put("phonenum", supplier.getPhoneNum()); //客户手机号码
+                        item.put("telephone", supplier.getTelephone()); //客户手机号码
                         dataArray.add(item);
                     }
                 }

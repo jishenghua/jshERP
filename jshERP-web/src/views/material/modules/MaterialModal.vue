@@ -25,11 +25,11 @@
                   <a-input placeholder="请输入名称" v-decorator.trim="[ 'name', validatorRules.name ]" @change="handleNameChange" />
                 </a-form-item>
               </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="2" data-title="规格" data-intro="规格不必填，比如：10克">
-                  <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard', validatorRules.standard ]"/>
-                </a-form-item>
-              </a-col>
+<!--              <a-col :md="6" :sm="24">-->
+<!--                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="规格" data-step="2" data-title="规格" data-intro="规格不必填，比如：10克">-->
+<!--                  <a-input placeholder="请输入规格" v-decorator.trim="[ 'standard', validatorRules.standard ]"/>-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
               <a-col :md="6" :sm="24">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="型号" data-step="3" data-title="型号" data-intro="型号是比规格更小的属性，比如：RX-01">
                   <a-input placeholder="请输入型号" v-decorator.trim="[ 'model', validatorRules.model ]" />
@@ -91,32 +91,32 @@
                 </a-form-item>
               </a-col>
             </a-row>
-            <a-row class="form-row" :gutter="24">
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="9" data-title="基础重量"
-                  data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">
-                  <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="10" data-title="保质期"
-                  data-intro="保质期指的是商品的保质期(天)，主要针对带生产日期的，此类商品一般有批号">
-                  <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓位货架" data-step="11" data-title="仓位货架"
-                             data-intro="仓位货架指的是仓库中的仓位和货架号，主要适用于仓库较大的场景，方便查找商品的准确位置">
-                  <a-input style="width: 100%" placeholder="请输入仓位货架" v-decorator.trim="[ 'position' ]" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="6" :sm="24">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制造商" data-step="12" data-title="制造商"
-                             data-intro="请填写商品的制造商，一般适用于制造行业">
-                  <a-input placeholder="请输入制造商" v-decorator.trim="[ 'mfrs' ]" />
-                </a-form-item>
-              </a-col>
-            </a-row>
+<!--            <a-row class="form-row" :gutter="24">-->
+<!--              <a-col :md="6" :sm="24">-->
+<!--                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量" data-step="9" data-title="基础重量"-->
+<!--                  data-intro="请填写基本单位对应的重量，用于计算按重量分摊费用时单据中各行商品分摊的费用成本">-->
+<!--                  <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="6" :sm="24">-->
+<!--                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="保质期" data-step="10" data-title="保质期"-->
+<!--                  data-intro="保质期指的是商品的保质期(天)，主要针对带生产日期的，此类商品一般有批号">-->
+<!--                  <a-input-number style="width: 100%" placeholder="请输入保质期(天)" v-decorator.trim="[ 'expiryNum' ]" />-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="6" :sm="24">-->
+<!--                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓位货架" data-step="11" data-title="仓位货架"-->
+<!--                             data-intro="仓位货架指的是仓库中的仓位和货架号，主要适用于仓库较大的场景，方便查找商品的准确位置">-->
+<!--                  <a-input style="width: 100%" placeholder="请输入仓位货架" v-decorator.trim="[ 'position' ]" />-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--              <a-col :md="6" :sm="24">-->
+<!--                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制造商" data-step="12" data-title="制造商"-->
+<!--                             data-intro="请填写商品的制造商，一般适用于制造行业">-->
+<!--                  <a-input placeholder="请输入制造商" v-decorator.trim="[ 'mfrs' ]" />-->
+<!--                </a-form-item>-->
+<!--              </a-col>-->
+<!--            </a-row>-->
             <a-row class="form-row" :gutter="24">
               <a-col :lg="6" :md="6" :sm="6">
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" :label="mpShort.otherField1.name">

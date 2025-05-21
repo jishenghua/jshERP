@@ -29,7 +29,7 @@
                 <a-form-item label="付款会员" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="请选择付款会员" showSearch optionFilterProp="children" v-model="queryParam.organId">
                     <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
-                      {{ item.supplier + ' ' + item.phonenum }}
+                      {{ item.supplier + ' ' + item.telephone }}
                     </a-select-option>
                   </a-select>
                 </a-form-item>

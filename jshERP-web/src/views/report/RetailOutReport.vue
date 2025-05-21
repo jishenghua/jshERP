@@ -47,7 +47,7 @@
                     <a-select placeholder="请选择会员卡号" v-model="queryParam.organId"
                               :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
                       <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
-                        {{ item.supplier + ' ' + item.phonenum }}
+                        {{ item.supplier + ' ' + item.telephone }}
                       </a-select-option>
                     </a-select>
                   </a-form-item>
