@@ -14,8 +14,8 @@
       <!--打印-->
       <a-button key="back" @click="handleCancel">取消(ESC)</a-button>
       <template v-if="isShowPrintBtn">
-        <a-button v-if="billPrintFlag" @click="handlePrintPro">三联打印新版预览</a-button>
-        <a-button v-if="billPrintFlag" @click="handlePrint">三联打印预览</a-button>
+        <a-button v-if="billPrintFlag" @click="handlePrintPro">三联打印-新版</a-button>
+        <a-button v-if="billPrintFlag" @click="handlePrint">三联打印</a-button>
         <!--此处为解决缓存问题-->
         <a-button v-if="billType === '零售出库'" v-print="'#retailOutPrint'">普通打印</a-button>
         <a-button v-if="billType === '零售退货入库'" v-print="'#retailBackPrint'">普通打印</a-button>
@@ -1952,25 +1952,25 @@
           return ''
         }
       },
-      //三联打印新版预览
+      //三联打印新版
       handlePrintPro() {
         getPlatformConfigByKey({"platformKey": "bill_print_pro_url"}).then((res)=> {
           if (res && res.code === 200) {
-            let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
+            let billPrintUrl = res.data.platformValue + '&no=' + this.model.number
             let billPrintHeight = document.documentElement.clientHeight - 260
             this.$refs.modalProDetail.show(this.model, billPrintUrl, billPrintHeight)
-            this.$refs.modalProDetail.title = this.billType + "-三联打印新版预览"
+            this.$refs.modalProDetail.title = this.billType + "-三联打印-新版"
           }
         })
       },
-      //三联打印预览
+      //三联打印
       handlePrint() {
         getPlatformConfigByKey({"platformKey": "bill_print_url"}).then((res)=> {
           if (res && res.code === 200) {
-            let billPrintUrl = res.data.platformValue + '?no=' + this.model.number
+            let billPrintUrl = res.data.platformValue + '&no=' + this.model.number
             let billPrintHeight = this.dataSource.length*50 + 600
             this.$refs.modalDetail.show(this.model, billPrintUrl, billPrintHeight)
-            this.$refs.modalDetail.title = this.billType + "-三联打印预览"
+            this.$refs.modalDetail.title = this.billType + "-三联打印"
           }
         })
       },
