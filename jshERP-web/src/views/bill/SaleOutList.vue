@@ -268,8 +268,8 @@
           offset: 1
         },
         // 默认索引
-        defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalPrice','totalTaxLastMoney',
-          'needOutMoney','changeAmount','debt','status'],
+        defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalTaxLastMoney',
+          'needOutMoney','changeAmount','debt','needInvoiceStr','status'],
         // 默认列
         defColumns: [
           {
@@ -318,6 +318,7 @@
           },
           { title: '销售人员', dataIndex: 'salesManStr',width:120},
           { title: '备注', dataIndex: 'remark',width:200},
+          { title: '需要发票', dataIndex: 'needInvoiceStr',width:80},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }

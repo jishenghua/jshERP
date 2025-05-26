@@ -244,8 +244,8 @@
           offset: 1
         },
         // 默认索引
-        defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalPrice','totalTaxLastMoney',
-          'needBackMoney','changeAmount','debt','status'],
+        defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalTaxLastMoney',
+          'needBackMoney','changeAmount','debt','needInvoiceStr','status'],
         // 默认列
         defColumns: [
           {
@@ -289,6 +289,7 @@
           { title: '本次退款', dataIndex: 'changeAmount',width:80},
           { title: '本次欠款', dataIndex: 'debt',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
+          { title: '需要发票', dataIndex: 'needInvoiceStr',width:80},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderStatus' }
           }
