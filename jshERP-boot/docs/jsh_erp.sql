@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50704
 File Encoding         : 65001
 
-Date: 2025-05-26 22:34:45
+Date: 2025-05-26 22:53:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -159,6 +159,7 @@ CREATE TABLE `jsh_depot_head` (
   `status` varchar(1) DEFAULT NULL COMMENT '状态，0未审核、1已审核、2完成采购|销售、3部分采购|销售、9审核中',
   `purchase_status` varchar(1) DEFAULT NULL COMMENT '采购状态，0未采购、2完成采购、3部分采购',
   `source` varchar(1) DEFAULT '0' COMMENT '单据来源，0-pc，1-手机',
+  `need_invoice` varchar(1) DEFAULT '0' COMMENT '是否需要开票，0不需要，1需要普票，2需要专票',
   `link_number` varchar(50) DEFAULT NULL COMMENT '关联订单号',
   `link_apply` varchar(50) DEFAULT NULL COMMENT '关联请购单',
   `tenant_id` bigint(20) DEFAULT NULL COMMENT '租户id',

@@ -1679,3 +1679,10 @@ alter table jsh_system_config add zero_change_amount_flag varchar(1) DEFAULT '0'
 -- 给系统参数表增加客户静态单价启用标记，启用后，客户的销售出库的单价不会从该客户历史单据的单价获取，而是只从商品信息获取
 -- --------------------------------------------------------
 alter table jsh_system_config add customer_static_price_flag varchar(1) DEFAULT '0' COMMENT '客户静态单价启用标记，0未启用，1启用' after zero_change_amount_flag;
+
+-- --------------------------------------------------------
+-- 时间 2025年5月26日
+-- by jishenghua
+-- 给单据主表增加是否需要开票字段
+-- --------------------------------------------------------
+alter table jsh_depot_head add need_invoice varchar(1) DEFAULT '0' COMMENT '是否需要开票，0不需要，1需要普票，2需要专票' after source;
