@@ -202,6 +202,10 @@ public class DepotHeadService {
                     if(materialCountListMap!=null) {
                         dh.setMaterialCount(materialCountListMap.get(dh.getId()));
                     }
+                    //是否需要开票
+                    if(StringUtil.isNotEmpty(dh.getNeedInvoice())) {
+                        dh.setNeedInvoiceStr(parseNeedInvoice(dh.getNeedInvoice()));
+                    }
                     //以销定购的情况（不能显示销售单据的金额和客户名称）
                     if(StringUtil.isNotEmpty(purchaseStatus)) {
                         dh.setOrganName("****");
@@ -741,6 +745,18 @@ public class DepotHeadService {
             }
         }
         return materialCountListMap;
+    }
+
+    public String parseNeedInvoice(String needInvoice) {
+        if("0".equals(needInvoice)) {
+            return BusinessConstants.NO_NEED;
+        } else if("1".equals(needInvoice)) {
+            return BusinessConstants.NEED_GENERAL;
+        } else if("2".equals(needInvoice)) {
+            return BusinessConstants.NEED_SPECIAL;
+        } else {
+            return BusinessConstants.NO_NEED;
+        }
     }
 
     public List<DepotHeadVo4InDetail> findInOutDetail(String beginTime, String endTime, String type, String[] creatorArray,
