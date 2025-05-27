@@ -30,7 +30,6 @@
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="purchase_status" jdbcType="VARCHAR" property="purchaseStatus" />
     <result column="source" jdbcType="VARCHAR" property="source" />
-    <result column="need_invoice" jdbcType="VARCHAR" property="needInvoice" />
     <result column="link_number" jdbcType="VARCHAR" property="linkNumber" />
     <result column="link_apply" jdbcType="VARCHAR" property="linkApply" />
     <result column="tenant_id" jdbcType="BIGINT" property="tenantId" />
@@ -98,8 +97,8 @@
     id, type, sub_type, default_number, number, create_time, oper_time, organ_id, creator, 
     account_id, change_amount, back_amount, total_price, pay_type, bill_type, remark, 
     file_name, sales_man, account_id_list, account_money_list, discount, discount_money, 
-    discount_last_money, other_money, deposit, status, purchase_status, source, need_invoice, 
-    link_number, link_apply, tenant_id, delete_flag
+    discount_last_money, other_money, deposit, status, purchase_status, source, link_number, 
+    link_apply, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="BaseResultMap">
     select
@@ -141,9 +140,8 @@
       account_id_list, account_money_list, discount, 
       discount_money, discount_last_money, other_money, 
       deposit, status, purchase_status, 
-      source, need_invoice, link_number, 
-      link_apply, tenant_id, delete_flag
-      )
+      source, link_number, link_apply, 
+      tenant_id, delete_flag)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, 
       #{defaultNumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{operTime,jdbcType=TIMESTAMP}, #{organId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT}, 
@@ -153,9 +151,8 @@
       #{accountIdList,jdbcType=VARCHAR}, #{accountMoneyList,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
       #{discountMoney,jdbcType=DECIMAL}, #{discountLastMoney,jdbcType=DECIMAL}, #{otherMoney,jdbcType=DECIMAL}, 
       #{deposit,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, #{purchaseStatus,jdbcType=VARCHAR}, 
-      #{source,jdbcType=VARCHAR}, #{needInvoice,jdbcType=VARCHAR}, #{linkNumber,jdbcType=VARCHAR}, 
-      #{linkApply,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{source,jdbcType=VARCHAR}, #{linkNumber,jdbcType=VARCHAR}, #{linkApply,jdbcType=VARCHAR}, 
+      #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depot_head
@@ -243,9 +240,6 @@
       </if>
       <if test="source != null">
         source,
-      </if>
-      <if test="needInvoice != null">
-        need_invoice,
       </if>
       <if test="linkNumber != null">
         link_number,
@@ -344,9 +338,6 @@
       </if>
       <if test="source != null">
         #{source,jdbcType=VARCHAR},
-      </if>
-      <if test="needInvoice != null">
-        #{needInvoice,jdbcType=VARCHAR},
       </if>
       <if test="linkNumber != null">
         #{linkNumber,jdbcType=VARCHAR},
@@ -455,9 +446,6 @@
       <if test="record.source != null">
         source = #{record.source,jdbcType=VARCHAR},
       </if>
-      <if test="record.needInvoice != null">
-        need_invoice = #{record.needInvoice,jdbcType=VARCHAR},
-      </if>
       <if test="record.linkNumber != null">
         link_number = #{record.linkNumber,jdbcType=VARCHAR},
       </if>
@@ -505,7 +493,6 @@
       status = #{record.status,jdbcType=VARCHAR},
       purchase_status = #{record.purchaseStatus,jdbcType=VARCHAR},
       source = #{record.source,jdbcType=VARCHAR},
-      need_invoice = #{record.needInvoice,jdbcType=VARCHAR},
       link_number = #{record.linkNumber,jdbcType=VARCHAR},
       link_apply = #{record.linkApply,jdbcType=VARCHAR},
       tenant_id = #{record.tenantId,jdbcType=BIGINT},
@@ -598,9 +585,6 @@
       <if test="source != null">
         source = #{source,jdbcType=VARCHAR},
       </if>
-      <if test="needInvoice != null">
-        need_invoice = #{needInvoice,jdbcType=VARCHAR},
-      </if>
       <if test="linkNumber != null">
         link_number = #{linkNumber,jdbcType=VARCHAR},
       </if>
@@ -645,7 +629,6 @@
       status = #{status,jdbcType=VARCHAR},
       purchase_status = #{purchaseStatus,jdbcType=VARCHAR},
       source = #{source,jdbcType=VARCHAR},
-      need_invoice = #{needInvoice,jdbcType=VARCHAR},
       link_number = #{linkNumber,jdbcType=VARCHAR},
       link_apply = #{linkApply,jdbcType=VARCHAR},
       tenant_id = #{tenantId,jdbcType=BIGINT},

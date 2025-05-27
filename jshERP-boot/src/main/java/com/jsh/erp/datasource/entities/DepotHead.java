@@ -60,8 +60,6 @@ public class DepotHead {
 
     private String source;
 
-    private String needInvoice;
-
     private String linkNumber;
 
     private String linkApply;
@@ -292,14 +290,6 @@ public class DepotHead {
 
     public void setSource(String source) {
         this.source = source == null ? null : source.trim();
-    }
-
-    public String getNeedInvoice() {
-        return needInvoice;
-    }
-
-    public void setNeedInvoice(String needInvoice) {
-        this.needInvoice = needInvoice == null ? null : needInvoice.trim();
     }
 
     public String getLinkNumber() {
