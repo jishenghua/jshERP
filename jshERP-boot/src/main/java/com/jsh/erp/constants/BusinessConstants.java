@@ -214,13 +214,6 @@ public class BusinessConstants {
     public static final String ROLE_TYPE_PUBLIC = "全部数据";
 
     /**
-     * 是否需要开票
-     */
-    public static final String NO_NEED = "不需要";
-    public static final String NEED_GENERAL = "需要普票";
-    public static final String NEED_SPECIAL = "需要专票";
-
-    /**
      * redis相关
      * */
     //session的生命周期,秒

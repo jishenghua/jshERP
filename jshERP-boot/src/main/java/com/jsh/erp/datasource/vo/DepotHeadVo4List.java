@@ -57,11 +57,6 @@ public class DepotHeadVo4List extends DepotHead{
      */
     private BigDecimal realNeedDebt;
 
-    /**
-     * 是否需要开票
-     */
-    private String needInvoiceStr;
-
     public String getProjectName() {
         return projectName;
     }
@@ -228,13 +223,5 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setRealNeedDebt(BigDecimal realNeedDebt) {
         this.realNeedDebt = realNeedDebt;
-    }
-
-    public String getNeedInvoiceStr() {
-        return needInvoiceStr;
-    }
-
-    public void setNeedInvoiceStr(String needInvoiceStr) {
-        this.needInvoiceStr = needInvoiceStr;
     }
 }
