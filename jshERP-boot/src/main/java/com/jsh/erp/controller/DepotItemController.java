@@ -1023,7 +1023,7 @@ public class DepotItemController {
                     if("CGDD".equals(prefixNo) || "XSDD".equals(prefixNo)) {
                         barCode = ExcelUtils.getContent(src, i, 0);
                         num = ExcelUtils.getContent(src, i, 2);
-                        unitPrice = ExcelUtils.getContent(src, i, 3);
+                        unitPrice = ExcelUtils.getContentNumber(src, i, 3);
                         taxRate = ExcelUtils.getContent(src, i, 4);
                         remark = ExcelUtils.getContent(src, i, 5);
                     }
@@ -1031,7 +1031,7 @@ public class DepotItemController {
                         depotName = ExcelUtils.getContent(src, i, 0);
                         barCode = ExcelUtils.getContent(src, i, 1);
                         num = ExcelUtils.getContent(src, i, 3);
-                        unitPrice = ExcelUtils.getContent(src, i, 4);
+                        unitPrice = ExcelUtils.getContentNumber(src, i, 4);
                         taxRate = ExcelUtils.getContent(src, i, 5);
                         remark = ExcelUtils.getContent(src, i, 6);
                     }
@@ -1039,7 +1039,7 @@ public class DepotItemController {
                         depotName = ExcelUtils.getContent(src, i, 0);
                         barCode = ExcelUtils.getContent(src, i, 1);
                         num = ExcelUtils.getContent(src, i, 3);
-                        unitPrice = ExcelUtils.getContent(src, i, 4);
+                        unitPrice = ExcelUtils.getContentNumber(src, i, 4);
                         remark = ExcelUtils.getContent(src, i, 5);
                     }
                     Map<String, String> materialMap = new HashMap<>();

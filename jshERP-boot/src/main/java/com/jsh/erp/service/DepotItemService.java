@@ -1371,7 +1371,7 @@ public class DepotItemService {
                     item.put("unitPrice", unitPrice);
                     BigDecimal allPrice = BigDecimal.ZERO;
                     if(unitPrice!=null && unitPrice.compareTo(BigDecimal.ZERO)!=0) {
-                        allPrice = unitPrice.multiply(operNumber);
+                        allPrice = unitPrice.multiply(operNumber).setScale(2, BigDecimal.ROUND_HALF_UP);
                     }
                     BigDecimal taxMoney = BigDecimal.ZERO;
                     if(taxRate.compareTo(BigDecimal.ZERO) != 0) {

@@ -2,6 +2,7 @@ package com.jsh.erp.utils;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import jxl.*;
@@ -179,6 +180,22 @@ public class ExcelUtils {
 	public static String getContent(Sheet src, int rowNum, int colNum) {
 		if(colNum < src.getRow(rowNum).length) {
 			return src.getRow(rowNum)[colNum].getContents().trim();
+		} else {
+			return null;
+		}
+	}
+
+	public static String getContentNumber(Sheet src, int rowNum, int colNum) {
+		if(colNum < src.getRow(rowNum).length) {
+			Cell cell = src.getCell(colNum, rowNum);
+			if(cell.getType() == CellType.NUMBER) {
+				NumberCell numCell = (NumberCell)cell;
+				double value = numCell.getValue(); // 获取完整精度的数值
+				DecimalFormat df = new DecimalFormat("#.######"); // 设置足够多的小数位
+				return df.format(value);
+			} else {
+				return cell.getContents().trim(); // 获取原始字符串内容
+			}
 		} else {
 			return null;
 		}
