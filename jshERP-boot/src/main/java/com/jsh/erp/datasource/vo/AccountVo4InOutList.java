@@ -24,6 +24,8 @@ public class AccountVo4InOutList {
 
     private String amList;
 
+    private String remark;
+
     private Long tenantId;
 
     public Long getAccountId() {
@@ -104,6 +106,14 @@ public class AccountVo4InOutList {
 
     public void setAmList(String amList) {
         this.amList = amList;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Long getTenantId() {
