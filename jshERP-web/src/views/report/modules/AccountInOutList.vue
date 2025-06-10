@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1000"
+      :width="1200"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
@@ -60,6 +60,32 @@
         <span slot="numberCustomRender" slot-scope="text, record">
           <a @click="myHandleDetail(record)">{{record.number}}</a>
         </span>
+        <span slot="customTitle">
+          <a-popover trigger="click" placement="right">
+            <template slot="content">
+              <a-checkbox-group @change="onColChange" v-model="settingDataIndex" :defaultValue="settingDataIndex">
+                <a-row style="width: 600px">
+                  <template v-for="(item,index) in defColumns">
+                    <template>
+                      <a-col :span="6">
+                        <a-checkbox :value="item.dataIndex" v-if="item.dataIndex==='rowIndex'" disabled></a-checkbox>
+                        <a-checkbox :value="item.dataIndex" v-if="item.dataIndex!=='rowIndex'">
+                          <j-ellipsis :value="item.title" :length="10"></j-ellipsis>
+                        </a-checkbox>
+                      </a-col>
+                    </template>
+                  </template>
+                </a-row>
+                <a-row style="padding-top: 10px;">
+                  <a-col>
+                    恢复默认列配置：<a-button @click="handleRestDefault" type="link" size="small">恢复默认</a-button>
+                  </a-col>
+                </a-row>
+              </a-checkbox-group>
+            </template>
+            <a-icon type="setting" />
+          </a-popover>
+        </span>
       </a-table>
       <!-- table区域-end -->
       <!-- 表单区域 -->
@@ -100,14 +126,16 @@
           endTime: '',
         },
         tabKey: "1",
-        // 表头
-        columns: [
+        pageName: 'accountInOutList',
+        // 默认索引
+        defDataIndex:['rowIndex','number','type','supplierName','changeAmount','balance','operTime'],
+        // 默认列
+        defColumns: [
           {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
+            dataIndex: 'rowIndex',
             width:40,
             align:"center",
+            slots: { title: 'customTitle' },
             customRender:function (t,r,index) {
               return parseInt(index)+1;
             }
@@ -143,7 +171,8 @@
             }
           },
           { title: '余额', dataIndex: 'balance', width: 80},
-          { title: '单据日期', dataIndex: 'operTime', width: 120}
+          { title: '单据日期', dataIndex: 'operTime', width: 120},
+          { title: '备注', dataIndex: 'remark', width: 150}
         ],
         labelCol: {
           xs: { span: 1 },
@@ -159,6 +188,7 @@
       }
     },
     created() {
+      this.initColumnsSetting()
     },
     methods: {
       getQueryParams() {
@@ -216,11 +246,11 @@
       },
       exportExcel() {
         let list = []
-        let head = '单据编号,类型,单位信息,金额,余额,单据日期'
+        let head = '单据编号,类型,单位信息,金额,余额,单据日期,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.number, ds.type, ds.supplierName, this.getRealChangeAmount(ds), ds.balance, ds.operTime)
+          item.push(ds.number, ds.type, ds.supplierName, this.getRealChangeAmount(ds), ds.balance, ds.operTime, ds.remark)
           list.push(item)
         }
         let tip = '账户流水'
