@@ -146,6 +146,9 @@ public class ExceptionConstants {
     //修改收支项目信息失败
     public static final int IN_OUT_ITEM_EDIT_FAILED_CODE = 3500002;
     public static final String IN_OUT_ITEM_EDIT_FAILED_MSG = "修改收支项目信息失败";
+    //该收支项目的名称已经存在
+    public static final int IN_OUT_ITEM_NAME_EXIST_FAILED_CODE = 3500003;
+    public static final String IN_OUT_ITEM_NAME_EXIST_FAILED_MSG = "该收支项目的名称已经存在，请修改！";
     /**
      *  多单位信息
      * type = 40

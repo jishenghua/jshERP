@@ -92,6 +92,12 @@ public class InOutItemService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertInOutItem(JSONObject obj, HttpServletRequest request)throws Exception {
         InOutItem inOutItem = JSONObject.parseObject(obj.toJSONString(), InOutItem.class);
+        int exist = checkIsNameAndTypeExist(inOutItem.getId(), inOutItem.getName(), inOutItem.getType());
+        if(exist>0) {
+            //存在
+            throw new BusinessRunTimeException(ExceptionConstants.IN_OUT_ITEM_NAME_EXIST_FAILED_CODE,
+                    ExceptionConstants.IN_OUT_ITEM_NAME_EXIST_FAILED_MSG);
+        }
         int result=0;
         try{
             inOutItem.setEnabled(true);
@@ -107,6 +113,12 @@ public class InOutItemService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateInOutItem(JSONObject obj, HttpServletRequest request)throws Exception {
         InOutItem inOutItem = JSONObject.parseObject(obj.toJSONString(), InOutItem.class);
+        int exist = checkIsNameAndTypeExist(inOutItem.getId(), inOutItem.getName(), inOutItem.getType());
+        if(exist>0) {
+            //存在
+            throw new BusinessRunTimeException(ExceptionConstants.IN_OUT_ITEM_NAME_EXIST_FAILED_CODE,
+                    ExceptionConstants.IN_OUT_ITEM_NAME_EXIST_FAILED_MSG);
+        }
         int result=0;
         try{
             result=inOutItemMapper.updateByPrimaryKeySelective(inOutItem);
@@ -161,6 +173,20 @@ public class InOutItemService {
             JshException.readFail(logger, e);
         }
         return result;
+    }
+
+    public int checkIsNameAndTypeExist(Long id, String name, String type)throws Exception {
+        id = id==null?0L:id;
+        InOutItemExample example = new InOutItemExample();
+        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andTypeEqualTo(type).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        List<InOutItem> list = null;
+        try{
+            list=inOutItemMapper.selectByExample(example);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+
+        return list==null?0:list.size();
     }
 
     public int checkIsNameExist(Long id, String name)throws Exception {

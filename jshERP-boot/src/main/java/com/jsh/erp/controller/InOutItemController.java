@@ -94,8 +94,9 @@ public class InOutItemController extends BaseController {
     }
 
     @GetMapping(value = "/checkIsNameExist")
-    @ApiOperation(value = "检查名称是否存在")
-    public String checkIsNameExist(@RequestParam Long id, @RequestParam(value ="name", required = false) String name,
+    @ApiOperation(value = "检查名称是否存在-后续废弃")
+    public String checkIsNameExist(@RequestParam Long id,
+                                   @RequestParam(value ="name", required = false) String name,
                                    HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
         int exist = inOutItemService.checkIsNameExist(id, name);
