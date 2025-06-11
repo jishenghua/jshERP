@@ -72,8 +72,7 @@
           name:{
             rules: [
               { required: true, message: '请输入名称!' },
-              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
-              { validator: this.validatePersonName}
+              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
             ]},
           type:{
             rules: [
@@ -128,36 +127,20 @@
             }
             obj.then((res)=>{
               if(res.code === 200){
-                that.$emit('ok');
-              }else{
+                that.$emit('ok')
+                that.confirmLoading = false
+                that.close()
+              } else {
                 that.$message.warning(res.data.message);
+                that.confirmLoading = false
               }
             }).finally(() => {
-              that.confirmLoading = false;
-              that.close();
             })
           }
         })
       },
       handleCancel () {
         this.close()
-      },
-      validatePersonName(rule, value, callback){
-        let params = {
-          name: value,
-          id: this.model.id?this.model.id:0
-        };
-        checkInOutItem(params).then((res)=>{
-          if(res && res.code===200) {
-            if(!res.data.status){
-              callback();
-            } else {
-              callback("名称已经存在");
-            }
-          } else {
-            callback(res.data);
-          }
-        });
       }
     }
   }
