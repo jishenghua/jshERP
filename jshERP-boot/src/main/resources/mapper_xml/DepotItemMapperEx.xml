@@ -350,7 +350,7 @@
 
     <select id="getInOutStock" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="ResultByMaterial">
         select m.id MId, me.bar_code, m.name MName, m.mfrs MMfrs, m.model MModel, m.standard MStandard, m.brand,
-        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3,
+        m.other_field1 MOtherField1,m.other_field2 MOtherField2,m.other_field3 MOtherField3, m.img_name,
         concat_ws('', m.unit, u.basic_unit) MaterialUnit, m.color MColor, m.unit_id, u.name unit_name,
         ifnull(me.purchase_decimal,0) purchase_decimal, ifnull(mcs.current_unit_price,0) currentUnitPrice
         from jsh_material m
@@ -377,7 +377,7 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         group by m.id, me.bar_code, m.name, m.mfrs, m.model, m.standard, m.brand,
-        m.other_field1,m.other_field2,m.other_field3,m.unit, u.basic_unit, m.color, m.unit_id, u.name,
+        m.other_field1,m.other_field2,m.other_field3, m.img_name ,m.unit, u.basic_unit, m.color, m.unit_id, u.name,
         me.purchase_decimal, mcs.current_unit_price
         order by m.id desc
         <if test="offset != null and rows != null">

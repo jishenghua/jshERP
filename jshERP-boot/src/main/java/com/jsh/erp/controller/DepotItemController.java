@@ -389,6 +389,11 @@ public class DepotItemController {
                     } else {
                         item.put("thisAllPrice", thisSum.multiply(diEx.getPurchaseDecimal()));
                     }
+                    item.put("imgName", diEx.getImgName());
+                    if(fileUploadType == 2) {
+                        item.put("imgSmall", "small");
+                        item.put("imgLarge", "large");
+                    }
                     dataArray.add(item);
                 }
             }

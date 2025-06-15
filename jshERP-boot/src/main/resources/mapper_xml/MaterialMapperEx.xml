@@ -650,7 +650,7 @@
     </select>
 
     <select id="getListWithStock" resultMap="ResultMapListWithStock">
-        select m.id, m.name, m.standard, m.model, m.color, m.brand, m.mfrs, m.position,
+        select m.id, m.name, m.standard, m.model, m.color, m.brand, m.mfrs, m.position, m.img_name,
                me.commodity_unit unitName, mc.name categoryName, me.bar_code mBarCode,
         ifnull(me.purchase_decimal,0) purchaseDecimal,
         ifnull(mcs.current_unit_price,0) currentUnitPrice,
@@ -688,7 +688,7 @@
             or m.other_field2 like #{bindKey} or m.other_field3 like #{bindKey})
         </if>
         and ifnull(m.delete_flag,'0') !='1'
-        group by m.id, m.name, m.standard, m.model, m.color, m.brand, m.mfrs, m.position,
+        group by m.id, m.name, m.standard, m.model, m.color, m.brand, m.mfrs, m.position, m.img_name,
         me.commodity_unit, mc.name, me.bar_code, ifnull(me.purchase_decimal,0), ifnull(mcs.current_unit_price,0)
         <if test="zeroStock == 0">
             having ifnull(sum(mcs.current_number),0)!=0
