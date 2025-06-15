@@ -107,6 +107,16 @@
                 <a-icon type="setting" />
               </a-popover>
             </span>
+            <template slot="customPic" slot-scope="text, record">
+              <a-popover placement="right" trigger="click">
+                <template slot="content">
+                  <img :src="getImgUrl(record.imgName, record.imgLarge)" width="500px" />
+                </template>
+                <div class="item-info" v-if="record.imgName">
+                  <img v-if="record.imgName" :src="getImgUrl(record.imgName, record.imgSmall)" class="item-img" title="查看大图" />
+                </div>
+              </a-popover>
+            </template>
             <template slot="customRenderStock" slot-scope="text, record">
               <a-tooltip :title="record.bigUnitStock">
                 {{text}}
@@ -138,7 +148,7 @@
 </template>
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import { getAction } from '@/api/manage'
+  import { getAction, getFileAccessHttpUrl } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
   import { getFormatDate, getMpListShort, getPrevMonthFormatDate } from '@/utils/util'
   import JEllipsis from '@/components/jeecg/JEllipsis'
@@ -192,6 +202,7 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
+          {title: '图片', dataIndex: 'pic', width: 45, scopedSlots: { customRender: 'customPic' }},
           {title: '条码', dataIndex: 'barCode', sorter: (a, b) => a.barCode - b.barCode, width: 100},
           {title: '名称', dataIndex: 'materialName', width: 120, ellipsis:true},
           {title: '规格', dataIndex: 'materialStandard', width: 80, ellipsis:true},
@@ -271,6 +282,14 @@
         console.log(dateString);
         this.queryParam.monthTime=dateString;
       },
+      getImgUrl(imgName, type) {
+        if(imgName && imgName.split(',')) {
+          type = type? type + '/':''
+          return getFileAccessHttpUrl('systemConfig/static/' + type + imgName.split(',')[0])
+        } else {
+          return ''
+        }
+      },
       loadTreeData(){
         let that = this;
         let params = {};
@@ -313,4 +332,20 @@
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+</style>
+<style scoped>
+  .item-info {
+    float:left;
+    width:38px;
+    height:38px;
+    margin-left:6px
+  }
+  .item-img {
+    cursor:pointer;
+    position: static;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 </style>
