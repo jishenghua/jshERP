@@ -153,6 +153,9 @@
             and
             (ifnull(dh.discount_last_money,0)+ifnull(dh.other_money,0)-ifnull(dh.deposit,0)-abs(ifnull(dh.change_amount,0))=0)
         </if>
+        <if test="salesMan != null and salesMan !=''">
+            and FIND_IN_SET(#{salesMan}, dh.sales_man) > 0
+        </if>
         <if test="remark != null and remark !=''">
             <bind name="bindRemark" value="'%'+remark+'%'"/>
             and (dh.remark like #{bindRemark} or di.remark like #{bindRemark})
