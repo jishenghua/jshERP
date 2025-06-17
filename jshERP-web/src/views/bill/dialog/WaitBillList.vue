@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1250"
+      :width="1300"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
@@ -57,6 +57,7 @@
         rowKey="id"
         :columns="columns"
         :dataSource="dataSource"
+        :components="handleDrag(columns)"
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
@@ -82,6 +83,7 @@
         :pagination="false"
         :columns="columnsDetail"
         :dataSource="dataSourceDetail"
+        :components="handleDrag(columnsDetail)"
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedDetailRowKeys, onChange: onSelectDetailChange, type: 'checkbox'}"
         @change="handleTableChange">

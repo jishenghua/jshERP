@@ -2,7 +2,7 @@
   <div ref="container">
     <a-modal
       :title="title"
-      :width="1250"
+      :width="1300"
       :visible="visible"
       :getContainer="() => $refs.container"
       :maskStyle="{'top':'93px','left':'154px'}"
@@ -62,6 +62,7 @@
         rowKey="id"
         :columns="columns"
         :dataSource="dataSource"
+        :components="handleDrag(columns)"
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: getType}"
@@ -99,6 +100,7 @@
         :pagination="false"
         :columns="columnsDetail"
         :dataSource="dataSourceDetail"
+        :components="handleDrag(columnsDetail)"
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedDetailRowKeys, onChange: onSelectDetailChange, type: 'checkbox'}"
         @change="handleTableChange">
@@ -190,9 +192,9 @@
         ],
         columnsDetail: [
           { title: '条码', dataIndex: 'barCode',width:120},
-          { title: '名称', dataIndex: 'name',width:100, ellipsis:true},
+          { title: '名称', dataIndex: 'name',width:150, ellipsis:true},
           { title: '规格', dataIndex: 'standard',width:100, ellipsis:true},
-          { title: '型号', dataIndex: 'model',width:150, ellipsis:true},
+          { title: '型号', dataIndex: 'model',width:100, ellipsis:true},
           { title: '单位', dataIndex: 'unit',width:50},
           { title: '数量', dataIndex: 'operNumber',width:80},
           { title: '单价', dataIndex: 'unitPrice',width:80},
