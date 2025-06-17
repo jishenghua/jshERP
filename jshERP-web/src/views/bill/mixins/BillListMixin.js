@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import { getAction, postAction } from '@/api/manage'
 import { FormTypes } from '@/utils/JEditableTableUtil'
-import {findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount,
-  waitBillCount, getCurrentSystemConfig, getPlatformConfigByKey} from '@/api/api'
+import { findBillDetailByNumber, findBySelectSup, findBySelectCus, findBySelectRetail, getUserList, getAccount,
+  waitBillCount, getCurrentSystemConfig, getPlatformConfigByKey, getPersonByNumType } from '@/api/api'
 import { getCheckFlag, getFormatDate, getMpListShort, getPrevMonthFormatDate } from '@/utils/util'
 import moment from 'moment'
 import pick from 'lodash.pick'
@@ -23,6 +23,7 @@ export const BillListMixin = {
       supList: [],
       cusList: [],
       retailList: [],
+      salesManList: [],
       userList: [],
       accountList: [],
       // 实际索引
@@ -633,6 +634,14 @@ export const BillListMixin = {
       findBySelectRetail({}).then((res)=>{
         if(res) {
           that.retailList = res;
+        }
+      });
+    },
+    initSalesman() {
+      let that = this;
+      getPersonByNumType({type:1}).then((res)=>{
+        if(res) {
+          that.salesManList = res;
         }
       });
     },

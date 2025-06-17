@@ -104,6 +104,15 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
+                  <a-form-item label="销售人员" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择销售人员" showSearch allow-clear optionFilterProp="children" v-model="queryParam.salesMan">
+                      <a-select-option v-for="(item,index) in salesManList" :key="index" :value="item.value">
+                        {{ item.text }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
                   <a-form-item label="单据备注" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-input placeholder="请输入单据备注" v-model="queryParam.remark"></a-input>
                   </a-form-item>
@@ -255,6 +264,7 @@
           accountId: undefined,
           hasDebt: undefined,
           status: undefined,
+          salesMan: undefined,
           remark: ""
         },
         prefixNo: 'XSCK',
@@ -336,6 +346,7 @@
     created() {
       this.initSystemConfig()
       this.initCustomer()
+      this.initSalesman()
       this.getDepotData()
       this.initUser()
       this.initAccount()
