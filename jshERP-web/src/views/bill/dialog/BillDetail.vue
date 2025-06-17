@@ -1698,6 +1698,10 @@
           if(ds[i].remark) {
             needAddkeywords.push('remark')
           }
+          if(record.status === '3' || record.purchaseStatus === '3') {
+            //部分采购|部分销售|销售订单转采购订单的场景
+            needAddkeywords.push('finishNumber')
+          }
         }
         let currentCol = [{title:'#',dataIndex:'',align:'center',
           customRender:function(t,r,index){
@@ -1709,60 +1713,40 @@
             }
           }
         }]
-        if(record.status === '3') {
-          //部分采购|部分销售的时候显示全部列
-          for(let i=0; i<this.defColumns.length; i++){
-            currentCol.push(this.defColumns[i])
-          }
-          this.columns = currentCol
-        } else if(record.purchaseStatus === '3') {
-          //将已出库的标题转为已采购，针对销售订单转采购订单的场景
-          for(let i=0; i<this.defColumns.length; i++){
+        for(let i=0; i<this.defColumns.length; i++){
+          //移除列
+          let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position',
+            'brand','mfrs','otherField1','otherField2','otherField3','taxRate','remark']
+          if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
             let info = {}
             info.title = this.defColumns[i].title
             info.dataIndex = this.defColumns[i].dataIndex
             if(this.defColumns[i].width) {
               info.width = this.defColumns[i].width
             }
-            if(this.defColumns[i].dataIndex === 'finishNumber') {
-              info.title = '已采购'
-            }
             if(this.defColumns[i].dataIndex === 'barCode') {
               info.scopedSlots = { customRender: 'customBarCode' }
             }
             currentCol.push(info)
           }
-          this.columns = currentCol
-        } else {
-          for(let i=0; i<this.defColumns.length; i++){
-            //移除列
-            let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position',
-              'brand','mfrs','otherField1','otherField2','otherField3','taxRate','remark']
-            if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
-              let info = {}
-              info.title = this.defColumns[i].title
-              info.dataIndex = this.defColumns[i].dataIndex
-              if(this.defColumns[i].width) {
-                info.width = this.defColumns[i].width
-              }
-              if(this.defColumns[i].dataIndex === 'barCode') {
-                info.scopedSlots = { customRender: 'customBarCode' }
-              }
-              currentCol.push(info)
+          //添加有数据的列
+          if(needAddkeywords.indexOf(this.defColumns[i].dataIndex)>-1) {
+            let info = {}
+            info.title = this.defColumns[i].title
+            info.dataIndex = this.defColumns[i].dataIndex
+            if(this.defColumns[i].width) {
+              info.width = this.defColumns[i].width
             }
-            //添加有数据的列
-            if(needAddkeywords.indexOf(this.defColumns[i].dataIndex)>-1) {
-              let info = {}
-              info.title = this.defColumns[i].title
-              info.dataIndex = this.defColumns[i].dataIndex
-              if(this.defColumns[i].width) {
-                info.width = this.defColumns[i].width
+            if(record.purchaseStatus === '3') {
+              //将已出库的标题转为已采购，针对销售订单转采购订单的场景
+              if(this.defColumns[i].dataIndex === 'finishNumber') {
+                info.title = '已采购'
               }
-              currentCol.push(info)
             }
+            currentCol.push(info)
           }
-          this.columns = currentCol
         }
+        this.columns = currentCol
       },
       //动态替换扩展字段
       handleChangeOtherField() {
