@@ -1062,7 +1062,8 @@ public class DepotItemService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateCurrentUnitPrice(DepotItem depotItem) throws Exception {
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-        Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
+        //此处给出入库管理的传值默认为false，不然会导致查询不到销售相关的单据
+        Boolean inOutManageFlag = false;
         //查询多单位信息
         Unit unitInfo = materialService.findUnit(depotItem.getMaterialId());
         List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdList(null, forceFlag, inOutManageFlag, depotItem.getSku(),

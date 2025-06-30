@@ -184,7 +184,7 @@
             )
         </if>
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="sku != null and sku !=''">
             and di.sku = #{sku}
