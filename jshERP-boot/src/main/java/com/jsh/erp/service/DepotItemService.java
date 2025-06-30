@@ -1089,7 +1089,7 @@ public class DepotItemService {
                         currentNumber = currentNumber.add(basicNumber);
                         //只有当前库存总金额和当前库存数量都大于0才计算移动平均价
                         if (currentAllPrice.compareTo(BigDecimal.ZERO) > 0 && currentNumber.compareTo(BigDecimal.ZERO) > 0) {
-                            currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
+                            currentUnitPrice = currentAllPrice.divide(currentNumber, 4, BigDecimal.ROUND_HALF_UP);
                         } else {
                             currentUnitPrice = item.getUnitPrice();
                         }
@@ -1103,7 +1103,7 @@ public class DepotItemService {
                         currentNumber = currentNumber.add(basicNumber);
                         //只有当前库存总金额和当前库存数量都大于0才计算移动平均价
                         if (currentAllPrice.compareTo(BigDecimal.ZERO) > 0 && currentNumber.compareTo(BigDecimal.ZERO) > 0) {
-                            currentUnitPrice = currentAllPrice.divide(currentNumber, 2, BigDecimal.ROUND_HALF_UP);
+                            currentUnitPrice = currentAllPrice.divide(currentNumber, 4, BigDecimal.ROUND_HALF_UP);
                         } else {
                             currentUnitPrice = item.getUnitPrice();
                         }
