@@ -209,6 +209,7 @@ public class MaterialService {
                 materialMapperEx.setExpiryNumToNull(material.getId());
             }
             materialExtendService.saveDetials(obj, obj.getString("sortList"),material.getId(), "update");
+            BigDecimal currentUnitPrice = materialCurrentStockMapperEx.getCurrentUnitPriceByMId(material.getId());
             if(obj.get("stock")!=null) {
                 JSONArray stockArr = obj.getJSONArray("stock");
                 for (int i = 0; i < stockArr.size(); i++) {
@@ -232,7 +233,7 @@ public class MaterialService {
                             insertInitialStockByMaterialAndDepot(depotId, material.getId(), parseBigDecimalEx(number), lowSafeStock, highSafeStock);
                         }
                         //更新当前库存
-                        depotItemService.updateCurrentStockFun(material.getId(), depotId);
+                        depotItemService.updateCurrentStockFun(material.getId(), depotId, currentUnitPrice);
                     }
                 }
             }
@@ -1432,8 +1433,9 @@ public class MaterialService {
         List<Long> idList = StringUtil.strToLongList(ids);
         List<Depot> depotList = depotService.getAllList();
         for(Long mId: idList) {
+            BigDecimal currentUnitPrice = materialCurrentStockMapperEx.getCurrentUnitPriceByMId(mId);
             for(Depot depot: depotList) {
-                depotItemService.updateCurrentStockFun(mId, depot.getId());
+                depotItemService.updateCurrentStockFun(mId, depot.getId(), currentUnitPrice);
                 res = 1;
             }
         }

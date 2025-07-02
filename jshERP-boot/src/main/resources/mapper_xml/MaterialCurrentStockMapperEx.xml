@@ -28,7 +28,10 @@
     </update>
 
     <select id="getCurrentUnitPriceByMId" resultType="java.math.BigDecimal">
-        select ifnull(mcs.current_unit_price,0) as current_unit_price from jsh_material_current_stock mcs where mcs.material_id=#{materialId} limit 1
+        select mcs.current_unit_price as current_unit_price from jsh_material_current_stock mcs
+        where mcs.material_id=#{materialId}
+        and mcs.current_unit_price is not null
+        limit 1
     </select>
 
     <update id="batchDeleteByDepots">

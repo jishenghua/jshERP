@@ -1049,9 +1049,10 @@ public class DepotItemService {
      */
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void updateCurrentStock(DepotItem depotItem) throws Exception {
-        updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getDepotId());
+        BigDecimal currentUnitPrice = materialCurrentStockMapperEx.getCurrentUnitPriceByMId(depotItem.getMaterialId());
+        updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getDepotId(), currentUnitPrice);
         if(depotItem.getAnotherDepotId()!=null){
-            updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getAnotherDepotId());
+            updateCurrentStockFun(depotItem.getMaterialId(), depotItem.getAnotherDepotId(), currentUnitPrice);
         }
     }
 
@@ -1136,7 +1137,7 @@ public class DepotItemService {
      * @param mId
      * @param dId
      */
-    public void updateCurrentStockFun(Long mId, Long dId) throws Exception {
+    public void updateCurrentStockFun(Long mId, Long dId, BigDecimal currentUnitPrice) throws Exception {
         if(mId!=null && dId!=null) {
             MaterialCurrentStockExample example = new MaterialCurrentStockExample();
             example.createCriteria().andMaterialIdEqualTo(mId).andDepotIdEqualTo(dId)
@@ -1146,6 +1147,7 @@ public class DepotItemService {
             materialCurrentStock.setMaterialId(mId);
             materialCurrentStock.setDepotId(dId);
             materialCurrentStock.setCurrentNumber(getStockByParam(dId,mId,null,null));
+            materialCurrentStock.setCurrentUnitPrice(currentUnitPrice);
             if(list!=null && list.size()>0) {
                 Long mcsId = list.get(0).getId();
                 materialCurrentStock.setId(mcsId);
