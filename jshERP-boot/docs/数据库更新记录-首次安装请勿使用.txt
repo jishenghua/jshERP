@@ -1679,3 +1679,12 @@ alter table jsh_system_config add zero_change_amount_flag varchar(1) DEFAULT '0'
 -- 给系统参数表增加客户静态单价启用标记，启用后，客户的销售出库的单价不会从该客户历史单据的单价获取，而是只从商品信息获取
 -- --------------------------------------------------------
 alter table jsh_system_config add customer_static_price_flag varchar(1) DEFAULT '0' COMMENT '客户静态单价启用标记，0未启用，1启用' after zero_change_amount_flag;
+
+-- --------------------------------------------------------
+-- 时间 2025年7月3日
+-- by jishenghua
+-- 给jsh_material表的扩展字段增加长度
+-- --------------------------------------------------------
+alter table jsh_material change other_field1 other_field1 varchar(500) DEFAULT NULL COMMENT '自定义1';
+alter table jsh_material change other_field2 other_field2 varchar(500) DEFAULT NULL COMMENT '自定义2';
+alter table jsh_material change other_field3 other_field3 varchar(500) DEFAULT NULL COMMENT '自定义3';
