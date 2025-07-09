@@ -73,6 +73,8 @@ public class DepotHeadService {
     @Resource
     private SequenceService sequenceService;
     @Resource
+    private RedisService redisService;
+    @Resource
     DepotItemMapperEx depotItemMapperEx;
     @Resource
     private LogService logService;
@@ -1107,6 +1109,17 @@ public class DepotHeadService {
                                       HttpServletRequest request) throws Exception {
         /**处理单据主表数据*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        //判断用户是否已经登录过，登录过不再处理
+        User userInfo=userService.getCurrentUser();
+        //通过redis去校验重复
+        String keyNo = userInfo.getLoginName() + "_" + depotHead.getNumber();
+        String keyValue = redisService.getCacheObject(keyNo);
+        if(StringUtil.isNotEmpty(keyValue)) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
+                    String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
+        } else {
+            redisService.storageKeyWithTime(keyNo, depotHead.getNumber(), 10L);
+        }
         //校验单号是否重复
         if(checkIsBillNumberExist(0L, depotHead.getNumber())>0) {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
@@ -1125,8 +1138,6 @@ public class DepotHeadService {
                         String.format(ExceptionConstants.DEPOT_HEAD_ACCOUNT_FAILED_MSG));
             }
         }
-        //判断用户是否已经登录过，登录过不再处理
-        User userInfo=userService.getCurrentUser();
         depotHead.setCreator(userInfo==null?null:userInfo.getId());
         depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
         if(StringUtil.isEmpty(depotHead.getStatus())) {

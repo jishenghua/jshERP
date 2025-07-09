@@ -105,6 +105,16 @@ public class RedisService {
     }
 
     /**
+     * 带有效时间缓存数据
+     * @param key
+     * @param value
+     * @param time 单位秒
+     */
+    public void storageKeyWithTime(String key, String value, Long time) {
+        redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+    }
+
+    /**
      * 删除单个对象
      *
      * @param key
