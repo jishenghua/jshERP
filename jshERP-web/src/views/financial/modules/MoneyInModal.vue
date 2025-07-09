@@ -44,7 +44,7 @@
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
-              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'billNo' ]" />
+              <a-input placeholder="请输入单据编号" v-decorator.trim="[ 'billNo', validatorRules.billNo ]" />
             </a-form-item>
           </a-col>
           <a-col :lg="6" :md="12" :sm="24">
@@ -223,6 +223,9 @@
           },
           billTime:{
             rules: [{ required: true, message: '请选择单据日期!' }]
+          },
+          billNo:{
+            rules: [{ required: true, message: '请输入单据编号!' }]
           },
           accountId:{
             rules: [{ required: true, message: '请选择收款账户!' }]
