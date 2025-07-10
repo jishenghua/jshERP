@@ -16,42 +16,22 @@
       okText="保存"
       style="top:5%;height: 95%;">
       <a-spin :spinning="confirmLoading">
-        <div class="drawer-bootom-button">
-          <a-dropdown :trigger="['click']" placement="topCenter">
-            <a-menu slot="overlay">
-              <a-menu-item key="1" @click="switchCheckStrictly(1)">父子关联</a-menu-item>
-              <a-menu-item key="2" @click="switchCheckStrictly(2)">取消关联</a-menu-item>
-              <a-menu-item key="3" @click="checkALL">全部勾选</a-menu-item>
-              <a-menu-item key="4" @click="cancelCheckALL">取消全选</a-menu-item>
-              <a-menu-item key="5" @click="expandAll">展开所有</a-menu-item>
-              <a-menu-item key="6" @click="closeAll">合并所有</a-menu-item>
-            </a-menu>
-            <a-button>
-              树操作 <a-icon type="up" />
-            </a-button>
-          </a-dropdown>
-        </div>
-        <a-col :md="10" :sm="24">
-          <template>
-            <a-tree
-              checkable
-              multiple
-              @check="onCheck"
-              :selectedKeys="selectedKeys"
-              :checkedKeys="checkedKeys"
-              :treeData="roleFunctionTree"
-              :checkStrictly="checkStrictly"
-              :expandedKeys="iExpandedKeys"
-              :autoExpandParent="true"
-              @expand="onExpand"/>
-          </template>
-        </a-col>
+        <a-table
+          ref="table"
+          size="small"
+          rowKey="id"
+          :columns="columns"
+          :dataSource="dataSource"
+          :pagination="false"
+          :customRow="null"
+          :loading="loading"
+          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}">
+        </a-table>
       </a-spin>
     </a-modal>
   </div>
 </template>
 <script>
-  import pick from 'lodash.pick'
   import {mixinDevice} from '@/utils/mixin'
   import {addUserBusiness,editUserBusiness,checkUserBusiness} from '@/api/api'
   import {getAction} from '../../../api/manage'
@@ -64,22 +44,19 @@
         visible: false,
         model: {},
         roleId: 0,
-        iExpandedKeys: [],
-        roleFunctionTree: [],
-        checkedKeys: [],
-        selectedKeys: [],
-        checkStrictly: false,
-        hiding: true,
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 5 },
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 16 },
-        },
+        // 表头
+        columns: [
+          { title: '客户名称', dataIndex: 'supplier', width: 200 }
+        ],
+        dataSource:[],
+        selectedRowKeys: [],
+        loading:false,
         confirmLoading: false,
         form: this.$form.createForm(this),
+        url: {
+          cusList: "/supplier/getAllCustomer",
+          selectedList: "/supplier/getUserCustomerValue",
+        }
       }
     },
     created () {
@@ -89,16 +66,41 @@
         this.form.resetFields();
         this.model = Object.assign({}, {});
         this.visible = true;
-        this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'name', 'type', 'description'))
-        });
         this.roleId = record.id
-        this.checkedKeys = []
-        this.loadTree(record.id)
+        this.loadData()
+        this.loadSelected(record.id)
       },
       close () {
-        this.$emit('close');
-        this.visible = false;
+        this.$emit('close')
+        this.visible = false
+      },
+      handleCancel () {
+        this.close()
+      },
+      loadData() {
+        this.loading = true
+        getAction(this.url.cusList).then((res) => {
+          if (res.code===200) {
+            this.dataSource = res.data.rows
+          } else if(res.code===510){
+            this.$message.warning(res.data)
+          } else {
+            this.$message.warning(res.data.message)
+          }
+          this.loading = false
+        })
+      },
+      loadSelected(id) {
+        getAction(this.url.selectedList + '?UBType=UserCustomer&UBKeyId='+id).then((res) => {
+          if (res.code===200) {
+            this.selectedRowKeys = res.data
+          } else {
+            this.$message.warning(res.data)
+          }
+        })
+      },
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys
       },
       handleOk () {
         const that = this;
@@ -109,7 +111,7 @@
             let formData = Object.assign(this.model, values);
             formData.type = 'UserCustomer'
             formData.keyId = this.roleId
-            formData.value = this.checkedKeys
+            formData.value = this.selectedRowKeys
             let obj;
             checkUserBusiness({'type': 'UserCustomer','keyId': this.roleId}).then((res)=>{
               if(res.data && res.data.id) {
@@ -131,88 +133,12 @@
             })
           }
         })
-      },
-      handleCancel () {
-        this.close()
-      },
-      loadTree(id) {
-        let that = this
-        that.treeData = []
-        that.roleFunctionTree = []
-        let params = {};
-        params.id='';
-        getAction('/supplier/findUserCustomer?UBType=UserCustomer&UBKeyId='+id).then((res) => {
-          if (res) {
-            //机构全选后，再添加机构，选中数量增多
-            this.allTreeKeys = [];
-            for (let i = 0; i < res.length; i++) {
-              let temp = res[i]
-              that.treeData.push(temp)
-              that.roleFunctionTree.push(temp)
-              that.setThisExpandedKeys(temp)
-              that.getAllKeys(temp);
-            }
-            console.log(JSON.stringify(this.checkedKeys))
-            this.loading = false
-          }
-        })
-      },
-      onCheck(checkedKeys, info) {
-        console.log('onCheck', checkedKeys, info)
-        this.hiding = false
-        if(this.checkStrictly){
-          this.checkedKeys = checkedKeys.checked;
-        }else{
-          this.checkedKeys = checkedKeys
-        }
-      },
-      setThisExpandedKeys(node) {
-        if(node.checked==true) {
-          this.checkedKeys.push(node.key)
-        }
-        if (node.children && node.children.length > 0) {
-          this.iExpandedKeys.push(node.key)
-          for (let a = 0; a < node.children.length; a++) {
-            this.setThisExpandedKeys(node.children[a])
-          }
-        }
-      },
-      getAllKeys(node) {
-        // console.log('node',node);
-        this.allTreeKeys.push(node.key)
-        if (node.children && node.children.length > 0) {
-          for (let a = 0; a < node.children.length; a++) {
-            this.getAllKeys(node.children[a])
-          }
-        }
-      },
-      expandAll () {
-        this.iExpandedKeys = this.allTreeKeys
-      },
-      closeAll () {
-        this.iExpandedKeys = []
-      },
-      checkALL () {
-        this.checkStriccheckStrictlytly = false
-        this.checkedKeys = this.allTreeKeys
-      },
-      cancelCheckALL () {
-        this.checkedKeys = []
-      },
-      switchCheckStrictly (v) {
-        if(v==1){
-          this.checkStrictly = false
-        }else if(v==2){
-          this.checkStrictly = true
-        }
-      },
-      onExpand(expandedKeys) {
-        console.log('onExpand', expandedKeys)
-        this.iExpandedKeys = expandedKeys
       }
     }
   }
 </script>
 <style scoped>
-
+  .virtual-table {
+    height: 500px; /* 必须指定高度 */
+  }
 </style>

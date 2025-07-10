@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Supplier;
+import com.jsh.erp.datasource.vo.SupplierSimple;
 import com.jsh.erp.service.SupplierService;
 import com.jsh.erp.service.SystemConfigService;
 import com.jsh.erp.service.UserService;
@@ -297,51 +298,51 @@ public class SupplierController extends BaseController {
     }
 
     /**
-     * 用户对应客户显示
+     * 获取全部客户信息
+     * @param search
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/getAllCustomer")
+    @ApiOperation(value = "获取全部客户信息")
+    public TableDataInfo getAllCustomer(@RequestParam(value = Constants.SEARCH, required = false) String search,
+                                        HttpServletRequest request)throws Exception {
+        List<SupplierSimple> list = supplierService.getAllCustomer();
+        return getDataTable(list);
+    }
+
+    /**
+     * 获取用户对应客户的关系数组
      * @param type
      * @param keyId
      * @param request
      * @return
      */
-    @GetMapping(value = "/findUserCustomer")
-    @ApiOperation(value = "用户对应客户显示")
-    public JSONArray findUserCustomer(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
-                                   HttpServletRequest request) throws Exception{
-        JSONArray arr = new JSONArray();
+    @GetMapping(value = "/getUserCustomerValue")
+    @ApiOperation(value = "获取用户对应客户的关系数组")
+    public JSONObject getUserCustomerValue(@RequestParam("UBType") String type, @RequestParam("UBKeyId") String keyId,
+                                           HttpServletRequest request) throws Exception{
+        JSONObject obj = new JSONObject();
         try {
             //获取权限信息
             String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, keyId);
-            List<Supplier> dataList = supplierService.findUserCustomer();
-            //开始拼接json数据
-            JSONObject outer = new JSONObject();
-            outer.put("id", 0);
-            outer.put("key", 0);
-            outer.put("value", 0);
-            outer.put("title", "客户列表");
-            outer.put("attributes", "客户列表");
-            //存放数据json数组
-            JSONArray dataArray = new JSONArray();
-            if (null != dataList) {
-                for (Supplier supplier : dataList) {
-                    JSONObject item = new JSONObject();
-                    item.put("id", supplier.getId());
-                    item.put("key", supplier.getId());
-                    item.put("value", supplier.getId());
-                    item.put("title", supplier.getSupplier());
-                    item.put("attributes", supplier.getSupplier());
-                    Boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
-                    if (flag) {
-                        item.put("checked", true);
-                    }
-                    dataArray.add(item);
+            if(StringUtil.isNotEmpty(ubValue)) {
+                String ubStr = ubValue.substring(1, ubValue.length()-1);
+                String [] ubArr = ubStr.split("]\\[");
+                Long[] ubLongArray = new Long[ubArr.length];
+                for (int i = 0; i < ubArr.length; i++) {
+                    ubLongArray[i] = Long.parseLong(ubArr[i]);
                 }
+                obj.put("data", ubLongArray);
             }
-            outer.put("children", dataArray);
-            arr.add(outer);
+            obj.put("code", 200);
         } catch (Exception e) {
+            obj.put("code", 500);
+            obj.put("data", "服务内部错误");
             logger.error(e.getMessage(), e);
         }
-        return arr;
+        return obj;
     }
 
     /**

@@ -6,6 +6,7 @@ import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
 import com.jsh.erp.datasource.vo.DepotHeadVo4StatementAccount;
+import com.jsh.erp.datasource.vo.SupplierSimple;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.utils.*;
@@ -673,5 +674,9 @@ public class SupplierService {
             res = 1;
         }
         return res;
+    }
+
+    public List<SupplierSimple> getAllCustomer() {
+        return supplierMapperEx.getAllCustomer();
     }
 }

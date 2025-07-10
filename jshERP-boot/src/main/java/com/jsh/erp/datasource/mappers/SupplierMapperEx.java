@@ -2,6 +2,7 @@ package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.entities.SupplierExample;
+import com.jsh.erp.datasource.vo.SupplierSimple;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -28,4 +29,6 @@ public interface SupplierMapperEx {
     Supplier getSupplierByNameAndType(
             @Param("supplier") String supplier,
             @Param("type") String type);
+
+    List<SupplierSimple> getAllCustomer();
 }
