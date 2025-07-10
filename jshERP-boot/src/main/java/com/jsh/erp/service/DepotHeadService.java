@@ -1115,8 +1115,8 @@ public class DepotHeadService {
         String keyNo = userInfo.getLoginName() + "_" + depotHead.getNumber();
         String keyValue = redisService.getCacheObject(keyNo);
         if(StringUtil.isNotEmpty(keyValue)) {
-            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
-                    String.format(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_MSG));
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SUBMIT_REPEAT_FAILED_CODE,
+                    String.format(ExceptionConstants.DEPOT_HEAD_SUBMIT_REPEAT_FAILED_MSG));
         } else {
             redisService.storageKeyWithTime(keyNo, depotHead.getNumber(), 10L);
         }

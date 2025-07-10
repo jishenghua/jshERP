@@ -451,6 +451,9 @@ public class ExceptionConstants {
     //单据录入-单据在该状态不能强制结单
     public static final int DEPOT_HEAD_FORCE_CLOSE_FAILED_CODE = 8500031;
     public static final String DEPOT_HEAD_FORCE_CLOSE_FAILED_MSG = "抱歉，单据:%s在该状态不能强制结单";
+    //单据录入-请勿重复提交单据
+    public static final int DEPOT_HEAD_SUBMIT_REPEAT_FAILED_CODE = 8500032;
+    public static final String DEPOT_HEAD_SUBMIT_REPEAT_FAILED_MSG = "抱歉，请勿重复提交单据";
 
     /**
      *  单据明细信息
