@@ -335,6 +335,8 @@ public class SupplierController extends BaseController {
                     ubLongArray[i] = Long.parseLong(ubArr[i]);
                 }
                 obj.put("data", ubLongArray);
+            } else {
+                obj.put("data", null);
             }
             obj.put("code", 200);
         } catch (Exception e) {

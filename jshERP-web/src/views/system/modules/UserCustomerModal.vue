@@ -93,7 +93,7 @@
       loadSelected(id) {
         getAction(this.url.selectedList + '?UBType=UserCustomer&UBKeyId='+id).then((res) => {
           if (res.code===200) {
-            this.selectedRowKeys = res.data
+            this.selectedRowKeys = res.data? res.data:[]
           } else {
             this.$message.warning(res.data)
           }
