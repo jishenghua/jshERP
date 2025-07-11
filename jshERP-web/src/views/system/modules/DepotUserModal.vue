@@ -24,7 +24,7 @@
               @check="onCheck"
               :selectedKeys="selectedKeys"
               :checkedKeys="checkedKeys"
-              :treeData="customerUserTree"
+              :treeData="depotUserTree"
               :checkStrictly="checkStrictly"
               :expandedKeys="iExpandedKeys"
               :autoExpandParent="true"
@@ -41,16 +41,16 @@
   import {updateOneValueByKeyIdAndType} from '@/api/api'
   import {getAction} from '../../../api/manage'
   export default {
-    name: "CustomerUserModal",
+    name: "DepotUserModal",
     mixins: [mixinDevice],
     data () {
       return {
         title:"操作",
         visible: false,
         model: {},
-        customerId: 0,
+        depotId: 0,
         iExpandedKeys: [],
-        customerUserTree: [],
+        depotUserTree: [],
         checkedKeys: [],
         selectedKeys: [],
         checkStrictly: false,
@@ -74,7 +74,7 @@
         this.form.resetFields();
         this.model = Object.assign({}, {});
         this.visible = true
-        this.customerId = record.id
+        this.depotId = record.id
         this.checkedKeys = []
         this.loadTree(record.id)
       },
@@ -89,9 +89,9 @@
           if (!err) {
             that.confirmLoading = true;
             let formData = Object.assign(this.model, values);
-            formData.type = 'UserCustomer'
+            formData.type = 'UserDepot'
             formData.keyIds = this.checkedKeys
-            formData.oneValue = this.customerId
+            formData.oneValue = this.depotId
             updateOneValueByKeyIdAndType(formData).then((res)=>{
               if(res.code === 200){
                 that.$message.info('保存成功');
@@ -112,17 +112,17 @@
       loadTree(id) {
         let that = this
         that.treeData = []
-        that.customerUserTree = []
+        that.depotUserTree = []
         let params = {};
         params.id='';
-        getAction('/user/getUserWithChecked?UBType=UserCustomer&UBValue='+id).then((res) => {
+        getAction('/user/getUserWithChecked?UBType=UserDepot&UBValue='+id).then((res) => {
           if (res) {
             //机构全选后，再添加机构，选中数量增多
             this.allTreeKeys = [];
             for (let i = 0; i < res.length; i++) {
               let temp = res[i]
               that.treeData.push(temp)
-              that.customerUserTree.push(temp)
+              that.depotUserTree.push(temp)
               that.setThisExpandedKeys(temp)
               that.getAllKeys(temp);
             }

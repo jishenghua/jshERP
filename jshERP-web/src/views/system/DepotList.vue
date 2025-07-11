@@ -49,6 +49,8 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
+              <a v-if="btnEnableList.indexOf(1)>-1 && depotFlag === '1' && quickBtn.user.indexOf(1)>-1 " @click="btnSetUser(record)">分配用户</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1 && depotFlag === '1' && quickBtn.user.indexOf(1)>-1 " type="vertical" />
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定设为默认吗?" @confirm="() => handleSetDefault(record.id)">
                 <a>设为默认</a>
               </a-popconfirm>
@@ -73,21 +75,26 @@
         <!-- table区域-end -->
         <!-- 表单区域 -->
         <depot-modal ref="modalForm" @ok="modalFormOk"></depot-modal>
+        <depot-user-modal ref="depotUserModal"></depot-user-modal>
       </a-card>
     </a-col>
   </a-row>
 </template>
-<!-- BY cao_yu_li -->
+<!-- BY cao_yu-li -->
 <script>
   import DepotModal from './modules/DepotModal'
+  import DepotUserModal from './modules/DepotUserModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JDate from '@/components/jeecg/JDate'
   import { postAction } from '@api/manage'
+  import { getCurrentSystemConfig } from '@/api/api'
+  import Vue from 'vue'
   export default {
     name: "DepotList",
     mixins:[JeecgListMixin],
     components: {
       DepotModal,
+      DepotUserModal,
       JDate
     },
     data () {
@@ -101,6 +108,10 @@
         },
         // 查询条件
         queryParam: {name:'',remark:''},
+        depotFlag: '0',
+        quickBtn: {
+          user: ''
+        },
         // 表头
         columns: [
           {
@@ -143,10 +154,29 @@
         }
       }
     },
-    computed: {
-
+    created() {
+      this.getSystemConfig()
+      this.initQuickBtn()
     },
     methods: {
+      getSystemConfig() {
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data){
+            this.depotFlag = res.data.depotFlag
+          }
+        })
+      },
+      //加载快捷按钮：分配用户
+      initQuickBtn() {
+        let btnStrList = Vue.ls.get('winBtnStrList') //按钮功能列表 JSON字符串
+        if (btnStrList) {
+          for (let i = 0; i < btnStrList.length; i++) {
+            if (btnStrList[i].btnStr) {
+              this.quickBtn.user = btnStrList[i].url === '/system/user'?btnStrList[i].btnStr:this.quickBtn.user
+            }
+          }
+        }
+      },
       handleSetDefault: function (id) {
         if(!this.url.setDefault){
           this.$message.error("请设置url.delete属性!")
@@ -168,6 +198,11 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
+      },
+      btnSetUser(record) {
+        this.$refs.depotUserModal.edit(record)
+        this.$refs.depotUserModal.title = "分配用户给：" + record.name
+        this.$refs.depotUserModal.disableSubmit = false
       }
     }
   }
