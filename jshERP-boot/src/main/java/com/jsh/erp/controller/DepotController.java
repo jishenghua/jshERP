@@ -7,9 +7,11 @@ import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Depot;
 import com.jsh.erp.datasource.entities.DepotEx;
 import com.jsh.erp.datasource.entities.MaterialInitialStock;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.service.DepotService;
 import com.jsh.erp.service.MaterialService;
 import com.jsh.erp.service.UserBusinessService;
+import com.jsh.erp.service.UserService;
 import com.jsh.erp.utils.BaseResponseInfo;
 import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
@@ -27,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
@@ -48,6 +52,9 @@ public class DepotController extends BaseController {
 
     @Resource
     private MaterialService materialService;
+
+    @Resource
+    private UserService userService;
 
     @GetMapping(value = "/info")
     @ApiOperation(value = "根据id获取信息")

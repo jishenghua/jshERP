@@ -351,54 +351,6 @@ public class SupplierController extends BaseController {
     }
 
     /**
-     * 客户对应用户显示
-     * @param type
-     * @param oneValue
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/getCustomerUser")
-    @ApiOperation(value = "客户对应用户显示")
-    public JSONArray findUserCustomer(@RequestParam("UBType") String type, @RequestParam("UBValue") String oneValue,
-                                      HttpServletRequest request) throws Exception{
-        JSONArray arr = new JSONArray();
-        try {
-            //获取权限信息
-            List<Long> keyIdList = userBusinessService.getUBKeyIdByTypeAndOneValue(type, oneValue);
-            Map<Long, Long> keyIdMap = keyIdList.stream().collect(Collectors.toMap(Function.identity(),Function.identity()));
-            List<User> dataList = userService.getUser(request);
-            //开始拼接json数据
-            JSONObject outer = new JSONObject();
-            outer.put("id", 0);
-            outer.put("key", 0);
-            outer.put("value", 0);
-            outer.put("title", "用户列表");
-            outer.put("attributes", "用户列表");
-            //存放数据json数组
-            JSONArray dataArray = new JSONArray();
-            if (null != dataList) {
-                for (User user : dataList) {
-                    JSONObject item = new JSONObject();
-                    item.put("id", user.getId());
-                    item.put("key", user.getId());
-                    item.put("value", user.getId());
-                    item.put("title", user.getLoginName() + "(" + user.getUsername() + ")");
-                    item.put("attributes", user.getLoginName());
-                    if (keyIdMap.get(user.getId())!=null) {
-                        item.put("checked", true);
-                    }
-                    dataArray.add(item);
-                }
-            }
-            outer.put("children", dataArray);
-            arr.add(outer);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
-        return arr;
-    }
-
-    /**
      * 根据客户或供应商查询期初、期初已收等信息
      * @param organId
      * @param request
