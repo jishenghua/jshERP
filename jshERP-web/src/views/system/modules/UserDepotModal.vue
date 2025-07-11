@@ -122,7 +122,6 @@
       },
       loadTree(id) {
         let that = this
-        that.treeData = []
         that.roleFunctionTree = []
         let params = {};
         params.id='';
@@ -132,7 +131,6 @@
             this.allTreeKeys = [];
             for (let i = 0; i < res.length; i++) {
               let temp = res[i]
-              that.treeData.push(temp)
               that.roleFunctionTree.push(temp)
               that.setThisExpandedKeys(temp)
               that.getAllKeys(temp);

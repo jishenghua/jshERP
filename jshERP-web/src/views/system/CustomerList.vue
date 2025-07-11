@@ -69,6 +69,8 @@
             :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
             @change="handleTableChange">
             <span slot="action" slot-scope="text, record">
+              <a v-if="btnEnableList.indexOf(1)>-1 && customerFlag === '1' && quickBtn.user.indexOf(1)>-1 " @click="btnSetUser(record)">分配用户</a>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1 && customerFlag === '1' && quickBtn.user.indexOf(1)>-1 " type="vertical" />
               <a @click="handleEdit(record)">编辑</a>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" type="vertical" />
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -86,6 +88,7 @@
         <!-- 表单区域 -->
         <customer-modal ref="modalForm" @ok="modalFormOk"></customer-modal>
         <import-file-modal ref="modalImportForm" @ok="modalFormOk"></import-file-modal>
+        <customer-user-modal ref="customerUserModal"></customer-user-modal>
       </a-card>
     </a-col>
   </a-row>
@@ -94,8 +97,10 @@
 <script>
   import CustomerModal from './modules/CustomerModal'
   import ImportFileModal from '@/components/tools/ImportFileModal'
+  import CustomerUserModal from './modules/CustomerUserModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import JDate from '@/components/jeecg/JDate'
+  import { getCurrentSystemConfig } from '@/api/api'
   import Vue from 'vue'
   export default {
     name: "CustomerList",
@@ -103,6 +108,7 @@
     components: {
       CustomerModal,
       ImportFileModal,
+      CustomerUserModal,
       JDate
     },
     data () {
@@ -122,8 +128,12 @@
           telephone:'',
           phonenum:''
         },
+        customerFlag: '0',
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']
+        },
+        quickBtn: {
+          user: ''
         },
         // 表头
         columns: [
@@ -140,7 +150,7 @@
           {
             title: '操作',
             dataIndex: 'action',
-            width: 100,
+            width: 130,
             align:"center",
             scopedSlots: { customRender: 'action' },
           },
@@ -173,13 +183,38 @@
       }
     },
     created() {
+      this.getSystemConfig()
+      this.initQuickBtn()
     },
     methods: {
+      getSystemConfig() {
+        getCurrentSystemConfig().then((res) => {
+          if(res.code === 200 && res.data){
+            this.customerFlag = res.data.customerFlag
+          }
+        })
+      },
+      //加载快捷按钮：分配用户
+      initQuickBtn() {
+        let btnStrList = Vue.ls.get('winBtnStrList') //按钮功能列表 JSON字符串
+        if (btnStrList) {
+          for (let i = 0; i < btnStrList.length; i++) {
+            if (btnStrList[i].btnStr) {
+              this.quickBtn.user = btnStrList[i].url === '/system/user'?btnStrList[i].btnStr:this.quickBtn.user
+            }
+          }
+        }
+      },
+      searchQuery() {
+        this.loadData(1);
+        this.getSystemConfig()
+      },
       searchReset() {
         this.queryParam = {
           type:'客户',
         }
-        this.loadData(1);
+        this.loadData(1)
+        this.getSystemConfig()
       },
       handleImportXls() {
         let importExcelUrl = this.url.importExcelUrl
@@ -195,6 +230,11 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
+      },
+      btnSetUser(record) {
+        this.$refs.customerUserModal.edit(record);
+        this.$refs.customerUserModal.title = "分配用户给：" + record.supplier
+        this.$refs.customerUserModal.disableSubmit = false;
       }
     }
   }
