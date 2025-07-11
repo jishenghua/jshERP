@@ -21,4 +21,11 @@ public interface UserBusinessMapperEx {
             @Param("type") String type);
 
     void updateValueByTypeAndKeyId(@Param("type") String type, @Param("keyId") String keyId, @Param("ubValue") String ubValue);
+
+    List<Long> getUBKeyIdByTypeAndOneValue(
+            @Param("type") String type,
+            @Param("oneValue") String oneValue);
+
+    List<UserBusiness> getOldListByType(
+            @Param("type") String type);
 }

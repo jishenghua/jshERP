@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Supplier;
+import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.vo.SupplierSimple;
 import com.jsh.erp.service.SupplierService;
 import com.jsh.erp.service.SystemConfigService;
@@ -25,6 +26,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
 import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
@@ -345,6 +348,54 @@ public class SupplierController extends BaseController {
             logger.error(e.getMessage(), e);
         }
         return obj;
+    }
+
+    /**
+     * 客户对应用户显示
+     * @param type
+     * @param oneValue
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getCustomerUser")
+    @ApiOperation(value = "客户对应用户显示")
+    public JSONArray findUserCustomer(@RequestParam("UBType") String type, @RequestParam("UBValue") String oneValue,
+                                      HttpServletRequest request) throws Exception{
+        JSONArray arr = new JSONArray();
+        try {
+            //获取权限信息
+            List<Long> keyIdList = userBusinessService.getUBKeyIdByTypeAndOneValue(type, oneValue);
+            Map<Long, Long> keyIdMap = keyIdList.stream().collect(Collectors.toMap(Function.identity(),Function.identity()));
+            List<User> dataList = userService.getUser(request);
+            //开始拼接json数据
+            JSONObject outer = new JSONObject();
+            outer.put("id", 0);
+            outer.put("key", 0);
+            outer.put("value", 0);
+            outer.put("title", "用户列表");
+            outer.put("attributes", "用户列表");
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (User user : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", user.getId());
+                    item.put("key", user.getId());
+                    item.put("value", user.getId());
+                    item.put("title", user.getLoginName() + "(" + user.getUsername() + ")");
+                    item.put("attributes", user.getLoginName());
+                    if (keyIdMap.get(user.getId())!=null) {
+                        item.put("checked", true);
+                    }
+                    dataArray.add(item);
+                }
+            }
+            outer.put("children", dataArray);
+            arr.add(outer);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return arr;
     }
 
     /**

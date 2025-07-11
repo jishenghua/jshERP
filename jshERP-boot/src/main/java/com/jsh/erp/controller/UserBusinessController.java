@@ -1,5 +1,6 @@
 package com.jsh.erp.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.datasource.entities.UserBusiness;
 import com.jsh.erp.service.UserBusinessService;
@@ -156,6 +157,34 @@ public class UserBusinessController {
             String keyId = roleId;
             String type = "RoleFunctions";
             int back = userBusinessService.updateBtnStr(keyId, type, btnStr);
+            if(back > 0) {
+                res.code = 200;
+                res.data = "成功";
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            res.code = 500;
+            res.data = "更新权限失败";
+        }
+        return res;
+    }
+
+    /**
+     * 根据KeyId和类型更新一个值
+     * @param jsonObject
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/updateOneValueByKeyIdAndType")
+    @ApiOperation(value = "根据KeyId和类型更新一个值")
+    public BaseResponseInfo updateOneValueByKeyIdAndType(@RequestBody JSONObject jsonObject,
+                                                         HttpServletRequest request)throws Exception {
+        BaseResponseInfo res = new BaseResponseInfo();
+        try {
+            String type = jsonObject.getString("type");
+            JSONArray keyIdArr = jsonObject.getJSONArray("keyIds");
+            String oneValue = jsonObject.getString("oneValue");
+            int back = userBusinessService.updateOneValueByKeyIdAndType(type, keyIdArr, oneValue);
             if(back > 0) {
                 res.code = 200;
                 res.data = "成功";

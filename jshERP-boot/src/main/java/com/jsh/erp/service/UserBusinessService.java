@@ -1,5 +1,6 @@
 package com.jsh.erp.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.User;
@@ -18,7 +19,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserBusinessService {
@@ -171,5 +174,71 @@ public class UserBusinessService {
             JshException.writeFail(logger, e);
         }
         return result;
+    }
+
+    public List<Long> getUBKeyIdByTypeAndOneValue(String type, String oneValue) {
+        return userBusinessMapperEx.getUBKeyIdByTypeAndOneValue(type, oneValue);
+    }
+
+    public int updateOneValueByKeyIdAndType(String type, JSONArray keyIdArr, String oneValue) {
+        int res = 0;
+        try {
+            Map<String, String> keyIdMap = new HashMap<>();
+            List<UserBusiness> oldUbList = userBusinessMapperEx.getOldListByType(type);
+            for(Object keyIdObj: keyIdArr) {
+                String keyId = keyIdObj.toString();
+                keyIdMap.put(keyId, keyId);
+                List<UserBusiness> ubList = userBusinessMapperEx.getBasicDataByKeyIdAndType(keyId, type);
+                if(ubList.size()>0) {
+                    String valueStr = ubList.get(0).getValue();
+                    Boolean flag = valueStr.contains("[" + oneValue + "]");
+                    if(flag) {
+                        //存在则忽略
+                    } else {
+                        //不存在则追加并更新
+                        valueStr = valueStr + "[" + oneValue + "]";
+                        UserBusiness userBusiness = new UserBusiness();
+                        userBusiness.setId(ubList.get(0).getId());
+                        userBusiness.setValue(valueStr);
+                        userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+                    }
+                } else {
+                    //新增数据
+                    UserBusiness userBusiness = new UserBusiness();
+                    userBusiness.setType(type);
+                    userBusiness.setKeyId(keyId);
+                    userBusiness.setValue("[" + oneValue + "]");
+                    userBusinessMapper.insertSelective(userBusiness);
+                }
+            }
+            //检查被移除的keyId
+            for(UserBusiness item: oldUbList) {
+                String oldValue = item.getValue();
+                String oldkeyId = item.getKeyId();
+                if(keyIdMap.get(oldkeyId) == null) {
+                    //处理被删除的keyId
+                    String valueStr = "[" + oneValue + "]";
+                    if(oldValue.equals(valueStr)) {
+                        //说明value里面只有一条数据，需要进行逻辑删除
+                        UserBusiness userBusiness = new UserBusiness();
+                        userBusiness.setId(item.getId());
+                        userBusiness.setDeleteFlag("1");
+                        userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+                    } else {
+                        //多条进行替换后再更新
+                        String newValue = oldValue.replace(valueStr, "");
+                        UserBusiness userBusiness = new UserBusiness();
+                        userBusiness.setId(item.getId());
+                        userBusiness.setValue(newValue);
+                        userBusinessMapper.updateByPrimaryKeySelective(userBusiness);
+                    }
+                }
+            }
+            res = 1;
+        } catch (Exception e) {
+            res = 0;
+            logger.error(e.getMessage(), e);
+        }
+        return res;
     }
 }
