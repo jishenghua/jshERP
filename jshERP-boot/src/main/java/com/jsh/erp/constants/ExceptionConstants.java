@@ -356,9 +356,6 @@ public class ExceptionConstants {
     //EXCEL中有副条码在系统中已存在（除自身商品之外）
     public static final int MATERIAL_EXCEL_IMPORT_MANY_BARCODE_EXIST_CODE = 80000028;
     public static final String MATERIAL_EXCEL_IMPORT_MANY_BARCODE_EXIST_MSG = "抱歉，EXCEL中有副条码在系统中已存在，具体副条码为：%s";
-    //单次导出条数超出限制（1万条）
-    public static final int MATERIAL_EXPORT_LIMIT_CODE = 8000029;
-    public static final String MATERIAL_EXPORT_LIMIT_MSG = "单次导出条数超出限制（1万条）";
 
     /**
      *  单据信息

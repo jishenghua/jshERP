@@ -472,6 +472,7 @@ public class MaterialService {
     public void exportExcel(String categoryId, String materialParam, String color, String materialOther, String weight,
                                              String expiryNum, String enabled, String enableSerialNumber, String enableBatchNumber,
                                              String remark, String mpList, HttpServletResponse response)throws Exception {
+        String title = "商品信息";
         List<Long> idList = new ArrayList<>();
         if(StringUtil.isNotEmpty(categoryId)){
             idList = getListByParentId(Long.parseLong(categoryId));
@@ -480,8 +481,9 @@ public class MaterialService {
         List<MaterialVo4Unit> dataList = materialMapperEx.exportExcel(materialParam, color, materialOther, weight, expiryNum, enabled, enableSerialNumber,
                 enableBatchNumber, remark, idList);
         if (null != dataList && dataList.size() > EXPORT_LIMIT) {
-            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXPORT_LIMIT_CODE,
-                    ExceptionConstants.MATERIAL_EXPORT_LIMIT_MSG);
+            File file = ExcelUtils.exportObjectsOneSheet(title, "单次导出条数超出限制（1万条）", new String[0], title, new ArrayList<>());
+            ExcelUtils.downloadExcel(file, file.getName(), response);
+            return;
         }
         //查询商品副条码相关列表
         Map<Long, MaterialExtend> otherMaterialMap = new HashMap<>();
@@ -513,7 +515,6 @@ public class MaterialService {
             }
         }
         String[] names = StringUtil.listToStringArray(nameList);
-        String title = "商品信息";
         List<Object[]> objects = new ArrayList<>();
         if (null != dataList) {
             for (MaterialVo4Unit m : dataList) {
