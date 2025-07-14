@@ -1118,7 +1118,7 @@ public class DepotHeadService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SUBMIT_REPEAT_FAILED_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_SUBMIT_REPEAT_FAILED_MSG));
         } else {
-            redisService.storageKeyWithTime(keyNo, depotHead.getNumber(), 3L);
+            redisService.storageKeyWithTime(keyNo, depotHead.getNumber(), 2L);
         }
         //校验单号是否重复
         if(checkIsBillNumberExist(0L, depotHead.getNumber())>0) {
