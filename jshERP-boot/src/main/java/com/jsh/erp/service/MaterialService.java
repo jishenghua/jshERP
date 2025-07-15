@@ -1213,7 +1213,7 @@ public class MaterialService {
         List<MaterialInitialStock> list = materialInitialStockMapper.selectByExample(example);
         if(list!=null && list.size()>0) {
             for(MaterialInitialStock ms: list) {
-                if(ms!=null) {
+                if(ms!=null && null!=ms.getNumber()) {
                     stock = stock.add(ms.getNumber());
                 }
             }
