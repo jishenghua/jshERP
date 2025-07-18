@@ -471,7 +471,7 @@
           this.$nextTick(() => {
             this.form.setFieldsValue({
               'discountLastMoney': discountLastMoney.toFixed(2),
-              'changeAmount': discountLastMoney.toFixed(2)
+              'changeAmount': 0
             })
           })
         }
