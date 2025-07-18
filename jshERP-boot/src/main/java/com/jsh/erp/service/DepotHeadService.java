@@ -1032,7 +1032,10 @@ public class DepotHeadService {
                 if(materialsListMap!=null) {
                     dh.setMaterialsList(materialsListMap.get(dh.getId()));
                 }
-                dh.setCreatorName(userService.getUser(dh.getCreator()).getUsername());
+                User creatorUser = userService.getUser(dh.getCreator());
+                if(creatorUser!=null) {
+                    dh.setCreatorName(creatorUser.getUsername());
+                }
                 resList.add(dh);
             }
         }catch(Exception e){
