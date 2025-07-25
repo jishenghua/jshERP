@@ -33,7 +33,7 @@
 # 开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
 * IDE: IntelliJ IDEA 2019.2+和JetBrains WebStorm 2019.3+
-* DB: Mysql 5.7.33
+* DB: Mysql 8.0.24
 * JDK: JDK 1.8
 * Node: Node 20.17.0
 * Maven: Maven 3.2.3+
@@ -41,7 +41,7 @@
 * Nginx: 1.12.2 
 
 # 服务器环境
-* 数据库：Mysql5.7.33
+* 数据库：Mysql8.0.24
 * JAVA平台：JRE1.8
 * Redis库：redis6.2.1
 * Nginx代理：nginx1.12.2
