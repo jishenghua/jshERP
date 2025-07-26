@@ -807,7 +807,7 @@ public class MaterialService {
                         }
                         buildChangeInitialStock(deleteInitialStockMaterialIdList, insertInitialStockMaterialList, materialDepotInitialMap, mId, depotId, materialDepotKey, stock);
                     } else {
-                        if(initStock.compareTo(BigDecimal.ZERO)!=0) {
+                        if(initStock!=null && initStock.compareTo(BigDecimal.ZERO)!=0) {
                             buildChangeInitialStock(deleteInitialStockMaterialIdList, insertInitialStockMaterialList, materialDepotInitialMap, mId, depotId, materialDepotKey, stock);
                         }
                     }
@@ -817,7 +817,7 @@ public class MaterialService {
                         if(stock!=null && stock.compareTo(BigDecimal.ZERO)!=0) {
                             buildChangeCurrentStock(deleteCurrentStockMaterialIdList, insertCurrentStockMaterialList, materialDepotCurrentMap, mId, depotId, materialDepotKey, stock);
                         } else {
-                            if(initStock.compareTo(BigDecimal.ZERO)!=0) {
+                            if(initStock!=null && initStock.compareTo(BigDecimal.ZERO)!=0) {
                                 buildChangeCurrentStock(deleteCurrentStockMaterialIdList, insertCurrentStockMaterialList, materialDepotCurrentMap, mId, depotId, materialDepotKey, stock);
                             }
                         }
