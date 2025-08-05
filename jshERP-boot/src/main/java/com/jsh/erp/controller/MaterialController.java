@@ -613,7 +613,7 @@ public class MaterialController extends BaseController {
                             || "PDLR".equals(prefixNo) || "PDFP".equals(prefixNo)) {
                         //采购价-给录入界面按权限屏蔽
                         mvo.setBillPrice(roleService.parseBillPriceByLimit(mvo.getPurchaseDecimal(), "buy", priceLimit, request));
-                    } if ("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
+                    } else if ("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
                         //销售价
                         if(organId == null) {
                             mvo.setBillPrice(mvo.getWholesaleDecimal());
@@ -630,6 +630,14 @@ public class MaterialController extends BaseController {
                         //销售价-给录入界面按权限屏蔽价格
                         if("QTCK".equals(prefixNo)) {
                             mvo.setBillPrice(roleService.parseBillPriceByLimit(mvo.getWholesaleDecimal(), "sale", priceLimit, request));
+                        }
+                    } else if ("other".equals(prefixNo)) {
+                        //其它需要填充商品采购价或者成本价的场景
+                        if(systemConfigService.getMoveAvgPriceFlag()) {
+                            BigDecimal currentUnitPrice = materialService.getCurrentUnitPriceByMaterialId(mvo.getId());
+                            mvo.setBillPrice(currentUnitPrice);
+                        } else {
+                            mvo.setBillPrice(mvo.getPurchaseDecimal());
                         }
                     }
                     //仓库id

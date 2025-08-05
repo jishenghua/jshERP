@@ -1470,6 +1470,10 @@ public class MaterialService {
         return materialMapperEx.getMaterialExtendBySerialNumber(serialNumber);
     }
 
+    public BigDecimal getCurrentUnitPriceByMaterialId(Long materialId) {
+        return materialCurrentStockMapperEx.getCurrentUnitPriceByMId(materialId);
+    }
+
     /**
      * 构造多属性数组字符串
      * @param obj
