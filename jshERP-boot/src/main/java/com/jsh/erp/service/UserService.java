@@ -197,7 +197,7 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int resetPwd(String md5Pwd, Long id) throws Exception{
+    public int resetPwd(String md5Pwd, Long id, HttpServletRequest request) throws Exception{
         int result=0;
         logService.insertLog("用户",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
@@ -211,7 +211,11 @@ public class UserService {
             user.setId(id);
             user.setPassword(md5Pwd);
             try{
-                result=userMapper.updateByPrimaryKeySelective(user);
+                //判断是否登录过
+                Object userId = redisService.getObjectFromSessionByKey(request,"userId");
+                if (userId != null) {
+                    result = userMapper.updateByPrimaryKeySelective(user);
+                }
             }catch(Exception e){
                 JshException.writeFail(logger, e);
             }

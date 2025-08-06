@@ -235,7 +235,7 @@ public class UserController extends BaseController {
         Long id = jsonObject.getLong("id");
         String password = "123456";
         String md5Pwd = Tools.md5Encryp(password);
-        int update = userService.resetPwd(md5Pwd, id);
+        int update = userService.resetPwd(md5Pwd, id, request);
         if(update > 0) {
             return returnJson(objectMap, SUCCESS, ErpInfo.OK.code);
         } else {

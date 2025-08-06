@@ -13,9 +13,7 @@ import java.io.IOException;
 
 @WebFilter(filterName = "LogCostFilter", urlPatterns = {"/*"},
         initParams = {@WebInitParam(name = "filterPath",
-                      value = "/jshERP-boot/user/login#/jshERP-boot/user/weixinLogin#/jshERP-boot/user/weixinBind#" +
-                              "/jshERP-boot/user/registerUser#/jshERP-boot/user/randomImage#" +
-                              "/jshERP-boot/platformConfig/getPlatform#/jshERP-boot/v2/api-docs#/jshERP-boot/webjars#" +
+                      value = "/jshERP-boot/platformConfig/getPlatform#/jshERP-boot/v2/api-docs#/jshERP-boot/webjars#" +
                               "/jshERP-boot/systemConfig/static#/jshERP-boot/api/plugin/wechat/weChat/share#" +
                               "/jshERP-boot/api/plugin/general-ledger/pdf/voucher#/jshERP-boot/api/plugin/tenant-statistics/tenantClean")})
 public class LogCostFilter implements Filter {
@@ -46,21 +44,23 @@ public class LogCostFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        if (requestUrl != null && (requestUrl.contains("/doc.html") ||
-            requestUrl.contains("/user/login") || requestUrl.contains("/user/register"))) {
+        if (requestUrl != null && (requestUrl.equals("/jshERP-boot/doc.html") ||
+            requestUrl.equals("/jshERP-boot/user/login") || requestUrl.equals("/jshERP-boot/user/register")
+                || requestUrl.equals("/jshERP-boot/user/weixinLogin") || requestUrl.equals("/jshERP-boot/user/weixinBind")
+                || requestUrl.equals("/jshERP-boot/user/registerUser") || requestUrl.equals("/jshERP-boot/user/randomImage"))) {
             chain.doFilter(request, response);
             return;
         }
         if (null != allowUrls && allowUrls.length > 0) {
             for (String url : allowUrls) {
-                if (requestUrl.startsWith(url)) {
+                if (requestUrl != null && requestUrl.startsWith(url)) {
                     chain.doFilter(request, response);
                     return;
                 }
             }
         }
         servletResponse.setStatus(500);
-        if(requestUrl != null && !requestUrl.contains("/user/logout") && !requestUrl.contains("/function/findMenuByPNumber")) {
+        if(requestUrl != null && !requestUrl.equals("/jshERP-boot/user/logout") && !requestUrl.equals("/jshERP-boot/function/findMenuByPNumber")) {
             servletResponse.getWriter().write("loginOut");
         }
     }
