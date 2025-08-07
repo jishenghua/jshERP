@@ -173,9 +173,13 @@ public class UserService {
         User user = JSONObject.parseObject(obj.toJSONString(), User.class);
         int result=0;
         try{
-            result=userMapper.updateByPrimaryKeySelective(user);
-            logService.insertLog("用户",
-                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getLoginName()).toString(), request);
+            //判断是否登录过
+            Object userId = redisService.getObjectFromSessionByKey(request,"userId");
+            if (userId != null) {
+                result = userMapper.updateByPrimaryKeySelective(user);
+                logService.insertLog("用户",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getLoginName()).toString(), request);
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -183,13 +187,17 @@ public class UserService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int updateUserByObj(User user) throws Exception{
-        logService.insertLog("用户",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getId()).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+    public int updateUserByObj(User user, HttpServletRequest request) throws Exception{
         int result=0;
         try{
-            result=userMapper.updateByPrimaryKeySelective(user);
+            //判断是否登录过
+            Object userId = redisService.getObjectFromSessionByKey(request,"userId");
+            if (userId != null) {
+                result = userMapper.updateByPrimaryKeySelective(user);
+                logService.insertLog("用户",
+                        new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(user.getId()).toString(),
+                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -199,9 +207,6 @@ public class UserService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int resetPwd(String md5Pwd, Long id, HttpServletRequest request) throws Exception{
         int result=0;
-        logService.insertLog("用户",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User u = getUser(id);
         String loginName = u.getLoginName();
         if("admin".equals(loginName)){
@@ -215,6 +220,9 @@ public class UserService {
                 Object userId = redisService.getObjectFromSessionByKey(request,"userId");
                 if (userId != null) {
                     result = userMapper.updateByPrimaryKeySelective(user);
+                    logService.insertLog("用户",
+                            new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(id).toString(),
+                            ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
                 }
             }catch(Exception e){
                 JshException.writeFail(logger, e);
@@ -225,16 +233,16 @@ public class UserService {
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int deleteUser(Long id, HttpServletRequest request)throws Exception {
-        return batDeleteUser(id.toString());
+        return batDeleteUser(id.toString(), request);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteUser(String ids, HttpServletRequest request)throws Exception {
-        return batDeleteUser(ids);
+        return batDeleteUser(ids, request);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batDeleteUser(String ids) throws Exception{
+    public int batDeleteUser(String ids, HttpServletRequest request) throws Exception{
         int result=0;
         StringBuffer sb = new StringBuffer();
         sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
@@ -248,11 +256,15 @@ public class UserService {
             }
             sb.append("[").append(user.getLoginName()).append("]");
         }
-        logService.insertLog("用户", sb.toString(),
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         String[] idsArray =ids.split(",");
         try{
-            result=userMapperEx.batDeleteOrUpdateUser(idsArray);
+            //判断是否登录过
+            Object userId = redisService.getObjectFromSessionByKey(request,"userId");
+            if (userId != null) {
+                result = userMapperEx.batDeleteOrUpdateUser(idsArray);
+                logService.insertLog("用户", sb.toString(),
+                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            }
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }

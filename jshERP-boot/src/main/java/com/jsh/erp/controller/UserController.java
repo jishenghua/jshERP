@@ -257,7 +257,7 @@ public class UserController extends BaseController {
             //必须和原始密码一致才可以更新密码
             if (oldpwd.equalsIgnoreCase(user.getPassword())) {
                 user.setPassword(password);
-                flag = userService.updateUserByObj(user); //1-成功
+                flag = userService.updateUserByObj(user, request); //1-成功
                 info = "修改成功";
             } else {
                 flag = 2; //原始密码输入错误

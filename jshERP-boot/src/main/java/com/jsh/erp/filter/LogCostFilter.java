@@ -38,6 +38,11 @@ public class LogCostFilter implements Filter {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
         String requestUrl = servletRequest.getRequestURI();
+        if(requestUrl.contains("../") || requestUrl.contains("..;/")) {
+            servletResponse.setStatus(500);
+            servletResponse.getWriter().write("loginOut");
+            return;
+        }
         //具体，比如：处理若用户未登录，则跳转到登录页
         Object userId = redisService.getObjectFromSessionByKey(servletRequest,"userId");
         if(userId!=null) { //如果已登录，不阻止
