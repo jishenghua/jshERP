@@ -49,23 +49,23 @@ public class LogCostFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-        if (requestUrl != null && (requestUrl.equals("/jshERP-boot/doc.html") ||
-            requestUrl.equals("/jshERP-boot/user/login") || requestUrl.equals("/jshERP-boot/user/register")
-                || requestUrl.equals("/jshERP-boot/user/weixinLogin") || requestUrl.equals("/jshERP-boot/user/weixinBind")
-                || requestUrl.equals("/jshERP-boot/user/registerUser") || requestUrl.equals("/jshERP-boot/user/randomImage"))) {
+        if (requestUrl.equals("/jshERP-boot/doc.html") || requestUrl.equals("/jshERP-boot/user/login")
+                || requestUrl.equals("/jshERP-boot/user/register") || requestUrl.equals("/jshERP-boot/user/weixinLogin")
+                || requestUrl.equals("/jshERP-boot/user/weixinBind") || requestUrl.equals("/jshERP-boot/user/registerUser")
+                || requestUrl.equals("/jshERP-boot/user/randomImage")) {
             chain.doFilter(request, response);
             return;
         }
         if (null != allowUrls && allowUrls.length > 0) {
             for (String url : allowUrls) {
-                if (requestUrl != null && requestUrl.startsWith(url)) {
+                if (requestUrl.startsWith(url)) {
                     chain.doFilter(request, response);
                     return;
                 }
             }
         }
         servletResponse.setStatus(500);
-        if(requestUrl != null && !requestUrl.equals("/jshERP-boot/user/logout") && !requestUrl.equals("/jshERP-boot/function/findMenuByPNumber")) {
+        if(!requestUrl.equals("/jshERP-boot/user/logout") && !requestUrl.equals("/jshERP-boot/function/findMenuByPNumber")) {
             servletResponse.getWriter().write("loginOut");
         }
     }
