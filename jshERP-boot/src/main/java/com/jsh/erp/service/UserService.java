@@ -65,7 +65,12 @@ public class UserService {
     public User getUser(long id)throws Exception {
         User result=null;
         try{
-            result=userMapper.selectByPrimaryKey(id);
+            //先校验是否登录，然后才能查询用户数据
+            HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+            Long userId = this.getUserId(request);
+            if(userId!=null) {
+                result = userMapper.selectByPrimaryKey(id);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

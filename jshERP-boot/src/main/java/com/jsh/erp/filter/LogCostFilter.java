@@ -38,7 +38,7 @@ public class LogCostFilter implements Filter {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
         String requestUrl = servletRequest.getRequestURI();
-        if(requestUrl.contains("../") || requestUrl.contains("..;/") || requestUrl.contains("%2e")) {
+        if(requestUrl.contains("../") || requestUrl.contains("..;/") || requestUrl.contains("%2e") || requestUrl.contains("%2E")) {
             servletResponse.setStatus(500);
             servletResponse.getWriter().write("loginOut");
             return;
