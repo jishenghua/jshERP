@@ -461,11 +461,6 @@
       rowAction(record, index) {
         return {
           on: {
-            click: () => {
-              let arr = []
-              arr.push(record.id)
-              this.selectedRowKeys = arr
-            },
             dblclick: () => {
               let arr = []
               arr.push(record.id)
