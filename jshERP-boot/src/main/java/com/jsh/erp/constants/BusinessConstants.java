@@ -227,4 +227,19 @@ public class BusinessConstants {
      * 验证码有效期（分钟）
      */
     public static final Integer CAPTCHA_EXPIRATION = 2;
+
+    /**
+     * 微信登录接口
+     */
+    public static final String WEIXIN_LOGIN = "/sns/jscode2session";
+
+    /**
+     * 微信获取token接口
+     */
+    public static final String WEIXIN_TOKEN = "/cgi-bin/token";
+
+    /**
+     * 微信发送订阅消息接口
+     */
+    public static final String WEIXIN_MESSAGE_SEND = "/cgi-bin/message/subscribe/send";
 }

@@ -75,7 +75,7 @@ public final class HttpClient {
 
             HttpEntity entity = response.getEntity();
             String data = EntityUtils.toString(entity, StandardCharsets.UTF_8);
-            logger.info("状态:"+statusCode+"数据:"+data);
+            logger.info("状态:"+statusCode+",数据:"+data);
             return data;
         } catch(Exception e){
             throw new RuntimeException(e.getMessage());

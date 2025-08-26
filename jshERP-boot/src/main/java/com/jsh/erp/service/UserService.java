@@ -376,6 +376,18 @@ public class UserService {
                 pwdSimple = true;
             }
             user.setPassword(null);
+            if(BusinessConstants.DEFAULT_MANAGER.equals(user.getLoginName())) {
+                //如果是管理员，则发送订阅消息
+                //1-获取token
+                String accessToken = platformConfigService.getAccessToken();
+                //2-发送订阅消息
+                String templateId = platformConfigService.getPlatformConfigByKey("login_temp_id").getPlatformValue();
+                String weixinUrl = platformConfigService.getPlatformConfigByKey("weixinUrl").getPlatformValue();
+                String platformName = platformConfigService.getPlatformConfigByKey("platform_name").getPlatformValue();
+                if(StringUtil.isNotEmpty(accessToken) && StringUtil.isNotEmpty(user.getWeixinOpenId()) && StringUtil.isNotEmpty(templateId)) {
+                    platformConfigService.sendSubscribeMessage(accessToken, weixinUrl, platformName, templateId, null, user.getWeixinOpenId());
+                }
+            }
             redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
             logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_LOGIN).append(user.getLoginName()).toString(),
@@ -913,10 +925,10 @@ public class UserService {
     }
 
     public User getUserByWeixinCode(String weixinCode) throws Exception {
-        String weixinUrl = platformConfigService.getPlatformConfigByKey("weixinUrl").getPlatformValue();
+        String weixinLogin = platformConfigService.getPlatformConfigByKey("weixinUrl").getPlatformValue() + BusinessConstants.WEIXIN_LOGIN;
         String weixinAppid = platformConfigService.getPlatformConfigByKey("weixinAppid").getPlatformValue();
         String weixinSecret = platformConfigService.getPlatformConfigByKey("weixinSecret").getPlatformValue();
-        String url = weixinUrl + "?appid=" + weixinAppid + "&secret=" + weixinSecret + "&js_code=" + weixinCode
+        String url = weixinLogin + "?appid=" + weixinAppid + "&secret=" + weixinSecret + "&js_code=" + weixinCode
                 + "&grant_type=authorization_code";
         JSONObject jsonObject = HttpClient.httpGet(url);
         if(jsonObject!=null) {

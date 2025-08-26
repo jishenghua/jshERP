@@ -1688,3 +1688,10 @@ alter table jsh_system_config add customer_static_price_flag varchar(1) DEFAULT 
 alter table jsh_material change other_field1 other_field1 varchar(500) DEFAULT NULL COMMENT '自定义1';
 alter table jsh_material change other_field2 other_field2 varchar(500) DEFAULT NULL COMMENT '自定义2';
 alter table jsh_material change other_field3 other_field3 varchar(500) DEFAULT NULL COMMENT '自定义3';
+
+-- --------------------------------------------------------
+-- 时间 2025年8月26日
+-- by jishenghua
+-- 给平台表增加微信订阅-登录模板ID
+-- --------------------------------------------------------
+insert into jsh_platform_config (platform_key, platform_key_info, platform_value) VALUES ('login_temp_id', '微信订阅-登录模板ID', '');
