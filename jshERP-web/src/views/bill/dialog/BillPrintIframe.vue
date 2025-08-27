@@ -13,7 +13,7 @@
       @cancel="handleCancel"
       cancelText="关闭">
       <template slot="footer">
-        <a-button key="back" @click="handleCancel">取消</a-button>
+        <a-button key="back" @click="handleCancel">取消(ESC)</a-button>
       </template>
       <a-form :form="form">
         <template>

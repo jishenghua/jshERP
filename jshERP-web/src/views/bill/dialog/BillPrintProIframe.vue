@@ -11,7 +11,7 @@
     @cancel="handleCancel"
     wrapClassName="ant-modal-cust-warp">
     <template slot="footer">
-      <a-button key="back" @click="handleCancel">取消</a-button>
+      <a-button key="back" @click="handleCancel">取消(ESC)</a-button>
     </template>
     <a-form :form="form">
       <template>
