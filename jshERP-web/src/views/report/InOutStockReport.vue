@@ -81,6 +81,9 @@
             :scroll="scroll"
             :loading="loading"
             @change="handleTableChange">
+            <span slot="action" slot-scope="text, record">
+              <a @click="showMaterialDepotStockList(record)">{{record.id?'分布':''}}</a>
+            </span>
             <span slot="customTitle">
               <a-popover trigger="click" placement="right">
                 <template slot="content">
@@ -142,11 +145,13 @@
           </a-row>
         </section>
         <!-- table区域-end -->
+        <material-depot-stock-list-with-time ref="materialDepotStockListWithTime" @ok="modalFormOk"></material-depot-stock-list-with-time>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
+  import MaterialDepotStockListWithTime from './modules/MaterialDepotStockListWithTime'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction, getFileAccessHttpUrl } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
@@ -158,6 +163,7 @@
     name: "InOutStockReport",
     mixins:[JeecgListMixin],
     components: {
+      MaterialDepotStockListWithTime,
       JEllipsis
     },
     data () {
@@ -192,7 +198,7 @@
         totalCountMoneyStr: '0',
         pageName: 'inOutStockReport',
         // 默认索引
-        defDataIndex:['rowIndex','barCode','materialName','materialStandard','materialModel','unitName','unitPrice',
+        defDataIndex:['rowIndex','action','barCode','materialName','materialStandard','materialModel','unitName','unitPrice',
           'prevSum','inSum','outSum','thisSum','thisAllPrice'],
         // 默认列
         defColumns: [
@@ -201,6 +207,9 @@
             customRender:function (t,r,index) {
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
+          },
+          {title: '库存详情', dataIndex: 'action', align:"center", width: 60,
+            scopedSlots: { customRender: 'action' }
           },
           {title: '图片', dataIndex: 'pic', width: 45, scopedSlots: { customRender: 'customPic' }},
           {title: '条码', dataIndex: 'barCode', sorter: (a, b) => a.barCode - b.barCode, width: 100},
@@ -311,6 +320,15 @@
           this.loadData(1);
           this.getTotalCountMoney();
         }
+      },
+      showMaterialDepotStockList(record) {
+        let depotIds = ''
+        if(this.depotSelected && this.depotSelected.length>0) {
+          depotIds = this.depotSelected.join()
+        }
+        this.$refs.materialDepotStockListWithTime.show(record, depotIds, this.queryParam.beginTime, this.queryParam.endTime);
+        this.$refs.materialDepotStockListWithTime.title = "查看进销存统计库存分布（条码：" + record.barCode + "，名称：" + record.materialName + "）";
+        this.$refs.materialDepotStockListWithTime.disableSubmit = false;
       },
       exportExcel() {
         let list = []

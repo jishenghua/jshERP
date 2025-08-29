@@ -830,4 +830,19 @@
         limit 0,1
     </select>
 
+    <select id="getMaterialDepotStock" resultType="com.jsh.erp.datasource.vo.MaterialDepotStock">
+        select mcs.id, mcs.material_id, mcs.depot_id, d.name depotName, mcs.current_number,
+        ifnull(me.purchase_decimal,0) purchase_decimal, ifnull(mcs.current_unit_price,0) currentUnitPrice
+        from jsh_material_current_stock mcs
+        left join jsh_material_extend me on me.material_id=mcs.material_id and ifnull(me.delete_Flag,'0') !='1'
+        left join jsh_depot d on mcs.depot_id=d.id and ifnull(d.delete_flag,'0') !='1'
+        where me.default_flag=1 and ifnull(mcs.current_number,0)!=0
+        and mcs.material_id=#{mId}
+        <if test="depotIdArray != null and depotIdArray.length>0">
+            and mcs.depot_id in (
+            <foreach collection="depotIdArray" item="depotId" separator=",">#{depotId}</foreach>
+            )
+        </if>
+    </select>
+
 </mapper>

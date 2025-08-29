@@ -7,6 +7,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
+import com.jsh.erp.datasource.vo.MaterialDepotStock;
 import com.jsh.erp.datasource.vo.MaterialVoSearch;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
@@ -1494,5 +1495,28 @@ public class MaterialService {
         } else {
             return null;
         }
+    }
+
+    public List<MaterialDepotStock> getMaterialDepotStock(String depotIds, Long mId) throws Exception {
+        String[] depotIdArr = null;
+        if(StringUtil.isNotEmpty(depotIds)) {
+            depotIdArr = depotIds.split(",");
+        }
+        boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
+        List<Long> depotList = depotService.parseDepotListByArr(depotIdArr);
+        Long[] depotIdArray = StringUtil.listToLongArray(depotList);
+        PageUtils.startPage();
+        List<MaterialDepotStock> list = materialMapperEx.getMaterialDepotStock(depotIdArray, mId);
+        for (MaterialDepotStock item: list) {
+            if(moveAvgPriceFlag) {
+                item.setUnitPrice(item.getCurrentUnitPrice());
+            } else {
+                item.setUnitPrice(item.getPurchaseDecimal());
+            }
+            if(item.getCurrentNumber()!=null && item.getUnitPrice()!=null ) {
+                item.setAllPrice(item.getCurrentNumber().multiply(item.getUnitPrice()));
+            }
+        }
+        return list;
     }
 }

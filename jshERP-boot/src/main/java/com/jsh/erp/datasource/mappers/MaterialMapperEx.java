@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.*;
+import com.jsh.erp.datasource.vo.MaterialDepotStock;
 import com.jsh.erp.datasource.vo.MaterialVoSearch;
 import org.apache.ibatis.annotations.Param;
 
@@ -165,4 +166,8 @@ public interface MaterialMapperEx {
 
     MaterialExtend getMaterialExtendBySerialNumber(
             @Param("serialNumber") String serialNumber);
+
+    List<MaterialDepotStock> getMaterialDepotStock(
+            @Param("depotIdArray") Long[] depotIdArray,
+            @Param("mId") Long mId);
 }

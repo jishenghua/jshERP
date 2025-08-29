@@ -8,6 +8,7 @@ import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
 import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
 import com.jsh.erp.datasource.vo.InOutPriceVo;
+import com.jsh.erp.datasource.vo.MaterialDepotStock;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.DepotService;
 import com.jsh.erp.service.DepotHeadService;
@@ -355,6 +356,7 @@ public class DepotItemController {
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
                     Long mId = diEx.getMId();
+                    item.put("id", mId);
                     item.put("barCode", diEx.getBarCode());
                     item.put("materialName", diEx.getMName());
                     item.put("materialModel", diEx.getMModel());
@@ -470,6 +472,67 @@ public class DepotItemController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+
+    /**
+     * 根据仓库和商品查询库存分布情况-带时间段参数
+     * @param mId
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getMaterialDepotStockByParam")
+    @ApiOperation(value = "根据仓库和商品查询库存分布情况-带时间段参数")
+    public String getMaterialDepotStockByParam(
+            @RequestParam(value = "depotIds",required = false) String depotIds,
+            @RequestParam("materialId") Long mId,
+            @RequestParam(value = "unitPrice", required = false) BigDecimal unitPrice,
+            @RequestParam("beginTime") String beginTime,
+            @RequestParam("endTime") String endTime,
+            HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+        endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
+        Map<Long, String> depotMap = new HashMap<>();
+        JSONArray depotArr = depotService.findDepotByCurrentUser();
+        for (Object depotObj: depotArr) {
+            if(depotObj!=null) {
+                JSONObject depotObject = JSONObject.parseObject(depotObj.toString());
+                depotMap.put(depotObject.getLong("id"), depotObject.getString("depotName"));
+            }
+        }
+        String[] depotIdArr = null;
+        if(StringUtil.isNotEmpty(depotIds)) {
+            depotIdArr = depotIds.split(",");
+        }
+        List<Long> depotList = depotService.parseDepotListByArr(depotIdArr);
+        Long[] depotIdArray = StringUtil.listToLongArray(depotList);
+        List<MaterialDepotStock> list = new ArrayList<>();
+        for (int i = 0; i < depotIdArray.length; i++) {
+            Long depotId = depotIdArray[i];
+            List<Long> currentDepotIdList = new ArrayList<>();
+            currentDepotIdList.add(depotId);
+            String depotName = depotMap.get(depotId);
+            MaterialDepotStock materialDepotStock = new MaterialDepotStock();
+            materialDepotStock.setDepotId(depotId);
+            materialDepotStock.setDepotName(depotName);
+            BigDecimal prevSum = depotItemService.getStockByParamWithDepotList(currentDepotIdList,mId,null,beginTime);
+            Map<String,BigDecimal> intervalMap = depotItemService.getIntervalMapByParamWithDepotList(currentDepotIdList,mId,beginTime,endTime);
+            BigDecimal inSum = intervalMap.get("inSum");
+            BigDecimal outSum = intervalMap.get("outSum");
+            BigDecimal thisSum = prevSum.add(inSum).subtract(outSum);
+            materialDepotStock.setCurrentNumber(thisSum);
+            materialDepotStock.setUnitPrice(unitPrice);
+            if(materialDepotStock.getCurrentNumber()!=null && materialDepotStock.getUnitPrice()!=null ) {
+                materialDepotStock.setAllPrice(materialDepotStock.getCurrentNumber().multiply(materialDepotStock.getUnitPrice()));
+            }
+            if(thisSum.compareTo(BigDecimal.ZERO)!=0) {
+                list.add(materialDepotStock);
+            }
+        }
+        objectMap.put("rows", list);
+        objectMap.put("total", list.size());
+        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
     }
 
     private List<Long> parseListByDepotIds(@RequestParam("depotIds") String depotIds) throws Exception {

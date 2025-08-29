@@ -111,6 +111,8 @@
             </span>
             <span slot="action" slot-scope="text, record">
               <a @click="showMaterialInOutList(record)">{{record.id?'流水':''}}</a>
+              <a-divider type="vertical" />
+              <a @click="showMaterialDepotStockList(record)">{{record.id?'分布':''}}</a>
             </span>
             <template slot="customPic" slot-scope="text, record">
               <a-popover placement="right" trigger="click">
@@ -148,12 +150,14 @@
         </section>
         <!-- table区域-end -->
         <material-in-out-list ref="materialInOutList" @ok="modalFormOk"></material-in-out-list>
+        <material-depot-stock-list ref="materialDepotStockList" @ok="modalFormOk"></material-depot-stock-list>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
   import MaterialInOutList from './modules/MaterialInOutList'
+  import MaterialDepotStockList from './modules/MaterialDepotStockList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction, getFileAccessHttpUrl } from '@/api/manage'
   import {queryMaterialCategoryTreeList} from '@/api/api'
@@ -166,6 +170,7 @@
     mixins:[JeecgListMixin],
     components: {
       MaterialInOutList,
+      MaterialDepotStockList,
       JEllipsis
     },
     data () {
@@ -207,7 +212,7 @@
               return (t !== '合计') ? (parseInt(index) + 1) : t
             }
           },
-          {title: '库存流水', dataIndex: 'action', align:"center", width: 60,
+          {title: '库存详情', dataIndex: 'action', align:"center", width: 80,
             scopedSlots: { customRender: 'action' }
           },
           {title: '图片', dataIndex: 'pic', width: 45, scopedSlots: { customRender: 'customPic' }},
@@ -316,6 +321,15 @@
         this.$refs.materialInOutList.show(record, depotIds);
         this.$refs.materialInOutList.title = "查看商品库存流水";
         this.$refs.materialInOutList.disableSubmit = false;
+      },
+      showMaterialDepotStockList(record) {
+        let depotIds = ''
+        if(this.depotSelected && this.depotSelected.length>0) {
+          depotIds = this.depotSelected.join()
+        }
+        this.$refs.materialDepotStockList.show(record, depotIds);
+        this.$refs.materialDepotStockList.title = "查看商品库存分布（条码：" + record.mBarCode + "，名称：" + record.name + "）";
+        this.$refs.materialDepotStockList.disableSubmit = false;
       },
       exportExcel() {
         let list = []

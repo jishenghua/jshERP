@@ -8,6 +8,7 @@ import com.jsh.erp.datasource.entities.Material;
 import com.jsh.erp.datasource.entities.MaterialExtend;
 import com.jsh.erp.datasource.entities.MaterialVo4Unit;
 import com.jsh.erp.datasource.entities.Unit;
+import com.jsh.erp.datasource.vo.MaterialDepotStock;
 import com.jsh.erp.service.DepotService;
 import com.jsh.erp.service.DepotItemService;
 import com.jsh.erp.service.MaterialService;
@@ -841,5 +842,21 @@ public class MaterialController extends BaseController {
             res.data = "获取数据失败";
         }
         return res;
+    }
+
+    /**
+     * 根据仓库和商品查询库存分布情况
+     * @param mId
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getMaterialDepotStock")
+    @ApiOperation(value = "根据仓库和商品查询库存分布情况")
+    public TableDataInfo getMaterialDepotStock(
+            @RequestParam(value = "depotIds",required = false) String depotIds,
+            @RequestParam("materialId") Long mId,
+            HttpServletRequest request)throws Exception {
+        List<MaterialDepotStock> list = materialService.getMaterialDepotStock(depotIds, mId);
+        return getDataTable(list);
     }
 }
