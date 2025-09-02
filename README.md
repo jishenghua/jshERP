@@ -2,7 +2,7 @@
 * 很多人说管伊佳ERP（原名：华夏ERP，英文名：jshERP）是目前人气领先的国产ERP系统
 * 虽然目前只有进销存+财务+生产的功能，但后面将会推出ERP的全部功能，有兴趣请帮点一下 **Star** 哦
 * **官网地址：http://www.gyjerp.com  商务或技术交流，请联系QQ：752718920 微信：shenhua861584**
-* 对物联网感兴趣的朋友欢迎关注我们的新产品：[管伊佳物联](https://gitee.com/jishenghua/gyj-iot)
+* 对物联网感兴趣的朋友欢迎关注我们的新产品：管伊佳物联 https://gitee.com/jishenghua/gyj-iot
 
 # 网络版介绍
 * 推荐使用网络版（198元1年）淘宝链接：https://item.taobao.com/item.htm?id=674169489573
