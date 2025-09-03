@@ -10,7 +10,6 @@ import com.jsh.erp.exception.JshException;
 import com.jsh.erp.utils.HttpClient;
 import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
-import com.jsh.erp.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -19,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import javax.mail.*;
+import javax.mail.internet.*;
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class PlatformConfigService {
@@ -220,45 +221,38 @@ public class PlatformConfigService {
     }
 
     /**
-     * 发送微信订阅消息(该方法将在一个单独的线程中执行)
+     * 发送邮件(该方法将在一个单独的线程中执行)
      * @return
      * @throws Exception
      */
     @Async
-    public void sendSubscribeMessage(String accessToken, String weixinUrl, String platformName, String templateId, String page, String openId) throws Exception {
-        String weixinMessageSend = weixinUrl + BusinessConstants.WEIXIN_MESSAGE_SEND;
-        String url = weixinMessageSend + "?access_token=" + accessToken;
-        JSONObject paramObj = new JSONObject();
-        paramObj.put("template_id", templateId);
-        if (StringUtil.isNotEmpty(page)) {
-            paramObj.put("page", page);
+    public void sendEmail(String emailFrom, String emailAuthCode, String emailSmtpHost, String toEmail, String emailSubject, String emailBody) {
+        // 配置邮件服务器属性
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", emailSmtpHost); // 网易邮箱SMTP服务器
+        properties.put("mail.smtp.port", "465"); // SSL端口
+        properties.put("mail.smtp.auth", "true"); // 需要认证
+        properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // 使用SSL
+        properties.put("mail.smtp.socketFactory.port", "465"); // SSL端口
+        try {
+            // 创建会话
+            Session session = Session.getInstance(properties, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(emailFrom, emailAuthCode);
+                }
+            });
+            // 创建邮件
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(emailFrom));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject(emailSubject);
+            message.setText(emailBody);
+            // 发送邮件
+            Transport.send(message);
+            logger.info("邮件发送成功！");
+        } catch (Exception e) {
+            logger.error("邮件发送失败: " + e.getMessage());
         }
-        paramObj.put("touser", openId);
-        JSONObject dataObj = new JSONObject();
-        //登录状态
-        JSONObject phraseObj = new JSONObject();
-        //登陆方式
-        JSONObject thing2Obj = new JSONObject();
-        //登陆应用
-        JSONObject thing3Obj = new JSONObject();
-        //登录时间
-        JSONObject time4Obj = new JSONObject();
-        //备注
-        JSONObject thing5Obj = new JSONObject();
-        phraseObj.put("value", "已登录");
-        thing2Obj.put("value", "账号登录");
-        thing3Obj.put("value", platformName);
-        time4Obj.put("value", Tools.getCenternTime(new Date()));
-        thing5Obj.put("value", "欢迎" + BusinessConstants.DEFAULT_MANAGER + "登录！");
-        dataObj.put("phrase1", phraseObj);
-        dataObj.put("thing2", thing2Obj);
-        dataObj.put("thing3", thing3Obj);
-        dataObj.put("time4", time4Obj);
-        dataObj.put("thing5", thing5Obj);
-        paramObj.put("data", dataObj);
-        paramObj.put("miniprogram_state", "formal");
-        paramObj.put("lang", "zh_CN");
-        String param = paramObj.toJSONString();
-        HttpClient.httpPost(url, param);
     }
 }

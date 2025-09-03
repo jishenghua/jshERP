@@ -1690,8 +1690,12 @@ alter table jsh_material change other_field2 other_field2 varchar(500) DEFAULT N
 alter table jsh_material change other_field3 other_field3 varchar(500) DEFAULT NULL COMMENT '自定义3';
 
 -- --------------------------------------------------------
--- 时间 2025年8月26日
+-- 时间 2025年9月3日
 -- by jishenghua
--- 给平台表增加微信订阅-登录模板ID
+-- 给平台表增加邮件发送端-发件人
+-- 给平台表增加邮件发送端-授权码
+-- 给平台表增加邮件发送端-SMTP服务器
 -- --------------------------------------------------------
-insert into jsh_platform_config (platform_key, platform_key_info, platform_value) VALUES ('login_temp_id', '微信订阅-登录模板ID', '');
+insert into jsh_platform_config (platform_key, platform_key_info, platform_value) VALUES ('email_from', '邮件发送端-发件人', '');
+insert into jsh_platform_config (platform_key, platform_key_info, platform_value) VALUES ('email_auth_code', '邮件发送端-授权码', '');
+insert into jsh_platform_config (platform_key, platform_key_info, platform_value) VALUES ('email_smtp_host', '邮件发送端-SMTP服务器', '');

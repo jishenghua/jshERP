@@ -377,16 +377,8 @@ public class UserService {
             }
             user.setPassword(null);
             if(BusinessConstants.DEFAULT_MANAGER.equals(user.getLoginName())) {
-                //如果是管理员，则发送订阅消息
-                //1-获取token
-                String accessToken = platformConfigService.getAccessToken();
-                //2-发送订阅消息
-                String templateId = platformConfigService.getPlatformConfigByKey("login_temp_id").getPlatformValue();
-                String weixinUrl = platformConfigService.getPlatformConfigByKey("weixinUrl").getPlatformValue();
-                String platformName = platformConfigService.getPlatformConfigByKey("platform_name").getPlatformValue();
-                if(StringUtil.isNotEmpty(accessToken) && StringUtil.isNotEmpty(user.getWeixinOpenId()) && StringUtil.isNotEmpty(templateId)) {
-                    platformConfigService.sendSubscribeMessage(accessToken, weixinUrl, platformName, templateId, null, user.getWeixinOpenId());
-                }
+                //如果是管理员，则发送登录邮件
+                sendEmailToCurrentUser(request, user);
             }
             redisService.storageObjectBySession(token,"clientIp", Tools.getLocalIp(request));
             logService.insertLogWithUserId(user.getId(), user.getTenantId(), "用户",
@@ -457,6 +449,26 @@ public class UserService {
             user = list.get(0);
         }
         return user;
+    }
+
+    /**
+     * 发送邮件给当前用户
+     * @param request
+     * @param user
+     * @throws Exception
+     */
+    private void sendEmailToCurrentUser(HttpServletRequest request, User user) throws Exception {
+        String platformName = platformConfigService.getPlatformConfigByKey("platform_name").getPlatformValue();
+        String emailFrom = platformConfigService.getPlatformConfigByKey("email_from").getPlatformValue();
+        String emailAuthCode = platformConfigService.getPlatformConfigByKey("email_auth_code").getPlatformValue();
+        String emailSmtpHost = platformConfigService.getPlatformConfigByKey("email_smtp_host").getPlatformValue();
+        if(StringUtil.isNotEmpty(emailFrom) && StringUtil.isNotEmpty(emailAuthCode) && StringUtil.isNotEmpty(emailSmtpHost)
+                && StringUtil.isNotEmpty(user.getEmail())) {
+            String emailSubject = "用户" + user.getLoginName() + "成功登录" + platformName;
+            String emailBody = "用户" + user.getLoginName() + "成功登录" + platformName + "，登录时间：" + Tools.getCenternTime(new Date())
+                    + "，登录IP：" + Tools.getLocalIp(request);
+            platformConfigService.sendEmail(emailFrom, emailAuthCode, emailSmtpHost, user.getEmail(), emailSubject, emailBody);
+        }
     }
 
     public int checkIsNameExist(Long id, String name)throws Exception {
