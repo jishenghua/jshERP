@@ -166,8 +166,12 @@ export default {
     }
     const on = {
       select: obj => {
-        this.selectedKeys = obj.selectedKeys
-        this.$emit('select', obj)
+        if(obj.key.indexOf('http://')>-1) {
+          window.open(obj.key)
+        } else {
+          this.selectedKeys = obj.selectedKeys
+          this.$emit('select', obj)
+        }
       },
       openChange: this.onOpenChange
     }
