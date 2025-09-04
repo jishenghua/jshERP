@@ -755,12 +755,13 @@ export const BillListMixin = {
           }
           getAction('/depotItem/getDetailList', param).then((res) => {
             if (res.code === 200) {
+              let deposit = info.changeAmount - info.finishDeposit
               let transferParam = {
                 list: res.data.rows,
                 number: info.number,
                 organId: info.organId,
                 discountMoney: info.discountMoney,
-                deposit: info.deposit,
+                deposit: deposit,
                 remark: info.remark,
                 accountId: info.accountId,
                 salesMan: info.salesMan
