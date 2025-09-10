@@ -10,6 +10,10 @@
         <result column="contacts" jdbcType="VARCHAR" property="contacts" />
         <result column="telephone" jdbcType="VARCHAR" property="telephone" />
         <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+        <result column="account_number" jdbcType="VARCHAR" property="accountNumber" />
+        <result column="tax_num" jdbcType="VARCHAR" property="taxNum" />
+        <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
     </resultMap>
 
     <resultMap id="ResultWithInfoExMap" type="com.jsh.erp.datasource.vo.DepotHeadVo4InDetail">
@@ -1065,7 +1069,7 @@
 
     <select id="getDetailByNumber" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">
         select dh.*, concat(dh.sub_type,dh.type) as depotHeadType, a.name AccountName,
-               s.supplier OrganName, s.contacts, s.telephone, s.address
+               s.supplier OrganName, s.contacts, s.telephone, s.address, s.bank_name, s.account_number, s.tax_num, s.phone_num
         from jsh_depot_head dh
         left join jsh_supplier s on dh.organ_id=s.id and ifnull(s.delete_Flag,'0') !='1'
         left join jsh_account a on dh.account_id=a.id and ifnull(a.delete_Flag,'0') !='1'

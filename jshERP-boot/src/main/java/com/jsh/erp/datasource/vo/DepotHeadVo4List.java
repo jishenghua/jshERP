@@ -57,6 +57,26 @@ public class DepotHeadVo4List extends DepotHead{
      */
     private BigDecimal realNeedDebt;
 
+    /**
+     * 开户行
+     */
+    private String bankName;
+
+    /**
+     * 账号
+     */
+    private String accountNumber;
+
+    /**
+     * 纳税人识别号
+     */
+    private String taxNum;
+
+    /**
+     * 联系电话
+     */
+    private String phoneNum;
+
     public String getProjectName() {
         return projectName;
     }
@@ -223,5 +243,37 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setRealNeedDebt(BigDecimal realNeedDebt) {
         this.realNeedDebt = realNeedDebt;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getTaxNum() {
+        return taxNum;
+    }
+
+    public void setTaxNum(String taxNum) {
+        this.taxNum = taxNum;
+    }
+
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 }
