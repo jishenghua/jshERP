@@ -132,6 +132,7 @@ export default {
       allTreeKeys:[],
       checkStrictly: true,
       form: this.$form.createForm(this),
+      urlPath: '/system/organization',
       labelCol: {
         xs: {span: 24},
         sm: {span: 5}

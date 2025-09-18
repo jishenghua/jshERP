@@ -225,6 +225,7 @@
           remark: ""
         },
         prefixNo: 'LSCK',
+        urlPath: '/bill/retail_out',
         labelCol: {
           span: 5
         },

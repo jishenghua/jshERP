@@ -128,6 +128,7 @@
           telephone:'',
           phonenum:''
         },
+        urlPath: '/system/customer',
         customerFlag: '0',
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']

@@ -104,6 +104,7 @@
           offset: 1
         },
         queryParam: {},
+        urlPath: '/system/user',
         depotFlag: '0',
         customerFlag: '0',
         columns: [

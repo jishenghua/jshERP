@@ -191,6 +191,7 @@
           number: ""
         },
         prefixNo: 'FK',
+        urlPath: '/financial/money_out',
         // 表头
         columns: [
           {

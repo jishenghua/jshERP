@@ -227,6 +227,7 @@
           remark: ""
         },
         prefixNo: 'LSTH',
+        urlPath: '/bill/retail_back',
         labelCol: {
           span: 5
         },

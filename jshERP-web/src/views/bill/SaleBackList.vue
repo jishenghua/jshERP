@@ -244,6 +244,7 @@
           remark: ""
         },
         prefixNo: 'XSTH',
+        urlPath: '/bill/sale_back',
         //出入库管理开关，适合独立仓管场景
         inOutManageFlag: false,
         labelCol: {

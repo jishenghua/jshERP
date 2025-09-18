@@ -122,6 +122,7 @@
           telephone:'',
           phonenum:''
         },
+        urlPath: '/system/member',
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']
         },

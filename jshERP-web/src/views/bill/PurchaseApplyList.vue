@@ -203,6 +203,7 @@
           remark: ""
         },
         prefixNo: 'QGD',
+        urlPath: '/bill/purchase_apply',
         labelCol: {
           span: 5
         },

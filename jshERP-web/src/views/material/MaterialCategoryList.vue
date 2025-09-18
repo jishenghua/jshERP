@@ -130,6 +130,7 @@ export default {
       allTreeKeys:[],
       checkStrictly: true,
       form: this.$form.createForm(this),
+      urlPath: '/material/material_category',
       labelCol: {
         xs: {span: 24},
         sm: {span: 5}

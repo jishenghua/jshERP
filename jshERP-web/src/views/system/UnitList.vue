@@ -86,6 +86,7 @@
         },
         // 查询条件
         queryParam: {name:'',type:''},
+        urlPath: '/system/unit',
         // 表头
         columns: [
           {

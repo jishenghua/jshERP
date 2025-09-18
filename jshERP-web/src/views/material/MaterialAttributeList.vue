@@ -89,6 +89,7 @@
           attributeName:'',
           attributeValue:''
         },
+        urlPath: '/material/material_attribute',
         // 表头
         columns: [
           {

@@ -172,6 +172,7 @@
           remark: ""
         },
         prefixNo: 'ZZ',
+        urlPath: '/financial/giro',
         // 表头
         columns: [
           {

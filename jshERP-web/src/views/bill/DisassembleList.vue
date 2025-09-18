@@ -201,6 +201,7 @@
           remark: ""
         },
         prefixNo: 'CXD',
+        urlPath: '/bill/disassemble',
         labelCol: {
           span: 5
         },

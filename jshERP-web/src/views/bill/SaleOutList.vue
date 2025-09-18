@@ -268,6 +268,7 @@
           remark: ""
         },
         prefixNo: 'XSCK',
+        urlPath: '/bill/sale_out',
         //出入库管理开关，适合独立仓管场景
         inOutManageFlag: false,
         labelCol: {

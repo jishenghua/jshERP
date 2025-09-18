@@ -172,6 +172,7 @@
           remark: ""
         },
         prefixNo: 'SYF',
+        urlPath: '/financial/advance_in',
         // 表头
         columns: [
           {

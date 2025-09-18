@@ -427,15 +427,11 @@ export const JeecgListMixin = {
     initActiveBtnStr() {
       let btnStrList = Vue.ls.get('winBtnStrList'); //按钮功能列表 JSON字符串
       this.btnEnableList = ""; //按钮列表
-      let pathName = location.pathname
-      if(pathName.indexOf('/plugins')>-1) {
-        pathName = '/system' + pathName
-      }
-      if (pathName && btnStrList) {
+      if (this.urlPath && btnStrList) {
         for (let i = 0; i < btnStrList.length; i++) {
-          if (btnStrList[i].url === pathName) {
+          if (btnStrList[i].url === this.urlPath) {
             if (btnStrList[i].btnStr) {
-              this.btnEnableList = btnStrList[i].btnStr;
+              this.btnEnableList = btnStrList[i].btnStr
             }
           }
         }

@@ -192,6 +192,7 @@
           remark: ""
         },
         prefixNo: 'ZC',
+        urlPath: '/financial/item_out',
         // 表头
         columns: [
           {

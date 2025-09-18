@@ -231,6 +231,7 @@
           remark: ""
         },
         prefixNo: 'CGDD',
+        urlPath: '/bill/purchase_order',
         labelCol: {
           span: 5
         },

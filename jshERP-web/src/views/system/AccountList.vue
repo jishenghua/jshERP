@@ -106,6 +106,7 @@
         },
         // 查询条件
         queryParam: {name:'',serialNo:'',remark:''},
+        urlPath: '/system/account',
         // 表头
         columns: [
           {

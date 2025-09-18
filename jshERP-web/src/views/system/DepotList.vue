@@ -108,6 +108,7 @@
         },
         // 查询条件
         queryParam: {name:'',remark:''},
+        urlPath: '/system/depot',
         depotFlag: '0',
         quickBtn: {
           user: ''

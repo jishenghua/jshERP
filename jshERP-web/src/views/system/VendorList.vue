@@ -121,6 +121,7 @@
           telephone:'',
           phonenum:''
         },
+        urlPath: '/system/vendor',
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']
         },

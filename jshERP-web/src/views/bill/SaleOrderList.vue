@@ -237,6 +237,7 @@
           remark: ""
         },
         prefixNo: 'XSDD',
+        urlPath: '/bill/sale_order',
         //以销定购开关
         purchaseBySaleFlag: false,
         labelCol: {

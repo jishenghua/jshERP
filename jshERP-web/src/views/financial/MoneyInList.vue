@@ -192,6 +192,7 @@
           number: ""
         },
         prefixNo: 'SK',
+        urlPath: '/financial/money_in',
         // 表头
         columns: [
           {

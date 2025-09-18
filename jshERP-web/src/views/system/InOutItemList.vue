@@ -100,6 +100,7 @@
         },
         // 查询条件
         queryParam: {name:'',type:'',remark:''},
+        urlPath: '/system/in_out_item',
         // 表头
         columns: [
           {

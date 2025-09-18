@@ -279,6 +279,7 @@
           remark:'',
           mpList: getMpListShort(Vue.ls.get('materialPropertyList'))  //扩展属性
         },
+        urlPath: '/material/material',
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '50', '100', '200']
         },

@@ -127,6 +127,7 @@
           name: '',
           description: '',
         },
+        urlPath: '/system/role',
         // 表头
         columns: [
           {

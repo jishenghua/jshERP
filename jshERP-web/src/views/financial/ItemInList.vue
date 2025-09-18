@@ -192,6 +192,7 @@
           remark: ""
         },
         prefixNo: 'SR',
+        urlPath: '/financial/item_in',
         // 表头
         columns: [
           {

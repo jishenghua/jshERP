@@ -51,6 +51,7 @@
         },
         // 查询条件
         queryParam: {name:'',type:''},
+        urlPath: '/material/material_property',
         // 表头
         columns: [
           {

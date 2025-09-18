@@ -95,6 +95,7 @@
         },
         // 查询条件
         queryParam: {name:'',type:''},
+        urlPath: '/system/person',
         // 表头
         columns: [
           {

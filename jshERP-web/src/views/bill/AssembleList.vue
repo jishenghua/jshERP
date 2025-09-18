@@ -201,6 +201,7 @@
           remark: ""
         },
         prefixNo: 'ZZD',
+        urlPath: '/bill/assemble',
         labelCol: {
           span: 5
         },
