@@ -152,6 +152,26 @@ public class PlatformConfigController extends BaseController {
     }
 
     /**
+     * 获取是否开启验证码
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getPlatform/checkcodeFlag")
+    @ApiOperation(value = "获取是否开启验证码")
+    public String getPlatformCheckcodeFlag(HttpServletRequest request)throws Exception {
+        String res;
+        try {
+            String platformKey = "checkcode_flag";
+            PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
+            res = platformConfig.getPlatformValue();
+        } catch(Exception e){
+            logger.error(e.getMessage(), e);
+            res = "#";
+        }
+        return res;
+    }
+
+    /**
      * 根据platformKey更新platformValue
      * @param object
      * @param request

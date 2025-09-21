@@ -685,6 +685,7 @@ INSERT INTO `jsh_platform_config` VALUES ('18', 'bill_excel_url', '单据Excel�
 INSERT INTO `jsh_platform_config` VALUES ('19', 'email_from', '邮件发送端-发件人', '');
 INSERT INTO `jsh_platform_config` VALUES ('20', 'email_auth_code', '邮件发送端-授权码', '');
 INSERT INTO `jsh_platform_config` VALUES ('21', 'email_smtp_host', '邮件发送端-SMTP服务器', '');
+INSERT INTO `jsh_platform_config` VALUES ('22', 'checkcode_flag', '验证码启用标记', '1');
 
 -- ----------------------------
 -- Table structure for jsh_role

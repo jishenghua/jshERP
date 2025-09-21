@@ -288,24 +288,27 @@ public class UserService {
      * @param uuid 唯一标识
      * @return 结果
      */
-    public void validateCaptcha(String code, String uuid) {
-        if(StringUtil.isNotEmpty(code) && StringUtil.isNotEmpty(uuid)) {
-            code = code.trim();
-            uuid = uuid.trim();
-            String verifyKey = BusinessConstants.CAPTCHA_CODE_KEY + uuid;
-            String captcha = redisService.getCacheObject(verifyKey);
-            redisService.deleteObject(verifyKey);
-            if (captcha == null) {
-                logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_EXPIRE_CODE, ExceptionConstants.USER_JCAPTCHA_EXPIRE_MSG);
-                throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_EXPIRE_CODE, ExceptionConstants.USER_JCAPTCHA_EXPIRE_MSG);
+    public void validateCaptcha(String code, String uuid) throws Exception {
+        PlatformConfig platformConfig = platformConfigService.getInfoByKey("checkcode_flag");
+        if(platformConfig!=null && "1".equals(platformConfig.getPlatformValue())) {
+            if(StringUtil.isNotEmpty(code) && StringUtil.isNotEmpty(uuid)) {
+                code = code.trim();
+                uuid = uuid.trim();
+                String verifyKey = BusinessConstants.CAPTCHA_CODE_KEY + uuid;
+                String captcha = redisService.getCacheObject(verifyKey);
+                redisService.deleteObject(verifyKey);
+                if (captcha == null) {
+                    logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_EXPIRE_CODE, ExceptionConstants.USER_JCAPTCHA_EXPIRE_MSG);
+                    throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_EXPIRE_CODE, ExceptionConstants.USER_JCAPTCHA_EXPIRE_MSG);
+                }
+                if (!code.equalsIgnoreCase(captcha)) {
+                    logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
+                    throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
+                }
+            } else {
+                logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_EMPTY_CODE, ExceptionConstants.USER_JCAPTCHA_EMPTY_MSG);
+                throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_EMPTY_CODE, ExceptionConstants.USER_JCAPTCHA_EMPTY_MSG);
             }
-            if (!code.equalsIgnoreCase(captcha)) {
-                logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
-                throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_ERROR_CODE, ExceptionConstants.USER_JCAPTCHA_ERROR_MSG);
-            }
-        } else {
-            logger.error("异常码[{}],异常提示[{}]", ExceptionConstants.USER_JCAPTCHA_EMPTY_CODE, ExceptionConstants.USER_JCAPTCHA_EMPTY_MSG);
-            throw new BusinessRunTimeException(ExceptionConstants.USER_JCAPTCHA_EMPTY_CODE, ExceptionConstants.USER_JCAPTCHA_EMPTY_MSG);
         }
     }
 
