@@ -1,6 +1,6 @@
 <!-- b y 7 5 2 7  1 8 9 2 0 -->
 <template>
-  <div class="main">
+  <div class="main" :style="mainStyle">
     <a-form :form="form" class="user-layout-login" ref="formLogin" id="formLogin">
       <a-form-item>
         <a-input
@@ -23,7 +23,7 @@
         </a-input-password>
       </a-form-item>
 
-      <a-row :gutter="0">
+      <a-row :gutter="0" v-if="checkcodeFlag==='1'">
         <a-col :span="14">
           <a-form-item>
             <a-input
@@ -49,7 +49,7 @@
         </router-link>
       </a-form-item>
 
-      <a-form-item style="margin-top:16px">
+      <a-form-item :style="btnStyle">
         <a-button
           size="large"
           type="primary"
@@ -126,6 +126,9 @@
         uuid:'',
         randCodeImage:'',
         registerFlag:'',
+        checkcodeFlag:'',
+        mainStyle: '',
+        btnStyle: 'margin-top:16px',
         requestCodeSuccess:false,
         checked: false
       }
@@ -137,6 +140,7 @@
       Vue.ls.remove(ACCESS_TOKEN)
       this.getRouterData()
       this.getRegisterFlag()
+      this.getCheckcodeFlag()
       this.handleChangeCheckCode()
     },
     methods: {
@@ -344,6 +348,18 @@
       getRegisterFlag(){
         getAction('/platformConfig/getPlatform/registerFlag').then((res) => {
           this.registerFlag = res + ''
+        })
+      },
+      getCheckcodeFlag(){
+        getAction('/platformConfig/getPlatform/checkcodeFlag').then((res) => {
+          this.checkcodeFlag = res + ''
+          if(this.checkcodeFlag === '1') {
+            this.mainStyle = ''
+            this.btnStyle = 'margin-top:16px'
+          } else {
+            this.mainStyle = 'padding-top:20px'
+            this.btnStyle = 'margin-top:26px'
+          }
         })
       },
       //获取密码加密规则
