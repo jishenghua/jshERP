@@ -460,6 +460,9 @@ export const BillModalMixin = {
                     let mObj = this.parseInfoToObj(mInfo)
                     mObj.depotId = mInfo.depotId
                     mObj.stock = mInfo.stock
+                    mObj.snList = ''
+                    mObj.batchNumber = ''
+                    mObj.expirationDate = ''
                     mArr.push(mObj)
                   }
                   let allPriceTotal = 0
@@ -494,6 +497,9 @@ export const BillModalMixin = {
                     this.changeColumnShow(mInfo)
                     let mInfoEx = this.parseInfoToObj(mInfo)
                     mInfoEx.stock = res.data.stock
+                    mInfoEx.snList = ''
+                    mInfoEx.batchNumber = ''
+                    mInfoEx.expirationDate = ''
                     let mObj = {
                       rowKey: row.id,
                       values: mInfoEx
