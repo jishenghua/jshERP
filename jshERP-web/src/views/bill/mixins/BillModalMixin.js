@@ -534,8 +534,8 @@ export const BillModalMixin = {
           }
           break;
         case "batchNumber":
-          //只针对销售出库、采购退货、其它出库
-          if(this.prefixNo === 'XSCK' || this.prefixNo === 'CGTH' || this.prefixNo === 'QTCK') {
+          //只针对零售出库、销售出库、采购退货、其它出库
+          if(this.prefixNo === 'LSCK' || this.prefixNo === 'XSCK' || this.prefixNo === 'CGTH' || this.prefixNo === 'QTCK') {
             batchNumber = value
             let depotItemId = ''
             if(this.model.id) {
