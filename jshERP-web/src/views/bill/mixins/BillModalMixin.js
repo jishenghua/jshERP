@@ -112,6 +112,10 @@ export const BillModalMixin = {
                 this.form.setFieldsValue({'accountId': item.id})
               }
             }
+            //数据从前一个页面带过来的情况
+            if(this.transferParam && this.transferParam.accountId) {
+              this.form.setFieldsValue({'accountId': this.transferParam.accountId})
+            }
           }
         })
       })
