@@ -975,6 +975,7 @@ public class DepotHeadService {
                 Map<Long,Integer> financialBillNoMap = getFinancialBillNoMapByBillIdList(idList);
                 Map<String,Integer> billSizeMap = getBillSizeMapByLinkNumberList(numberList);
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
+                Map<Long,BigDecimal> materialCountListMap = getMaterialCountListMapByHeaderIdList(idList);
                 DepotHeadVo4List dh = list.get(0);
                 String billCategory = getBillCategory(dh.getSubType());
                 if(accountMap!=null && StringUtil.isNotEmpty(dh.getAccountIdList()) && StringUtil.isNotEmpty(dh.getAccountMoneyList())) {
@@ -1031,6 +1032,10 @@ public class DepotHeadService {
                 //商品信息简述
                 if(materialsListMap!=null) {
                     dh.setMaterialsList(materialsListMap.get(dh.getId()));
+                }
+                //商品总数量
+                if(materialCountListMap!=null) {
+                    dh.setMaterialCount(materialCountListMap.get(dh.getId()));
                 }
                 User creatorUser = userService.getUser(dh.getCreator());
                 if(creatorUser!=null) {
