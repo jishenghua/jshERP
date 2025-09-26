@@ -45,7 +45,12 @@
                 <a-col :md="6" :sm="24">
                   <a-form-item label="会员卡号" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-select placeholder="请选择会员卡号" v-model="queryParam.organId"
-                              :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
+                              :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children" @search="handleSearchRetail">
+                      <div slot="dropdownRender" slot-scope="menu">
+                        <v-nodes :vnodes="menu" />
+                        <a-divider style="margin: 4px 0;" />
+                        <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initRetail"><a-icon type="reload" /> 刷新列表</div>
+                      </div>
                       <a-select-option v-for="(item,index) in retailList" :key="index" :value="item.id">
                         {{ item.supplier }}
                       </a-select-option>
@@ -160,7 +165,11 @@
     name: "RetailOutReport",
     mixins:[JeecgListMixin],
     components: {
-      JEllipsis
+      JEllipsis,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
@@ -192,6 +201,7 @@
         orgaTree: [],
         categoryTree:[],
         realityPriceTotal: '',
+        setTimeFlag: null,
         tabKey: "1",
         pageName: 'retailOutReport',
         // 默认索引
@@ -280,6 +290,19 @@
             that.retailList = res
           }
         });
+      },
+      handleSearchRetail(value) {
+        let that = this
+        if(this.setTimeFlag != null){
+          clearTimeout(this.setTimeFlag);
+        }
+        this.setTimeFlag = setTimeout(()=>{
+          findBySelectRetail({key: value}).then((res) => {
+            if(res) {
+              that.supList = res;
+            }
+          })
+        },500)
       },
       getDepotData() {
         getAction('/depot/findDepotByCurrentUser').then((res)=>{
