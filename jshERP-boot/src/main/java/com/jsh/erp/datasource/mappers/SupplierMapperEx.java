@@ -31,4 +31,11 @@ public interface SupplierMapperEx {
             @Param("type") String type);
 
     List<SupplierSimple> getAllCustomer();
+
+    List<Supplier> findByTypeAndKey(
+            @Param("type") String type,
+            @Param("key") String key);
+
+    Supplier getInfoById(
+            @Param("id") Long id);
 }

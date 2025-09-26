@@ -275,7 +275,7 @@ public class DepotHeadService {
         Long userId = userService.getCurrentUser().getId();
         //获取权限信息
         String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
-        List<Supplier> supplierList = supplierService.findBySelectCus();
+        List<SupplierSimple> supplierList = supplierService.getAllCustomer();
         if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType) || BusinessConstants.SUB_TYPE_SALES.equals(subType)
                 ||BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType) ) {
             //采购订单里面选择销售订单的时候不要过滤
@@ -283,7 +283,7 @@ public class DepotHeadService {
                 if (null != supplierList && supplierList.size() > 0) {
                     boolean customerFlag = systemConfigService.getCustomerFlag();
                     List<String> organList = new ArrayList<>();
-                    for (Supplier supplier : supplierList) {
+                    for (SupplierSimple supplier : supplierList) {
                         boolean flag = ubValue.contains("[" + supplier.getId().toString() + "]");
                         if (!customerFlag || flag) {
                             organList.add(supplier.getId().toString());

@@ -288,43 +288,64 @@ public class SupplierService {
         }
     }
 
-    public List<Supplier> findBySelectCus()throws Exception {
-        SupplierExample example = new SupplierExample();
-        example.createCriteria().andTypeLike("客户").andEnabledEqualTo(true).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("sort asc, id desc");
+    public List<Supplier> findBySelectCus(String key, Long organId)throws Exception {
         List<Supplier> list=null;
         try{
-            list = supplierMapper.selectByExample(example);
+            list = supplierMapperEx.findByTypeAndKey("客户", key);
+            if(organId!=null) {
+                list = addOrganToList(list, organId);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public List<Supplier> findBySelectSup()throws Exception {
-        SupplierExample example = new SupplierExample();
-        example.createCriteria().andTypeLike("供应商").andEnabledEqualTo(true)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("sort asc, id desc");
+    public List<Supplier> findBySelectSup(String key, Long organId)throws Exception {
         List<Supplier> list=null;
         try{
-            list = supplierMapper.selectByExample(example);
+            list = supplierMapperEx.findByTypeAndKey("供应商", key);
+            if(organId!=null) {
+                list = addOrganToList(list, organId);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public List<Supplier> findBySelectRetail()throws Exception {
-        SupplierExample example = new SupplierExample();
-        example.createCriteria().andTypeLike("会员").andEnabledEqualTo(true)
-                .andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
-        example.setOrderByClause("sort asc, id desc");
+    public List<Supplier> findBySelectRetail(String key, Long organId)throws Exception {
         List<Supplier> list=null;
         try{
-            list = supplierMapper.selectByExample(example);
+            list = supplierMapperEx.findByTypeAndKey("会员", key);
+            if(organId!=null) {
+                list = addOrganToList(list, organId);
+            }
         }catch(Exception e){
             JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
+    /**
+     * 给列表追加供应商信息
+     * @param list
+     * @param organId
+     * @return
+     */
+    public List<Supplier> addOrganToList(List<Supplier> list, Long organId) {
+        boolean isExist = false;
+        for(Supplier supplier: list) {
+            if(supplier.getId().equals(organId)) {
+                isExist = true;
+            }
+        }
+        if(!isExist) {
+            //列表里面不存在则追加
+            Supplier info = supplierMapperEx.getInfoById(organId);
+            if(info!=null) {
+                list.add(info);
+            }
         }
         return list;
     }

@@ -82,4 +82,22 @@
         and ifnull(delete_flag,'0') !='1'
         order by sort asc, id desc
     </select>
+
+    <select id="findByTypeAndKey" resultType="com.jsh.erp.datasource.entities.Supplier">
+        select id, supplier, advance_in from jsh_supplier
+        where type = #{type} and enabled = 1
+        <if test="key != null and key !=''">
+            <bind name="bindKey" value="'%'+key+'%'"/>
+            and supplier like #{bindKey}
+        </if>
+        and ifnull(delete_flag,'0') !='1'
+        order by sort asc, id desc
+        limit 0,500
+    </select>
+
+    <select id="getInfoById" resultType="com.jsh.erp.datasource.entities.Supplier">
+        select id, supplier from jsh_supplier
+        where id = #{id}
+        and ifnull(delete_flag,'0') !='1'
+    </select>
 </mapper>
