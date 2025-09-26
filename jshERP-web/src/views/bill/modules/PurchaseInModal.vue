@@ -221,7 +221,7 @@
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
-  import { getCurrentSystemConfig } from '@/api/api'
+  import { getCurrentSystemConfig, findBySelectSup } from '@/api/api'
 
   export default {
     name: "PurchaseInModal",
@@ -509,6 +509,9 @@
               'changeAmount': changeAmount,
               'accountId': accountId,
               'remark': remark
+            })
+            findBySelectSup({organId: organId}).then((res)=> {
+              this.supList = res && Array.isArray(res) ? res : [];
             })
             getCurrentSystemConfig().then((res) => {
               if (res.code === 200 && res.data) {

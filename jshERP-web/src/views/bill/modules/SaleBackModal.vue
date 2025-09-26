@@ -193,12 +193,11 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort, changeListFmtMinus, handleIntroJs } from '@/utils/util'
-  import { getAction } from '@/api/manage'
   import JSelectMultiple from '@/components/jeecg/JSelectMultiple'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
-  import { getCurrentSystemConfig } from '@/api/api'
+  import { getCurrentSystemConfig, findBySelectCus } from '@/api/api'
   export default {
     name: "SaleBackModal",
     mixins: [JEditableTableMixin, BillModalMixin],
@@ -461,6 +460,9 @@
               'changeAmount': discountLastMoney,
               'accountId': accountId,
               'remark': remark
+            })
+            findBySelectCus({organId: organId}).then((res)=> {
+              this.cusList = res && Array.isArray(res) ? res : [];
             })
             getCurrentSystemConfig().then((res) => {
               if (res.code === 200 && res.data) {

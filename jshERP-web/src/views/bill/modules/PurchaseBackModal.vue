@@ -190,11 +190,10 @@
   import { JEditableTableMixin } from '@/mixins/JEditableTableMixin'
   import { BillModalMixin } from '../mixins/BillModalMixin'
   import { getMpListShort} from "@/utils/util"
-  import { getAction } from '@/api/manage'
   import JUpload from '@/components/jeecg/JUpload'
   import JDate from '@/components/jeecg/JDate'
   import Vue from 'vue'
-  import { getCurrentSystemConfig } from '@/api/api'
+  import { getCurrentSystemConfig, findBySelectSup } from '@/api/api'
   export default {
     name: "PurchaseBackModal",
     mixins: [JEditableTableMixin, BillModalMixin],
@@ -451,6 +450,9 @@
               'changeAmount': discountLastMoney,
               'accountId': accountId,
               'remark': remark
+            })
+            findBySelectSup({organId: organId}).then((res)=> {
+              this.supList = res && Array.isArray(res) ? res : [];
             })
             getCurrentSystemConfig().then((res) => {
               if (res.code === 200 && res.data) {

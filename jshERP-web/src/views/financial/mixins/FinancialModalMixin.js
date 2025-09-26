@@ -290,6 +290,15 @@ export const FinancialModalMixin = {
     waitNeedListOk(organType, organId, selectBillRows) {
       if(organId) {
         this.form.setFieldsValue({'organId': organId})
+        if(organType === '供应商') {
+          findBySelectSup({organId: organId}).then((res)=> {
+            this.supList = res && Array.isArray(res) ? res : [];
+          })
+        } else if(organType === '客户') {
+          findBySelectCus({organId: organId}).then((res)=> {
+            this.cusList = res && Array.isArray(res) ? res : [];
+          })
+        }
       }
       if (selectBillRows && selectBillRows.length > 0) {
         this.requestSubTableDataEx(selectBillRows, this.accountTable);
