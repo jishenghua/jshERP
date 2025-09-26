@@ -29,7 +29,7 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号" data-step="1" data-title="会员卡号"
                          data-intro="如果发现需要选择的会员卡号尚未录入，可以在下拉框中点击新增会员信息进行录入">
               <a-select placeholder="请选择会员卡号" v-decorator="[ 'organId' ]"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="onChangeOrgan">
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @change="onChangeOrgan" @search="handleSearchRetail">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />

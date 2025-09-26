@@ -27,7 +27,7 @@
           <a-col :lg="6" :md="12" :sm="24">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="会员卡号">
               <a-select placeholder="请选择会员卡号" v-decorator="[ 'organId' ]" :disabled="!rowCanEdit"
-                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children">
+                :dropdownMatchSelectWidth="false" showSearch optionFilterProp="children" @search="handleSearchRetail">
                 <div slot="dropdownRender" slot-scope="menu">
                   <v-nodes :vnodes="menu" />
                   <a-divider style="margin: 4px 0;" />

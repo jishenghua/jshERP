@@ -45,6 +45,7 @@ export const BillModalMixin = {
       checkFlag: true,
       //零收付款的场景开关
       zeroChangeAmountFlag: false,
+      setTimeFlag: null,
       validatorRules:{
         price:{
           rules: [
@@ -203,7 +204,7 @@ export const BillModalMixin = {
     },
     initSupplier(isChecked) {
       let that = this;
-      findBySelectSup({}).then((res)=>{
+      findBySelectSup({organId: this.model.organId}).then((res)=>{
         if(res) {
           that.supList = res
           if(isChecked && res.length>0) {
@@ -214,7 +215,7 @@ export const BillModalMixin = {
     },
     initCustomer(isChecked) {
       let that = this;
-      findBySelectCus({}).then((res)=>{
+      findBySelectCus({organId: this.model.organId}).then((res)=>{
         if(res) {
           that.cusList = res
           if(isChecked && res.length>0) {
@@ -225,7 +226,7 @@ export const BillModalMixin = {
     },
     initRetail(isChecked) {
       let that = this;
-      findBySelectRetail({}).then((res)=>{
+      findBySelectRetail({organId: this.model.organId}).then((res)=>{
         if(res) {
           that.retailList = res
           if(isChecked && res.length>0) {
@@ -282,6 +283,45 @@ export const BillModalMixin = {
           })
         }
       })
+    },
+    handleSearchSupplier(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectSup({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
+    },
+    handleSearchCustomer(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectCus({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
+    },
+    handleSearchRetail(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectRetail({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
     },
     handleManyAccount(){
       this.selectAccount(0)

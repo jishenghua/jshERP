@@ -16,6 +16,7 @@ export const BillListMixin = {
       isShowExcel: false,
       //以销定购的场景开关
       purchaseBySaleFlag: false,
+      setTimeFlag: null,
       waitTotal: 0,
       dateFormat: 'YYYY-MM-DD',
       billExcelUrl: '',
@@ -717,6 +718,45 @@ export const BillListMixin = {
           }
         }
       }
+    },
+    handleSearchSupplier(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectSup({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
+    },
+    handleSearchCustomer(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectCus({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
+    },
+    handleSearchRetail(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectRetail({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
     },
     getDepotByCurrentUser() {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
