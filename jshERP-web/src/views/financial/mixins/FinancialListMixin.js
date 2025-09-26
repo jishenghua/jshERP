@@ -11,6 +11,7 @@ export const FinancialListMixin = {
       checkFlag: true,
       /* 单据Excel是否开启 */
       isShowExcel: false,
+      setTimeFlag: null,
       billExcelUrl: '',
       prefixNo: '',
       waitTotal: 0,
@@ -190,6 +191,58 @@ export const FinancialListMixin = {
           this.waitTotal = res.data.needCount
         }
       })
+    },
+    handleSearchSupplier(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectSup({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
+    },
+    handleSearchCustomer(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectCus({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
+    },
+    handleSearchOrgan(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectOrgan({key: value}).then((res) => {
+          if(res) {
+            that.organList = res;
+          }
+        })
+      },500)
+    },
+    handleSearchRetail(value) {
+      let that = this
+      if(this.setTimeFlag != null){
+        clearTimeout(this.setTimeFlag);
+      }
+      this.setTimeFlag = setTimeout(()=>{
+        findBySelectRetail({key: value}).then((res) => {
+          if(res) {
+            that.supList = res;
+          }
+        })
+      },500)
     },
     onDateChange: function (value, dateString) {
       this.queryParam.beginTime=dateString[0]
