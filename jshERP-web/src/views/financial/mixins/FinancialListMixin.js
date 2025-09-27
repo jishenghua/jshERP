@@ -126,7 +126,7 @@ export const FinancialListMixin = {
     },
     initSupplier() {
       let that = this;
-      findBySelectSup({}).then((res)=>{
+      findBySelectSup({limit:1}).then((res)=>{
         if(res) {
           that.supList = res;
         }
@@ -134,7 +134,7 @@ export const FinancialListMixin = {
     },
     initCustomer() {
       let that = this;
-      findBySelectCus({}).then((res)=>{
+      findBySelectCus({limit:1}).then((res)=>{
         if(res) {
           that.cusList = res;
         }
@@ -142,7 +142,7 @@ export const FinancialListMixin = {
     },
     initOrgan() {
       let that = this;
-      findBySelectOrgan({}).then((res)=>{
+      findBySelectOrgan({limit:1}).then((res)=>{
         if(res) {
           that.organList = res;
         }
@@ -150,7 +150,7 @@ export const FinancialListMixin = {
     },
     initRetail() {
       let that = this;
-      findBySelectRetail({}).then((res)=>{
+      findBySelectRetail({limit:1}).then((res)=>{
         if(res) {
           that.retailList = res;
         }
@@ -198,7 +198,7 @@ export const FinancialListMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectSup({key: value}).then((res) => {
+        findBySelectSup({key: value, limit:1}).then((res) => {
           if(res) {
             that.supList = res;
           }
@@ -211,7 +211,7 @@ export const FinancialListMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectCus({key: value}).then((res) => {
+        findBySelectCus({key: value, limit:1}).then((res) => {
           if(res) {
             that.cusList = res;
           }
@@ -224,7 +224,7 @@ export const FinancialListMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectOrgan({key: value}).then((res) => {
+        findBySelectOrgan({key: value, limit:1}).then((res) => {
           if(res) {
             that.organList = res;
           }
@@ -237,7 +237,7 @@ export const FinancialListMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectRetail({key: value}).then((res) => {
+        findBySelectRetail({key: value, limit:1}).then((res) => {
           if(res) {
             that.retailList = res;
           }

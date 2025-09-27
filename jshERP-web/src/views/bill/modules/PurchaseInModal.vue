@@ -510,7 +510,7 @@
               'accountId': accountId,
               'remark': remark
             })
-            findBySelectSup({organId: organId}).then((res)=> {
+            findBySelectSup({organId: organId, limit:1}).then((res)=> {
               this.supList = res && Array.isArray(res) ? res : [];
             })
             getCurrentSystemConfig().then((res) => {

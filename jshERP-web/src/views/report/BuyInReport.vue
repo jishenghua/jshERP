@@ -283,7 +283,7 @@
       },
       initSupplier() {
         let that = this;
-        findBySelectSup({}).then((res)=>{
+        findBySelectSup({limit:1}).then((res)=>{
           if(res) {
             that.supList = res
           }
@@ -295,7 +295,7 @@
           clearTimeout(this.setTimeFlag);
         }
         this.setTimeFlag = setTimeout(()=>{
-          findBySelectSup({key: value}).then((res) => {
+          findBySelectSup({key: value, limit:1}).then((res) => {
             if(res) {
               that.supList = res;
             }

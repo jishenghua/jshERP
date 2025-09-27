@@ -320,7 +320,7 @@
       },
       initOrgan() {
         let that = this;
-        findBySelectOrgan({}).then((res)=>{
+        findBySelectOrgan({limit:1}).then((res)=>{
           if(res) {
             that.organList = res;
           }
@@ -332,7 +332,7 @@
           clearTimeout(this.setTimeFlag);
         }
         this.setTimeFlag = setTimeout(()=>{
-          findBySelectOrgan({key: value}).then((res) => {
+          findBySelectOrgan({key: value, limit:1}).then((res) => {
             if(res) {
               that.organList = res;
             }

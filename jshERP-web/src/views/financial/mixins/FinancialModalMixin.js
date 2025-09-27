@@ -101,7 +101,7 @@ export const FinancialModalMixin = {
     },
     initSupplier() {
       let that = this;
-      findBySelectSup({organId: this.model.organId}).then((res)=>{
+      findBySelectSup({organId: this.model.organId, limit:1}).then((res)=>{
         if(res) {
           that.supList = res;
         }
@@ -109,7 +109,7 @@ export const FinancialModalMixin = {
     },
     initCustomer() {
       let that = this;
-      findBySelectCus({organId: this.model.organId}).then((res)=>{
+      findBySelectCus({organId: this.model.organId, limit:1}).then((res)=>{
         if(res) {
           that.cusList = res;
         }
@@ -117,7 +117,7 @@ export const FinancialModalMixin = {
     },
     initOrgan() {
       let that = this;
-      findBySelectOrgan({organId: this.model.organId}).then((res)=>{
+      findBySelectOrgan({organId: this.model.organId, limit:1}).then((res)=>{
         if(res) {
           that.organList = res;
         }
@@ -125,7 +125,7 @@ export const FinancialModalMixin = {
     },
     initRetail() {
       let that = this;
-      findBySelectRetail({organId: this.model.organId}).then((res)=>{
+      findBySelectRetail({organId: this.model.organId, limit:1}).then((res)=>{
         if(res) {
           that.retailList = res;
         }
@@ -194,7 +194,7 @@ export const FinancialModalMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectSup({key: value}).then((res) => {
+        findBySelectSup({key: value, limit:1}).then((res) => {
           if(res) {
             that.supList = res;
           }
@@ -207,7 +207,7 @@ export const FinancialModalMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectCus({key: value}).then((res) => {
+        findBySelectCus({key: value, limit:1}).then((res) => {
           if(res) {
             that.cusList = res;
           }
@@ -220,7 +220,7 @@ export const FinancialModalMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectOrgan({key: value}).then((res) => {
+        findBySelectOrgan({key: value, limit:1}).then((res) => {
           if(res) {
             that.organList = res;
           }
@@ -233,7 +233,7 @@ export const FinancialModalMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectRetail({key: value}).then((res) => {
+        findBySelectRetail({key: value, limit:1}).then((res) => {
           if(res) {
             that.retailList = res;
           }
@@ -291,11 +291,11 @@ export const FinancialModalMixin = {
       if(organId) {
         this.form.setFieldsValue({'organId': organId})
         if(organType === '供应商') {
-          findBySelectSup({organId: organId}).then((res)=> {
+          findBySelectSup({organId: organId, limit:1}).then((res)=> {
             this.supList = res && Array.isArray(res) ? res : [];
           })
         } else if(organType === '客户') {
-          findBySelectCus({organId: organId}).then((res)=> {
+          findBySelectCus({organId: organId, limit:1}).then((res)=> {
             this.cusList = res && Array.isArray(res) ? res : [];
           })
         }

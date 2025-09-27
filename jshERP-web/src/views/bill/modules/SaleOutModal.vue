@@ -527,7 +527,7 @@
               'accountId': accountId,
               'remark': remark
             })
-            findBySelectCus({organId: organId}).then((res)=> {
+            findBySelectCus({organId: organId, limit:1}).then((res)=> {
               this.cusList = res && Array.isArray(res) ? res : [];
             })
             getCurrentSystemConfig().then((res) => {

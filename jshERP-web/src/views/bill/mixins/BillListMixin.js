@@ -616,7 +616,7 @@ export const BillListMixin = {
     },
     initSupplier() {
       let that = this;
-      findBySelectSup({}).then((res)=>{
+      findBySelectSup({limit:1}).then((res)=>{
         if(res) {
           that.supList = res;
         }
@@ -624,7 +624,7 @@ export const BillListMixin = {
     },
     initCustomer() {
       let that = this;
-      findBySelectCus({}).then((res)=>{
+      findBySelectCus({limit:1}).then((res)=>{
         if(res) {
           that.cusList = res;
         }
@@ -632,7 +632,7 @@ export const BillListMixin = {
     },
     initRetail() {
       let that = this;
-      findBySelectRetail({}).then((res)=>{
+      findBySelectRetail({limit:1}).then((res)=>{
         if(res) {
           that.retailList = res;
         }
@@ -725,7 +725,7 @@ export const BillListMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectSup({key: value}).then((res) => {
+        findBySelectSup({key: value, limit:1}).then((res) => {
           if(res) {
             that.supList = res;
           }
@@ -738,7 +738,7 @@ export const BillListMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectCus({key: value}).then((res) => {
+        findBySelectCus({key: value, limit:1}).then((res) => {
           if(res) {
             that.cusList = res;
           }
@@ -751,7 +751,7 @@ export const BillListMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectRetail({key: value}).then((res) => {
+        findBySelectRetail({key: value, limit:1}).then((res) => {
           if(res) {
             that.retailList = res;
           }

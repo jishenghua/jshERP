@@ -285,7 +285,7 @@
       },
       initCustomer() {
         let that = this;
-        findBySelectCus({}).then((res)=>{
+        findBySelectCus({limit:1}).then((res)=>{
           if(res) {
             that.cusList = res
           }
@@ -297,7 +297,7 @@
           clearTimeout(this.setTimeFlag);
         }
         this.setTimeFlag = setTimeout(()=>{
-          findBySelectCus({key: value}).then((res) => {
+          findBySelectCus({key: value, limit:1}).then((res) => {
             if(res) {
               that.supList = res;
             }

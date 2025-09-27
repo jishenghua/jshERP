@@ -213,7 +213,7 @@
       },
       loadSupplier(organType, organId) {
         if(organType === '供应商') {
-          findBySelectSup({}).then((res)=>{
+          findBySelectSup({limit:1}).then((res)=>{
             if(res) {
               this.supplierList = res
               if(organId) {
@@ -223,7 +223,7 @@
             }
           })
         } else if(organType === '客户') {
-          findBySelectCus({}).then((res)=>{
+          findBySelectCus({limit:1}).then((res)=>{
             if(res) {
               this.supplierList = res
               if(organId) {
@@ -241,7 +241,7 @@
         }
         if(this.organLabel === '供应商') {
           this.setTimeFlag = setTimeout(() => {
-            findBySelectSup({ key: value }).then((res) => {
+            findBySelectSup({ key: value, limit:1 }).then((res) => {
               if (res) {
                 that.supplierList = res;
               }
@@ -249,7 +249,7 @@
           }, 500)
         } else if(this.organLabel === '客户') {
           this.setTimeFlag = setTimeout(() => {
-            findBySelectCus({ key: value }).then((res) => {
+            findBySelectCus({ key: value, limit:1 }).then((res) => {
               if (res) {
                 that.supplierList = res;
               }

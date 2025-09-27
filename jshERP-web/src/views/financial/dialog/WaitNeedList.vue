@@ -151,13 +151,13 @@
       initSupplier() {
         let that = this
         if(this.organType === '客户') {
-          findBySelectCus({}).then((res) => {
+          findBySelectCus({limit:1}).then((res) => {
             if (res) {
               that.supList = res
             }
           })
         } else if(this.organType === '供应商') {
-          findBySelectSup({}).then((res) => {
+          findBySelectSup({limit:1}).then((res) => {
             if (res) {
               that.supList = res;
             }
@@ -171,7 +171,7 @@
         }
         if(this.organType === '客户') {
           this.setTimeFlag = setTimeout(() => {
-            findBySelectCus({ key: value }).then((res) => {
+            findBySelectCus({ key: value, limit:1 }).then((res) => {
               if (res) {
                 that.supList = res
               }
@@ -179,7 +179,7 @@
           }, 500)
         } else if(this.organType === '供应商') {
           this.setTimeFlag = setTimeout(() => {
-            findBySelectSup({ key: value }).then((res) => {
+            findBySelectSup({ key: value, limit:1 }).then((res) => {
               if (res) {
                 that.supList = res;
               }

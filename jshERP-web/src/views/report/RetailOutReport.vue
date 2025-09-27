@@ -285,7 +285,7 @@
       },
       initRetail() {
         let that = this;
-        findBySelectRetail({}).then((res)=>{
+        findBySelectRetail({limit:1}).then((res)=>{
           if(res) {
             that.retailList = res
           }
@@ -297,7 +297,7 @@
           clearTimeout(this.setTimeFlag);
         }
         this.setTimeFlag = setTimeout(()=>{
-          findBySelectRetail({key: value}).then((res) => {
+          findBySelectRetail({key: value, limit:1}).then((res) => {
             if(res) {
               that.supList = res;
             }

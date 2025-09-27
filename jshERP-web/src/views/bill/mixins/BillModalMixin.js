@@ -204,7 +204,7 @@ export const BillModalMixin = {
     },
     initSupplier(isChecked) {
       let that = this;
-      findBySelectSup({organId: this.model.organId}).then((res)=>{
+      findBySelectSup({organId: this.model.organId, limit:1}).then((res)=>{
         if(res) {
           that.supList = res
           if(isChecked && res.length>0) {
@@ -215,7 +215,7 @@ export const BillModalMixin = {
     },
     initCustomer(isChecked) {
       let that = this;
-      findBySelectCus({organId: this.model.organId}).then((res)=>{
+      findBySelectCus({organId: this.model.organId, limit:1}).then((res)=>{
         if(res) {
           that.cusList = res
           if(isChecked && res.length>0) {
@@ -226,7 +226,7 @@ export const BillModalMixin = {
     },
     initRetail(isChecked) {
       let that = this;
-      findBySelectRetail({organId: this.model.organId}).then((res)=>{
+      findBySelectRetail({organId: this.model.organId, limit:1}).then((res)=>{
         if(res) {
           that.retailList = res
           if(isChecked && res.length>0) {
@@ -290,7 +290,7 @@ export const BillModalMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectSup({key: value}).then((res) => {
+        findBySelectSup({key: value, limit:1}).then((res) => {
           if(res) {
             that.supList = res;
           }
@@ -303,7 +303,7 @@ export const BillModalMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectCus({key: value}).then((res) => {
+        findBySelectCus({key: value, limit:1}).then((res) => {
           if(res) {
             that.cusList = res;
           }
@@ -316,7 +316,7 @@ export const BillModalMixin = {
         clearTimeout(this.setTimeFlag);
       }
       this.setTimeFlag = setTimeout(()=>{
-        findBySelectRetail({key: value}).then((res) => {
+        findBySelectRetail({key: value, limit:1}).then((res) => {
           if(res) {
             that.retailList = res;
           }
