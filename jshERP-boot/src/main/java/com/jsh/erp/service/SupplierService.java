@@ -288,10 +288,10 @@ public class SupplierService {
         }
     }
 
-    public List<Supplier> findBySelectCus(String key, Long organId)throws Exception {
+    public List<Supplier> findBySelectCus(String key, Long organId, Integer limit)throws Exception {
         List<Supplier> list=null;
         try{
-            list = supplierMapperEx.findByTypeAndKey("客户", key);
+            list = supplierMapperEx.findByTypeAndKey("客户", key, limit);
             if(organId!=null) {
                 list = addOrganToList(list, organId);
             }
@@ -301,10 +301,10 @@ public class SupplierService {
         return list;
     }
 
-    public List<Supplier> findBySelectSup(String key, Long organId)throws Exception {
+    public List<Supplier> findBySelectSup(String key, Long organId, Integer limit)throws Exception {
         List<Supplier> list=null;
         try{
-            list = supplierMapperEx.findByTypeAndKey("供应商", key);
+            list = supplierMapperEx.findByTypeAndKey("供应商", key, limit);
             if(organId!=null) {
                 list = addOrganToList(list, organId);
             }
@@ -314,10 +314,10 @@ public class SupplierService {
         return list;
     }
 
-    public List<Supplier> findBySelectRetail(String key, Long organId)throws Exception {
+    public List<Supplier> findBySelectRetail(String key, Long organId, Integer limit)throws Exception {
         List<Supplier> list=null;
         try{
-            list = supplierMapperEx.findByTypeAndKey("会员", key);
+            list = supplierMapperEx.findByTypeAndKey("会员", key, limit);
             if(organId!=null) {
                 list = addOrganToList(list, organId);
             }

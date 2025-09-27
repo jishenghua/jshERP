@@ -92,7 +92,9 @@
         </if>
         and ifnull(delete_flag,'0') !='1'
         order by sort asc, id desc
-        limit 0,1000
+        <if test="limit != null">
+            limit 0, 500
+        </if>
     </select>
 
     <select id="getInfoById" resultType="com.jsh.erp.datasource.entities.Supplier">

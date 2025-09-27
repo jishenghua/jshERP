@@ -155,11 +155,12 @@ public class SupplierController extends BaseController {
         try {
             String key = jsonObject.get("key")!=null ? jsonObject.getString("key") : null;
             Long organId = jsonObject.get("organId")!=null ? jsonObject.getLong("organId") : null;
+            Integer limit = jsonObject.get("limit")!=null ? jsonObject.getInteger("limit") : null;
             String type = "UserCustomer";
             Long userId = userService.getUserId(request);
             //获取权限信息
             String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
-            List<Supplier> supplierList = supplierService.findBySelectCus(key, organId);
+            List<Supplier> supplierList = supplierService.findBySelectCus(key, organId, limit);
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
                 boolean customerFlag = systemConfigService.getCustomerFlag();
@@ -193,7 +194,8 @@ public class SupplierController extends BaseController {
         try {
             String key = jsonObject.get("key")!=null ? jsonObject.getString("key") : null;
             Long organId = jsonObject.get("organId")!=null ? jsonObject.getLong("organId") : null;
-            List<Supplier> supplierList = supplierService.findBySelectSup(key, organId);
+            Integer limit = jsonObject.get("limit")!=null ? jsonObject.getInteger("limit") : null;
+            List<Supplier> supplierList = supplierService.findBySelectSup(key, organId, limit);
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
                 for (Supplier supplier : supplierList) {
@@ -224,9 +226,10 @@ public class SupplierController extends BaseController {
         try {
             String key = jsonObject.get("key")!=null ? jsonObject.getString("key") : null;
             Long organId = jsonObject.get("organId")!=null ? jsonObject.getLong("organId") : null;
+            Integer limit = jsonObject.get("limit")!=null ? jsonObject.getInteger("limit") : null;
             JSONArray dataArray = new JSONArray();
             //1、获取供应商信息
-            List<Supplier> supplierList = supplierService.findBySelectSup(key, organId);
+            List<Supplier> supplierList = supplierService.findBySelectSup(key, organId, limit);
             if (null != supplierList) {
                 for (Supplier supplier : supplierList) {
                     JSONObject item = new JSONObject();
@@ -239,7 +242,7 @@ public class SupplierController extends BaseController {
             String type = "UserCustomer";
             Long userId = userService.getUserId(request);
             String ubValue = userBusinessService.getUBValueByTypeAndKeyId(type, userId.toString());
-            List<Supplier> customerList = supplierService.findBySelectCus(key, organId);
+            List<Supplier> customerList = supplierService.findBySelectCus(key, organId, limit);
             if (null != customerList) {
                 boolean customerFlag = systemConfigService.getCustomerFlag();
                 for (Supplier supplier : customerList) {
@@ -272,7 +275,8 @@ public class SupplierController extends BaseController {
         try {
             String key = jsonObject.get("key")!=null ? jsonObject.getString("key") : null;
             Long organId = jsonObject.get("organId")!=null ? jsonObject.getLong("organId") : null;
-            List<Supplier> supplierList = supplierService.findBySelectRetail(key, organId);
+            Integer limit = jsonObject.get("limit")!=null ? jsonObject.getInteger("limit") : null;
+            List<Supplier> supplierList = supplierService.findBySelectRetail(key, organId, limit);
             JSONArray dataArray = new JSONArray();
             if (null != supplierList) {
                 for (Supplier supplier : supplierList) {
