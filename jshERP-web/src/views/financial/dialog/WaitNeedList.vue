@@ -23,7 +23,12 @@
             <a-col :md="12" :sm="24">
               <a-form-item :label="organType" :labelCol="labelCol" :wrapperCol="wrapperCol">
                 <a-select :placeholder="'请选择'+ organType" v-model="queryParam.organId"
-                          :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
+                          :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children" @search="handleSearchSupplier">
+                  <div slot="dropdownRender" slot-scope="menu">
+                    <v-nodes :vnodes="menu" />
+                    <a-divider style="margin: 4px 0;" />
+                    <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initSupplier"><a-icon type="reload" /> 刷新列表</div>
+                  </div>
                   <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
                     {{ item.supplier }}
                   </a-select-option>
@@ -68,6 +73,12 @@
   export default {
     name: 'WaitNeedList',
     mixins:[JeecgListMixin],
+    components: {
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
+    },
     data () {
       return {
         title: "操作",
@@ -75,6 +86,7 @@
         disableMixinCreated: true,
         organType: '',
         actionType: '',
+        setTimeFlag: null,
         supList: [],
         selectBillRows: [],
         queryParam: {
@@ -150,6 +162,29 @@
               that.supList = res;
             }
           })
+        }
+      },
+      handleSearchSupplier(value) {
+        let that = this
+        if(this.setTimeFlag != null){
+          clearTimeout(this.setTimeFlag);
+        }
+        if(this.organType === '客户') {
+          this.setTimeFlag = setTimeout(() => {
+            findBySelectCus({ key: value }).then((res) => {
+              if (res) {
+                that.supList = res
+              }
+            })
+          }, 500)
+        } else if(this.organType === '供应商') {
+          this.setTimeFlag = setTimeout(() => {
+            findBySelectSup({ key: value }).then((res) => {
+              if (res) {
+                that.supList = res;
+              }
+            })
+          }, 500)
         }
       },
       //选择供应商进行付款，选择客户进行收款
