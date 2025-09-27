@@ -10,8 +10,13 @@
               <a-col :md="6" :sm="24">
                 <a-form-item label="客户" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select placeholder="请选择客户" v-model="queryParam.organId"
-                    :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children">
-                    <a-select-option v-for="(item,index) in supList" :key="index" :value="item.id">
+                    :dropdownMatchSelectWidth="false" showSearch allow-clear optionFilterProp="children" @search="handleSearchCustomer">
+                    <div slot="dropdownRender" slot-scope="menu">
+                      <v-nodes :vnodes="menu" />
+                      <a-divider style="margin: 4px 0;" />
+                      <div class="dropdown-btn" @mousedown="e => e.preventDefault()" @click="initCustomer"><a-icon type="reload" /> 刷新列表</div>
+                    </div>
+                    <a-select-option v-for="(item,index) in cusList" :key="index" :value="item.id">
                       {{ item.supplier }}
                     </a-select-option>
                   </a-select>
@@ -148,7 +153,11 @@
     mixins:[JeecgListMixin],
     components: {
       DebtAccountList,
-      JEllipsis
+      JEllipsis,
+      VNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
     },
     data () {
       return {
@@ -172,9 +181,10 @@
           pageSize: 11,
           pageSizeOptions: ['11', '21', '31', '101', '201']
         },
-        supList: [],
+        cusList: [],
         firstTotal: '',
         lastTotal: '',
+        setTimeFlag: null,
         tabKey: "1",
         pageName: 'customerAccount',
         // 默认索引
@@ -208,7 +218,7 @@
       }
     },
     created () {
-      this.initSupplier()
+      this.initCustomer()
       this.initColumnsSetting()
     },
     methods: {
@@ -219,13 +229,26 @@
         param.pageSize = this.ipagination.pageSize-1;
         return param;
       },
-      initSupplier() {
+      initCustomer() {
         let that = this;
         findBySelectCus({}).then((res)=>{
           if(res) {
-            that.supList = res;
+            that.cusList = res;
           }
         });
+      },
+      handleSearchCustomer(value) {
+        let that = this
+        if(this.setTimeFlag != null){
+          clearTimeout(this.setTimeFlag);
+        }
+        this.setTimeFlag = setTimeout(()=>{
+          findBySelectCus({key: value}).then((res) => {
+            if(res) {
+              that.cusList = res;
+            }
+          })
+        },500)
       },
       onDateChange: function (value, dateString) {
         this.queryParam.beginTime=dateString[0]
