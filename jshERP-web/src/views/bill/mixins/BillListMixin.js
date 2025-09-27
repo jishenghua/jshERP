@@ -740,7 +740,7 @@ export const BillListMixin = {
       this.setTimeFlag = setTimeout(()=>{
         findBySelectCus({key: value}).then((res) => {
           if(res) {
-            that.supList = res;
+            that.cusList = res;
           }
         })
       },500)
@@ -753,7 +753,7 @@ export const BillListMixin = {
       this.setTimeFlag = setTimeout(()=>{
         findBySelectRetail({key: value}).then((res) => {
           if(res) {
-            that.supList = res;
+            that.retailList = res;
           }
         })
       },500)
