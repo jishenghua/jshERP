@@ -29,15 +29,15 @@
 * 前端框架：Vue 2.7.16
 * UI框架: Ant-Design-Vue 1.5.2
 * 模板框架: Jeecg-Boot 2.2.0
-* 项目管理框架: Maven 3.2.3
+* 项目管理框架: Maven 3.3.9
 
 # 开发环境
 建议开发者使用以下环境，可以避免版本带来的问题
-* IDE: IntelliJ IDEA 2019.2+和JetBrains WebStorm 2019.3+
+* IDE: IntelliJ IDEA 2025.1.4.1
 * DB: Mysql 8.0.24
 * JDK: JDK 1.8
 * Node: Node 20.17.0
-* Maven: Maven 3.2.3+
+* Maven: Maven 3.3.9
 * Redis: 6.2.1
 * Nginx: 1.12.2 
 
