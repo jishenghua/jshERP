@@ -508,4 +508,19 @@ public class SupplierController extends BaseController {
         }
     }
 
+    @GetMapping(value = "/getInfoByName")
+    @ApiOperation(value = "根据名称获取信息")
+    public String getInfoByName(@RequestParam("name") String name,
+                                @RequestParam("type") String type,
+                                HttpServletRequest request) throws Exception {
+        Supplier supplier = supplierService.getInfoByName(name, type);
+        Map<String, Object> objectMap = new HashMap<>();
+        if(supplier != null) {
+            objectMap.put("info", supplier);
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
 }

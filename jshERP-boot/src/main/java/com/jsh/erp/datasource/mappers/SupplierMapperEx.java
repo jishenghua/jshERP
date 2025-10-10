@@ -39,4 +39,8 @@ public interface SupplierMapperEx {
 
     Supplier getInfoById(
             @Param("id") Long id);
+
+    Supplier getInfoByName(
+            @Param("name") String name,
+            @Param("type") String type);
 }

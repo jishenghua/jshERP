@@ -102,4 +102,11 @@
         where id = #{id}
         and ifnull(delete_flag,'0') !='1'
     </select>
+
+    <select id="getInfoByName" resultType="com.jsh.erp.datasource.entities.Supplier">
+        select id, supplier from jsh_supplier
+        where supplier = #{name} and type = #{type}
+        and ifnull(delete_flag,'0') !='1'
+        limit 1
+    </select>
 </mapper>

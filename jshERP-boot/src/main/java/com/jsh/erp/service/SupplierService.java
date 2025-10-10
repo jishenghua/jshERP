@@ -700,4 +700,8 @@ public class SupplierService {
     public List<SupplierSimple> getAllCustomer() {
         return supplierMapperEx.getAllCustomer();
     }
+
+    public Supplier getInfoByName(String name, String type) {
+        return supplierMapperEx.getInfoByName(name, type);
+    }
 }
