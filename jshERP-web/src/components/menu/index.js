@@ -166,7 +166,7 @@ export default {
     }
     const on = {
       select: obj => {
-        if(obj.key.indexOf('http://')>-1) {
+        if(obj.key.indexOf('http://')>-1 || obj.key.indexOf('https://')>-1) {
           window.open(obj.key)
         } else {
           this.selectedKeys = obj.selectedKeys
