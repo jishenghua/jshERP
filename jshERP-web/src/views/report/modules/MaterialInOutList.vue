@@ -184,11 +184,11 @@
       },
       exportExcel() {
         let list = []
-        let head = '单据编号,类型,条码,名称,仓库名称,数量,日期'
+        let head = '单据编号,类型,条码,名称,仓库名称,数量,单价,金额,日期'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.number, ds.type, ds.barCode, ds.materialName, ds.depotName, ds.basicNumber, ds.operTime)
+          item.push(ds.number, ds.type, ds.barCode, ds.materialName, ds.depotName, ds.basicNumber, ds.unitPrice, ds.allPrice, ds.operTime)
           list.push(item)
         }
         let tip = '商品库存流水查询'
