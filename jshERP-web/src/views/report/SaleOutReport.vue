@@ -299,7 +299,7 @@
         this.setTimeFlag = setTimeout(()=>{
           findBySelectCus({key: value, limit:1}).then((res) => {
             if(res) {
-              that.supList = res;
+              that.cusList = res;
             }
           })
         },500)

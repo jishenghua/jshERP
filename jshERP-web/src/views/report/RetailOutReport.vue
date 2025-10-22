@@ -299,7 +299,7 @@
         this.setTimeFlag = setTimeout(()=>{
           findBySelectRetail({key: value, limit:1}).then((res) => {
             if(res) {
-              that.supList = res;
+              that.retailList = res;
             }
           })
         },500)
