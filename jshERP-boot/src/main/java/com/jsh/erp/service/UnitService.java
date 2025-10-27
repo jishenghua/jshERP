@@ -227,7 +227,7 @@ public class UnitService {
      * @return
      */
     public BigDecimal parseStockByUnit(BigDecimal stock, Unit unitInfo, String materialUnit) {
-        if(stock!=null) {
+        if(stock!=null && unitInfo!=null && StringUtil.isNotEmpty(materialUnit)) {
             if (materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio() != null && unitInfo.getRatio().compareTo(BigDecimal.ZERO) != 0) {
                 stock = stock.divide(unitInfo.getRatio(), 2, BigDecimal.ROUND_HALF_UP);
             }

@@ -342,17 +342,19 @@ public class MaterialController extends BaseController {
                         unit = unitService.getUnit(material.getUnitId());
                         //拼接副单位的比例
                         String commodityUnit = material.getCommodityUnit();
-                        if(commodityUnit.equals(unit.getBasicUnit())) {
-                            ratioStr = "[基本]";
-                        }
-                        if(commodityUnit.equals(unit.getOtherUnit()) && unit.getRatio()!=null) {
-                            ratioStr = "[" + unit.getRatio().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
-                        }
-                        if(commodityUnit.equals(unit.getOtherUnitTwo()) && unit.getRatioTwo()!=null) {
-                            ratioStr = "[" + unit.getRatioTwo().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
-                        }
-                        if(commodityUnit.equals(unit.getOtherUnitThree()) && unit.getRatioThree()!=null) {
-                            ratioStr = "[" + unit.getRatioThree().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
+                        if(StringUtil.isNotEmpty(commodityUnit) && unit!=null) {
+                            if(commodityUnit.equals(unit.getBasicUnit())) {
+                                ratioStr = "[基本]";
+                            }
+                            if(commodityUnit.equals(unit.getOtherUnit()) && unit.getRatio()!=null) {
+                                ratioStr = "[" + unit.getRatio().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
+                            }
+                            if(commodityUnit.equals(unit.getOtherUnitTwo()) && unit.getRatioTwo()!=null) {
+                                ratioStr = "[" + unit.getRatioTwo().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
+                            }
+                            if(commodityUnit.equals(unit.getOtherUnitThree()) && unit.getRatioThree()!=null) {
+                                ratioStr = "[" + unit.getRatioThree().stripTrailingZeros().toPlainString() + unit.getBasicUnit() + "]";
+                            }
                         }
                     }
                     item.put("mBarCode", material.getmBarCode());
