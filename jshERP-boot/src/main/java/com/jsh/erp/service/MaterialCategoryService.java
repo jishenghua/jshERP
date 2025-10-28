@@ -204,9 +204,13 @@ public class MaterialCategoryService {
         return result;
     }
 
-    public int checkIsNameExist(Long id, String name)throws Exception {
+    public int checkIsNameExist(Long id, String name, Long parentId)throws Exception {
         MaterialCategoryExample example = new MaterialCategoryExample();
-        example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        if(parentId!=null) {
+            example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andParentIdEqualTo(parentId).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        } else {
+            example.createCriteria().andIdNotEqualTo(id).andNameEqualTo(name).andDeleteFlagNotEqualTo(BusinessConstants.DELETE_FLAG_DELETED);
+        }
         List<MaterialCategory> list=null;
         try{
             list= materialCategoryMapper.selectByExample(example);

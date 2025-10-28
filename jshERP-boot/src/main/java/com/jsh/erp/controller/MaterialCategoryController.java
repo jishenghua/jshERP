@@ -97,10 +97,12 @@ public class MaterialCategoryController extends BaseController {
 
     @GetMapping(value = "/checkIsNameExist")
     @ApiOperation(value = "检查名称是否存在")
-    public String checkIsNameExist(@RequestParam Long id, @RequestParam(value ="name", required = false) String name,
+    public String checkIsNameExist(@RequestParam Long id,
+                                   @RequestParam(value ="name", required = false) String name,
+                                   @RequestParam(value ="parentId", required = false) Long parentId,
                                    HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
-        int exist = materialCategoryService.checkIsNameExist(id, name);
+        int exist = materialCategoryService.checkIsNameExist(id, name, parentId);
         if(exist > 0) {
             objectMap.put("status", true);
         } else {

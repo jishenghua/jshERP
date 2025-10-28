@@ -154,6 +154,7 @@
       validateName(rule, value, callback){
         let params = {
           name: value,
+          parentId: this.form.getFieldValue('parentId'),
           id: this.model.id?this.model.id:0
         };
         checkMaterialCategory(params).then((res)=>{
