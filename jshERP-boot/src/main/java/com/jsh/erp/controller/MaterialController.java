@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
-import com.jsh.erp.datasource.entities.Material;
-import com.jsh.erp.datasource.entities.MaterialExtend;
-import com.jsh.erp.datasource.entities.MaterialVo4Unit;
-import com.jsh.erp.datasource.entities.Unit;
+import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.MaterialDepotStock;
 import com.jsh.erp.service.DepotService;
 import com.jsh.erp.service.DepotItemService;
@@ -777,7 +774,11 @@ public class MaterialController extends BaseController {
                                  HttpServletRequest request)throws Exception {
         String ids = jsonObject.getString("ids");
         Map<String, Object> objectMap = new HashMap<>();
-        int res = materialService.batchSetMaterialCurrentStock(ids);
+        List<Depot> depotList = depotService.getAllList();
+        if(depotList.isEmpty()) {
+            return returnJson(objectMap, "请先创建仓库后再操作", ErpInfo.WARING_MSG.code);
+        }
+        int res = materialService.batchSetMaterialCurrentStock(ids, depotList);
         if(res > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {

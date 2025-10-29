@@ -1430,10 +1430,9 @@ public class MaterialService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public int batchSetMaterialCurrentStock(String ids) throws Exception {
+    public int batchSetMaterialCurrentStock(String ids, List<Depot> depotList) throws Exception {
         int res = 0;
         List<Long> idList = StringUtil.strToLongList(ids);
-        List<Depot> depotList = depotService.getAllList();
         for(Long mId: idList) {
             BigDecimal currentUnitPrice = materialCurrentStockMapperEx.getCurrentUnitPriceByMId(mId);
             for(Depot depot: depotList) {
