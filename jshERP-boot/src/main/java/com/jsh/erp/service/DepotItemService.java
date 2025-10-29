@@ -1099,8 +1099,8 @@ public class DepotItemService {
         Boolean inOutManageFlag = false;
         //查询多单位信息
         Unit unitInfo = materialService.findUnit(depotItem.getMaterialId());
-        List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdList(null, forceFlag, inOutManageFlag, depotItem.getSku(),
-                depotItem.getBatchNumber(), null, null, null, depotItem.getMaterialId(), null, null);
+        List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdList(null, forceFlag, inOutManageFlag, null,
+                null, null, null, null, depotItem.getMaterialId(), null, null);
         Collections.reverse(itemList); //倒序之后变成按时间从前往后排序
         BigDecimal currentNumber = BigDecimal.ZERO;
         BigDecimal currentUnitPrice = BigDecimal.ZERO;
