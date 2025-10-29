@@ -392,6 +392,8 @@ public class DepotItemService {
         if (null != rowArr && rowArr.size()>0) {
             //针对组装单、拆卸单校验是否存在组合件和普通子件
             checkAssembleWithMaterialType(rowArr, depotHead.getSubType());
+            //校验多行明细当中是否存在重复的序列号
+            checkSerialNumberRepeat(rowArr);
             for (int i = 0; i < rowArr.size(); i++) {
                 DepotItem depotItem = new DepotItem();
                 JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
@@ -869,6 +871,36 @@ public class DepotItemService {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_CHECK_ASSEMBLE_EMPTY_MSG));
             }
+        }
+    }
+
+    /**
+     * 校验多行明细当中是否存在重复的序列号
+     * @param rowArr
+     */
+    public void checkSerialNumberRepeat(JSONArray rowArr) {
+        List<String> allSnArr = new ArrayList<>();
+        for (int i = 0; i < rowArr.size(); i++) {
+            JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
+            if(StringUtil.isNotEmpty(rowObj.getString("snList"))) {
+                String snList = rowObj.getString("snList");
+                snList = snList.replaceAll("，", ",");
+                List<String> snArr = StringUtil.strToStringList(snList);
+                if(snArr!=null && !snArr.isEmpty()) {
+                    allSnArr.addAll(snArr);
+                }
+            }
+        }
+        Set<String> seen = new HashSet<>();
+        Set<String> duplicates = new HashSet<>();
+        for (String str : allSnArr) {
+            if (!seen.add(str)) {
+                duplicates.add(str);
+            }
+        }
+        if(!duplicates.isEmpty()) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_CODE,
+                    String.format(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_MSG, String.join(", ", duplicates)));
         }
     }
 

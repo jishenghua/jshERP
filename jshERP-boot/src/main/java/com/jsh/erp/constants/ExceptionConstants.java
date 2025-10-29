@@ -451,6 +451,9 @@ public class ExceptionConstants {
     //单据录入-请勿频繁提交单据
     public static final int DEPOT_HEAD_SUBMIT_REPEAT_FAILED_CODE = 8500032;
     public static final String DEPOT_HEAD_SUBMIT_REPEAT_FAILED_MSG = "抱歉，请不要频繁提交单据";
+    //单据录入-单据明细中存在重复的序列号
+    public static final int DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_CODE = 8500033;
+    public static final String DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_MSG = "抱歉，单据明细中存在重复的序列号:%s";
 
     /**
      *  单据明细信息
