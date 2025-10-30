@@ -509,6 +509,12 @@ public class ExceptionConstants {
     //财务信息录入-付款账户和明细中的账户重复
     public static final int ACCOUNT_HEAD_ACCOUNT_REPEAT_CODE = 9500006;
     public static final String ACCOUNT_HEAD_ACCOUNT_REPEAT_MSG = "抱歉，付款账户:%s和明细中的账户重复";
+    //财务信息审核-只有未审核的单据才能审核
+    public static final int ACCOUNT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_CODE = 9500007;
+    public static final String ACCOUNT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_MSG = "抱歉，只有未审核的单据才能审核";
+    //财务信息反审核-只有已审核的单据才能反审核
+    public static final int ACCOUNT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE = 9500008;
+    public static final String ACCOUNT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG = "抱歉，只有已审核的单据才能反审核";
     /**
      *  财务明细信息
      * type = 100

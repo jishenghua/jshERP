@@ -159,7 +159,7 @@ public class AccountHeadService {
             User userInfo=userService.getCurrentUser();
             accountHead.setCreator(userInfo==null?null:userInfo.getId());
             result = accountHeadMapper.insertSelective(accountHead);
-            logService.insertLog("财务",
+            logService.insertLog("财务单据",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -173,7 +173,7 @@ public class AccountHeadService {
         int result=0;
         try{
             result = accountHeadMapper.updateByPrimaryKeySelective(accountHead);
-            logService.insertLog("财务",
+            logService.insertLog("财务单据",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillNo()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -224,7 +224,7 @@ public class AccountHeadService {
         }
         //逻辑删除文件
         systemConfigService.deleteFileByPathList(pathList);
-        logService.insertLog("财务", sb.toString(),
+        logService.insertLog("财务单据", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         return 1;
     }
@@ -251,32 +251,46 @@ public class AccountHeadService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchSetStatus(String status, String accountHeadIds)throws Exception {
         int result = 0;
-        try{
-            List<Long> ahIds = new ArrayList<>();
-            List<Long> ids = StringUtil.strToLongList(accountHeadIds);
-            for(Long id: ids) {
-                AccountHead accountHead = getAccountHead(id);
-                if("0".equals(status)){
-                    if("1".equals(accountHead.getStatus())) {
-                        ahIds.add(id);
-                    }
-                } else if("1".equals(status)){
-                    if("0".equals(accountHead.getStatus())) {
-                        ahIds.add(id);
-                    }
+        List<Long> ahIds = new ArrayList<>();
+        List<String> noList = new ArrayList<>();
+        List<Long> ids = StringUtil.strToLongList(accountHeadIds);
+        for(Long id: ids) {
+            AccountHead accountHead = getAccountHead(id);
+            if("0".equals(status)){
+                //进行反审核操作
+                if("1".equals(accountHead.getStatus())) {
+                    ahIds.add(id);
+                    noList.add(accountHead.getBillNo());
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_CODE,
+                            String.format(ExceptionConstants.ACCOUNT_HEAD_AUDIT_TO_UN_AUDIT_FAILED_MSG));
+                }
+            } else if("1".equals(status)){
+                //进行审核操作
+                if("0".equals(accountHead.getStatus())) {
+                    ahIds.add(id);
+                    noList.add(accountHead.getBillNo());
+                } else {
+                    throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_CODE,
+                            String.format(ExceptionConstants.ACCOUNT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_MSG));
                 }
             }
-            if(ahIds.size()>0) {
-                AccountHead accountHead = new AccountHead();
-                accountHead.setStatus(status);
-                AccountHeadExample example = new AccountHeadExample();
-                example.createCriteria().andIdIn(ahIds);
-                result = accountHeadMapper.updateByExampleSelective(accountHead, example);
-            } else {
-                return 1;
+        }
+        if(!ahIds.isEmpty()) {
+            AccountHead accountHead = new AccountHead();
+            accountHead.setStatus(status);
+            AccountHeadExample example = new AccountHeadExample();
+            example.createCriteria().andIdIn(ahIds);
+            result = accountHeadMapper.updateByExampleSelective(accountHead, example);
+            //记录日志
+            if(!noList.isEmpty() && ("0".equals(status) || "1".equals(status))) {
+                String statusStr = status.equals("1")?"[审核]":"[反审核]";
+                logService.insertLog("财务单据",
+                        new StringBuffer(statusStr).append(String.join(", ", noList)).toString(),
+                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             }
-        }catch(Exception e){
-            JshException.writeFail(logger, e);
+        } else {
+            result = 1;
         }
         return result;
     }
@@ -326,8 +340,9 @@ public class AccountHeadService {
             //更新会员预付款
             supplierService.updateAdvanceIn(accountHead.getOrganId());
         }
+        String statusStr = accountHead.getStatus().equals("1")?"[审核]":"";
         logService.insertLog("财务单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).toString(), request);
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(accountHead.getBillNo()).append(statusStr).toString(), request);
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
@@ -353,8 +368,9 @@ public class AccountHeadService {
             //更新会员预付款
             supplierService.updateAdvanceIn(accountHead.getOrganId());
         }
+        String statusStr = accountHead.getStatus().equals("1")?"[审核]":"";
         logService.insertLog("财务单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillNo()).toString(), request);
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(accountHead.getBillNo()).append(statusStr).toString(), request);
     }
 
     public List<AccountHeadVo4ListEx> getDetailByNumber(String billNo)throws Exception {

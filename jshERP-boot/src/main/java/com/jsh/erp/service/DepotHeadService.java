@@ -673,6 +673,7 @@ public class DepotHeadService {
     public int batchSetStatus(String status, String depotHeadIDs)throws Exception {
         int result = 0;
         List<Long> dhIds = new ArrayList<>();
+        List<String> noList = new ArrayList<>();
         List<Long> ids = StringUtil.strToLongList(depotHeadIDs);
         for(Long id: ids) {
             DepotHead depotHead = getDepotHead(id);
@@ -680,6 +681,7 @@ public class DepotHeadService {
                 //进行反审核操作
                 if("1".equals(depotHead.getStatus()) && "0".equals(depotHead.getPurchaseStatus())) {
                     dhIds.add(id);
+                    noList.add(depotHead.getNumber());
                 } else if("2".equals(depotHead.getPurchaseStatus())) {
                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_PURCHASE_STATUS_TWO_CODE,
                             String.format(ExceptionConstants.DEPOT_HEAD_PURCHASE_STATUS_TWO_MSG));
@@ -694,13 +696,14 @@ public class DepotHeadService {
                 //进行审核操作
                 if("0".equals(depotHead.getStatus())) {
                     dhIds.add(id);
+                    noList.add(depotHead.getNumber());
                 } else {
                     throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_CODE,
                             String.format(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_TO_AUDIT_FAILED_MSG));
                 }
             }
         }
-        if(dhIds.size()>0) {
+        if(!dhIds.isEmpty()) {
             DepotHead depotHead = new DepotHead();
             depotHead.setStatus(status);
             DepotHeadExample example = new DepotHeadExample();
@@ -714,6 +717,13 @@ public class DepotHeadService {
                         depotItemService.updateCurrentStock(depotItem);
                     }
                 }
+            }
+            //记录日志
+            if(!noList.isEmpty() && ("0".equals(status) || "1".equals(status))) {
+                String statusStr = status.equals("1")?"[审核]":"[反审核]";
+                logService.insertLog("单据",
+                        new StringBuffer(statusStr).append(String.join(", ", noList)).toString(),
+                        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             }
         }
         return result;
@@ -1211,8 +1221,9 @@ public class DepotHeadService {
             /**入库和出库处理单据子表信息*/
             depotItemService.saveDetials(rows,headId, "add",request);
         }
+        String statusStr = depotHead.getStatus().equals("1")?"[审核]":"";
         logService.insertLog("单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(depotHead.getNumber()).toString(),
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(depotHead.getNumber()).append(statusStr).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
     }
 
@@ -1311,8 +1322,9 @@ public class DepotHeadService {
         }
         /**入库和出库处理单据子表信息*/
         depotItemService.saveDetials(rows,depotHead.getId(), "update",request);
+        String statusStr = depotHead.getStatus().equals("1")?"[审核]":"";
         logService.insertLog("单据",
-                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).toString(),
+                new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).append(statusStr).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
     }
 
