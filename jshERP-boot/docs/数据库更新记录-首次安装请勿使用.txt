@@ -1706,3 +1706,42 @@ insert into jsh_platform_config (platform_key, platform_key_info, platform_value
 -- 给平台表增加验证码启用标记
 -- --------------------------------------------------------
 insert into jsh_platform_config(platform_key, platform_key_info, platform_value) values ('checkcode_flag', '验证码启用标记', '1');
+
+-- --------------------------------------------------------
+-- 时间 2025年11月5日
+-- by jishenghua
+-- 给部分表加索引,提升查询速度
+-- --------------------------------------------------------
+create index number on jsh_depot_head(number) using btree;
+create index link_number on jsh_depot_head(link_number) using btree;
+create index creator on jsh_depot_head(creator) using btree;
+create index tenant_id on jsh_depot_head(tenant_id) using btree;
+create index material_extend_id on jsh_depot_item(material_extend_id) using btree;
+create index tenant_id on jsh_depot_item(tenant_id) using btree;
+create index material_id on jsh_material_extend(material_id) using btree;
+create index bar_code on jsh_material_extend(bar_code) using btree;
+create index tenant_id on jsh_material_extend(tenant_id) using btree;
+create index tenant_id on jsh_material(tenant_id) using btree;
+create index bill_no on jsh_account_head(bill_no) using btree;
+create index tenant_id on jsh_account_head(tenant_id) using btree;
+create index bill_id on jsh_account_item(bill_id) using btree;
+create index tenant_id on jsh_account_item(tenant_id) using btree;
+create index material_id on jsh_material_current_stock(material_id) using btree;
+create index depot_id on jsh_material_current_stock(depot_id) using btree;
+create index tenant_id on jsh_material_current_stock(tenant_id) using btree;
+create index material_id on jsh_material_initial_stock(material_id) using btree;
+create index depot_id on jsh_material_initial_stock(depot_id) using btree;
+create index tenant_id on jsh_material_initial_stock(tenant_id) using btree;
+create index create_time on jsh_log(create_time) using btree;
+create index tenant_id on jsh_log(tenant_id) using btree;
+create index orga_id on jsh_orga_user_rel(orga_id) using btree;
+create index user_id on jsh_orga_user_rel(user_id) using btree;
+create index creator on jsh_orga_user_rel(creator) using btree;
+create index tenant_id on jsh_orga_user_rel(tenant_id) using btree;
+create index create_time on jsh_tenant(create_time) using btree;
+create index tenant_id on jsh_tenant(tenant_id) using btree;
+create index material_id on jsh_serial_number(material_id) using btree;
+create index depot_id on jsh_serial_number(depot_id) using btree;
+create index type on jsh_user_business(type) using btree;
+create index key_id on jsh_user_business(key_id) using btree;
+create index tenant_id on jsh_user_business(tenant_id) using btree;
