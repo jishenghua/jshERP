@@ -3,6 +3,7 @@ package com.jsh.erp.service;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -153,10 +154,31 @@ public class RedisService {
     public void deleteObjectByUserAndIp(Long userId, String clientIp){
         Set<String> tokens = redisTemplate.keys("*");
         for(String token : tokens) {
-            Object userIdValue = redisTemplate.opsForHash().get(token, "userId");
-            Object clientIpValue = redisTemplate.opsForHash().get(token, "clientIp");
-            if(userIdValue!=null && clientIpValue!=null && userIdValue.equals(userId.toString()) && clientIpValue.equals(clientIp)) {
-                redisTemplate.opsForHash().delete(token, "userId");
+            // 检查键是否存在且为哈希类型
+            if (redisTemplate.hasKey(token) && redisTemplate.type(token) == DataType.HASH) {
+                Object userIdValue = redisTemplate.opsForHash().get(token, "userId");
+                Object clientIpValue = redisTemplate.opsForHash().get(token, "clientIp");
+                if(userIdValue!=null && clientIpValue!=null && userIdValue.equals(userId.toString()) && clientIpValue.equals(clientIp)) {
+                    redisTemplate.opsForHash().delete(token, "userId");
+                }
+            }
+        }
+    }
+
+    /**
+     * @author jisheng hua
+     * 将信息从redis中移除，比对user
+     * @param userId
+     */
+    public void deleteObjectByUser(Long userId){
+        Set<String> tokens = redisTemplate.keys("*");
+        for(String token : tokens) {
+            // 检查键是否存在且为哈希类型
+            if (redisTemplate.hasKey(token) && redisTemplate.type(token) == DataType.HASH) {
+                Object userIdValue = redisTemplate.opsForHash().get(token, "userId");
+                if(userIdValue!=null && userIdValue.equals(userId.toString())) {
+                    redisTemplate.opsForHash().delete(token, "userId");
+                }
             }
         }
     }

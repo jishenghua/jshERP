@@ -267,6 +267,12 @@ public class UserService {
             Object userId = redisService.getObjectFromSessionByKey(request,"userId");
             if (userId != null) {
                 result = userMapperEx.batDeleteOrUpdateUser(idsArray);
+                if(result>0) {
+                    //从redis中移除这些用户的登录状态
+                    for (String idStr : idsArray) {
+                        redisService.deleteObjectByUser(Long.valueOf(idStr));
+                    }
+                }
                 logService.insertLog("用户", sb.toString(),
                         ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
             }
