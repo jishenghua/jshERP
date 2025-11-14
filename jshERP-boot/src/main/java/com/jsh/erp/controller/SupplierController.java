@@ -7,6 +7,7 @@ import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.Supplier;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.vo.SupplierSimple;
+import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.SupplierService;
 import com.jsh.erp.service.SystemConfigService;
 import com.jsh.erp.service.UserService;
@@ -403,9 +404,13 @@ public class SupplierController extends BaseController {
                             HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
+            supplierService.checkFileExt(file);
             supplierService.importVendor(file, request);
             res.code = 200;
             res.data = "导入成功";
+        } catch(BusinessRunTimeException e) {
+            res.code = e.getCode();
+            res.data = e.getData().get("message");
         } catch(Exception e){
             logger.error(e.getMessage(), e);
             res.code = 500;
@@ -427,9 +432,13 @@ public class SupplierController extends BaseController {
                                         HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
+            supplierService.checkFileExt(file);
             supplierService.importCustomer(file, request);
             res.code = 200;
             res.data = "导入成功";
+        } catch(BusinessRunTimeException e) {
+            res.code = e.getCode();
+            res.data = e.getData().get("message");
         } catch(Exception e){
             logger.error(e.getMessage(), e);
             res.code = 500;
@@ -451,9 +460,13 @@ public class SupplierController extends BaseController {
                                            HttpServletRequest request, HttpServletResponse response) throws Exception{
         BaseResponseInfo res = new BaseResponseInfo();
         try {
+            supplierService.checkFileExt(file);
             supplierService.importMember(file, request);
             res.code = 200;
             res.data = "导入成功";
+        } catch(BusinessRunTimeException e) {
+            res.code = e.getCode();
+            res.data = e.getData().get("message");
         } catch(Exception e){
             logger.error(e.getMessage(), e);
             res.code = 500;

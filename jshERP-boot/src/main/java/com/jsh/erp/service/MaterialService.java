@@ -571,8 +571,8 @@ public class MaterialService {
             if(StringUtil.isNotEmpty(fileName)) {
                 String fileExt = fileName.substring(fileName.indexOf(".")+1);
                 if(!"xls".equals(fileExt)) {
-                    throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_EXTENSION_ERROR_CODE,
-                            ExceptionConstants.MATERIAL_EXTENSION_ERROR_MSG);
+                    throw new BusinessRunTimeException(ExceptionConstants.FILE_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.FILE_EXTENSION_ERROR_MSG);
                 }
             }
             Workbook workbook = Workbook.getWorkbook(file.getInputStream());

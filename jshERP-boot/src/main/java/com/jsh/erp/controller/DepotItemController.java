@@ -1063,17 +1063,17 @@ public class DepotItemController {
         String message = "";
         try {
             String barCodes = "";
-            //文件合法性校验
-            Sheet src = null;
-            try {
-                Workbook workbook = Workbook.getWorkbook(file.getInputStream());
-                src = workbook.getSheet(0);
-            } catch (Exception e) {
-                message = "导入文件不合法，请检查";
-                data.put("message", message);
-                res.code = 400;
-                res.data = data;
+            //文件扩展名只能为xls
+            String fileName = file.getOriginalFilename();
+            if(StringUtil.isNotEmpty(fileName)) {
+                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                if(!"xls".equals(fileExt)) {
+                    throw new BusinessRunTimeException(ExceptionConstants.FILE_EXTENSION_ERROR_CODE,
+                            ExceptionConstants.FILE_EXTENSION_ERROR_MSG);
+                }
             }
+            Workbook workbook = Workbook.getWorkbook(file.getInputStream());
+            Sheet  src = workbook.getSheet(0);
             if(src.getRows()>1000) {
                 message = "导入失败，明细不能超出1000条";
                 res.code = 500;

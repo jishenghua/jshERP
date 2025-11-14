@@ -430,6 +430,22 @@ public class SupplierService {
         return map;
     }
 
+    /**
+     * 校验文件格式
+     * @param file
+     */
+    public void checkFileExt(MultipartFile file) {
+        //文件扩展名只能为xls
+        String fileName = file.getOriginalFilename();
+        if(StringUtil.isNotEmpty(fileName)) {
+            String fileExt = fileName.substring(fileName.indexOf(".")+1);
+            if(!"xls".equals(fileExt)) {
+                throw new BusinessRunTimeException(ExceptionConstants.FILE_EXTENSION_ERROR_CODE,
+                        ExceptionConstants.FILE_EXTENSION_ERROR_MSG);
+            }
+        }
+    }
+
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public void importVendor(MultipartFile file, HttpServletRequest request) throws Exception{
         String type = "供应商";
