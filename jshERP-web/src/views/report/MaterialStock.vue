@@ -333,11 +333,11 @@
       },
       exportExcel() {
         let list = []
-        let head = '条码,名称,规格,型号,颜色,品牌,制造商,类别,单位,成本价,初始库存,库存,库存金额,重量'
+        let head = '条码,名称,规格,型号,颜色,品牌,制造商,类别,仓位货架,单位,成本价,初始库存,库存,库存金额,重量'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.brand, ds.mfrs, ds.categoryName, ds.unitName,
+          item.push(ds.mBarCode, ds.name, ds.standard, ds.model, ds.color, ds.brand, ds.mfrs, ds.categoryName, ds.position, ds.unitName,
             ds.purchaseDecimal, ds.initialStock, ds.currentStock, ds.currentStockPrice, ds.currentWeight)
           list.push(item)
         }
