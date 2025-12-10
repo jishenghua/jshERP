@@ -7,6 +7,7 @@ import com.jsh.erp.service.DepotHeadService;
 import com.jsh.erp.service.DepotItemService;
 import com.jsh.erp.service.SerialNumberService;
 import com.jsh.erp.utils.BaseResponseInfo;
+import com.jsh.erp.utils.StringUtil;
 import com.jsh.erp.utils.Tools;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -80,15 +81,24 @@ public class SerialNumberController {
         Map<String, Object> map = new HashMap<>();
         try {
             String number = "";
+            String [] nameArray = null;
             if(depotItemId != null) {
                 DepotItem depotItem = depotItemService.getDepotItem(depotItemId);
                 number = depotHeadService.getDepotHead(depotItem.getHeaderId()).getNumber();
             }
-            List<SerialNumberEx> list = serialNumberService.getEnableSerialNumberList(number, name, depotId, barCode, (currentPage-1)*pageSize, pageSize);
+            // 批量查询序列号时，name可能为多个
+            if(StringUtil.isNotEmpty(name)) {
+                name = name.replace("，",",");
+                if(name.contains(",")) {
+                    nameArray = name.split(",");
+                    name = null;
+                }
+            }
+            List<SerialNumberEx> list = serialNumberService.getEnableSerialNumberList(number, name, nameArray, depotId, barCode, (currentPage-1)*pageSize, pageSize);
             for(SerialNumberEx serialNumberEx: list) {
                 serialNumberEx.setCreateTimeStr(Tools.getCenternTime(serialNumberEx.getCreateTime()));
             }
-            Long total = serialNumberService.getEnableSerialNumberCount(number, name, depotId, barCode);
+            Long total = serialNumberService.getEnableSerialNumberCount(number, name, nameArray, depotId, barCode);
             map.put("rows", list);
             map.put("total", total);
             res.code = 200;

@@ -218,20 +218,20 @@ public class SerialNumberService {
         return result;
     }
 
-    public List<SerialNumberEx> getEnableSerialNumberList(String number, String name, Long depotId, String barCode, Integer offset, Integer rows)throws Exception {
+    public List<SerialNumberEx> getEnableSerialNumberList(String number, String name, String [] nameArray, Long depotId, String barCode, Integer offset, Integer rows)throws Exception {
         List<SerialNumberEx> list =null;
         try{
-            list = serialNumberMapperEx.getEnableSerialNumberList(StringUtil.toNull(number), StringUtil.toNull(name), depotId, barCode, offset, rows);
+            list = serialNumberMapperEx.getEnableSerialNumberList(StringUtil.toNull(number), StringUtil.toNull(name), nameArray, depotId, barCode, offset, rows);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }
         return list;
     }
 
-    public Long getEnableSerialNumberCount(String number, String name, Long depotId, String barCode)throws Exception {
+    public Long getEnableSerialNumberCount(String number, String name, String [] nameArray, Long depotId, String barCode)throws Exception {
         Long count = 0L;
         try{
-            count = serialNumberMapperEx.getEnableSerialNumberCount(StringUtil.toNull(number), StringUtil.toNull(name), depotId, barCode);
+            count = serialNumberMapperEx.getEnableSerialNumberCount(StringUtil.toNull(number), StringUtil.toNull(name), nameArray, depotId, barCode);
         }catch(Exception e){
             JshException.readFail(logger, e);
         }

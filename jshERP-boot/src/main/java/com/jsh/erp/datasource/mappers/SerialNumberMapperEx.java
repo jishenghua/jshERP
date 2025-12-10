@@ -44,12 +44,14 @@ public interface SerialNumberMapperEx {
 
     List<SerialNumberEx> getEnableSerialNumberList(@Param("number") String number,
                                                  @Param("name") String name,
+                                                 @Param("nameArray") String [] nameArray,
                                                  @Param("depotId") Long depotId,
                                                  @Param("barCode") String barCode,
                                                  @Param("offset") Integer offset, @Param("rows") Integer rows);
 
     Long getEnableSerialNumberCount(@Param("number") String number,
                                     @Param("name") String name,
+                                    @Param("nameArray") String [] nameArray,
                                     @Param("depotId") Long depotId,
                                     @Param("barCode") String barCode);
 

@@ -159,6 +159,14 @@
             <bind name="bindName" value="'%'+name+'%'"/>
             and ser.serial_number like #{bindName}
         </if>
+        <if test="nameArray != null">
+            and ser.serial_number
+            in (
+            <foreach collection="nameArray" item="name" separator=",">
+                #{name}
+            </foreach>
+            )
+        </if>
         <if test="depotId != null">
             and ser.depot_id = #{depotId}
         </if>
@@ -186,6 +194,14 @@
         <if test="name != null">
             <bind name="bindName" value="'%'+name+'%'"/>
             and ser.serial_number like #{bindName}
+        </if>
+        <if test="nameArray != null">
+            and ser.serial_number
+            in (
+            <foreach collection="nameArray" item="name" separator=",">
+                #{name}
+            </foreach>
+            )
         </if>
         <if test="depotId != null">
             and ser.depot_id = #{depotId}
