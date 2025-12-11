@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,8 +100,31 @@ public class SerialNumberController {
                 serialNumberEx.setCreateTimeStr(Tools.getCenternTime(serialNumberEx.getCreateTime()));
             }
             Long total = serialNumberService.getEnableSerialNumberCount(number, name, nameArray, depotId, barCode);
+            List<String> missList = new ArrayList<>();
+            if(nameArray!=null && nameArray.length>0) {
+                List<SerialNumberEx> allList = serialNumberService.getEnableSerialNumberList(number, name, nameArray, depotId, barCode, null, null);
+                if(allList.size() < nameArray.length) {
+                    //说明查出的比查询条件里面的序列号少，此时需要寻找出缺少的序列号
+                    for (String item : nameArray) {
+                        boolean isHave = false;
+                        for (SerialNumberEx serialNumberEx : allList) {
+                            if (item.equals(serialNumberEx.getSerialNumber())) {
+                                isHave = true;
+                                break;
+                            }
+                        }
+                        if (!isHave) {
+                            missList.add(item);
+                        }
+                    }
+                }
+            }
             map.put("rows", list);
             map.put("total", total);
+            if(!missList.isEmpty()) {
+                //列出未查询到的序列号
+                map.put("missInfo", String.join(",", missList));
+            }
             res.code = 200;
             res.data = map;
         } catch(Exception e){

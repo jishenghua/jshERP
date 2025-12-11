@@ -197,6 +197,9 @@
                 this.queryParam.name = ''
               }
             }
+            if(res.data.missInfo) {
+              this.$message.warning("未查询到的序列号：" + res.data.missInfo)
+            }
           }
         }).finally(() => {
           this.loading = false
