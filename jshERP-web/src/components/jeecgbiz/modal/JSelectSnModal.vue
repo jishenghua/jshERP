@@ -69,6 +69,7 @@
               <a @click="removeSn(record)">移除</a>
            </span>
         </a-table>
+        <div style="width:200px; float:right; text-align: right; padding: 18px 30px 18px 0">已选中共{{checkDataSource.length}}条</div>
       </a-col>
     </a-row>
   </a-modal>
