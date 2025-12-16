@@ -60,27 +60,23 @@ public class SerialNumberController {
 
     /**
      * 获取序列号商品
-     * @param name
-     * @param depotId
-     * @param barCode
-     * @param currentPage
-     * @param pageSize
+     * @param jsonObject
      * @param request
      * @return
      * @throws Exception
      */
-    @GetMapping(value = "/getEnableSerialNumberList")
+    @PostMapping(value = "/getEnableSerialNumberList")
     @ApiOperation(value = "获取序列号商品")
-    public BaseResponseInfo getEnableSerialNumberList(@RequestParam("name") String name,
-                                                      @RequestParam("depotItemId") Long depotItemId,
-                                                      @RequestParam("depotId") Long depotId,
-                                                      @RequestParam("barCode") String barCode,
-                                                      @RequestParam("page") Integer currentPage,
-                                                      @RequestParam("rows") Integer pageSize,
-                                                      HttpServletRequest request)throws Exception {
+    public BaseResponseInfo getEnableSerialNumberList(@RequestBody JSONObject jsonObject, HttpServletRequest request)throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            String name = jsonObject.getString("name");
+            Long depotItemId = jsonObject.getLong("depotItemId");
+            Long depotId = jsonObject.getLong("depotId");
+            String barCode = jsonObject.getString("barCode");
+            Integer currentPage = jsonObject.getInteger("page");
+            Integer pageSize = jsonObject.getInteger("rows");
             String number = "";
             String [] nameArray = null;
             if(depotItemId != null) {

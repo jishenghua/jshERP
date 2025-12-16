@@ -65,7 +65,7 @@ const batchUpdateMaterial = (params)=>postAction("/material/batchUpdate",params)
 const changeNameToPinYin = (params)=>postAction("/material/changeNameToPinYin",params);
 //序列号
 const batAddSerialNumber = (params)=>postAction("/serialNumber/batAddSerialNumber",params);
-const getEnableSerialNumberList = (params)=>getAction("/serialNumber/getEnableSerialNumberList",params);
+const getEnableSerialNumberList = (params)=>postAction("/serialNumber/getEnableSerialNumberList",params);
 //多属性
 const addMaterialAttribute = (params)=>postAction("/materialAttribute/add",params);
 const editMaterialAttribute = (params)=>putAction("/materialAttribute/update",params);
