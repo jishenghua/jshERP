@@ -333,8 +333,8 @@
         this.selectionRows = selectionRows;
       },
       onSearch() {
-        if(this.queryParam.name && this.queryParam.name.length>1000) {
-          this.$message.warning('序列号长度不能超出1000个字符！');
+        if(this.queryParam.name && this.queryParam.name.length>2000) {
+          this.$message.warning('序列号长度不能超出2000个字符！');
           return
         }
         this.loadData(1);

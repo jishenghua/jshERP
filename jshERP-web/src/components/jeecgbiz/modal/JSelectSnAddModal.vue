@@ -32,7 +32,7 @@
                   <a-col :md="24" :sm="24">
                     <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
                       <a-textarea style="width:400px;"
-                        placeholder="多个序列号用逗号隔开，请少于1000个字符"
+                        placeholder="多个序列号用逗号隔开，请少于2000个字符"
                         :auto-size="{ minRows: 2, maxRows: 4 }"
                         v-model="queryParam.multiName" />
                       <div style="float:left;">
@@ -206,8 +206,8 @@
         if(!this.queryParam.multiName) {
           return
         }
-        if(this.queryParam.multiName && this.queryParam.multiName.length>1000) {
-          this.$message.warning('序列号长度不能超出1000个字符！');
+        if(this.queryParam.multiName && this.queryParam.multiName.length>2000) {
+          this.$message.warning('序列号长度不能超出2000个字符！');
           return
         }
         this.queryParam.multiName = this.queryParam.multiName.replaceAll('，',',')
