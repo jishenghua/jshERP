@@ -671,6 +671,7 @@
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
+        and m.enabled=1
         <if test="idList.size()>0">
             and m.category_id in
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
@@ -719,6 +720,7 @@
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
+        and m.enabled=1
         <if test="idList.size()>0">
             and m.category_id in
             <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
@@ -756,6 +758,7 @@
         left JOIN jsh_material_category mc on m.category_id = mc.id and ifnull(mc.delete_Flag,'0') !='1'
         where 1=1
         and me.default_flag=1
+        and m.enabled=1
         <if test="depotList.size()>0">
             and mcs.depot_id in
             <foreach collection="depotList" item="item" index="index" separator="," open="(" close=")">

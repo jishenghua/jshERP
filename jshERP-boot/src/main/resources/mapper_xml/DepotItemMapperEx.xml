@@ -359,7 +359,7 @@
         left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
         left join jsh_unit u on m.unit_id=u.id and ifnull(u.delete_Flag,'0') !='1'
-        where 1=1 and me.default_flag=1
+        where 1=1 and me.default_flag=1 and m.enabled=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
@@ -391,7 +391,7 @@
         left join jsh_material_extend me on me.material_id=m.id and ifnull(me.delete_Flag,'0') !='1'
         left join jsh_depot_item di on di.material_id=m.id and ifnull(di.delete_Flag,'0') !='1'
         left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
-        where 1=1 and me.default_flag=1
+        where 1=1 and me.default_flag=1 and m.enabled=1
         <if test="materialParam != null and materialParam !=''">
             <bind name="bindKey" value="'%'+materialParam+'%'"/>
             and (me.bar_code like #{bindKey} or m.name like #{bindKey} or m.mnemonic like #{bindKey} or m.standard like #{bindKey} or m.model like #{bindKey}
@@ -900,6 +900,7 @@
         left join jsh_depot d on d.id=mis.depot_id and ifnull(u.delete_flag,'0') !='1'
         where 1=1
         and me.default_flag=1
+        and m.enabled=1
         and ifnull(m.delete_flag,'0') !='1'
         and mis.depot_id=mcs.depot_id
         and ((ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number &lt; ifnull(mis.low_safe_stock,0))
@@ -939,6 +940,7 @@
         left join jsh_depot d on d.id=mis.depot_id and ifnull(u.delete_flag,'0') !='1'
         where 1=1
         and me.default_flag=1
+        and m.enabled=1
         and ifnull(m.delete_flag,'0') !='1'
         and mis.depot_id=mcs.depot_id
         and ((ifnull(mis.low_safe_stock,0)!=0 and mcs.current_number &lt; ifnull(mis.low_safe_stock,0))
