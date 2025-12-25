@@ -294,7 +294,7 @@
   import JEditableTable from '@/components/jeecg/JEditableTable'
   import { FormTypes, getRefPromise, VALIDATE_NO_PASSED, validateFormAndTables } from '@/utils/JEditableTableUtil'
   import { changeNameToPinYin, checkMaterial, checkMaterialBarCode, getMaterialAttributeNameList, getMaterialAttributeValueListById, getMaxBarCode, queryMaterialCategoryTreeList } from '@/api/api'
-  import { autoJumpNextInput, handleIntroJs, removeByVal } from '@/utils/util'
+  import { autoJumpNextInput, handleIntroJs, removeByVal, addBigNumbers } from '@/utils/util'
   import { getAction, httpAction } from '@/api/manage'
   import JImageUpload from '@/components/jeecg/JImageUpload'
   import JDate from '@/components/jeecg/JDate'
@@ -578,11 +578,14 @@
           if(this.action === 'copyAdd') {
             getMaxBarCode({}).then((res)=> {
               if (res && res.code === 200) {
-                let maxBarCode = res.data.barCode - 0
+                let maxBarCode = res.data.barCode
                 let meTableData = []
                 for (let i = 0; i < tab.dataSource.length; i++) {
                   let meInfo = tab.dataSource[i]
-                  meInfo.barCode = maxBarCode + i + 1
+                  console.log(maxBarCode)
+                  console.log(addBigNumbers(maxBarCode, i+1))
+                  meInfo.barCode = addBigNumbers(maxBarCode, i+1)
+                  console.log(meInfo.barCode)
                   meTableData.push(meInfo)
                 }
                 tab.dataSource = meTableData
@@ -1025,7 +1028,7 @@
           getMaxBarCode({}).then((res)=>{
             if(res && res.code===200) {
               let k = 0
-              let maxBarCode = res.data.barCode-0
+              let maxBarCode = res.data.barCode
               for (let i = 0; i < barCodeSku.length; i++) {
                 let currentBarCode = ''
                 let currentId = ''
@@ -1050,7 +1053,7 @@
                     wholesaleDecimal: wholesaleDecimal, lowDecimal: lowDecimal})
                 } else {
                   k = k+1
-                  currentBarCode = maxBarCode + k
+                  currentBarCode = addBigNumbers(maxBarCode, k)
                   meTableData.push({barCode: currentBarCode, commodityUnit: unit, sku: barCodeSku[i]})
                 }
               }
@@ -1080,13 +1083,13 @@
         if(this.maxBarCodeInfo === '') {
           getMaxBarCode({}).then((res)=> {
             if (res && res.code === 200) {
-              this.maxBarCodeInfo = res.data.barCode - 0
-              this.maxBarCodeInfo = this.maxBarCodeInfo + 1
+              this.maxBarCodeInfo = res.data.barCode
+              this.maxBarCodeInfo = addBigNumbers(this.maxBarCodeInfo, 1)
               target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
             }
           })
         } else {
-          this.maxBarCodeInfo = this.maxBarCodeInfo + 1
+          this.maxBarCodeInfo = addBigNumbers(this.maxBarCodeInfo, 1)
           target.setValues([{rowKey: row.id, values: {barCode: this.maxBarCodeInfo, commodityUnit: unit?unit:''}}])
         }
       },

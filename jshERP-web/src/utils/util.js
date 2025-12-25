@@ -565,6 +565,36 @@ export function getPrevMonthFormatDate(monthNum) {
 }
 
 /**
+ * 自定义大数加法函数，两个数字相加
+ * @param a
+ * @param b
+ * @returns {string}
+ */
+export function addBigNumbers(a, b) {
+  a = a.toString();
+  b = b.toString();
+  // 反转字符串，从个位开始计算
+  let aRev = a.split('').reverse();
+  let bRev = b.split('').reverse();
+  const maxLength = Math.max(aRev.length, bRev.length);
+  let result = [];
+  let carry = 0;
+  for (let i = 0; i < maxLength; i++) {
+    const digitA = i < aRev.length ? parseInt(aRev[i]) : 0;
+    const digitB = i < bRev.length ? parseInt(bRev[i]) : 0;
+    const sum = digitA + digitB + carry;
+    result.push(sum % 10);
+    carry = Math.floor(sum / 10);
+  }
+  // 处理最后的进位
+  if (carry > 0) {
+    result.push(carry);
+  }
+  // 反转回来得到正确的结果
+  return result.reverse().join('');
+}
+
+/**
  * JS中根据指定值删除数组中的元素
  * @param arrylist
  * @param val

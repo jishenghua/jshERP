@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 @Service
@@ -1329,13 +1330,14 @@ public class MaterialService {
     public String getMaxBarCode() {
         List<String> barCodeOldList = materialMapperEx.getBarCodeList();
         // 使用 Stream API 处理条码列表
-        OptionalLong maxBarcode = barCodeOldList.stream()
+        // 使用 BigInteger 处理可能的大数字
+        Optional<BigInteger> maxBarcode = barCodeOldList.stream()
                 .filter(StringUtil::isNumeric)   // 过滤掉非数字条码
-                .mapToLong(Long::parseLong)      // 将字符串转换为 Long 类型
-                .max();                          // 获取最大值
+                .map(BigInteger::new)            // 使用 BigInteger 构造函数
+                .max(Comparator.naturalOrder()); // 获取最大值
         // 如果存在最大值，返回它；否则返回 1000L
-        Long maxBarCodeOld = maxBarcode.orElse(1000L);
-        return maxBarCodeOld + "";
+        BigInteger maxBarCodeOld = maxBarcode.orElse(new BigInteger("1000"));
+        return maxBarCodeOld.toString();
     }
 
     public List<String> getMaterialNameList() {
