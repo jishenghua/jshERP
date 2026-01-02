@@ -400,9 +400,13 @@
       handleSubmit() {
         let that = this;
         this.getSelectMaterialRows();
-        that.$emit('ok', that.selectMaterialRows, that.selectMaterialIds);
-        that.searchReset(0)
-        that.close();
+        if(that.selectMaterialRows.length>0) {
+          that.$emit('ok', that.selectMaterialRows, that.selectMaterialIds);
+          that.searchReset(0)
+          that.close();
+        } else {
+          that.$message.warning('请选择商品！')
+        }
       },
       //获取选择信息
       getSelectMaterialRows(rowId) {
