@@ -648,8 +648,15 @@ public class DepotItemService {
                         thisRealNumber = depotItem.getOperNumber()==null?BigDecimal.ZERO:depotItem.getOperNumber();
                     }
                     if(!systemConfigService.getMinusStockFlag() && stock.compareTo(thisRealNumber)<0){
-                        throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
-                                String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, stockMsg));
+                        //如果开启出入库管理，并且类型等于采购退货、销售，则跳过
+                        if(systemConfigService.getInOutManageFlag() &&
+                                (BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(depotHead.getSubType())
+                                        ||BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))) {
+                            //跳过
+                        } else {
+                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
+                                    String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, stockMsg));
+                        }
                     }
                     //出库时处理序列号
                     if(!BusinessConstants.SUB_TYPE_TRANSFER.equals(depotHead.getSubType())) {
