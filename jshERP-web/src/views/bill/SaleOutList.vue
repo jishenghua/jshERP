@@ -196,10 +196,10 @@
             </span>
             <template slot="customRenderDebt" slot-scope="value, record">
               <a-tooltip title="有收款单">
-                <span style="color:green" v-if="value>0 && record.hasFinancialFlag">{{value}}</span>
+                <span style="color:green" v-if="value>0 && value>record.lastDebt">{{value}}</span>
               </a-tooltip>
               <a-tooltip title="暂未收款">
-                <span style="color:red" v-if="value>0 && !record.hasFinancialFlag">{{value}}</span>
+                <span style="color:red" v-if="value>0 && value===record.lastDebt">{{value}}</span>
               </a-tooltip>
               <span v-if="value===0">{{value}}</span>
             </template>
@@ -289,7 +289,7 @@
         },
         // 默认索引
         defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalPrice','totalTaxLastMoney',
-          'needOutMoney','changeAmount','debt','status'],
+          'changeAmount','debt','lastDebt','status'],
         // 默认列
         defColumns: [
           {
@@ -336,6 +336,7 @@
           { title: '本次欠款', dataIndex: 'debt',width:80,
             scopedSlots: { customRender: 'customRenderDebt' }
           },
+          { title: '最终欠款', dataIndex: 'lastDebt',width:80},
           { title: '销售人员', dataIndex: 'salesManStr',width:120},
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '状态', dataIndex: 'status', width: 80, align: "center",

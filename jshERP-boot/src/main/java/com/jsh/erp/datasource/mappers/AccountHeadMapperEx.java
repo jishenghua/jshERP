@@ -38,7 +38,7 @@ public interface AccountHeadMapperEx {
 
     List<AccountHead> getAccountHeadListByHandsPersonIds(@Param("handsPersonIds") String[] handsPersonIds);
 
-    List<AccountItem> getFinancialBillNoByBillIdList(
+    List<AccountItem> getFinancialBillPriceByBillIdList(
             @Param("idList") List<Long> idList);
 
     List<AccountHead> getFinancialBillNoByBillId(

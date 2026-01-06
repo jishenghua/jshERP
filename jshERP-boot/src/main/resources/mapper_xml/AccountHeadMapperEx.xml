@@ -133,8 +133,8 @@
         and ifnull(delete_flag,'0') !='1'
     </select>
 
-    <select id="getFinancialBillNoByBillIdList" resultType="com.jsh.erp.datasource.entities.AccountItem">
-        select ai.bill_id from jsh_account_head ah
+    <select id="getFinancialBillPriceByBillIdList" resultType="com.jsh.erp.datasource.entities.AccountItem">
+        select ai.bill_id, sum(ai.each_amount) each_amount from jsh_account_head ah
         left join jsh_account_item ai on ah.id=ai.header_id and ifnull(ai.delete_flag,'0') !='1'
         where 1=1
         <if test="idList.size()>0">
@@ -144,6 +144,7 @@
             </foreach>
         </if>
         and ifnull(ah.delete_flag,'0') !='1'
+        group by ai.bill_id
     </select>
 
     <select id="getFinancialBillNoByBillId" resultType="com.jsh.erp.datasource.entities.AccountHead">

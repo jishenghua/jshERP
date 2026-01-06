@@ -47,6 +47,12 @@ public class DepotHeadVo4List extends DepotHead{
      * 是否有付款单或收款单
      */
     private Boolean hasFinancialFlag;
+
+    /**
+     * 最终欠款
+     */
+    private BigDecimal lastDebt;
+
     /**
      * 是否有退款单
      */
@@ -227,6 +233,14 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setHasFinancialFlag(Boolean hasFinancialFlag) {
         this.hasFinancialFlag = hasFinancialFlag;
+    }
+
+    public BigDecimal getLastDebt() {
+        return lastDebt;
+    }
+
+    public void setLastDebt(BigDecimal lastDebt) {
+        this.lastDebt = lastDebt;
     }
 
     public Boolean getHasBackFlag() {

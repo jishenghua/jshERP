@@ -133,7 +133,7 @@ public class DepotHeadService {
                 }
                 //通过批量查询去构造map
                 Map<String,BigDecimal> finishDepositMap = getFinishDepositMapByNumberList(numberList);
-                Map<Long,Integer> financialBillNoMap = getFinancialBillNoMapByBillIdList(idList);
+                Map<Long,BigDecimal> financialBillPriceMap = getFinancialBillPriceMapByBillIdList(idList);
                 Map<String,Integer> billSizeMap = getBillSizeMapByLinkNumberList(numberList);
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
                 Map<Long,BigDecimal> materialCountListMap = getMaterialCountListMapByHeaderIdList(idList);
@@ -180,10 +180,11 @@ public class DepotHeadService {
                     BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
                     BigDecimal debt = discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount)));
                     dh.setDebt(roleService.parseBillPriceByLimit(debt, billCategory, priceLimit, request));
-                    //是否有付款单或收款单
-                    if(financialBillNoMap!=null) {
-                        Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
-                        dh.setHasFinancialFlag(financialBillNoSize!=null && financialBillNoSize>0);
+                    //最终欠款的金额
+                    if(financialBillPriceMap!=null) {
+                        BigDecimal financialBillPrice = financialBillPriceMap.get(dh.getId())!=null?financialBillPriceMap.get(dh.getId()):BigDecimal.ZERO;
+                        BigDecimal lastDebt = debt.subtract(financialBillPrice);
+                        dh.setLastDebt(roleService.parseBillPriceByLimit(lastDebt, billCategory, priceLimit, request));
                     }
                     //是否有退款单
                     if(billSizeMap!=null) {
@@ -345,14 +346,14 @@ public class DepotHeadService {
         return billListMap;
     }
 
-    public Map<Long,Integer> getFinancialBillNoMapByBillIdList(List<Long> idList) {
-        Map<Long, Integer> billListMap = new HashMap<>();
-        if(idList.size()>0) {
-            List<AccountItem> list = accountHeadService.getFinancialBillNoByBillIdList(idList);
-            if(list!=null && list.size()>0) {
+    private Map<Long, BigDecimal> getFinancialBillPriceMapByBillIdList(List<Long> idList) {
+        Map<Long, BigDecimal> billListMap = new HashMap<>();
+        if(!idList.isEmpty()) {
+            List<AccountItem> list = accountHeadService.getFinancialBillPriceByBillIdList(idList);
+            if(list!=null && !list.isEmpty()) {
                 for (AccountItem accountItem : list) {
                     if(accountItem!=null) {
-                        billListMap.put(accountItem.getBillId(), list.size());
+                        billListMap.put(accountItem.getBillId(), accountItem.getEachAmount().abs());
                     }
                 }
             }
@@ -982,7 +983,6 @@ public class DepotHeadService {
                     numberList.add(dh.getNumber());
                 }
                 //通过批量查询去构造map
-                Map<Long,Integer> financialBillNoMap = getFinancialBillNoMapByBillIdList(idList);
                 Map<String,Integer> billSizeMap = getBillSizeMapByLinkNumberList(numberList);
                 Map<Long,String> materialsListMap = findMaterialsListMapByHeaderIdList(idList);
                 Map<Long,BigDecimal> materialCountListMap = getMaterialCountListMapByHeaderIdList(idList);
@@ -1023,11 +1023,6 @@ public class DepotHeadService {
                 BigDecimal changeAmount = dh.getChangeAmount()!=null?dh.getChangeAmount():BigDecimal.ZERO;
                 BigDecimal debt = discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount)));
                 dh.setDebt(roleService.parseBillPriceByLimit(debt, billCategory, priceLimit, request));
-                //是否有付款单或收款单
-                if(financialBillNoMap!=null) {
-                    Integer financialBillNoSize = financialBillNoMap.get(dh.getId());
-                    dh.setHasFinancialFlag(financialBillNoSize!=null && financialBillNoSize>0);
-                }
                 //是否有退款单
                 if(billSizeMap!=null) {
                     Integer billListSize = billSizeMap.get(dh.getNumber());
