@@ -346,7 +346,7 @@ public class DepotHeadService {
         return billListMap;
     }
 
-    private Map<Long, BigDecimal> getFinancialBillPriceMapByBillIdList(List<Long> idList) {
+    public Map<Long, BigDecimal> getFinancialBillPriceMapByBillIdList(List<Long> idList) {
         Map<Long, BigDecimal> billListMap = new HashMap<>();
         if(!idList.isEmpty()) {
             List<AccountItem> list = accountHeadService.getFinancialBillPriceByBillIdList(idList);
