@@ -1,8 +1,8 @@
 <template>
   <div>
-    <a-input-group v-if="kind === 'material'" compact style="width:100%;top:0px">
+    <a-input-group v-if="kind === 'material'" compact style="width:100%;top:0px;display:flex;">
       <a-select placeholder="输入条码或名称" :dropdownMatchSelectWidth="false" showSearch :showArrow="false"
-                v-model="names" optionFilterProp="children" :style="searchWidth" notFoundContent="需在商品管理先新增才能使用"
+                v-model="names" optionFilterProp="children" style="flex:1; min-width:0;" notFoundContent="需在商品管理先新增才能使用"
                 @search="handleSearch" @change="handleChange">
         <div slot="dropdownRender" slot-scope="menu">
           <v-nodes :vnodes="menu" />
@@ -69,8 +69,7 @@
         ids: "",
         names: "",
         materialData: [],
-        setTimeFlag: null,
-        searchWidth: ""
+        setTimeFlag: null
       }
     },
     mounted() {
@@ -82,12 +81,6 @@
       }
     },
     created () {
-      const currentWidth = window.screen.width
-      if(currentWidth<1500) {
-        this.searchWidth = 'width:75%'
-      } else {
-        this.searchWidth = 'width:81%'
-      }
     },
     model: {
       prop: 'value',
