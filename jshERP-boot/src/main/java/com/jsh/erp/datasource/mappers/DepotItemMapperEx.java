@@ -18,6 +18,9 @@ import java.util.List;
  * @Date: 2019/1/24 16:59
  */
 public interface DepotItemMapperEx {
+
+    int batchInsert(List<DepotItem> depotItemList);
+
     List<DepotItem> selectByConditionDepotItem(
             @Param("name") String name,
             @Param("type") Integer type,

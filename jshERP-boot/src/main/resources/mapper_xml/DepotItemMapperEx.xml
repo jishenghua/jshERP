@@ -110,6 +110,23 @@
         <result column="oper_number" jdbcType="VARCHAR" property="operNumber" />
     </resultMap>
 
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into jsh_depot_item (header_id, material_id, material_extend_id, material_unit, sku, oper_number,
+        basic_number, unit_price, purchase_unit_price, tax_unit_price, all_price, remark, depot_id, another_depot_id,
+        tax_rate, tax_money, tax_last_money, material_type, sn_list, batch_number, expiration_date, link_id)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.headerId,jdbcType=BIGINT}, #{item.materialId,jdbcType=BIGINT},
+            #{item.materialExtendId,jdbcType=BIGINT}, #{item.materialUnit,jdbcType=VARCHAR}, #{item.sku,jdbcType=VARCHAR},
+            #{item.operNumber,jdbcType=DECIMAL}, #{item.basicNumber,jdbcType=DECIMAL}, #{item.unitPrice,jdbcType=DECIMAL},
+            #{item.purchaseUnitPrice,jdbcType=DECIMAL}, #{item.taxUnitPrice,jdbcType=DECIMAL}, #{item.allPrice,jdbcType=DECIMAL},
+            #{item.remark,jdbcType=VARCHAR}, #{item.depotId,jdbcType=BIGINT}, #{item.anotherDepotId,jdbcType=BIGINT},
+            #{item.taxRate,jdbcType=DECIMAL}, #{item.taxMoney,jdbcType=DECIMAL}, #{item.taxLastMoney,jdbcType=DECIMAL},
+            #{item.materialType,jdbcType=VARCHAR}, #{item.snList,jdbcType=VARCHAR}, #{item.batchNumber,jdbcType=VARCHAR},
+            #{item.expirationDate,jdbcType=TIMESTAMP}, #{item.linkId,jdbcType=BIGINT})
+        </foreach >
+    </insert>
+
     <select id="selectByConditionDepotItem" parameterType="com.jsh.erp.datasource.entities.DepotItemExample" resultMap="com.jsh.erp.datasource.mappers.DepotItemMapper.BaseResultMap">
         select *
         FROM jsh_depot_item
