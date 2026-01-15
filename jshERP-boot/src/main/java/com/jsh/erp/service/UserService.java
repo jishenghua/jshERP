@@ -962,7 +962,7 @@ public class UserService {
     }
 
     public int weixinBind(String loginName, String password, String weixinCode) throws Exception {
-        String weixinUrl = platformConfigService.getPlatformConfigByKey("weixinUrl").getPlatformValue();
+        String weixinUrl = platformConfigService.getPlatformConfigByKey("weixinUrl").getPlatformValue() + BusinessConstants.WEIXIN_LOGIN;
         String weixinAppid = platformConfigService.getPlatformConfigByKey("weixinAppid").getPlatformValue();
         String weixinSecret = platformConfigService.getPlatformConfigByKey("weixinSecret").getPlatformValue();
         String url = weixinUrl + "?appid=" + weixinAppid + "&secret=" + weixinSecret + "&js_code=" + weixinCode
