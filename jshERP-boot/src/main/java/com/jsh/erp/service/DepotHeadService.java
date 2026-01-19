@@ -1125,14 +1125,7 @@ public class DepotHeadService {
         //判断用户是否已经登录过，登录过不再处理
         User userInfo=userService.getCurrentUser();
         //通过redis去校验重复
-        String keyNo = userInfo.getLoginName() + "_" + depotHead.getNumber();
-        String keyValue = redisService.getCacheObject(keyNo);
-        if(StringUtil.isNotEmpty(keyValue)) {
-            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SUBMIT_REPEAT_FAILED_CODE,
-                    String.format(ExceptionConstants.DEPOT_HEAD_SUBMIT_REPEAT_FAILED_MSG));
-        } else {
-            redisService.storageKeyWithTime(keyNo, depotHead.getNumber(), 2L);
-        }
+        checkExistByRedis(userInfo, depotHead);
         //校验单号是否重复
         if(checkIsBillNumberExist(0L, depotHead.getNumber())>0) {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
@@ -1233,6 +1226,10 @@ public class DepotHeadService {
     public void updateDepotHeadAndDetail(String beanJson, String rows,HttpServletRequest request)throws Exception {
         /**更新单据主表信息*/
         DepotHead depotHead = JSONObject.parseObject(beanJson, DepotHead.class);
+        //判断用户是否已经登录过，登录过不再处理
+        User userInfo=userService.getCurrentUser();
+        //通过redis去校验重复
+        checkExistByRedis(userInfo, depotHead);
         //校验单号是否重复
         if(checkIsBillNumberExist(depotHead.getId(), depotHead.getNumber())>0) {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_NUMBER_EXIST_CODE,
@@ -1321,6 +1318,22 @@ public class DepotHeadService {
         logService.insertLog("单据",
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(depotHead.getNumber()).append(statusStr).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+    }
+
+    /**
+     * 通过redis去校验重复
+     * @param userInfo
+     * @param depotHead
+     */
+    private void checkExistByRedis(User userInfo, DepotHead depotHead) {
+        String keyNo = userInfo.getLoginName() + "_" + depotHead.getNumber();
+        String keyValue = redisService.getCacheObject(keyNo);
+        if(StringUtil.isNotEmpty(keyValue)) {
+            throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SUBMIT_REPEAT_FAILED_CODE,
+                    String.format(ExceptionConstants.DEPOT_HEAD_SUBMIT_REPEAT_FAILED_MSG));
+        } else {
+            redisService.storageKeyWithTime(keyNo, depotHead.getNumber(), 2L);
+        }
     }
 
     public Map<String, Object> getBuyAndSaleStatistics(String today, String monthFirstDay, String yesterdayBegin, String yesterdayEnd,
