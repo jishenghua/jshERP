@@ -20,7 +20,7 @@
             {{model.nativeName}}
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="别名">
-            <a-input placeholder="请输入别名" v-decorator.trim="[ 'anotherName' ]" />
+            <a-input placeholder="请输入别名" v-decorator.trim="[ 'anotherName', validatorRules.anotherName ]" />
           </a-form-item>
         </a-form>
       </a-spin>
@@ -50,10 +50,10 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          name:{
+          anotherName:{
             rules: [
-              { required: true, message: '请输入名称!' },
-              { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
+              { required: true, message: '请输入别名!' },
+              { min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur' }
             ]
           }
         },
