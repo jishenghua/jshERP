@@ -39,6 +39,7 @@ public class SequenceController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             String number = sequenceService.buildOnlyNumber();
+            logger.info("生成的单据编号：{}", number);
             map.put("defaultNumber", number);
             res.code = 200;
             res.data = map;

@@ -585,6 +585,17 @@ public class ExceptionConstants {
     public static final int REPORT_TWO_MANY_DEPOT_FAILED_CODE = 510;
     public static final String REPORT_TWO_MANY_DEPOT_FAILED_MSG = "请选择仓库，再进行查询";
 
+    /**
+     * 生成单据编号
+     * type = 120
+     * */
+    //获取唯一单据编号失败
+    public static final int SEQUENCE_ONLY_FAILED_CODE = 12000001;
+    public static final String SEQUENCE_ONLY_FAILED_MSG = "获取唯一单据编号失败，请稍后重试";
+    //获取唯一单据编号操作被中断
+    public static final int SEQUENCE_ONLY_BREAK_CODE = 12000002;
+    public static final String SEQUENCE_ONLY_BREAK_MSG = "获取唯一单据编号操作被中断";
+
     //演示用户禁止操作
     public static final int SYSTEM_CONFIG_TEST_USER_CODE = -1;
     public static final String SYSTEM_CONFIG_TEST_USER_MSG = "演示用户禁止操作";
