@@ -1341,10 +1341,10 @@ public class DepotItemService {
         return depotItemMapperEx.getCountByMaterialAndDepot(mId, depotId);
     }
 
-    public JSONObject parseMapByExcelData(String barCodes, List<Map<String, String>> detailList, String prefixNo) throws Exception {
+    public JSONObject parseMapByExcelData(List<String> barCodeList, List<Map<String, String>> detailList, String prefixNo) throws Exception {
         JSONObject map = new JSONObject();
         JSONArray arr = new JSONArray();
-        List<MaterialVo4Unit> list = depotItemMapperEx.getBillItemByParam(barCodes);
+        List<MaterialVo4Unit> list = depotItemMapperEx.getBillItemByParam(barCodeList);
         Map<String, MaterialVo4Unit> materialMap = new HashMap<>();
         Map<String, Long> depotMap = new HashMap<>();
         for (MaterialVo4Unit material: list) {

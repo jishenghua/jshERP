@@ -1122,8 +1122,11 @@
         from jsh_material m
         left join jsh_material_extend me on m.id=me.material_id and ifnull(me.delete_Flag,'0') !='1'
         where 1=1
-        <if test="barCodes != null">
-            and me.bar_code in (${barCodes})
+        <if test="barCodeList.size()>0">
+            and me.bar_code in
+            <foreach collection="barCodeList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc
@@ -1134,10 +1137,10 @@
         from jsh_material_current_stock
         where 1=1
         <if test="depotId != null">
-            and depot_id = ${depotId}
+            and depot_id = #{depotId}
         </if>
         <if test="mId != null">
-            and material_id = ${mId}
+            and material_id = #{mId}
         </if>
         and ifnull(delete_flag,'0') !='1'
     </select>

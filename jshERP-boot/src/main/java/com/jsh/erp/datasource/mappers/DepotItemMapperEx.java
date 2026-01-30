@@ -252,7 +252,7 @@ public interface DepotItemMapperEx {
             @Param("batchNumber") String batchNumber);
 
     List<MaterialVo4Unit> getBillItemByParam(
-            @Param("barCodes") String barCodes);
+            @Param("barCodeList") List<String> barCodeList);
 
     BigDecimal getCurrentStockByParam(
             @Param("depotId") Long depotId,

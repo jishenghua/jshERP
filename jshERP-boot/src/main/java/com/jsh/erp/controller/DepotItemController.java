@@ -1062,7 +1062,7 @@ public class DepotItemController {
         Map<String, Object> data = new HashMap<>();
         String message = "";
         try {
-            String barCodes = "";
+            List<String> barCodeList = new ArrayList<>();
             //文件扩展名只能为xls
             String fileName = file.getOriginalFilename();
             if(StringUtil.isNotEmpty(fileName)) {
@@ -1118,12 +1118,9 @@ public class DepotItemController {
                     materialMap.put("taxRate", taxRate);
                     materialMap.put("remark", remark);
                     detailList.add(materialMap);
-                    barCodes += "'" + barCode + "',";
+                    barCodeList.add(barCode);
                 }
-                if (StringUtil.isNotEmpty(barCodes)) {
-                    barCodes = barCodes.substring(0, barCodes.length() - 1);
-                }
-                JSONObject map = depotItemService.parseMapByExcelData(barCodes, detailList, prefixNo);
+                JSONObject map = depotItemService.parseMapByExcelData(barCodeList, detailList, prefixNo);
                 if (map != null) {
                     res.code = 200;
                 } else {
