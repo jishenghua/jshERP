@@ -276,7 +276,12 @@
             order by oper_time desc,number desc
         </if>
         <if test="column != 'createTime'">
-            order by ${column} ${order}
+            <if test="column == 'barCode' or column == 'operNumber' or column == 'unitPrice' or column == 'allPrice' or column == 'taxMoney'">
+                order by ${column}
+                <if test="order == 'asc' or order == 'desc'">
+                    ${order}
+                </if>
+            </if>
         </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
