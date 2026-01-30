@@ -698,7 +698,12 @@
             order by m.id desc
         </if>
         <if test="column != 'createTime'">
-            order by ${column} ${order}
+            <if test="column == 'mBarCode' or column == 'purchaseDecimal' or column == 'currentStock' or column == 'currentStockPrice' or column == 'currentWeight'">
+                order by ${column}
+                <if test="order == 'asc' or order == 'desc'">
+                    ${order}
+                </if>
+            </if>
         </if>
         <if test="offset != null and rows != null">
             limit #{offset},#{rows}
