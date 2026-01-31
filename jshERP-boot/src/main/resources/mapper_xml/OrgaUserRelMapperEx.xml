@@ -17,9 +17,7 @@
   <update id="updateOrgaUserRel" parameterType="com.jsh.erp.datasource.entities.OrgaUserRel" >
     update jsh_orga_user_rel
     <set >
-      <if test="orgaId != null" >
-        orga_id = #{orgaId},
-      </if>
+      orga_id = #{orgaId},
       <if test="userId != null" >
         user_id = #{userId},
       </if>

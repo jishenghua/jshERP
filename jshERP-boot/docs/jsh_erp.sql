@@ -580,7 +580,7 @@ INSERT INTO `jsh_msg` VALUES (2, '标题1', '内容1', '2019-09-10 00:11:39', '�
 DROP TABLE IF EXISTS `jsh_orga_user_rel`;
 CREATE TABLE `jsh_orga_user_rel`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `orga_id` bigint(0) NOT NULL COMMENT '机构id',
+  `orga_id` bigint(0) NULL DEFAULT NULL COMMENT '机构id',
   `user_id` bigint(0) NOT NULL COMMENT '用户id',
   `user_blng_orga_dspl_seq` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户在所属机构中显示顺序',
   `delete_flag` char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',

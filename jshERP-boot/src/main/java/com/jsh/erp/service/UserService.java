@@ -553,10 +553,6 @@ public class UserService {
                 ubObj.put("value", "[" + ue.getRoleId() + "]");
                 userBusinessService.insertUserBusiness(ubObj, request);
             }
-            if(ue.getOrgaId()==null){
-                //如果没有选择机构，就不建机构和用户的关联关系
-                return;
-            }
             if(ue.getOrgaId()!=null && "1".equals(ue.getLeaderFlag())){
                 //检查当前机构是否存在经理
                 List<User> checkList = userMapperEx.getListByOrgaId(ue.getId(), ue.getOrgaId());
@@ -706,10 +702,6 @@ public class UserService {
                 } else {
                     userBusinessService.insertUserBusiness(ubObj, request);
                 }
-            }
-            if (ue.getOrgaId() == null) {
-                //如果没有选择机构，就不建机构和用户的关联关系
-                return;
             }
             if(ue.getOrgaId()!=null && "1".equals(ue.getLeaderFlag())){
                 //检查当前机构是否存在经理
