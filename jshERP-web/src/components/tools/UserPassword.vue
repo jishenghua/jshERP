@@ -133,7 +133,7 @@
         }
         let reg = /^(?=.*[a-z])(?=.*\d).{6,}$/;
         if (!reg.test(value)) {
-          callback(new Error('密码由6位数字、小写字母组成!'))
+          callback(new Error('用户密码至少要有数字和小写字母，并且长度至少6位!'))
         }
         callback()
       },

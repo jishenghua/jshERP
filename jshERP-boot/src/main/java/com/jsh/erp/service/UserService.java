@@ -581,12 +581,10 @@ public class UserService {
     public UserEx addUser(UserEx ue) throws Exception{
         /**
          * 新增用户默认设置
-         * 1、密码默认123456
-         * 2是否系统自带默认为非系统自带
-         * 3是否管理者默认为员工
-         * 4默认用户状态为正常
+         * 1是否系统自带默认为非系统自带
+         * 2是否管理者默认为员工
+         * 3默认用户状态为正常
          * */
-        ue.setPassword(Tools.md5Encryp(BusinessConstants.USER_DEFAULT_PASSWORD));
         ue.setIsystem(BusinessConstants.USER_NOT_SYSTEM);
         if(ue.getIsmanager()==null){
             ue.setIsmanager(BusinessConstants.USER_NOT_MANAGER);

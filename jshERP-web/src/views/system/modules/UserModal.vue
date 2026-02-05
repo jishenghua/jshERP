@@ -14,7 +14,7 @@
       @cancel="handleCancel"
       cancelText="取消"
       okText="保存"
-      style="top:5%;height: 85%;">
+      style="top:2%;height:95%;">
       <template slot="footer">
         <a-button key="back" v-if="isReadOnly" @click="handleCancel">
           取消
@@ -23,8 +23,10 @@
       <a-spin :spinning="confirmLoading">
         <a-form :form="form" id="userModal">
           <a-form-item label="登录名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input placeholder="请输入登录名称" v-decorator.trim="[ 'loginName', validatorRules.loginName]" :readOnly="!!model.id"
-             suffix="初始密码：123456" />
+            <a-input placeholder="请输入登录名称" v-decorator.trim="[ 'loginName', validatorRules.loginName]" :readOnly="!!model.id" />
+          </a-form-item>
+          <a-form-item label="用户密码" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!model.id">
+            <a-input-password placeholder="请输入用户密码" v-decorator.trim="[ 'password', validatorRules.password]" />
           </a-form-item>
           <a-form-item label="用户姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" >
             <a-input placeholder="请输入用户姓名" v-decorator.trim="[ 'username', validatorRules.username]" />
@@ -71,11 +73,10 @@
 <script>
   import pick from 'lodash.pick'
   import Vue from 'vue'
+  import md5 from 'md5'
   import JSelectPosition from '@/components/jeecgbiz/JSelectPosition'
   import { ACCESS_TOKEN } from "@/store/mutation-types"
-  import { getAction } from '@/api/manage'
   import {addUser,editUser,queryOrganizationTreeList,roleAllList} from '@/api/api'
-  import { disabledAuthFilter } from "@/utils/authFilter"
   import {autoJumpNextInput} from "@/utils/util"
   import {mixinDevice} from '@/utils/mixin'
   import JImageUpload from '../../../components/jeecg/JImageUpload'
@@ -104,6 +105,12 @@
             rules: [{
               required: true, message: '请输入登录名称!'
             }]
+          },
+          password: {
+            rules: [
+              { required: true, message: '请输入用户密码!' },
+              { pattern: /^(?=.*[a-z])(?=.*\d).{6,}$/, message: '用户密码至少要有数字和小写字母，并且长度至少6位!' }
+            ]
           },
           username:{
             rules: [{
@@ -168,6 +175,7 @@
             let obj;
             if(!this.model.id){
               formData.id = this.userId;
+              formData.password = md5(values.password);
               obj=addUser(formData);
             }else{
               obj=editUser(formData);
