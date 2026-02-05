@@ -233,8 +233,7 @@ public class UserController extends BaseController {
                                      HttpServletRequest request) throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
         Long id = jsonObject.getLong("id");
-        String password = "123456";
-        String md5Pwd = Tools.md5Encryp(password);
+        String md5Pwd = jsonObject.getString("password");
         int update = userService.resetPwd(md5Pwd, id, request);
         if(update > 0) {
             return returnJson(objectMap, SUCCESS, ErpInfo.OK.code);

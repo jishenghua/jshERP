@@ -57,9 +57,7 @@
                 <a>删除</a>
               </a-popconfirm>
               <a-divider type="vertical"/>
-              <a-popconfirm title="确定重置密码为123456吗?" @confirm="() => handleReset(record.id)">
-                <a>重置密码</a>
-              </a-popconfirm>
+              <a @click="handleResetModal(record)">重置密码</a>
             </span>
             <!-- 状态渲染模板 -->
             <template slot="customRenderFlag" slot-scope="status">
@@ -72,6 +70,7 @@
         <user-modal ref="modalForm" @ok="modalFormOk"></user-modal>
         <user-depot-modal ref="userDepotModal" @ok="modalFormOk"></user-depot-modal>
         <user-customer-modal ref="userCustomerModal" @ok="modalFormOk"></user-customer-modal>
+        <user-reset-modal ref="userResetModal" @ok="modalFormOk"></user-reset-modal>
       </a-card>
     </a-col>
   </a-row>
@@ -81,6 +80,7 @@
   import UserModal from './modules/UserModal'
   import UserDepotModal from './modules/UserDepotModal'
   import UserCustomerModal from './modules/UserCustomerModal'
+  import UserResetModal from './modules/UserResetModal'
   import {postAction} from '@/api/manage';
   import {getCurrentSystemConfig} from '@/api/api'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
@@ -92,6 +92,7 @@
       UserModal,
       UserDepotModal,
       UserCustomerModal,
+      UserResetModal,
       JInput
     },
     data() {
@@ -174,6 +175,10 @@
         if(this.btnEnableList.indexOf(1)===-1) {
           this.$refs.modalForm.isReadOnly = true
         }
+      },
+      handleResetModal(record) {
+        this.$refs.userResetModal.edit(record);
+        this.$refs.userResetModal.title = "请输入" + record.loginName + "的新密码";
       },
       handleReset(id) {
         let that = this;
