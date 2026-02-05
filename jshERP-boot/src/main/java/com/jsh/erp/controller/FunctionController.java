@@ -241,7 +241,7 @@ public class FunctionController extends BaseController {
             if("admin".equals(userInfo.getLoginName())) {
                 funIdList = null;
             }
-            List<Function> dataListFun = functionService.findRoleFunction("0", funIdList);
+            List<Function> dataListFun = functionService.findRoleFunction("0", null);
             //开始拼接json数据
             JSONObject outer = new JSONObject();
             outer.put("id", 0);
@@ -255,15 +255,20 @@ public class FunctionController extends BaseController {
                 //根据条件从列表里面移除"系统管理"
                 List<Function> dataList = new ArrayList<>();
                 for (Function fun : dataListFun) {
+                    List<Function> childrenList = functionService.getRoleFunction(fun.getNumber());
                     String token = request.getHeader("X-Access-Token");
                     Long tenantId = Tools.getTenantIdByToken(token);
                     if (tenantId!=0L) {
                         if(!("系统管理").equals(fun.getName())) {
-                            dataList.add(fun);
+                            if(!childrenList.isEmpty()) {
+                                dataList.add(fun);
+                            }
                         }
                     } else {
                         //超管
-                        dataList.add(fun);
+                        if(!childrenList.isEmpty()) {
+                            dataList.add(fun);
+                        }
                     }
                 }
                 dataArray = getFunctionList(dataList, type, keyId, funIdList);
