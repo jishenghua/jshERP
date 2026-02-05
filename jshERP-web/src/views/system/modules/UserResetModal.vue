@@ -14,7 +14,7 @@
       @cancel="handleCancel"
       cancelText="取消"
       okText="保存"
-      style="top:30%;height: 35%;">
+      style="top:25%;height:35%;">
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="新密码">
