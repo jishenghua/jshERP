@@ -215,6 +215,7 @@ public class DepotItemController {
                 BigDecimal totalAllPrice = BigDecimal.ZERO;
                 BigDecimal totalTaxMoney = BigDecimal.ZERO;
                 BigDecimal totalTaxLastMoney = BigDecimal.ZERO;
+                BigDecimal totalFinishNumber = BigDecimal.ZERO;
                 BigDecimal totalWeight = BigDecimal.ZERO;
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
                     JSONObject item = new JSONObject();
@@ -252,7 +253,8 @@ public class DepotItemController {
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
-                    item.put("finishNumber", depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType)); //已入库|已出库
+                    BigDecimal finishNumber = depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType);
+                    item.put("finishNumber", finishNumber); //已入库|已出库
                     item.put("purchaseDecimal", roleService.parseBillPriceByLimit(diEx.getPurchaseDecimal(), billCategory, priceLimit, request));  //采购价
                     if("basic".equals(linkType) || "1".equals(isReadOnly)) {
                         //正常情况显示金额，而以销定购的情况不能显示金额
@@ -288,6 +290,7 @@ public class DepotItemController {
                     totalAllPrice = totalAllPrice.add(diEx.getAllPrice()==null?BigDecimal.ZERO:diEx.getAllPrice());
                     totalTaxMoney = totalTaxMoney.add(diEx.getTaxMoney()==null?BigDecimal.ZERO:diEx.getTaxMoney());
                     totalTaxLastMoney = totalTaxLastMoney.add(diEx.getTaxLastMoney()==null?BigDecimal.ZERO:diEx.getTaxLastMoney());
+                    totalFinishNumber = totalFinishNumber.add(finishNumber);
                     totalWeight = totalWeight.add(allWeight);
                 }
                 if(StringUtil.isNotEmpty(isReadOnly) && "1".equals(isReadOnly)) {
@@ -296,6 +299,7 @@ public class DepotItemController {
                     footItem.put("allPrice", roleService.parseBillPriceByLimit(totalAllPrice, billCategory, priceLimit, request));
                     footItem.put("taxMoney", roleService.parseBillPriceByLimit(totalTaxMoney, billCategory, priceLimit, request));
                     footItem.put("taxLastMoney", roleService.parseBillPriceByLimit(totalTaxLastMoney, billCategory, priceLimit, request));
+                    footItem.put("finishNumber", totalFinishNumber);
                     footItem.put("weight", totalWeight);
                     dataArray.add(footItem);
                 }
