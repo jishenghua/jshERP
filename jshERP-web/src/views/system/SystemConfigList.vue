@@ -232,7 +232,7 @@
       this.init()
       this.loadPlugins()
       if(this.isDesktop()) {
-        this.cardStyle = 'height:' + (document.documentElement.clientHeight-125) + 'px'
+        this.cardStyle = 'height:' + (document.documentElement.clientHeight-52) + 'px'
       }
     },
     methods: {
