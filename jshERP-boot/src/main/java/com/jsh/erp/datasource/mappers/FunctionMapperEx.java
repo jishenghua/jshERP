@@ -12,5 +12,8 @@ public interface FunctionMapperEx {
             @Param("name") String name,
             @Param("type") String type);
 
+    List<Long> getFirstNodeIdList();
+
     int batchDeleteFunctionByIds(@Param("updateTime") Date updateTime, @Param("updater") Long updater, @Param("ids") String ids[]);
+
 }

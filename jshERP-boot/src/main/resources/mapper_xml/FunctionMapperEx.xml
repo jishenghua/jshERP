@@ -21,6 +21,12 @@
         order by fa.sort asc
     </select>
 
+    <select id="getFirstNodeIdList" resultType="java.lang.Long">
+        select id from jsh_function
+        where parent_number='0'
+        and ifnull(delete_flag,'0') !='1'
+    </select>
+
     <update id="batchDeleteFunctionByIds">
         update jsh_function
         set delete_flag='1'

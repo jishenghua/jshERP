@@ -275,6 +275,11 @@ public class FunctionService {
             for (Long funId : list) {
                 funIdMap.put(funId, funId);
             }
+            //把一级菜单的id全都赋值给租户,解决漏掉枝干id的问题
+            List<Long> firstNodeIdList = functionMapperEx.getFirstNodeIdList();
+            for (Long firstNodeId : firstNodeIdList) {
+                funIdMap.put(firstNodeId, firstNodeId);
+            }
             return funIdMap;
         } else {
             return null;
