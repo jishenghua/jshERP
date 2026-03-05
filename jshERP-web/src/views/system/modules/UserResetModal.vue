@@ -90,6 +90,7 @@
             }
             resetPwd(bodyParam).then((res)=>{
               if(res.code === 200){
+                that.$message.info('重置密码成功！');
                 that.$emit('ok');
               }else{
                 that.$message.warning(res.data.message);

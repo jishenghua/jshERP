@@ -180,17 +180,6 @@
         this.$refs.userResetModal.edit(record);
         this.$refs.userResetModal.title = "请输入" + record.loginName + "的新密码";
       },
-      handleReset(id) {
-        let that = this;
-        postAction(that.url.resetPwd, {id: id}).then((res) => {
-          if(res.code === 200){
-            that.$message.info('重置密码成功！');
-            that.loadData();
-          } else {
-            that.$message.warning(res.data.message);
-          }
-        })
-      },
       btnSetDepot(record) {
         this.$refs.userDepotModal.edit(record);
         this.$refs.userDepotModal.title = "分配仓库给：" + record.username
