@@ -90,7 +90,7 @@ export const BillModalMixin = {
       const key = window.event.keyCode ? window.event.keyCode : window.event.which
       if (key === 83 && e.ctrlKey) {
         //保存 CTRL+S
-        this.handleOk()
+        this.handleOkOnly()
         e.preventDefault()
       }
     },
@@ -1106,6 +1106,11 @@ export const BillModalMixin = {
     //保存并审核
     handleOkAndCheck() {
       this.billStatus = '1'
+      this.handleOk()
+    },
+    //仅保存
+    handleOkOnly() {
+      this.billStatus = '0'
       this.handleOk()
     },
     //发起流程

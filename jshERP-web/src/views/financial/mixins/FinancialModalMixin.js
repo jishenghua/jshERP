@@ -425,6 +425,11 @@ export const FinancialModalMixin = {
       this.billStatus = '1'
       this.handleOk()
     },
+    //仅保存
+    handleOkOnly() {
+      this.billStatus = '0'
+      this.handleOk()
+    },
     //发起流程
     handleWorkflow() {
       if(this.model && this.model.billNo) {
