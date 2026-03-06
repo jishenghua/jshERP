@@ -360,6 +360,9 @@ public class ExceptionConstants {
     //EXCEL中有副条码在系统中已存在（除自身商品之外）
     public static final int MATERIAL_EXCEL_IMPORT_MANY_BARCODE_EXIST_CODE = 80000028;
     public static final String MATERIAL_EXCEL_IMPORT_MANY_BARCODE_EXIST_MSG = "抱歉，EXCEL中有副条码在系统中已存在，具体副条码为：%s";
+    //单据中商品库存不足
+    public static final int BILL_MATERIAL_STOCK_NOT_ENOUGH_CODE = 80000029;
+    public static final String BILL_MATERIAL_STOCK_NOT_ENOUGH_MSG = "单据:%s中商品:%s库存不足";
 
     /**
      *  单据信息

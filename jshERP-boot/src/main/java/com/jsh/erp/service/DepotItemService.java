@@ -648,15 +648,19 @@ public class DepotItemService {
                         //对于批次商品，直接使用当前填写的数量
                         thisRealNumber = depotItem.getOperNumber()==null?BigDecimal.ZERO:depotItem.getOperNumber();
                     }
-                    if(!systemConfigService.getMinusStockFlag() && stock.compareTo(thisRealNumber)<0){
-                        //如果开启出入库管理，并且类型等于采购退货、销售，则跳过
-                        if(systemConfigService.getInOutManageFlag() &&
-                                (BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(depotHead.getSubType())
-                                        ||BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))) {
-                            //跳过
-                        } else {
-                            throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
-                                    String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, stockMsg));
+                    if(systemConfigService.getForceApprovalFlag() && "0".equals(depotHead.getStatus())) {
+                        //如果开启强审核，并且没有保存的同时审核，则跳过库存判断
+                    } else {
+                        if(!systemConfigService.getMinusStockFlag() && stock.compareTo(thisRealNumber)<0){
+                            //如果开启出入库管理，并且类型等于采购退货、销售，则跳过
+                            if(systemConfigService.getInOutManageFlag() &&
+                                    (BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(depotHead.getSubType())
+                                            ||BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType()))) {
+                                //跳过
+                            } else {
+                                throw new BusinessRunTimeException(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_CODE,
+                                        String.format(ExceptionConstants.MATERIAL_STOCK_NOT_ENOUGH_MSG, stockMsg));
+                            }
                         }
                     }
                     //出库时处理序列号
@@ -1462,5 +1466,40 @@ public class DepotItemService {
     public BigDecimal getCurrentStockByParam(Long depotId, Long mId) {
         BigDecimal stock = depotItemMapperEx.getCurrentStockByParam(depotId, mId);
         return stock!=null? stock: BigDecimal.ZERO;
+    }
+
+    /**
+     * 校验单据中的商品库存是否不足
+     * @param number
+     * @param headerId
+     * @return
+     * @throws Exception
+     */
+    public void checkMaterialStock(String number, Long headerId) throws Exception {
+        List<DepotItem> depotItemList = getListByHeaderId(headerId);
+        for (DepotItem depotItem : depotItemList) {
+            Material material = materialService.getMaterial(depotItem.getMaterialId());
+            MaterialExtend materialExtend = materialExtendService.getMaterialExtend(depotItem.getMaterialExtendId());
+            String stockMsg = material.getName() + "-" + materialExtend.getBarCode();
+            BigDecimal stock = getCurrentStockByParam(depotItem.getDepotId(),depotItem.getMaterialId());
+            if(StringUtil.isNotEmpty(depotItem.getSku())) {
+                //对于sku商品要换个方式计算库存
+                stock = getSkuStockByParam(depotItem.getDepotId(),depotItem.getMaterialExtendId(),null,null);
+            }
+            if(StringUtil.isNotEmpty(depotItem.getBatchNumber())) {
+                //对于批次商品要换个方式计算库存
+                stock = getOneBatchNumberStock(depotItem.getDepotId(), materialExtend.getBarCode(), depotItem.getBatchNumber());
+                stockMsg += "-批号" + depotItem.getBatchNumber();
+            }
+            BigDecimal thisRealNumber = depotItem.getBasicNumber()==null?BigDecimal.ZERO:depotItem.getBasicNumber();
+            if(StringUtil.isNotEmpty(depotItem.getBatchNumber())) {
+                //对于批次商品，直接使用当前填写的数量
+                thisRealNumber = depotItem.getOperNumber()==null?BigDecimal.ZERO:depotItem.getOperNumber();
+            }
+            if(stock.compareTo(thisRealNumber)<0){
+                throw new BusinessRunTimeException(ExceptionConstants.BILL_MATERIAL_STOCK_NOT_ENOUGH_CODE,
+                        String.format(ExceptionConstants.BILL_MATERIAL_STOCK_NOT_ENOUGH_MSG, number, stockMsg));
+            }
+        }
     }
 }
