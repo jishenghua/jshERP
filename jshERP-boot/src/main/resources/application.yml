@@ -1,0 +1,55 @@
+# 服务端口
+server:
+  port: 9999
+  servlet:
+    # 登录超时 - 秒
+    session:
+      timeout: 36000
+    # 服务路径
+    context-path: /jshERP-boot
+  tomcat:
+    # 文件上传临时路径
+    basedir: /opt/tmp/tomcat
+
+spring:
+  datasource:
+    # 数据库连接
+    url: jdbc:mysql://127.0.0.1:3306/jsh_erp?useUnicode=true&characterEncoding=utf8&useCursorFetch=true&defaultFetchSize=500&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 1234abcd
+  servlet:
+    multipart:
+      # 文件上传限制 (byte)
+      max-file-size: 10485760
+      max-request-size: 10485760
+
+# mybatis-plus 配置
+mybatis-plus:
+  mapper-locations: classpath:./mapper_xml/*.xml
+
+# 租户对应的角色 id
+manage:
+  roleId: 10
+
+tenant:
+  # 租户允许创建的用户数
+  userNumLimit: 1000000
+  # 租户允许试用的天数
+  tryDayLimit: 3000
+
+# 插件配置
+plugin:
+  runMode: prod
+  pluginPath: plugins
+  pluginConfigFilePath: pluginConfig
+
+file:
+  # 文件上传方式 1-本机 2-oss
+  uploadType: 1
+  # 文件上传根目录
+  path: /opt/jshERP/upload
