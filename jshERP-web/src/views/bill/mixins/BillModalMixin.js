@@ -701,9 +701,9 @@ export const BillModalMixin = {
         operNumber: 1,
         unitPrice: mInfo.billPrice,
         allPrice: mInfo.billPrice,
-        taxRate: 0,
-        taxMoney: 0,
-        taxLastMoney: mInfo.billPrice
+        taxRate: mInfo.taxRate,
+        taxMoney: mInfo.taxMoney,
+        taxLastMoney: mInfo.taxLastMoney
       }
     },
     //使得型号、颜色、扩展信息、sku等为隐藏

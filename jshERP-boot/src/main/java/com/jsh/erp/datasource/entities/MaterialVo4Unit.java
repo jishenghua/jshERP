@@ -60,6 +60,12 @@ public class MaterialVo4Unit extends Material{
 
     private String imgLarge;
 
+    private BigDecimal taxRate;
+
+    private BigDecimal taxMoney;
+
+    private BigDecimal taxLastMoney;
+
     public String getUnitName() {
         return unitName;
     }
@@ -258,5 +264,29 @@ public class MaterialVo4Unit extends Material{
 
     public void setBigUnitInitialStock(String bigUnitInitialStock) {
         this.bigUnitInitialStock = bigUnitInitialStock;
+    }
+
+    public BigDecimal getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(BigDecimal taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public BigDecimal getTaxLastMoney() {
+        return taxLastMoney;
+    }
+
+    public void setTaxLastMoney(BigDecimal taxLastMoney) {
+        this.taxLastMoney = taxLastMoney;
+    }
+
+    public BigDecimal getTaxMoney() {
+        return taxMoney;
+    }
+
+    public void setTaxMoney(BigDecimal taxMoney) {
+        this.taxMoney = taxMoney;
     }
 }

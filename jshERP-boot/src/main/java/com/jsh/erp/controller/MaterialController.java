@@ -6,13 +6,7 @@ import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.vo.MaterialDepotStock;
-import com.jsh.erp.service.DepotService;
-import com.jsh.erp.service.DepotItemService;
-import com.jsh.erp.service.MaterialService;
-import com.jsh.erp.service.RoleService;
-import com.jsh.erp.service.SystemConfigService;
-import com.jsh.erp.service.UnitService;
-import com.jsh.erp.service.UserService;
+import com.jsh.erp.service.*;
 import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,6 +57,9 @@ public class MaterialController extends BaseController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private SupplierService supplierService;
 
     @Value(value="${file.uploadType}")
     private Long fileUploadType;
@@ -599,6 +596,8 @@ public class MaterialController extends BaseController {
             if(materialExtend!=null && StringUtil.isNotEmpty(materialExtend.getBarCode())) {
                 barCode = materialExtend.getBarCode();
             }
+            //查下供应商或者客户的信息
+            Supplier supplier = organId!=null ? supplierService.getSupplier(organId) : null;
             List<MaterialVo4Unit> list = materialService.getMaterialByBarCode(barCode);
             if(list!=null && list.size()>0) {
                 for(MaterialVo4Unit mvo: list) {
@@ -661,6 +660,24 @@ public class MaterialController extends BaseController {
                         mvo.setDepotId(depotId);
                         getStockByMaterialInfo(mvo);
                     }
+                    //税率
+                    BigDecimal taxRate = BigDecimal.ZERO;
+                    if(supplier!=null && supplier.getTaxRate()!=null) {
+                        taxRate = supplier.getTaxRate();
+                    }
+                    mvo.setTaxRate(taxRate);
+                    //税额
+                    BigDecimal taxMoney = BigDecimal.ZERO;
+                    if(taxRate.compareTo(BigDecimal.ZERO) != 0 && mvo.getBillPrice()!=null) {
+                        taxMoney = taxRate.multiply(mvo.getBillPrice()).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                    }
+                    mvo.setTaxMoney(taxMoney);
+                    //价税合计
+                    BigDecimal taxLastMoney = BigDecimal.ZERO;
+                    if(mvo.getBillPrice()!=null) {
+                        taxLastMoney = mvo.getBillPrice().add(taxMoney);
+                    }
+                    mvo.setTaxLastMoney(taxLastMoney);
                 }
             }
             res.code = 200;
