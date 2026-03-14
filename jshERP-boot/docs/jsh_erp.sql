@@ -841,6 +841,7 @@ CREATE TABLE `jsh_system_config`  (
   `audit_print_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '先审核后打印启用标记，0未启用，1启用',
   `zero_change_amount_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '零收付款启用标记，0未启用，1启用',
   `customer_static_price_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '客户静态单价启用标记，0未启用，1启用',
+  `material_price_tax_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '商品价格含税启用标记，0未启用，1启用',
   `tenant_id` bigint(0) NULL DEFAULT NULL COMMENT '租户id',
   `delete_flag` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '删除标记，0未删除，1删除',
   PRIMARY KEY (`id`) USING BTREE
@@ -849,7 +850,7 @@ CREATE TABLE `jsh_system_config`  (
 -- ----------------------------
 -- Records of jsh_system_config
 -- ----------------------------
-INSERT INTO `jsh_system_config` VALUES (11, '公司test', '小李', '地址1', '12345678', NULL, NULL, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '0', '', '0', '1', '0', '0', '0', '0', '0', '0', '0', 63, '0');
+INSERT INTO `jsh_system_config` VALUES (11, '公司test', '小李', '地址1', '12345678', NULL, NULL, '注：本单为我公司与客户约定账期内结款的依据，由客户或其单位员工签字生效，并承担法律责任。', '0', '0', '1', '0', '0', '', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', 63, '0');
 
 -- ----------------------------
 -- Table structure for jsh_tenant

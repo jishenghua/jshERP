@@ -1704,6 +1704,76 @@ public class SystemConfigExample {
             return (Criteria) this;
         }
 
+        public Criteria andMaterialPriceTaxFlagIsNull() {
+            addCriterion("material_price_tax_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagIsNotNull() {
+            addCriterion("material_price_tax_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagEqualTo(String value) {
+            addCriterion("material_price_tax_flag =", value, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagNotEqualTo(String value) {
+            addCriterion("material_price_tax_flag <>", value, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagGreaterThan(String value) {
+            addCriterion("material_price_tax_flag >", value, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagGreaterThanOrEqualTo(String value) {
+            addCriterion("material_price_tax_flag >=", value, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagLessThan(String value) {
+            addCriterion("material_price_tax_flag <", value, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagLessThanOrEqualTo(String value) {
+            addCriterion("material_price_tax_flag <=", value, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagLike(String value) {
+            addCriterion("material_price_tax_flag like", value, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagNotLike(String value) {
+            addCriterion("material_price_tax_flag not like", value, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagIn(List<String> values) {
+            addCriterion("material_price_tax_flag in", values, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagNotIn(List<String> values) {
+            addCriterion("material_price_tax_flag not in", values, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagBetween(String value1, String value2) {
+            addCriterion("material_price_tax_flag between", value1, value2, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaterialPriceTaxFlagNotBetween(String value1, String value2) {
+            addCriterion("material_price_tax_flag not between", value1, value2, "materialPriceTaxFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andTenantIdIsNull() {
             addCriterion("tenant_id is null");
             return (Criteria) this;

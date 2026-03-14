@@ -1752,3 +1752,10 @@ create index tenant_id on jsh_user_business(tenant_id) using btree;
 -- 给jsh_user表的orga_id字段改为非必填
 -- --------------------------------------------------------
 alter table jsh_orga_user_rel change orga_id orga_id bigint(0) NULL DEFAULT NULL COMMENT '机构id';
+
+-- --------------------------------------------------------
+-- 时间 2026年3月14日
+-- by jishenghua
+-- 给系统参数表增加商品价格含税启用标记，启用后，商品中录入的价格就含税
+-- --------------------------------------------------------
+alter table jsh_system_config add material_price_tax_flag varchar(1) DEFAULT '0' COMMENT '商品价格含税启用标记，0未启用，1启用' after customer_static_price_flag;

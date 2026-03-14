@@ -47,6 +47,8 @@ public class SystemConfig {
 
     private String customerStaticPriceFlag;
 
+    private String materialPriceTaxFlag;
+
     private Long tenantId;
 
     private String deleteFlag;
@@ -233,6 +235,14 @@ public class SystemConfig {
 
     public void setCustomerStaticPriceFlag(String customerStaticPriceFlag) {
         this.customerStaticPriceFlag = customerStaticPriceFlag == null ? null : customerStaticPriceFlag.trim();
+    }
+
+    public String getMaterialPriceTaxFlag() {
+        return materialPriceTaxFlag;
+    }
+
+    public void setMaterialPriceTaxFlag(String materialPriceTaxFlag) {
+        this.materialPriceTaxFlag = materialPriceTaxFlag == null ? null : materialPriceTaxFlag.trim();
     }
 
     public Long getTenantId() {
