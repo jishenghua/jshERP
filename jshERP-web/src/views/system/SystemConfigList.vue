@@ -2,155 +2,156 @@
   <a-card :style="cardStyle" :bordered="false">
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司名称">
-              <a-input placeholder="请输入公司名称" v-decorator.trim="[ 'companyName' ]" @change="handleCompanyName" />
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="联系人">
-              <a-input placeholder="请输入联系人" v-decorator.trim="[ 'companyContacts' ]" @change="handleCompanyContacts" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司地址">
-              <a-input placeholder="请输入公司地址" v-decorator.trim="[ 'companyAddress' ]" @change="handleCompanyAddress" />
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司电话">
-              <a-input placeholder="请输入公司电话" v-decorator.trim="[ 'companyTel' ]" @change="handleCompanyTel" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司传真">
-              <a-input placeholder="请输入公司传真" v-decorator.trim="[ 'companyFax' ]" @change="handleCompanyFax" />
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="公司邮编">
-              <a-input placeholder="请输入公司邮编" v-decorator.trim="[ 'companyPostCode' ]" @change="handleCompanyPostCode" />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="销售协议">
-              <a-input placeholder="请输入销售协议" v-decorator.trim="[ 'saleAgreement' ]" @change="handleSaleAgreement" />
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24"></a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="分配仓库权限">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="depotFlagSwitch" @change="onDepotChange"></a-switch>
-              （启用后，需要到<b>用户管理</b>进行<b>分配仓库</b>，针对专人管理仓库的场景）
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="分配客户权限">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerFlagSwitch" @change="onCustomerChange"></a-switch>
-              （启用后，需要到<b>用户管理</b>进行<b>分配客户</b>，针对销售员只能看自己客户的场景）
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支持负库存">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
-              （启用后，单据<b>支持负库存</b>录入，不会再提示库存不足）
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="以销定购">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="purchaseBySaleFlagSwitch" @change="onPurchaseBySaleChange"></a-switch>
-              （启用后，根据<b>销售订单</b>来定制<b>采购订单</b>，进货后再发给客户）
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="超出关联单据">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="overLinkBillFlagSwitch" @change="onOverLinkBillChange"></a-switch>
-              （启用后，允许当前单据<b>超出关联单据</b>的商品数量进行出入库）
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="更新单价">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="updateUnitPriceFlagSwitch" @change="onUpdateUnitPriceChange"></a-switch>
-              （启用后，会根据单据录入自动更新商品单价，默认是启用状态）
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="强审核">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="forceApprovalFlagSwitch" @change="onForceApprovalChange"></a-switch>
-              （启用后，只有<b>已审核</b>的单据才能产生库存，涉及库存查询的相关报表。启用或关闭后需到<b>商品管理</b>批量<b>修正库存</b>，请按实际业务谨慎操作）
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="出入库管理">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="inOutManageFlagSwitch" @change="onInOutManageChange"></a-switch>
-              （启用后，采购销售相关单据都需经过<b>其它出入库</b>单据，才能产生库存。启用或关闭后需到<b>商品管理</b>批量<b>修正库存</b>，请按实际业务谨慎操作）
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多账户">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiAccountFlagSwitch" @change="onMultiAccountChange"></a-switch>
-              （启用后，采购订单、采购入库、采购退货、销售订单、销售出库、销售退货等单据的结算账户可以进行多账户选择）
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="移动平均价">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="moveAvgPriceFlagSwitch" @change="onMoveAvgPriceChange"></a-switch>
-              （默认为关闭状态，代表成本价等于商品信息页面录入的采购价。开启之后将通过移动平均来计算成本价，需到<b>商品管理</b>批量<b>修正成本</b>，请按实际业务谨慎操作）
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="先审核后打印">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="auditPrintFlagSwitch" @change="onAuditPrintChange"></a-switch>
-              （启用后，零售管理、采购管理、销售管理和仓库管理下的单据，都需要先审核之后才能进行打印）
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零收付款">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="zeroChangeAmountFlagSwitch" @change="onZeroChangeAmountChange"></a-switch>
-              （启用后，销售出库单据新建时默认<b>本次收款</b>为0，采购入库单据同理）
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row class="form-row" :gutter="24">
-          <a-col :lg="12" :md="12" :sm="24">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户静态单价">
-                <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerStaticPriceFlagSwitch" @change="onCustomerStaticPriceChange"></a-switch>
-              （启用后，客户的销售出库的单价不会从该客户历史单据的单价获取，而是只从商品信息获取）
-            </a-form-item>
-          </a-col>
-          <a-col :lg="12" :md="12" :sm="24" v-if="isShowApproval">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
-              <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
-              <a-select placeholder="请选择流程类型" v-model="multiBillTypeSelect" style="width:400px;padding-left:10px"
-                        mode="multiple" :maxTagCount="6" :dropdownMatchSelectWidth="false"
-                        showSearch allow-clear optionFilterProp="children" @change="onMultiBillTypeChange">
-                <a-select-option v-for="(item,index) in billTypeList" :key="index" :value="item.key">
-                  {{ item.value }}
-                </a-select-option>
-              </a-select>
-              <br/>（启用后，多级审核需配置流程，开启后需刷新浏览器才能看到效果）<a-button type="link" @click="handleReload">点此刷新</a-button>
-            </a-form-item>
-          </a-col>
-        </a-row>
+        <div class="tabs-header">
+          <a-tabs :active-key="activeKey" @change="handleTabChange">
+            <a-tab-pane key="sec1" tab="基本资料" />
+            <a-tab-pane key="sec2" tab="配置信息" />
+          </a-tabs>
+        </div>
+        <div class="content-container" :style="contentStyle" ref="container">
+          <div id="sec1" class="section" ref="sec1">
+            <h2>基本资料</h2>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="baseWrapperCol" label="公司名称">
+                  <a-input placeholder="请输入公司名称" v-decorator.trim="[ 'companyName' ]" @change="handleCompanyName" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="baseWrapperCol" label="联系人">
+                  <a-input placeholder="请输入联系人" v-decorator.trim="[ 'companyContacts' ]" @change="handleCompanyContacts" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="baseWrapperCol" label="公司地址">
+                  <a-input placeholder="请输入公司地址" v-decorator.trim="[ 'companyAddress' ]" @change="handleCompanyAddress" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="baseWrapperCol" label="公司电话">
+                  <a-input placeholder="请输入公司电话" v-decorator.trim="[ 'companyTel' ]" @change="handleCompanyTel" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="baseWrapperCol" label="公司传真">
+                  <a-input placeholder="请输入公司传真" v-decorator.trim="[ 'companyFax' ]" @change="handleCompanyFax" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="baseWrapperCol" label="公司邮编">
+                  <a-input placeholder="请输入公司邮编" v-decorator.trim="[ 'companyPostCode' ]" @change="handleCompanyPostCode" />
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="baseWrapperCol" label="销售协议">
+                  <a-input placeholder="请输入销售协议" v-decorator.trim="[ 'saleAgreement' ]" @change="handleSaleAgreement" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </div>
+          <div id="sec2" class="section" ref="sec2">
+            <h2>配置信息</h2>
+            <a-row class="form-row" :gutter="24">
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="分配仓库权限">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="depotFlagSwitch" @change="onDepotChange"></a-switch>
+                  （启用后，需要到<b>用户管理</b>进行<b>分配仓库</b>，针对专人管理仓库的场景）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="分配客户权限">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerFlagSwitch" @change="onCustomerChange"></a-switch>
+                  （启用后，需要到<b>用户管理</b>进行<b>分配客户</b>，针对销售员只能看自己客户的场景）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="支持负库存">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="minusStockFlagSwitch" @change="onMinusStockChange"></a-switch>
+                  （启用后，单据<b>支持负库存</b>录入，不会再提示库存不足）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="以销定购">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="purchaseBySaleFlagSwitch" @change="onPurchaseBySaleChange"></a-switch>
+                  （启用后，根据<b>销售订单</b>来定制<b>采购订单</b>，进货后再发给客户）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="超出关联单据">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="overLinkBillFlagSwitch" @change="onOverLinkBillChange"></a-switch>
+                  （启用后，允许当前单据<b>超出关联单据</b>的商品数量进行出入库）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="更新单价">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="updateUnitPriceFlagSwitch" @change="onUpdateUnitPriceChange"></a-switch>
+                  （启用后，会根据单据录入自动更新商品单价，默认是启用状态）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="强审核">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="forceApprovalFlagSwitch" @change="onForceApprovalChange"></a-switch>
+                  （启用后，只有<b>已审核</b>的单据才能产生库存，涉及库存查询的相关报表。启用或关闭后需到<b>商品管理</b>批量<b>修正库存</b>，请按实际业务谨慎操作）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="出入库管理">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="inOutManageFlagSwitch" @change="onInOutManageChange"></a-switch>
+                  （启用后，采购销售相关单据都需经过<b>其它出入库</b>单据，才能产生库存。启用或关闭后需到<b>商品管理</b>批量<b>修正库存</b>，请按实际业务谨慎操作）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多账户">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiAccountFlagSwitch" @change="onMultiAccountChange"></a-switch>
+                  （启用后，采购订单、采购入库、采购退货、销售订单、销售出库、销售退货等单据的结算账户可以进行多账户选择）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="移动平均价">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="moveAvgPriceFlagSwitch" @change="onMoveAvgPriceChange"></a-switch>
+                  （默认为关闭状态，代表成本价等于商品信息页面录入的采购价。开启之后将通过移动平均来计算成本价，需到<b>商品管理</b>批量<b>修正成本</b>，请按实际业务谨慎操作）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="先审核后打印">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="auditPrintFlagSwitch" @change="onAuditPrintChange"></a-switch>
+                  （启用后，零售管理、采购管理、销售管理和仓库管理下的单据，都需要先审核之后才能进行打印）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="零收付款">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="zeroChangeAmountFlagSwitch" @change="onZeroChangeAmountChange"></a-switch>
+                  （启用后，销售出库单据新建时默认<b>本次收款</b>为0，采购入库单据同理）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="客户静态单价">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="customerStaticPriceFlagSwitch" @change="onCustomerStaticPriceChange"></a-switch>
+                  （启用后，客户的销售出库的单价不会从该客户历史单据的单价获取，而是只从商品信息获取）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="商品价格含税">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="materialPriceTaxFlagSwitch" @change="onMaterialPriceTaxChange"></a-switch>
+                  （启用后，商品中录入的价格变成含税价格，在单据录入中包含了税额）
+                </a-form-item>
+              </a-col>
+              <a-col :lg="24" :md="24" :sm="24" v-if="isShowApproval">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="多级审核">
+                  <a-switch checked-children="启用" un-checked-children="关闭" v-model="multiLevelApprovalFlagSwitch" @change="onMultiLevelApprovalChange"></a-switch>
+                  <a-select placeholder="请选择流程类型" v-model="multiBillTypeSelect" style="width:400px;padding-left:10px"
+                            mode="multiple" :maxTagCount="6" :dropdownMatchSelectWidth="false"
+                            showSearch allow-clear optionFilterProp="children" @change="onMultiBillTypeChange">
+                    <a-select-option v-for="(item,index) in billTypeList" :key="index" :value="item.key">
+                      {{ item.value }}
+                    </a-select-option>
+                  </a-select>
+                  （启用后，多级审核需配置流程，开启后需刷新浏览器才能看到效果）<a-button type="link" @click="handleReload">点此刷新</a-button>
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </div>
+        </div>
       </a-form>
     </a-spin>
   </a-card>
@@ -174,6 +175,8 @@
       return {
         title:"操作",
         cardStyle: '',
+        contentStyle: '',
+        activeKey: 'sec1',
         visible: true,
         model: {},
         depotFlagSwitch: false, //仓库权限状态
@@ -194,13 +197,18 @@
         auditPrintFlagSwitch: false, //先审核后打印
         zeroChangeAmountFlagSwitch: false, //零收付款
         customerStaticPriceFlagSwitch: false, //客户静态单价
+        materialPriceTaxFlagSwitch: false, //商品价格含税
         labelCol: {
           xs: { span: 24 },
-          sm: { span: 5 },
+          sm: { span: 2 },
+        },
+        baseWrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 12 },
         },
         wrapperCol: {
           xs: { span: 24 },
-          sm: { span: 16 },
+          sm: { span: 18 },
         },
         confirmLoading: false,
         form: this.$form.createForm(this),
@@ -232,10 +240,24 @@
       this.init()
       this.loadPlugins()
       if(this.isDesktop()) {
-        this.cardStyle = 'height:' + (document.documentElement.clientHeight-52) + 'px'
+        this.cardStyle = 'height:' + (document.documentElement.clientHeight-100) + 'px'
+        this.contentStyle = 'height:' + (document.documentElement.clientHeight-220) + 'px'
       }
     },
     methods: {
+      handleTabChange(key) {
+        this.activeKey = key
+        // 使用 setTimeout 确保 DOM 更新完成
+        this.$nextTick(() => {
+          const element = document.getElementById(key)
+          if (element) {
+            element.scrollIntoView({
+              behavior: 'smooth',  // 平滑滚动
+              block: 'start'       // 滚动到顶部
+            })
+          }
+        })
+      },
       //初始化加载内容
       init () {
         let param = {
@@ -300,6 +322,9 @@
               }
               if (record.customerStaticPriceFlag != null) {
                 this.customerStaticPriceFlagSwitch = record.customerStaticPriceFlag == '1' ? true : false;
+              }
+              if (record.materialPriceTaxFlag != null) {
+                this.materialPriceTaxFlagSwitch = record.materialPriceTaxFlag == '1' ? true : false;
               }
             }
           } else {
@@ -433,6 +458,10 @@
         this.model.customerStaticPriceFlag = checked?'1':'0'
         this.handleChange()
       },
+      onMaterialPriceTaxChange(checked) {
+        this.model.materialPriceTaxFlag = checked?'1':'0'
+        this.handleChange()
+      },
       //改变内容
       handleChange() {
         this.confirmLoading = true
@@ -461,4 +490,53 @@
 </script>
 <style scoped>
   @import '~@assets/less/common.less'
+</style>
+<style>
+.ant-form-item {
+  margin-bottom: 12px;
+}
+.tabs-header {
+  flex-shrink: 0;  /* 防止被压缩 */
+  background: white;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 8px;
+}
+/* 固定高度的滚动容器 */
+.content-container {
+  overflow-y: auto;   /* 出现滚动条 */
+  padding: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* 每个区域样式 */
+.section {
+  margin-bottom: 24px;
+  padding: 10px 10px 10px 20px;
+  background-color: #fafafa;
+  border-radius: 4px;
+  min-height: 200px;
+  font-size: 12px;
+}
+
+.section h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #1890ff;
+  border-bottom: 1px solid #e8e8e8;
+  padding-bottom: 8px;
+}
+
+/* 可选的滚动条美化 */
+.content-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.content-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
 </style>
