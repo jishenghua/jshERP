@@ -1424,10 +1424,21 @@ public class DepotItemService {
                         allPrice = unitPrice.multiply(operNumber).setScale(2, BigDecimal.ROUND_HALF_UP);
                     }
                     BigDecimal taxMoney = BigDecimal.ZERO;
-                    if(taxRate.compareTo(BigDecimal.ZERO) != 0) {
-                        taxMoney = taxRate.multiply(allPrice).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                    BigDecimal taxLastMoney = BigDecimal.ZERO;
+                    if(systemConfigService.getMaterialPriceTaxFlag()) {
+                        //商品价格含税-开启
+                        if(taxRate.compareTo(BigDecimal.ZERO) != 0) {
+                            BigDecimal taxRatePercent = taxRate.divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                            taxMoney = allPrice.divide(BigDecimal.ONE.add(taxRatePercent), 2, BigDecimal.ROUND_HALF_UP)
+                                    .multiply(taxRatePercent).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        }
+                        taxLastMoney = allPrice;
+                    } else {
+                        if(taxRate.compareTo(BigDecimal.ZERO) != 0) {
+                            taxMoney = taxRate.multiply(allPrice).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                        }
+                        taxLastMoney = allPrice.add(taxMoney);
                     }
-                    BigDecimal taxLastMoney = allPrice.add(taxMoney);
                     item.put("allPrice", allPrice);
                     item.put("taxRate", taxRate);
                     item.put("taxMoney", taxMoney);

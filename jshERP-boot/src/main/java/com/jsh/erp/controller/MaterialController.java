@@ -669,13 +669,25 @@ public class MaterialController extends BaseController {
                     //税额
                     BigDecimal taxMoney = BigDecimal.ZERO;
                     if(taxRate.compareTo(BigDecimal.ZERO) != 0 && mvo.getBillPrice()!=null) {
-                        taxMoney = taxRate.multiply(mvo.getBillPrice()).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                        if(systemConfigService.getMaterialPriceTaxFlag()) {
+                            //商品价格含税-开启
+                            BigDecimal taxRatePercent = taxRate.divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                            taxMoney = mvo.getBillPrice().divide(BigDecimal.ONE.add(taxRatePercent), 2, BigDecimal.ROUND_HALF_UP)
+                                    .multiply(taxRatePercent).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        } else {
+                            taxMoney = taxRate.multiply(mvo.getBillPrice()).divide(BigDecimal.valueOf(100), 2, BigDecimal.ROUND_HALF_UP);
+                        }
                     }
                     mvo.setTaxMoney(taxMoney);
                     //价税合计
                     BigDecimal taxLastMoney = BigDecimal.ZERO;
                     if(mvo.getBillPrice()!=null) {
-                        taxLastMoney = mvo.getBillPrice().add(taxMoney);
+                        if(systemConfigService.getMaterialPriceTaxFlag()) {
+                            //商品价格含税-开启
+                            taxLastMoney = mvo.getBillPrice();
+                        } else {
+                            taxLastMoney = mvo.getBillPrice().add(taxMoney);
+                        }
                     }
                     mvo.setTaxLastMoney(taxLastMoney);
                 }

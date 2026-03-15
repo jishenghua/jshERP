@@ -637,6 +637,23 @@ public class SystemConfigService {
     }
 
     /**
+     * 获取商品价格含税开关
+     * @return
+     * @throws Exception
+     */
+    public boolean getMaterialPriceTaxFlag() throws Exception {
+        boolean materialPriceTaxFlag = false;
+        List<SystemConfig> list = getSystemConfig();
+        if(list.size()>0) {
+            String flag = list.get(0).getMaterialPriceTaxFlag();
+            if(("1").equals(flag)) {
+                materialPriceTaxFlag = true;
+            }
+        }
+        return materialPriceTaxFlag;
+    }
+
+    /**
      * Excel导出统一方法
      * @param title
      * @param head
