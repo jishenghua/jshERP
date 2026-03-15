@@ -475,8 +475,14 @@
               info.operNumber = info.preNumber - info.finishNumber
               info.allPrice = info.operNumber * info.unitPrice-0
               let taxRate = info.taxRate-0
-              info.taxMoney = (info.allPrice*taxRate/100).toFixed(2)-0
-              info.taxLastMoney = (info.allPrice + info.taxMoney).toFixed(2)-0
+              if(this.materialPriceTaxFlag) {
+                let realAllPrice = (info.allPrice/(1+taxRate*0.01)).toFixed(2)-0
+                info.taxMoney = (realAllPrice*taxRate*0.01).toFixed(2)-0
+                info.taxLastMoney = info.allPrice
+              } else {
+                info.taxMoney = (info.allPrice*taxRate/100).toFixed(2)-0
+                info.taxLastMoney = (info.allPrice + info.taxMoney).toFixed(2)-0
+              }
             }
             info.linkId = info.id
             allTaxLastMoney += info.taxLastMoney
