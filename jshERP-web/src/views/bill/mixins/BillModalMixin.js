@@ -1163,7 +1163,18 @@ export const BillModalMixin = {
           discountLastMoney += data[i].taxLastMoney
           this.changeColumnShow(data[i])
         }
-        this.form.setFieldsValue({'discountLastMoney':discountLastMoney})
+        let changeAmount = 0
+        let debt = 0
+        if(this.prefixNo === 'CGRK' || this.prefixNo === 'XSCK') {
+          if(this.zeroChangeAmountFlag) {
+            changeAmount = 0
+            debt = discountLastMoney
+          } else {
+            changeAmount = discountLastMoney
+            debt = 0
+          }
+        }
+        this.form.setFieldsValue({'discountLastMoney':discountLastMoney, 'changeAmount':changeAmount, 'debt': debt})
       });
     },
     //保存并审核
