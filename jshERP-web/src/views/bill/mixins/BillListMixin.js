@@ -16,6 +16,8 @@ export const BillListMixin = {
       isShowExcel: false,
       //以销定购的场景开关
       purchaseBySaleFlag: false,
+      //商品价格含税开关
+      materialPriceTaxFlag: false,
       setTimeFlag: null,
       waitTotal: 0,
       dateFormat: 'YYYY-MM-DD',
@@ -604,6 +606,7 @@ export const BillListMixin = {
           this.checkFlag = getCheckFlag(multiBillType, multiLevelApprovalFlag, this.prefixNo)
           this.purchaseBySaleFlag = res.data.purchaseBySaleFlag==='1'?true:false
           this.inOutManageFlag = res.data.inOutManageFlag==='1'?true:false
+          this.materialPriceTaxFlag = res.data.materialPriceTaxFlag==='1'?true:false
         }
       })
       getPlatformConfigByKey({ "platformKey": "bill_excel_url" }).then((res) => {
@@ -819,6 +822,7 @@ export const BillListMixin = {
                 this.$refs.transferModalForm.action = "add"
                 this.$refs.transferModalForm.transferParam = transferParam
                 this.$refs.transferModalForm.defaultDepotId = this.defaultDepotId
+                this.$refs.transferModalForm.materialPriceTaxFlag = this.materialPriceTaxFlag
                 this.$refs.transferModalForm.add()
                 this.$refs.transferModalForm.title = type
                 if(quickBtnStr.indexOf(2)===-1) {
