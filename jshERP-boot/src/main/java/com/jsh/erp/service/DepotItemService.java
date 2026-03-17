@@ -393,7 +393,9 @@ public class DepotItemService {
             //针对组装单、拆卸单校验是否存在组合件和普通子件
             checkAssembleWithMaterialType(rowArr, depotHead.getSubType());
             //校验多行明细当中是否存在重复的序列号
-            checkSerialNumberRepeat(rowArr);
+            checkSerialNumberRepeatWithCurrent(rowArr);
+            //校验多行明细中的序列号与历史单据里面是否重复
+            checkSerialNumberRepeatWithHistory(rowArr, depotHead);
             List<DepotItem> depotItemList = new ArrayList<>();
             for (int i = 0; i < rowArr.size(); i++) {
                 DepotItem depotItem = new DepotItem();
@@ -894,7 +896,7 @@ public class DepotItemService {
      * 校验多行明细当中是否存在重复的序列号
      * @param rowArr
      */
-    public void checkSerialNumberRepeat(JSONArray rowArr) {
+    public void checkSerialNumberRepeatWithCurrent(JSONArray rowArr) {
         List<String> allSnArr = new ArrayList<>();
         for (int i = 0; i < rowArr.size(); i++) {
             JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
@@ -917,6 +919,50 @@ public class DepotItemService {
         if(!duplicates.isEmpty()) {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_MSG, String.join(", ", duplicates)));
+        }
+    }
+
+    /**
+     * 校验多行明细中的序列号与历史单据里面是否重复
+     * @param rowArr
+     * @param depotHead
+     */
+    private void checkSerialNumberRepeatWithHistory(JSONArray rowArr, DepotHead depotHead) {
+        List<String> allSnArr = new ArrayList<>();
+        for (int i = 0; i < rowArr.size(); i++) {
+            JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
+            if(StringUtil.isNotEmpty(rowObj.getString("snList"))) {
+                String snList = rowObj.getString("snList");
+                snList = snList.replaceAll("，", ",");
+                List<String> snArr = StringUtil.strToStringList(snList);
+                if(snArr!=null && !snArr.isEmpty()) {
+                    allSnArr.addAll(snArr);
+                }
+            }
+        }
+        if(!allSnArr.isEmpty()) {
+            List<String> historySnList = depotItemMapperEx.getHistorySnList(depotHead.getType());
+            for(String item: historySnList) {
+                String itemList = item.replaceAll("，", ",");
+                List<String> historySnArr = StringUtil.strToStringList(itemList);
+                if(historySnArr!=null && !historySnArr.isEmpty()) {
+                    List<String> checkSnArr = new ArrayList<>();
+                    checkSnArr.addAll(allSnArr);
+                    checkSnArr.addAll(historySnArr);
+                    //拿当前单据里面的全部序列号与历史单据的每个单据去分别对比
+                    Set<String> seen = new HashSet<>();
+                    Set<String> duplicates = new HashSet<>();
+                    for (String str : checkSnArr) {
+                        if (!seen.add(str)) {
+                            duplicates.add(str);
+                        }
+                    }
+                    if(!duplicates.isEmpty()) {
+                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_HISTORY_CODE,
+                                String.format(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_HISTORY_MSG, String.join(", ", duplicates)));
+                    }
+                }
+            }
         }
     }
 

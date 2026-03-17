@@ -1156,4 +1156,12 @@
         limit 0,1
     </select>
 
+    <select id="getHistorySnList" resultType="java.lang.String">
+        select di.sn_list from jsh_depot_head dh
+        left join jsh_depot_item di on dh.id=di.header_id and ifnull(di.delete_flag,'0') !='1'
+        where dh.type = #{type}
+        and di.sn_list != ''
+        and ifnull(dh.delete_flag,'0') !='1'
+    </select>
+
 </mapper>
