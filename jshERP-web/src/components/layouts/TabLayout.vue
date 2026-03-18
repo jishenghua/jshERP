@@ -77,12 +77,8 @@
         return this.componentsArr.filter(item => item.hasOpen)
       },
       multipage() {
-        //判断如果是手机模式，自动切换为单页面模式
-        if (this.isMobile()) {
-          return false
-        } else {
-          return this.$store.state.app.multipage
-        }
+        //根据配置来返回页面是否是多页签模式
+        return this.$store.state.app.multipage
       },
       includedComponents() {
         const includedRouters = Vue.ls.get(CACHE_INCLUDED_ROUTES)
