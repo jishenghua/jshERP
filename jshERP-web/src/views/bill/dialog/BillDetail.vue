@@ -1409,6 +1409,7 @@
           { title: '单位', dataIndex: 'unit'},
           { title: '多属性', dataIndex: 'sku'},
           { title: '数量', dataIndex: 'operNumber'},
+          { title: '已采购', dataIndex: 'finishPurchaseNumber'},
           { title: '已销售', dataIndex: 'finishNumber'},
           { title: '单价', dataIndex: 'unitPrice'},
           { title: '金额', dataIndex: 'allPrice'},
@@ -1698,9 +1699,13 @@
           if(ds[i].remark) {
             needAddkeywords.push('remark')
           }
-          if(record.status === '3' || record.purchaseStatus === '3') {
-            //部分采购|部分销售|销售订单转采购订单的场景
+          if(record.status === '3') {
+            //部分采购|部分销售
             needAddkeywords.push('finishNumber')
+          }
+          if(record.purchaseStatus === '3') {
+            //销售订单转采购订单的场景
+            needAddkeywords.push('finishPurchaseNumber')
           }
         }
         let currentCol = [{title:'#',dataIndex:'',align:'center',
@@ -1715,8 +1720,8 @@
         }]
         for(let i=0; i<this.defColumns.length; i++){
           //移除列
-          let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position',
-            'brand','mfrs','otherField1','otherField2','otherField3','taxRate','remark']
+          let needRemoveKeywords = ['finishNumber','finishPurchaseNumber','snList','batchNumber','expirationDate','sku',
+            'weight','position','brand','mfrs','otherField1','otherField2','otherField3','taxRate','remark']
           if(needRemoveKeywords.indexOf(this.defColumns[i].dataIndex)===-1) {
             let info = {}
             info.title = this.defColumns[i].title
@@ -1736,12 +1741,6 @@
             info.dataIndex = this.defColumns[i].dataIndex
             if(this.defColumns[i].width) {
               info.width = this.defColumns[i].width
-            }
-            if(record.purchaseStatus === '3') {
-              //将已出库的标题转为已采购，针对销售订单转采购订单的场景
-              if(this.defColumns[i].dataIndex === 'finishNumber') {
-                info.title = '已采购'
-              }
             }
             currentCol.push(info)
           }
@@ -1990,21 +1989,25 @@
       //采购订单|销售订单
       orderExportExcel() {
         let list = []
-        let finishType = ''
         let organType = ''
+        let head = ''
         if(this.billType === '采购订单') {
-          finishType = '已入库'
           organType = '供应商：'
+          head = '条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,单位,多属性,数量,已采购,单价,金额,税率(%),税额,价税合计,备注'
         } else if(this.billType === '销售订单') {
-          finishType = '已出库'
           organType = '客户：'
+          head = '条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,单位,多属性,数量,已采购,已销售,单价,金额,税率(%),税额,价税合计,备注'
         }
-        let head = '条码,名称,规格,型号,颜色,' + this.otherFieldTitle + ',库存,单位,多属性,数量,' + finishType + ',单价,金额,税率(%),税额,价税合计,备注'
         for (let i = 0; i < this.dataSource.length; i++) {
           let item = []
           let ds = this.dataSource[i]
-          item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit, ds.sku,
-            ds.operNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark)
+          if(this.billType === '采购订单') {
+            item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit, ds.sku,
+              ds.operNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark)
+          } else if(this.billType === '销售订单') {
+            item.push(ds.barCode, ds.name, ds.standard, ds.model, ds.color, ds.otherField1, ds.otherField2, ds.otherField3, ds.stock, ds.unit, ds.sku,
+              ds.operNumber, ds.finishPurchaseNumber, ds.finishNumber, ds.unitPrice, ds.allPrice, ds.taxRate, ds.taxMoney, ds.taxLastMoney, ds.remark)
+          }
           list.push(item)
         }
         let organName = this.model.organName? this.model.organName: ''

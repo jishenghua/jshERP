@@ -364,6 +364,10 @@
               let listEx = []
               for(let j=0; j<list.length; j++){
                 let info = list[j];
+                if(this.queryParam.subType === '销售订单' && this.showType === 'purchase') {
+                  //此时是销售订单转采购订单的场景
+                  info.finishNumber = info.finishPurchaseNumber
+                }
                 if(info.finishNumber < info.preNumber) {
                   //去掉已经全部转换的明细，只加载未转换完的明细
                   listEx.push(info)

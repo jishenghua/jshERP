@@ -215,6 +215,7 @@ public class DepotItemController {
                 BigDecimal totalAllPrice = BigDecimal.ZERO;
                 BigDecimal totalTaxMoney = BigDecimal.ZERO;
                 BigDecimal totalTaxLastMoney = BigDecimal.ZERO;
+                BigDecimal totalFinishPurchaseNumber = BigDecimal.ZERO;
                 BigDecimal totalFinishNumber = BigDecimal.ZERO;
                 BigDecimal totalWeight = BigDecimal.ZERO;
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
@@ -253,8 +254,10 @@ public class DepotItemController {
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
+                    BigDecimal finishPurchaseNumber = depotItemService.getFinishPurchaseNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType);
+                    item.put("finishPurchaseNumber", finishPurchaseNumber); //已采购（以销定购的情况）
                     BigDecimal finishNumber = depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType);
-                    item.put("finishNumber", finishNumber); //已入库|已出库
+                    item.put("finishNumber", finishNumber); //已采购|已销售|已入库|已出库
                     item.put("purchaseDecimal", roleService.parseBillPriceByLimit(diEx.getPurchaseDecimal(), billCategory, priceLimit, request));  //采购价
                     if("basic".equals(linkType) || "1".equals(isReadOnly)) {
                         //正常情况显示金额，而以销定购的情况不能显示金额
@@ -290,6 +293,7 @@ public class DepotItemController {
                     totalAllPrice = totalAllPrice.add(diEx.getAllPrice()==null?BigDecimal.ZERO:diEx.getAllPrice());
                     totalTaxMoney = totalTaxMoney.add(diEx.getTaxMoney()==null?BigDecimal.ZERO:diEx.getTaxMoney());
                     totalTaxLastMoney = totalTaxLastMoney.add(diEx.getTaxLastMoney()==null?BigDecimal.ZERO:diEx.getTaxLastMoney());
+                    totalFinishPurchaseNumber = totalFinishPurchaseNumber.add(finishPurchaseNumber);
                     totalFinishNumber = totalFinishNumber.add(finishNumber);
                     totalWeight = totalWeight.add(allWeight);
                 }
@@ -299,6 +303,7 @@ public class DepotItemController {
                     footItem.put("allPrice", roleService.parseBillPriceByLimit(totalAllPrice, billCategory, priceLimit, request));
                     footItem.put("taxMoney", roleService.parseBillPriceByLimit(totalTaxMoney, billCategory, priceLimit, request));
                     footItem.put("taxLastMoney", roleService.parseBillPriceByLimit(totalTaxLastMoney, billCategory, priceLimit, request));
+                    footItem.put("finishPurchaseNumber", totalFinishPurchaseNumber);
                     footItem.put("finishNumber", totalFinishNumber);
                     footItem.put("weight", totalWeight);
                     dataArray.add(footItem);

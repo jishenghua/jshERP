@@ -202,6 +202,7 @@ export const BillListMixin = {
         { title: '单位', dataIndex: 'unit'},
         { title: '多属性', dataIndex: 'sku'},
         { title: '数量', dataIndex: 'operNumber'},
+        { title: '已采购', dataIndex: 'finishPurchaseNumber'},
         { title: '已销售', dataIndex: 'finishNumber'},
         { title: '单价', dataIndex: 'unitPrice'},
         { title: '金额', dataIndex: 'allPrice'},
@@ -810,6 +811,10 @@ export const BillListMixin = {
                 salesMan: info.salesMan
               }
               if(type === '转采购订单-以销定购') {
+                let list = transferParam.list
+                list.forEach(item => {
+                  item.finishNumber = item.finishPurchaseNumber
+                })
                 this.$refs.transferPurchaseModalForm.action = "add"
                 this.$refs.transferPurchaseModalForm.transferParam = transferParam
                 this.$refs.transferPurchaseModalForm.defaultDepotId = this.defaultDepotId
@@ -974,34 +979,16 @@ export const BillListMixin = {
         }
       }
       let currentCol = []
-      if(record.status === '3') {
+      if(record.status === '3' || record.purchaseStatus === '3') {
         //部分采购|部分销售的时候显示全部列
         for(let i=0; i<this.defDetailColumns.length; i++){
           currentCol.push(this.defDetailColumns[i])
         }
         this.detailColumns = currentCol
-      } else if(record.purchaseStatus === '3') {
-        //将已出库的标题转为已采购，针对销售订单转采购订单的场景
-        for(let i=0; i<this.defDetailColumns.length; i++){
-          let info = {}
-          info.title = this.defDetailColumns[i].title
-          info.dataIndex = this.defDetailColumns[i].dataIndex
-          if(this.defDetailColumns[i].width) {
-            info.width = this.defDetailColumns[i].width
-          }
-          if(this.defDetailColumns[i].dataIndex === 'finishNumber') {
-            info.title = '已采购'
-          }
-          if(this.defDetailColumns[i].dataIndex === 'barCode') {
-            info.scopedSlots = { customRender: 'customBarCode' }
-          }
-          currentCol.push(info)
-        }
-        this.detailColumns = currentCol
       } else {
         for(let i=0; i<this.defDetailColumns.length; i++){
           //移除列
-          let needRemoveKeywords = ['finishNumber','snList','batchNumber','expirationDate','sku','weight','position',
+          let needRemoveKeywords = ['finishNumber','finishPurchaseNumber','snList','batchNumber','expirationDate','sku','weight','position',
             'brand','mfrs','otherField1','otherField2','otherField3','taxRate','remark']
           if(needRemoveKeywords.indexOf(this.defDetailColumns[i].dataIndex)===-1) {
             let info = {}
