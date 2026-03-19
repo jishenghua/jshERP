@@ -263,7 +263,4 @@ public interface DepotItemMapperEx {
             @Param("meId") Long meId,
             @Param("type") String type,
             @Param("subType") String subType);
-
-    List<String> getHistorySnList(
-            @Param("type") String type);
 }

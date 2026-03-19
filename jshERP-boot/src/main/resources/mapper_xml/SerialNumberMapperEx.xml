@@ -224,4 +224,14 @@
         and is_sell = '0'
         and ifnull(delete_flag,'0') !='1'
     </select>
+
+    <select id="getIsSellListByInBillNo" resultType="com.jsh.erp.datasource.entities.SerialNumber">
+        select serial_number from jsh_serial_number
+        where in_bill_no = #{inBillNo}
+        and is_sell = '1'
+        and out_bill_no != ''
+        and ifnull(delete_flag,'0') !='1'
+    </select>
+
+
 </mapper>

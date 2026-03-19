@@ -58,4 +58,7 @@ public interface SerialNumberMapperEx {
     int getIsNotSellCountByParam(
             @Param("materialId") Long materialId,
             @Param("serialNumber") String serialNumber);
+
+    List<SerialNumber> getIsSellListByInBillNo(
+            @Param("inBillNo") String inBillNo);
 }

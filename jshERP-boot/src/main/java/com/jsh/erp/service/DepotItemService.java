@@ -394,8 +394,6 @@ public class DepotItemService {
             checkAssembleWithMaterialType(rowArr, depotHead.getSubType());
             //校验多行明细当中是否存在重复的序列号
             checkSerialNumberRepeatWithCurrent(rowArr);
-            //校验多行明细中的序列号与历史单据里面是否重复
-            checkSerialNumberRepeatWithHistory(rowArr, depotHead);
             List<DepotItem> depotItemList = new ArrayList<>();
             for (int i = 0; i < rowArr.size(); i++) {
                 DepotItem depotItem = new DepotItem();
@@ -848,10 +846,18 @@ public class DepotItemService {
             User userInfo = userService.getCurrentUser();
             if(BusinessConstants.DEPOTHEAD_TYPE_IN.equals(depotHead.getType())){
                 //入库逻辑
-                String number = depotHead.getNumber();
-                SerialNumberExample example = new SerialNumberExample();
-                example.createCriteria().andInBillNoEqualTo(number);
-                serialNumberService.deleteByExample(example);
+                //判断如果有序列号被出库了就不允许修改该单据
+                List<SerialNumber> snList = serialNumberMapperEx.getIsSellListByInBillNo(depotHead.getNumber());
+                if(!snList.isEmpty()){
+                    String sn = snList.get(0).getSerialNumber();
+                    throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_SN_NOT_ALLOW_UPDATE_CODE,
+                            String.format(ExceptionConstants.DEPOT_HEAD_SN_NOT_ALLOW_UPDATE_MSG, sn));
+                } else {
+                    String number = depotHead.getNumber();
+                    SerialNumberExample example = new SerialNumberExample();
+                    example.createCriteria().andInBillNoEqualTo(number);
+                    serialNumberService.deleteByExample(example);
+                }
             } else if(BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(depotHead.getType())){
                 //出库逻辑
                 DepotItemExample example = new DepotItemExample();
@@ -919,50 +925,6 @@ public class DepotItemService {
         if(!duplicates.isEmpty()) {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_MSG, String.join(", ", duplicates)));
-        }
-    }
-
-    /**
-     * 校验多行明细中的序列号与历史单据里面是否重复
-     * @param rowArr
-     * @param depotHead
-     */
-    private void checkSerialNumberRepeatWithHistory(JSONArray rowArr, DepotHead depotHead) {
-        List<String> allSnArr = new ArrayList<>();
-        for (int i = 0; i < rowArr.size(); i++) {
-            JSONObject rowObj = JSONObject.parseObject(rowArr.getString(i));
-            if(StringUtil.isNotEmpty(rowObj.getString("snList"))) {
-                String snList = rowObj.getString("snList");
-                snList = snList.replaceAll("，", ",");
-                List<String> snArr = StringUtil.strToStringList(snList);
-                if(snArr!=null && !snArr.isEmpty()) {
-                    allSnArr.addAll(snArr);
-                }
-            }
-        }
-        if(!allSnArr.isEmpty()) {
-            List<String> historySnList = depotItemMapperEx.getHistorySnList(depotHead.getType());
-            for(String item: historySnList) {
-                String itemList = item.replaceAll("，", ",");
-                List<String> historySnArr = StringUtil.strToStringList(itemList);
-                if(historySnArr!=null && !historySnArr.isEmpty()) {
-                    List<String> checkSnArr = new ArrayList<>();
-                    checkSnArr.addAll(allSnArr);
-                    checkSnArr.addAll(historySnArr);
-                    //拿当前单据里面的全部序列号与历史单据的每个单据去分别对比
-                    Set<String> seen = new HashSet<>();
-                    Set<String> duplicates = new HashSet<>();
-                    for (String str : checkSnArr) {
-                        if (!seen.add(str)) {
-                            duplicates.add(str);
-                        }
-                    }
-                    if(!duplicates.isEmpty()) {
-                        throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_HISTORY_CODE,
-                                String.format(ExceptionConstants.DEPOT_HEAD_CHECK_SERIAL_NUMBER_REPEAT_HISTORY_MSG, String.join(", ", duplicates)));
-                    }
-                }
-            }
         }
     }
 
