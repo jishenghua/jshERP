@@ -14,6 +14,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -52,6 +53,9 @@ public class SupplierService {
     private UserBusinessService userBusinessService;
     @Resource
     private UserBusinessMapper userBusinessMapper;
+
+    @Value(value="${file.exportTmp}")
+    private String fileExportTmp;
 
     public Supplier getSupplier(long id)throws Exception {
         Supplier result=null;
@@ -612,7 +616,7 @@ public class SupplierService {
                     objects.add(objs);
                 }
             }
-            return ExcelUtils.exportObjectsOneSheet(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
+            return ExcelUtils.exportObjectsOneSheet(fileExportTmp, title, "*导入时本行内容请勿删除，切记！", names, title, objects);
         }
     }
 
@@ -652,7 +656,7 @@ public class SupplierService {
                 objects.add(objs);
             }
         }
-        return ExcelUtils.exportObjectsOneSheet(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
+        return ExcelUtils.exportObjectsOneSheet(fileExportTmp, title, "*导入时本行内容请勿删除，切记！", names, title, objects);
     }
 
     /**

@@ -112,9 +112,10 @@ public class ExcelUtils {
 	 * @throws Exception
 	 */
 
-	public static File exportObjectsOneSheet(String fileName, String tip,
+	public static File exportObjectsOneSheet(String path, String fileName, String tip,
 											 String[] names, String title, List<Object[]> objects) throws Exception {
-		File excelFile = new File("/opt/"+ fileName);
+		FileUtils.makedir(path);
+		File excelFile = new File(path + File.separator + fileName);
 		WritableWorkbook wtwb = Workbook.createWorkbook(excelFile);
 		WritableSheet sheet = wtwb.createSheet(title, 0);
 		sheet.getSettings().setDefaultColumnWidth(12);

@@ -62,6 +62,9 @@ public class SystemConfigService {
     @Value(value="${file.path}")
     private String filePath;
 
+    @Value(value="${file.exportTmp}")
+    private String fileExportTmp;
+
     private static String DELETED = "deleted";
 
     public SystemConfig getSystemConfig(long id)throws Exception {
@@ -678,7 +681,7 @@ public class SystemConfigService {
                 objects.add(objs);
             }
         }
-        File file = ExcelUtils.exportObjectsOneSheet(title, tip, names, title, objects);
+        File file = ExcelUtils.exportObjectsOneSheet(fileExportTmp, title, tip, names, title, objects);
         ExcelUtils.downloadExcel(file, file.getName(), response);
     }
 }

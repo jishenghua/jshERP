@@ -75,6 +75,9 @@ public class MaterialService {
     @Value(value="${file.uploadType}")
     private Long fileUploadType;
 
+    @Value(value="${file.exportTmp}")
+    private String fileExportTmp;
+
     private static final Integer EXPORT_LIMIT = 10000;
 
     public Material getMaterial(long id)throws Exception {
@@ -483,7 +486,7 @@ public class MaterialService {
         List<MaterialVo4Unit> dataList = materialMapperEx.exportExcel(materialParam, color, materialOther, weight, expiryNum, enabled, enableSerialNumber,
                 enableBatchNumber, remark, idList);
         if (null != dataList && dataList.size() > EXPORT_LIMIT) {
-            File file = ExcelUtils.exportObjectsOneSheet(title, "单次导出条数超出限制（1万条）", new String[0], title, new ArrayList<>());
+            File file = ExcelUtils.exportObjectsOneSheet(fileExportTmp, title, "单次导出条数超出限制（1万条）", new String[0], title, new ArrayList<>());
             ExcelUtils.downloadExcel(file, file.getName(), response);
             return;
         }
@@ -558,7 +561,7 @@ public class MaterialService {
                 objects.add(objs);
             }
         }
-        File file = ExcelUtils.exportObjectsOneSheet(title, "*导入时本行内容请勿删除，切记！", names, title, objects);
+        File file = ExcelUtils.exportObjectsOneSheet(fileExportTmp, title, "*导入时本行内容请勿删除，切记！", names, title, objects);
         ExcelUtils.downloadExcel(file, file.getName(), response);
     }
 

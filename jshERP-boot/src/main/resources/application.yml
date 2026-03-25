@@ -53,3 +53,5 @@ file:
   uploadType: 1
   # 文件上传根目录
   path: /opt/jshERP/upload
+  # 文件导出缓存
+  exportTmp: /opt/jshERP/export

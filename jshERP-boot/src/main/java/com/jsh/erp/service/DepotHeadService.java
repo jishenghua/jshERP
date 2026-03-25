@@ -19,6 +19,7 @@ import jxl.Workbook;
 import jxl.write.WritableWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -78,6 +79,9 @@ public class DepotHeadService {
     DepotItemMapperEx depotItemMapperEx;
     @Resource
     private LogService logService;
+
+    @Value(value="${file.exportTmp}")
+    private String fileExportTmp;
 
     public DepotHead getDepotHead(long id)throws Exception {
         DepotHead result=null;
@@ -1526,7 +1530,7 @@ public class DepotHeadService {
             }
             //生成Excel文件
             String fileName = "单据信息";
-            File file = new File("/opt/"+ fileName);
+            File file = new File(fileExportTmp + fileName);
             WritableWorkbook wtwb = Workbook.createWorkbook(file);
             String oneTip = "";
             String sheetOneStr = "";
