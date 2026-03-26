@@ -573,7 +573,7 @@ public class MaterialService {
             //文件扩展名只能为xls
             String fileName = file.getOriginalFilename();
             if(StringUtil.isNotEmpty(fileName)) {
-                String fileExt = fileName.substring(fileName.indexOf(".")+1);
+                String fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
                 if(!"xls".equals(fileExt)) {
                     throw new BusinessRunTimeException(ExceptionConstants.FILE_EXTENSION_ERROR_CODE,
                             ExceptionConstants.FILE_EXTENSION_ERROR_MSG);
