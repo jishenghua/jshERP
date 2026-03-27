@@ -1759,3 +1759,11 @@ alter table jsh_orga_user_rel change orga_id orga_id bigint(0) NULL DEFAULT NULL
 -- 给系统参数表增加商品价格含税启用标记，启用后，商品中录入的价格就含税
 -- --------------------------------------------------------
 alter table jsh_system_config add material_price_tax_flag varchar(1) DEFAULT '0' COMMENT '商品价格含税启用标记，0未启用，1启用' after customer_static_price_flag;
+
+-- --------------------------------------------------------
+-- 时间 2026年3月27日
+-- by jishenghua
+-- 给jsh_user_business表调整value和btn_str字段的长度
+-- --------------------------------------------------------
+alter table jsh_user_business change value value text NULL DEFAULT NULL COMMENT '值';
+alter table jsh_user_business change btn_str btn_str varchar(20000) NULL DEFAULT NULL COMMENT '按钮权限';
