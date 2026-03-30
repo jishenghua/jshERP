@@ -603,10 +603,17 @@ public class ExceptionConstants {
     public static final int SEQUENCE_ONLY_BREAK_CODE = 12000002;
     public static final String SEQUENCE_ONLY_BREAK_MSG = "获取唯一单据编号操作被中断";
 
+    /**
+     * 字典
+     * type = 125
+     * */
+    //字典类型已分配,不能删除
+    public static final int DICT_TYPE_ALREADY_USED_CODE = 12500001;
+    public static final String DICT_TYPE_ALREADY_USED_MSG = "%s已分配,不能删除";
+
     //演示用户禁止操作
     public static final int SYSTEM_CONFIG_TEST_USER_CODE = -1;
     public static final String SYSTEM_CONFIG_TEST_USER_MSG = "演示用户禁止操作";
-
 
     /**
      * 标准正常返回/操作成功返回

@@ -214,6 +214,11 @@ public class BusinessConstants {
     public static final String ROLE_TYPE_PUBLIC = "全部数据";
 
     /**
+     * 字典管理 cache key
+     */
+    public static final String SYS_DICT_KEY = "sys_dict:";
+
+    /**
      * redis相关
      * */
     //session的生命周期,秒

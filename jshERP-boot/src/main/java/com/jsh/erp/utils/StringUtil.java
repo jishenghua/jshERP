@@ -1,5 +1,7 @@
 package com.jsh.erp.utils;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -15,9 +17,13 @@ import java.util.regex.Pattern;
  */
 public class StringUtil {
 
+    private static ConfigurableListableBeanFactory beanFactory;
+
     private StringUtil() {
 
     }
+
+    public static final String EMPTY = "";
 
     private static String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -455,6 +461,57 @@ public class StringUtil {
         }
         // 使用正则表达式判断字符串是否为纯数字
         return str.matches("\\d+");
+    }
+
+    /**
+     * 获取对象
+     *
+     * @param name
+     * @return Object 一个以所给名字注册的bean的实例
+     * @throws org.springframework.beans.BeansException
+     *
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getBean(String name) throws BeansException
+    {
+        return (T) beanFactory.getBean(name);
+    }
+
+    /**
+     * 获取类型为requiredType的对象
+     *
+     * @param clz
+     * @return
+     * @throws org.springframework.beans.BeansException
+     *
+     */
+    public static <T> T getBean(Class<T> clz) throws BeansException
+    {
+        T result = (T) beanFactory.getBean(clz);
+        return result;
+    }
+
+    public static String stripEnd(String str, String stripChars) {
+        int end = length(str);
+        if (end == 0) {
+            return str;
+        } else {
+            if (stripChars == null) {
+                while(end != 0 && Character.isWhitespace(str.charAt(end - 1))) {
+                    --end;
+                }
+            } else {
+                if (stripChars.isEmpty()) {
+                    return str;
+                }
+
+                while(end != 0 && stripChars.indexOf(str.charAt(end - 1)) != -1) {
+                    --end;
+                }
+            }
+
+            return str.substring(0, end);
+        }
     }
 
 }

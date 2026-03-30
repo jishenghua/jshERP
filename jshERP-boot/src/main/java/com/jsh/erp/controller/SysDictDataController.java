@@ -1,0 +1,97 @@
+package com.jsh.erp.controller;
+
+import com.jsh.erp.base.AjaxResult;
+import com.jsh.erp.base.BaseController;
+import com.jsh.erp.base.TableDataInfo;
+import com.jsh.erp.datasource.entities.SysDictData;
+import com.jsh.erp.service.SysDictDataService;
+import com.jsh.erp.service.SysDictTypeService;
+import com.jsh.erp.service.UserService;
+import com.jsh.erp.utils.StringUtil;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 数据字典信息
+ *
+ * @author jishenghua
+ */
+@RestController
+@RequestMapping("/system/dict/data")
+public class SysDictDataController extends BaseController {
+
+    @Resource
+    private SysDictDataService dictDataService;
+
+    @Resource
+    private SysDictTypeService dictTypeService;
+
+    @Resource
+    private UserService userService;
+
+    @GetMapping("/list")
+    @ApiOperation(value = "查询列表")
+    public TableDataInfo list(SysDictData dictData) {
+        startPage();
+        List<SysDictData> list = dictDataService.selectDictDataList(dictData);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询字典数据详细
+     */
+    @GetMapping(value = "/{dictCode}")
+    @ApiOperation(value = "查询字典数据详细")
+    public AjaxResult getInfo(@PathVariable Long dictCode) {
+        return success(dictDataService.selectDictDataById(dictCode));
+    }
+
+    /**
+     * 根据字典类型查询字典数据信息
+     */
+    @GetMapping(value = "/type/{dictType}")
+    @ApiOperation(value = "根据字典类型查询字典数据信息")
+    public AjaxResult dictType(@PathVariable String dictType) {
+        List<SysDictData> data = dictTypeService.selectDictDataByType(dictType);
+        if (StringUtil.isNull(data))
+        {
+            data = new ArrayList<SysDictData>();
+        }
+        return success(data);
+    }
+
+    /**
+     * 新增字典类型
+     */
+    @PostMapping
+    @ApiOperation(value = "新增字典数据")
+    public AjaxResult add(@Validated @RequestBody SysDictData dict) throws Exception {
+        dict.setCreateBy(userService.getCurrentUser().getLoginName());
+        return toAjax(dictDataService.insertDictData(dict));
+    }
+
+    /**
+     * 修改保存字典类型
+     */
+    @PutMapping
+    @ApiOperation(value = "修改保存字典数据")
+    public AjaxResult edit(@Validated @RequestBody SysDictData dict) throws Exception {
+        dict.setUpdateBy(userService.getCurrentUser().getLoginName());
+        return toAjax(dictDataService.updateDictData(dict));
+    }
+
+    /**
+     * 删除字典类型
+     */
+    @DeleteMapping("/{dictCodes}")
+    @ApiOperation(value = "删除字典数据")
+    public AjaxResult remove(@PathVariable Long[] dictCodes) {
+        dictDataService.deleteDictDataByIds(dictCodes);
+        return success();
+    }
+}
