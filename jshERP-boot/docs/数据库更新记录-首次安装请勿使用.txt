@@ -1804,3 +1804,10 @@ CREATE TABLE `jsh_sys_dict_type`  (
   PRIMARY KEY (`dict_id`) USING BTREE,
   UNIQUE INDEX `dict_type`(`dict_type`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 207 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典类型表' ROW_FORMAT = Dynamic;
+
+-- --------------------------------------------------------
+-- 时间 2026年3月31日
+-- by jishenghua
+-- 增加字典管理的菜单
+-- --------------------------------------------------------
+INSERT INTO `jsh_function` VALUES (260, '000113', '字典管理', '0001', '/system/dict', '/system/DictList', b'0', '0172', b'1', '电脑版', '', 'profile', '0');
