@@ -87,6 +87,9 @@ const fileSizeLimit = (params)=>getAction("/systemConfig/fileSizeLimit",params);
 //字典管理
 const addDictType = (params)=>postAction("/dict/type/add",params);
 const editDictType = (params)=>putAction("/dict/type/update",params);
+const addDictData = (params)=>postAction("/dict/data/add",params);
+const editDictData= (params)=>putAction("/dict/data/update",params);
+const getDictOptionselect = (params)=>getAction("/dict/type/optionselect",params);
 //平台参数
 const addPlatformConfig = (params)=>postAction("/platformConfig/add",params);
 const editPlatformConfig = (params)=>putAction("/platformConfig/update",params);
@@ -189,6 +192,9 @@ export {
   fileSizeLimit,
   addDictType,
   editDictType,
+  addDictData,
+  editDictData,
+  getDictOptionselect,
   addPlatformConfig,
   editPlatformConfig,
   getPlatformConfigByKey,

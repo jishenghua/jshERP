@@ -12,6 +12,7 @@ import com.jsh.erp.datasource.mappers.SysDictTypeMapper;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.utils.DictUtils;
+import com.jsh.erp.utils.PageUtils;
 import com.jsh.erp.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,7 @@ public class SysDictTypeService {
      */
     public List<SysDictType> selectDictTypeList(SysDictType dictType)
     {
+        PageUtils.startPage();
         return dictTypeMapper.selectDictTypeList(dictType);
     }
 

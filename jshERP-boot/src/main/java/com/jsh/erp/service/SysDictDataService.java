@@ -3,6 +3,7 @@ package com.jsh.erp.service;
 import com.jsh.erp.datasource.entities.SysDictData;
 import com.jsh.erp.datasource.mappers.SysDictDataMapper;
 import com.jsh.erp.utils.DictUtils;
+import com.jsh.erp.utils.PageUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ public class SysDictDataService {
      */
     public List<SysDictData> selectDictDataList(SysDictData dictData)
     {
+        PageUtils.startPage();
         return dictDataMapper.selectDictDataList(dictData);
     }
 

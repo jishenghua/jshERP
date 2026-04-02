@@ -19,8 +19,8 @@
               <a-col :md="6" :sm="24">
                 <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select v-model="queryParam.status" placeholder="请选择状态">
-                    <a-select-option value="1">正常</a-select-option>
-                    <a-select-option value="0">停用</a-select-option>
+                    <a-select-option value="0">正常</a-select-option>
+                    <a-select-option value="1">停用</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -85,8 +85,8 @@
             dictNameCustomRender
             <!-- 状态渲染模板 -->
             <template slot="customRenderStatus" slot-scope="status">
-              <a-tag v-if="status" color="green">启用</a-tag>
-              <a-tag v-if="!status" color="orange">禁用</a-tag>
+              <a-tag v-if="status==='0'" color="green">正常</a-tag>
+              <a-tag v-if="status==='1'" color="orange">停用</a-tag>
             </template>
           </a-table>
         </div>
@@ -103,6 +103,7 @@
   import DictDataListModal from './modules/DictDataListModal'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import { deleteAction } from '@/api/manage'
+  import moment from 'moment/moment'
   export default {
     name: "DictList",
     mixins: [JeecgListMixin],
@@ -171,6 +172,16 @@
       },
       handleShowData(record) {
         this.$refs.modalDataList.show(record)
+      },
+      onCreateDateChange: function (value, dateString) {
+        this.queryParam.beginTime=dateString[0]
+        this.queryParam.endTime=dateString[1]
+        if(dateString[0] && dateString[1]) {
+          this.queryParam.createTimeRange = [moment(dateString[0]), moment(dateString[1])]
+        }
+      },
+      onDateOk(value) {
+        console.log(value);
       }
     }
   }

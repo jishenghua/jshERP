@@ -18,22 +18,22 @@
       <a-spin :spinning="confirmLoading">
         <a-form :form="form">
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="字典类型">
-            <a-input placeholder="请输入字典类型" v-decorator.trim="[ 'dictName', validatorRules.dictName]" />
+            <a-input placeholder="请输入字典类型" v-decorator.trim="[ 'dictType' ]" :readOnly="true" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="数据标签">
-            <a-input placeholder="请输入数据标签" v-decorator.trim="[ 'dictType', validatorRules.dictType]" />
+            <a-input placeholder="请输入数据标签" v-decorator.trim="[ 'dictLabel', validatorRules.dictLabel]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="数据键值">
-            <a-input placeholder="请输入数据键值" v-decorator.trim="[ 'dictType', validatorRules.dictType]" />
+            <a-input placeholder="请输入数据键值" v-decorator.trim="[ 'dictValue', validatorRules.dictValue]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="样式属性">
-            <a-input placeholder="请输入样式属性" v-decorator.trim="[ 'dictType' ]" />
+            <a-input placeholder="请输入样式属性" v-decorator.trim="[ 'cssClass' ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="显示排序">
-            <a-input placeholder="请输入显示排序" v-decorator.trim="[ 'dictType' ]" />
+            <a-input placeholder="请输入显示排序" v-decorator.trim="[ 'dictSort' ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="回显样式">
-            <a-input placeholder="请输入回显样式" v-decorator.trim="[ 'dictType' ]" />
+            <a-input placeholder="请输入回显样式" v-decorator.trim="[ 'listClass' ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
             <a-select style="width:100%" placeholder="请选择状态" v-decorator.trim="[ 'status' ]">
@@ -51,7 +51,7 @@
 </template>
 <script>
   import pick from 'lodash.pick'
-  import { addDictType, editDictType } from '@/api/api'
+  import { addDictData, editDictData } from '@/api/api'
   import { mixinDevice } from '@/utils/mixin'
   export default {
     name: "DictDataModal",
@@ -88,15 +88,19 @@
     created () {
     },
     methods: {
-      add () {
+      add (dictType) {
         this.edit({});
+        this.model.dictType = dictType
+        this.$nextTick(() => {
+          this.form.setFieldsValue(pick(this.model, 'dictType'))
+        })
       },
       edit (record) {
         this.form.resetFields();
         this.model = Object.assign({}, record);
         this.visible = true;
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model,'dictName', 'dictType', 'status', 'remark'))
+          this.form.setFieldsValue(pick(this.model, 'dictType', 'dictLabel', 'dictValue', 'cssClass', 'dictSort', 'listClass', 'status', 'remark'))
         })
       },
       close () {
@@ -111,10 +115,10 @@
             that.confirmLoading = true;
             let formData = Object.assign(this.model, values);
             let obj;
-            if(!this.model.dictId){
-              obj=addDictType(formData)
+            if(!this.model.dictCode){
+              obj=addDictData(formData)
             }else{
-              obj=editDictType(formData)
+              obj=editDictData(formData)
             }
             obj.then((res)=>{
               if(res.code === 200){

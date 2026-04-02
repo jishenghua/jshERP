@@ -22,7 +22,11 @@
           <a-row :gutter="24">
             <a-col :md="6" :sm="24">
               <a-form-item label="字典名称" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                <a-input placeholder="请输入字典名称" v-model="queryParam.dictName"></a-input>
+                <a-select placeholder="请选择字典名称" showSearch allow-clear optionFilterProp="children" v-model="queryParam.dictType">
+                  <a-select-option v-for="(item,index) in typeOptions" :key="index" :value="item.dictType">
+                    {{ item.dictName }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -49,7 +53,7 @@
       </div>
       <!-- 操作按钮区域 -->
       <div class="table-operator" style="border-top: 5px">
-        <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+        <a-button @click="handleAddWithData" type="primary" icon="plus">新增</a-button>
         <a-button @click="batchDel" icon="delete">删除</a-button>
       </div>
       <!-- table区域-begin -->
@@ -83,7 +87,7 @@
   </div>
 </template>
 <script>
-  import { addDictType, editDictType, findBillDetailByNumber, findBySelectCus, findBySelectSup } from '@/api/api'
+  import { getDictOptionselect } from '@/api/api'
   import DictDataModal from './DictDataModal'
   import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
@@ -96,8 +100,10 @@
         title:"字典数据",
         visible: false,
         disableMixinCreated: true,
+        // 类型数据字典
+        typeOptions: [],
         queryParam: {
-          dictType: "",
+          dictType: undefined,
           dictLabel: "",
           status: undefined
         },
@@ -138,30 +144,20 @@
       show(record) {
         this.model = Object.assign({}, {})
         this.visible = true
+        this.queryParam.dictType = record.dictType
+        this.getTypeList()
         this.loadData(1)
       },
-      handleSearchSupplier(value) {
-        let that = this
-        if(this.setTimeFlag != null){
-          clearTimeout(this.setTimeFlag);
-        }
-        if(this.organLabel === '供应商') {
-          this.setTimeFlag = setTimeout(() => {
-            findBySelectSup({ key: value, limit:1 }).then((res) => {
-              if (res) {
-                that.supplierList = res;
-              }
-            })
-          }, 500)
-        } else if(this.organLabel === '客户') {
-          this.setTimeFlag = setTimeout(() => {
-            findBySelectCus({ key: value, limit:1 }).then((res) => {
-              if (res) {
-                that.supplierList = res;
-              }
-            })
-          }, 500)
-        }
+      /** 查询字典类型列表 */
+      getTypeList() {
+        getDictOptionselect().then(res => {
+          this.typeOptions = res.data;
+        });
+      },
+      handleAddWithData() {
+        this.$refs.modalForm.add(this.queryParam.dictType)
+        this.$refs.modalForm.title = "新增";
+        this.$refs.modalForm.disableSubmit = false;
       },
       close () {
         this.$emit('close');
@@ -184,17 +180,6 @@
           status: ""
         }
         this.loadData(1);
-      },
-      myHandleDetail(record) {
-        let that = this
-        findBillDetailByNumber({ number: record.number }).then((res) => {
-          if (res && res.code === 200) {
-            let type = res.data.depotHeadType
-            type = type.replace('其它','')
-            that.$refs.billDetail.show(res.data, type);
-            that.$refs.billDetail.title="详情";
-          }
-        })
       }
     }
   }

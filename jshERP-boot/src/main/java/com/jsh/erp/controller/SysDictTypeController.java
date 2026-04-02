@@ -6,7 +6,9 @@ import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.SysDictType;
 import com.jsh.erp.service.SysDictTypeService;
 import com.jsh.erp.service.UserService;
+import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.ErpInfo;
+import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -39,8 +41,15 @@ public class SysDictTypeController extends BaseController {
 
     @ApiOperation("获取字典分页列表")
     @GetMapping("/list")
-    public TableDataInfo list(SysDictType dictType) {
-        startPage();
+    public TableDataInfo list(@RequestParam(value = Constants.SEARCH, required = false) String search) {
+        SysDictType dictType = new SysDictType();
+        dictType.setDictName(StringUtil.getInfo(search, "dictName"));
+        dictType.setDictType(StringUtil.getInfo(search, "dictType"));
+        dictType.setStatus(StringUtil.getInfo(search, "status"));
+        Map<String, Object> params = new HashMap<>();
+        params.put("beginTime", StringUtil.getInfo(search, "beginTime"));
+        params.put("endTime", StringUtil.getInfo(search, "endTime"));
+        dictType.setParams(params);
         List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
         return getDataTable(list);
     }

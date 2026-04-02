@@ -7,6 +7,7 @@ import com.jsh.erp.datasource.entities.SysDictData;
 import com.jsh.erp.service.SysDictDataService;
 import com.jsh.erp.service.SysDictTypeService;
 import com.jsh.erp.service.UserService;
+import com.jsh.erp.utils.Constants;
 import com.jsh.erp.utils.StringUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +15,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * 数据字典信息
@@ -36,8 +41,11 @@ public class SysDictDataController extends BaseController {
 
     @GetMapping("/list")
     @ApiOperation(value = "查询列表")
-    public TableDataInfo list(SysDictData dictData) {
-        startPage();
+    public TableDataInfo list(@RequestParam(value = Constants.SEARCH, required = false) String search) {
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType(StringUtil.getInfo(search, "dictType"));
+        dictData.setDictLabel(StringUtil.getInfo(search, "dictLabel"));
+        dictData.setStatus(StringUtil.getInfo(search, "status"));
         List<SysDictData> list = dictDataService.selectDictDataList(dictData);
         return getDataTable(list);
     }
@@ -66,27 +74,29 @@ public class SysDictDataController extends BaseController {
     }
 
     /**
-     * 新增字典类型
+     * 新增字典数据
      */
-    @PostMapping
     @ApiOperation(value = "新增字典数据")
-    public AjaxResult add(@Validated @RequestBody SysDictData dict) throws Exception {
+    @PostMapping(value = "/add")
+    public String add(@Validated @RequestBody SysDictData dict) throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
         dict.setCreateBy(userService.getCurrentUser().getLoginName());
-        return toAjax(dictDataService.insertDictData(dict));
+        return returnStr(objectMap, dictDataService.insertDictData(dict));
     }
 
     /**
-     * 修改保存字典类型
+     * 修改保存字典数据
      */
-    @PutMapping
     @ApiOperation(value = "修改保存字典数据")
-    public AjaxResult edit(@Validated @RequestBody SysDictData dict) throws Exception {
+    @PutMapping(value = "/update")
+    public String edit(@Validated @RequestBody SysDictData dict) throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
         dict.setUpdateBy(userService.getCurrentUser().getLoginName());
-        return toAjax(dictDataService.updateDictData(dict));
+        return returnStr(objectMap, dictDataService.updateDictData(dict));
     }
 
     /**
-     * 删除字典类型
+     * 删除字典数据
      */
     @DeleteMapping("/{dictCodes}")
     @ApiOperation(value = "删除字典数据")
