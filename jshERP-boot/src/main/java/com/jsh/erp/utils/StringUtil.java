@@ -1,7 +1,9 @@
 package com.jsh.erp.utils;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -15,7 +17,8 @@ import java.util.regex.Pattern;
 /**
  * @author jishenghua qq752718920  2018-10-7 15:26:27
  */
-public class StringUtil {
+@Component
+public class StringUtil implements BeanFactoryPostProcessor {
 
     private static ConfigurableListableBeanFactory beanFactory;
 
@@ -36,6 +39,12 @@ public class StringUtil {
 
     /** 下划线 */
     private static final char SEPARATOR = '_';
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException
+    {
+        StringUtil.beanFactory = beanFactory;
+    }
 
     public static String filterNull(String str) {
         if (str == null) {

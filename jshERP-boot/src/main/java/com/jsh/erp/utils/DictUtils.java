@@ -29,7 +29,8 @@ public class DictUtils {
      */
     public static void setDictCache(String key, List<SysDictData> dictDatas)
     {
-        StringUtil.getBean(RedisService.class).setCacheObject(getCacheKey(key), dictDatas);
+        String dictDatasStr = JSONObject.toJSONString(dictDatas);
+        StringUtil.getBean(RedisService.class).setCacheObject(getCacheKey(key), dictDatasStr);
     }
 
     /**
@@ -41,14 +42,17 @@ public class DictUtils {
     public static List<SysDictData> getDictCache(String key)
     {
         List<SysDictData> list = new ArrayList<>();
-        JSONArray arrayCache = StringUtil.getBean(RedisService.class).getCacheObject(getCacheKey(key));
-        if (StringUtil.isNotNull(arrayCache))
-        {
-            for (Object item: arrayCache) {
-                SysDictData sysDictData = JSONObject.parseObject(item.toString(), SysDictData.class);
-                list.add(sysDictData);
+        String strCache = StringUtil.getBean(RedisService.class).getCacheObject(getCacheKey(key));
+        if(StringUtil.isNotEmpty(strCache)) {
+            JSONArray arrayCache = JSONArray.parseArray(strCache);
+            if (StringUtil.isNotNull(arrayCache))
+            {
+                for (Object item: arrayCache) {
+                    SysDictData sysDictData = JSONObject.parseObject(item.toString(), SysDictData.class);
+                    list.add(sysDictData);
+                }
+                return list;
             }
-            return list;
         }
         return null;
     }
