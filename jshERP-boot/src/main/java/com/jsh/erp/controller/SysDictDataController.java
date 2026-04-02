@@ -22,7 +22,7 @@ import java.util.List;
  * @author jishenghua
  */
 @RestController
-@RequestMapping("/system/dict/data")
+@RequestMapping("/dict/data")
 public class SysDictDataController extends BaseController {
 
     @Resource

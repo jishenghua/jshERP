@@ -16,13 +16,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<sql id="selectDictTypeVo">
-        select dict_id, dict_name, dict_type, status, create_by, create_time, remark
+        select dict_id, dict_name, dict_type, status, create_by, create_time, update_by, update_time, remark
 		from jsh_sys_dict_type
     </sql>
 
 	<select id="selectDictTypeList" parameterType="com.jsh.erp.datasource.entities.SysDictType" resultMap="SysDictTypeResult">
 	    <include refid="selectDictTypeVo"/>
 		<where>
+			and ifnull(delete_flag,'0') !='1'
 		    <if test="dictName != null and dictName != ''">
 				AND dict_name like concat('%', #{dictName}, '%')
 			</if>
@@ -43,21 +44,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectDictTypeAll" resultMap="SysDictTypeResult">
 		<include refid="selectDictTypeVo"/>
+		where ifnull(delete_flag,'0') !='1'
 	</select>
 
 	<select id="selectDictTypeById" parameterType="Long" resultMap="SysDictTypeResult">
 		<include refid="selectDictTypeVo"/>
 		where dict_id = #{dictId}
+		and ifnull(delete_flag,'0') !='1'
 	</select>
 
 	<select id="selectDictTypeByType" parameterType="String" resultMap="SysDictTypeResult">
 		<include refid="selectDictTypeVo"/>
 		where dict_type = #{dictType}
+		and ifnull(delete_flag,'0') !='1'
 	</select>
 
 	<select id="checkDictTypeUnique" parameterType="String" resultMap="SysDictTypeResult">
 		<include refid="selectDictTypeVo"/>
-		where dict_type = #{dictType} limit 1
+		where dict_type = #{dictType}
+		and ifnull(delete_flag,'0') !='1'
+		limit 1
 	</select>
 
 	<delete id="deleteDictTypeById" parameterType="Long">
@@ -84,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		where dict_id = #{dictId}
 	</update>
 
- 	<insert id="insertDictType" parameterType="com.jsh.erp.datasource.entities.SysDictType">
+    <insert id="insertDictType" parameterType="com.jsh.erp.datasource.entities.SysDictType">
  		insert into jsh_sys_dict_type(
  			<if test="dictName != null and dictName != ''">dict_name,</if>
  			<if test="dictType != null and dictType != ''">dict_type,</if>
@@ -101,5 +107,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			sysdate()
  		)
 	</insert>
+
+	<update id="batchDeleteDictTypeByIds">
+		update jsh_sys_dict_type
+		set delete_flag='1'
+		where 1=1
+		and dict_id in (
+		<foreach collection="ids" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</update>
+
+	<select id="getDictTypeListByIds" resultType="com.jsh.erp.datasource.entities.SysDictType">
+		select dict_id, dict_name, dict_type, status, create_by, create_time, remark
+		from jsh_sys_dict_type
+		where ifnull(delete_flag,'0') !='1'
+		and dict_id in (
+		<foreach collection="idList" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</select>
 
 </mapper>

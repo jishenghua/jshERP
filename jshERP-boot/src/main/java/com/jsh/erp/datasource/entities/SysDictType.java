@@ -32,6 +32,8 @@ public class SysDictType extends BaseEntity {
     @ApiModelProperty("状态（0正常 1停用）")
     private String status;
 
+    private String deleteFlag;
+
     public Long getDictId()
     {
         return dictId;
@@ -77,4 +79,11 @@ public class SysDictType extends BaseEntity {
         this.status = status;
     }
 
+    public String getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(String deleteFlag) {
+        this.deleteFlag = deleteFlag;
+    }
 }

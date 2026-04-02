@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.SysDictType;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -81,4 +82,10 @@ public interface SysDictTypeMapper
      * @return 结果
      */
     public SysDictType checkDictTypeUnique(String dictType);
+
+    int batchDeleteDictTypeByIds(
+            @Param("ids") String ids[]);
+
+    List<SysDictType> getDictTypeListByIds(
+            @Param("idList") List<Long> idList);
 }

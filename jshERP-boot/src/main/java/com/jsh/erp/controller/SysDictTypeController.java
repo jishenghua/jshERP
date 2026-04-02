@@ -6,13 +6,20 @@ import com.jsh.erp.base.TableDataInfo;
 import com.jsh.erp.datasource.entities.SysDictType;
 import com.jsh.erp.service.SysDictTypeService;
 import com.jsh.erp.service.UserService;
+import com.jsh.erp.utils.ErpInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.jsh.erp.utils.ResponseJsonUtil.returnJson;
+import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
 
 /**
  * 数据字典信息
@@ -21,7 +28,7 @@ import java.util.List;
  */
 @Api(tags = "字典管理")
 @RestController
-@RequestMapping("/system/dict/type")
+@RequestMapping("/dict/type")
 public class SysDictTypeController extends BaseController {
 
     @Resource
@@ -51,38 +58,44 @@ public class SysDictTypeController extends BaseController {
      * 新增字典类型
      */
     @ApiOperation("新增字典类型")
-    @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysDictType dict) throws Exception {
-        if (!dictTypeService.checkDictTypeUnique(dict))
-        {
-            return error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
+    @PostMapping(value = "/add")
+    public String add(@Validated @RequestBody SysDictType dict) throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        if (!dictTypeService.checkDictTypeUnique(dict)) {
+            return returnJson(objectMap, "新增字典'" + dict.getDictName() + "'失败，字典类型已存在", ErpInfo.ERROR.code);
         }
         dict.setCreateBy(userService.getCurrentUser().getLoginName());
-        return toAjax(dictTypeService.insertDictType(dict));
+        return returnStr(objectMap, dictTypeService.insertDictType(dict));
     }
 
     /**
      * 修改字典类型
      */
-    @ApiOperation("新增字典类型")
-    @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysDictType dict) throws Exception {
-        if (!dictTypeService.checkDictTypeUnique(dict))
-        {
-            return error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
+    @ApiOperation("修改字典类型")
+    @PutMapping(value = "/update")
+    public String edit(@Validated @RequestBody SysDictType dict) throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        if (!dictTypeService.checkDictTypeUnique(dict)) {
+            return returnJson(objectMap, "修改字典'" + dict.getDictName() + "'失败，字典类型已存在", ErpInfo.ERROR.code);
         }
         dict.setUpdateBy(userService.getCurrentUser().getLoginName());
-        return toAjax(dictTypeService.updateDictType(dict));
+        return returnStr(objectMap, dictTypeService.updateDictType(dict));
     }
 
-    /**
-     * 删除字典类型
-     */
-    @ApiOperation("删除字典类型")
-    @DeleteMapping("/{dictIds}")
-    public AjaxResult remove(@PathVariable Long[] dictIds) {
-        dictTypeService.deleteDictTypeByIds(dictIds);
-        return success();
+    @DeleteMapping(value = "/delete")
+    @ApiOperation(value = "删除")
+    public String deleteResource(@RequestParam("id") Long id, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = dictTypeService.deleteDictType(id, request);
+        return returnStr(objectMap, delete);
+    }
+
+    @DeleteMapping(value = "/deleteBatch")
+    @ApiOperation(value = "批量删除")
+    public String batchDeleteResource(@RequestParam("ids") String ids, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        int delete = dictTypeService.batchDeleteDictType(ids, request);
+        return returnStr(objectMap, delete);
     }
 
     /**

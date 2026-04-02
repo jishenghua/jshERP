@@ -84,6 +84,9 @@ const editSystemConfig = (params)=>putAction("/systemConfig/update",params);
 const checkSystemConfig = (params)=>getAction("/systemConfig/checkIsNameExist",params);
 const getCurrentSystemConfig = (params)=>getAction("/systemConfig/getCurrentInfo",params);
 const fileSizeLimit = (params)=>getAction("/systemConfig/fileSizeLimit",params);
+//字典管理
+const addDictType = (params)=>postAction("/dict/type/add",params);
+const editDictType = (params)=>putAction("/dict/type/update",params);
 //平台参数
 const addPlatformConfig = (params)=>postAction("/platformConfig/add",params);
 const editPlatformConfig = (params)=>putAction("/platformConfig/update",params);
@@ -184,6 +187,8 @@ export {
   checkSystemConfig,
   getCurrentSystemConfig,
   fileSizeLimit,
+  addDictType,
+  editDictType,
   addPlatformConfig,
   editPlatformConfig,
   getPlatformConfigByKey,

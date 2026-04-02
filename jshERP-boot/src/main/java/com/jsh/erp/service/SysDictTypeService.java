@@ -1,21 +1,29 @@
 package com.jsh.erp.service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
+import com.jsh.erp.datasource.entities.Depot;
+import com.jsh.erp.datasource.entities.DepotExample;
 import com.jsh.erp.datasource.entities.SysDictData;
 import com.jsh.erp.datasource.entities.SysDictType;
 import com.jsh.erp.datasource.mappers.SysDictDataMapper;
 import com.jsh.erp.datasource.mappers.SysDictTypeMapper;
 import com.jsh.erp.exception.BusinessRunTimeException;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.utils.DictUtils;
 import com.jsh.erp.utils.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +33,11 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SysDictTypeService {
+
+    private Logger logger = LoggerFactory.getLogger(SysDictTypeService.class);
+
+    @Resource
+    private LogService logService;
 
     @Resource
     private SysDictTypeMapper dictTypeMapper;
@@ -105,23 +118,6 @@ public class SysDictTypeService {
     public SysDictType selectDictTypeByType(String dictType)
     {
         return dictTypeMapper.selectDictTypeByType(dictType);
-    }
-
-    /**
-     * 批量删除字典类型信息
-     *
-     * @param dictIds 需要删除的字典ID
-     */
-    public void deleteDictTypeByIds(Long[] dictIds) {
-        for (Long dictId : dictIds) {
-            SysDictType dictType = selectDictTypeById(dictId);
-            if (dictDataMapper.countDictDataByType(dictType.getDictType()) > 0) {
-                throw new BusinessRunTimeException(ExceptionConstants.DICT_TYPE_ALREADY_USED_CODE,
-                        String.format(ExceptionConstants.DICT_TYPE_ALREADY_USED_MSG, dictType.getDictName()));
-            }
-            dictTypeMapper.deleteDictTypeById(dictId);
-            DictUtils.removeDictCache(dictType.getDictType());
-        }
     }
 
     /**
@@ -206,5 +202,54 @@ public class SysDictTypeService {
             return false;
         }
         return true;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int deleteDictType(Long id, HttpServletRequest request) throws Exception {
+        return batchDeleteDictTypeByIds(id.toString());
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteDictType(String ids, HttpServletRequest request) throws Exception {
+        return batchDeleteDictTypeByIds(ids);
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteDictTypeByIds(String ids)throws Exception {
+        int result=0;
+        String [] idArray=ids.split(",");
+        try {
+            List<String> dictTypeList = new ArrayList<>();
+            for (String dictId : idArray) {
+                SysDictType dictType = selectDictTypeById(Long.valueOf(dictId));
+                dictTypeList.add(dictType.getDictType());
+                if (dictDataMapper.countDictDataByType(dictType.getDictType()) > 0) {
+                    throw new BusinessRunTimeException(ExceptionConstants.DICT_TYPE_ALREADY_USED_CODE,
+                            String.format(ExceptionConstants.DICT_TYPE_ALREADY_USED_MSG, dictType.getDictName()));
+                }
+            }
+            //记录日志
+            StringBuffer sb = new StringBuffer();
+            sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+            List<SysDictType> list = getDictTypeListByIds(ids);
+            for(SysDictType sysDictType: list){
+                sb.append("[").append(sysDictType.getDictName()).append("]");
+            }
+            result = dictTypeMapper.batchDeleteDictTypeByIds(idArray);
+            for (String dictType : dictTypeList) {
+                DictUtils.removeDictCache(dictType);
+            }
+            //记录日志
+            logService.insertLog("字典类型", sb.toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        } catch (Exception e) {
+            JshException.writeFail(logger, e);
+        }
+        return result;
+    }
+
+    public List<SysDictType> getDictTypeListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        return dictTypeMapper.getDictTypeListByIds(idList);
     }
 }
