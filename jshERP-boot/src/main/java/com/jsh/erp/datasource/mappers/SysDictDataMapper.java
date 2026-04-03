@@ -1,6 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.SysDictData;
+import com.jsh.erp.datasource.entities.SysDictType;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -93,4 +94,10 @@ public interface SysDictDataMapper
      * @return 结果
      */
     public int updateDictDataType(@Param("oldDictType") String oldDictType, @Param("newDictType") String newDictType);
+
+    int batchDeleteDictDataByIds(
+            @Param("ids") String ids[]);
+
+    List<SysDictData> getDictDataListByIds(
+            @Param("idList") List<Long> idList);
 }

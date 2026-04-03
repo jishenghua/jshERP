@@ -1,12 +1,21 @@
 package com.jsh.erp.service;
 
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.SysDictData;
 import com.jsh.erp.datasource.mappers.SysDictDataMapper;
+import com.jsh.erp.exception.JshException;
 import com.jsh.erp.utils.DictUtils;
 import com.jsh.erp.utils.PageUtils;
+import com.jsh.erp.utils.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -16,6 +25,11 @@ import java.util.List;
  */
 @Service
 public class SysDictDataService {
+
+    private Logger logger = LoggerFactory.getLogger(SysDictDataService.class);
+
+    @Resource
+    private LogService logService;
 
     @Resource
     private SysDictDataMapper dictDataMapper;
@@ -103,5 +117,49 @@ public class SysDictDataService {
             DictUtils.setDictCache(data.getDictType(), dictDatas);
         }
         return row;
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int deleteDictData(Long id, HttpServletRequest request) throws Exception {
+        return batchDeleteDictDataByIds(id.toString());
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteDictData(String ids, HttpServletRequest request) throws Exception {
+        return batchDeleteDictDataByIds(ids);
+    }
+
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public int batchDeleteDictDataByIds(String ids)throws Exception {
+        int result = 0;
+        String[] idArray = ids.split(",");
+        try {
+            //记录日志
+            String dictType = "";
+            StringBuffer sb = new StringBuffer();
+            sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);
+            List<SysDictData> list = getDictDataListByIds(ids);
+            if(!list.isEmpty()) {
+                dictType = list.get(0).getDictType();
+                sb.append("字典：").append(dictType).append("下的数据：");
+            }
+            for(SysDictData sysDictData: list){
+                sb.append("[").append(sysDictData.getDictLabel()).append("]");
+            }
+            result = dictDataMapper.batchDeleteDictDataByIds(idArray);
+            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(dictType);
+            DictUtils.setDictCache(dictType, dictDatas);
+            //记录日志
+            logService.insertLog("字典数据", sb.toString(),
+                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+        } catch (Exception e) {
+            JshException.writeFail(logger, e);
+        }
+        return result;
+    }
+
+    public List<SysDictData> getDictDataListByIds(String ids)throws Exception {
+        List<Long> idList = StringUtil.strToLongList(ids);
+        return dictDataMapper.getDictDataListByIds(idList);
     }
 }

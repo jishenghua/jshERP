@@ -30,10 +30,14 @@
             <a-input placeholder="请输入样式属性" v-decorator.trim="[ 'cssClass' ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="显示排序">
-            <a-input placeholder="请输入显示排序" v-decorator.trim="[ 'dictSort' ]" />
+            <a-input-number style="width: 100%" placeholder="请输入显示排序" v-decorator.trim="[ 'dictSort', validatorRules.dictSort ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="回显样式">
-            <a-input placeholder="请输入回显样式" v-decorator.trim="[ 'listClass' ]" />
+            <a-select placeholder="请选择回显样式" showSearch allow-clear optionFilterProp="children" v-decorator.trim="[ 'listClass' ]">
+              <a-select-option v-for="(item,index) in listClassOptions" :key="index" :value="item.value">
+                {{ item.label + '(' + item.value + ')' }}
+              </a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
             <a-select style="width:100%" placeholder="请选择状态" v-decorator.trim="[ 'status' ]">
@@ -72,17 +76,49 @@
         confirmLoading: false,
         form: this.$form.createForm(this),
         validatorRules:{
-          dictName:{
+          dictLabel:{
             rules: [
-              { required: true, message: '请输入字典名称!' }
+              { required: true, message: '请输入数据标签!' }
             ]
           },
-          dictType:{
+          dictValue:{
             rules: [
-              { required: true, message: '请输入字典类型!' }
+              { required: true, message: '请输入数据键值!' }
+            ]
+          },
+          dictSort:{
+            rules: [
+              { required: true, message: '请输入显示排序!' }
             ]
           }
         },
+        // 数据标签回显样式
+        listClassOptions: [
+          {
+            value: "default",
+            label: "默认"
+          },
+          {
+            value: "primary",
+            label: "主要"
+          },
+          {
+            value: "success",
+            label: "成功"
+          },
+          {
+            value: "info",
+            label: "信息"
+          },
+          {
+            value: "warning",
+            label: "警告"
+          },
+          {
+            value: "danger",
+            label: "危险"
+          }
+        ],
       }
     },
     created () {
@@ -91,8 +127,11 @@
       add (dictType) {
         this.edit({});
         this.model.dictType = dictType
+        this.model.dictSort = 0
+        this.model.listClass = 'default'
+        this.model.status = '0'
         this.$nextTick(() => {
-          this.form.setFieldsValue(pick(this.model, 'dictType'))
+          this.form.setFieldsValue(pick(this.model, 'dictType', 'dictSort', 'listClass', 'status'))
         })
       },
       edit (record) {

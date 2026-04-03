@@ -61,7 +61,7 @@
         bordered
         ref="table"
         size="middle"
-        rowKey="id"
+        rowKey="dictCode"
         :columns="columns"
         :dataSource="dataSource"
         :components="handleDrag(columns)"
@@ -72,7 +72,7 @@
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
-          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.dictId)">
+          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.dictCode)">
             <a>删除</a>
           </a-popconfirm>
         </span>
@@ -134,7 +134,9 @@
         ],
         dataSource:[],
         url: {
-          list: "/dict/data/list"
+          list: "/dict/data/list",
+          delete: "/dict/data/delete",
+          deleteBatch: "/dict/data/deleteBatch"
         }
       }
     },

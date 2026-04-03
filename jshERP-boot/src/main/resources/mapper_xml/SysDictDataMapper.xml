@@ -28,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectDictDataList" parameterType="com.jsh.erp.datasource.entities.SysDictData" resultMap="SysDictDataResult">
 	    <include refid="selectDictDataVo"/>
 		<where>
+			and ifnull(delete_flag,'0') !='1'
 		    <if test="dictType != null and dictType != ''">
 				AND dict_type = #{dictType}
 			</if>
@@ -43,21 +44,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectDictDataByType" parameterType="com.jsh.erp.datasource.entities.SysDictData" resultMap="SysDictDataResult">
 		<include refid="selectDictDataVo"/>
-		where status = '0' and dict_type = #{dictType} order by dict_sort asc
+		where status = '0' and dict_type = #{dictType}
+		and ifnull(delete_flag,'0') !='1'
+		order by dict_sort asc
 	</select>
 
 	<select id="selectDictLabel" resultType="String">
 		select dict_label from jsh_sys_dict_data
-		where dict_type = #{dictType} and dict_value = #{dictValue}
+		where dict_type = #{dictType}
+   	    and dict_value = #{dictValue}
+		and ifnull(delete_flag,'0') !='1'
 	</select>
 
 	<select id="selectDictDataById" parameterType="Long" resultMap="SysDictDataResult">
 		<include refid="selectDictDataVo"/>
-		where dict_code = #{dictCode}
+		where dict_code = #{dictCode} and ifnull(delete_flag,'0') !='1'
 	</select>
 
 	<select id="countDictDataByType" resultType="Integer">
-	    select count(1) from jsh_sys_dict_data where dict_type=#{dictType}
+	    select count(1) from jsh_sys_dict_data
+		where dict_type=#{dictType} and ifnull(delete_flag,'0') !='1'
 	</select>
 
 	<delete id="deleteDictDataById" parameterType="Long">
@@ -93,7 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		update jsh_sys_dict_data set dict_type = #{newDictType} where dict_type = #{oldDictType}
 	</update>
 
- 	<insert id="insertDictData" parameterType="com.jsh.erp.datasource.entities.SysDictData">
+	<insert id="insertDictData" parameterType="com.jsh.erp.datasource.entities.SysDictData">
  		insert into jsh_sys_dict_data(
  			<if test="dictSort != null">dict_sort,</if>
  			<if test="dictLabel != null and dictLabel != ''">dict_label,</if>
@@ -120,5 +126,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			sysdate()
  		)
 	</insert>
+
+	<update id="batchDeleteDictDataByIds">
+		update jsh_sys_dict_data
+		set delete_flag='1'
+		where 1=1
+		and dict_code in (
+		<foreach collection="ids" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</update>
+
+	<select id="getDictDataListByIds" resultType="com.jsh.erp.datasource.entities.SysDictData">
+		select dict_code, dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, create_time, remark
+		from jsh_sys_dict_data
+		where dict_code in
+		<foreach collection="idList" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+		and ifnull(delete_flag,'0') !='1'
+	</select>
 
 </mapper>
