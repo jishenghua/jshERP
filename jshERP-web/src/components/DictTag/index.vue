@@ -4,19 +4,14 @@
       <template v-if="values.includes(item.value)">
         <span
           v-if="item.raw.listClass == 'default' || item.raw.listClass == ''"
-          :key="item.value"
           :index="index"
           :class="item.raw.cssClass"
-          :size="size"
           >{{ item.label }}</span>
         <a-tag
           v-else
-          :disable-transitions="true"
-          :key="item.value"
           :index="index"
-          :type="item.raw.listClass == 'primary' ? '' : item.raw.listClass"
+          :color="item.raw.listClass == 'grey' ? '' : item.raw.listClass"
           :class="item.raw.cssClass"
-          :size="size"
         >{{ item.label }}</a-tag>
       </template>
     </template>
@@ -31,11 +26,7 @@ export default {
       type: Array,
       default: null,
     },
-    value: [Number, String, Array],
-    size:{
-      type: String,
-      default:"big"
-    }
+    value: [Number, String, Array]
   },
   computed: {
     values() {

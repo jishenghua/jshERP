@@ -25,8 +25,9 @@
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
             <a-select style="width:100%" placeholder="请选择状态" v-decorator.trim="[ 'status' ]">
-              <a-select-option value="0">正常</a-select-option>
-              <a-select-option value="1">停用</a-select-option>
+              <a-select-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :value="dict.value">
+                {{ dict.label }}
+              </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
@@ -43,6 +44,7 @@
   import { mixinDevice } from '@/utils/mixin'
   export default {
     name: "DictModal",
+    dicts: ['sys_normal_disable'],
     mixins: [mixinDevice],
     data () {
       return {

@@ -20,17 +20,17 @@
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="字典类型">
             <a-input placeholder="请输入字典类型" v-decorator.trim="[ 'dictType' ]" :readOnly="true" />
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="数据标签">
-            <a-input placeholder="请输入数据标签" v-decorator.trim="[ 'dictLabel', validatorRules.dictLabel]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="字典标签">
+            <a-input placeholder="请输入字典标签" v-decorator.trim="[ 'dictLabel', validatorRules.dictLabel]" />
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="数据键值">
-            <a-input placeholder="请输入数据键值" v-decorator.trim="[ 'dictValue', validatorRules.dictValue]" />
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="字典键值">
+            <a-input placeholder="请输入字典键值" v-decorator.trim="[ 'dictValue', validatorRules.dictValue]" />
+          </a-form-item>
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="字典排序">
+            <a-input-number style="width: 100%" placeholder="请输入字典排序" v-decorator.trim="[ 'dictSort', validatorRules.dictSort ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="样式属性">
             <a-input placeholder="请输入样式属性" v-decorator.trim="[ 'cssClass' ]" />
-          </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="显示排序">
-            <a-input-number style="width: 100%" placeholder="请输入显示排序" v-decorator.trim="[ 'dictSort', validatorRules.dictSort ]" />
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="回显样式">
             <a-select placeholder="请选择回显样式" showSearch allow-clear optionFilterProp="children" v-decorator.trim="[ 'listClass' ]">
@@ -41,8 +41,9 @@
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="状态">
             <a-select style="width:100%" placeholder="请选择状态" v-decorator.trim="[ 'status' ]">
-              <a-select-option value="0">正常</a-select-option>
-              <a-select-option value="1">停用</a-select-option>
+              <a-select-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :value="dict.value">
+                {{ dict.label }}
+              </a-select-option>
             </a-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
@@ -59,6 +60,7 @@
   import { mixinDevice } from '@/utils/mixin'
   export default {
     name: "DictDataModal",
+    dicts: ['sys_normal_disable'],
     mixins: [mixinDevice],
     data () {
       return {
@@ -78,17 +80,17 @@
         validatorRules:{
           dictLabel:{
             rules: [
-              { required: true, message: '请输入数据标签!' }
+              { required: true, message: '请输入字典标签!' }
             ]
           },
           dictValue:{
             rules: [
-              { required: true, message: '请输入数据键值!' }
+              { required: true, message: '请输入字典键值!' }
             ]
           },
           dictSort:{
             rules: [
-              { required: true, message: '请输入显示排序!' }
+              { required: true, message: '请输入字典排序!' }
             ]
           }
         },
@@ -99,23 +101,23 @@
             label: "默认"
           },
           {
-            value: "primary",
+            value: "blue",
             label: "主要"
           },
           {
-            value: "success",
+            value: "green",
             label: "成功"
           },
           {
-            value: "info",
+            value: "grey",
             label: "信息"
           },
           {
-            value: "warning",
+            value: "orange",
             label: "警告"
           },
           {
-            value: "danger",
+            value: "red",
             label: "危险"
           }
         ],

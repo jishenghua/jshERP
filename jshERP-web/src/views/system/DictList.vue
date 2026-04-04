@@ -18,7 +18,7 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                  <a-select v-model="queryParam.status" placeholder="请选择状态">
+                  <a-select v-model="queryParam.status" placeholder="请选择状态" allow-clear>
                     <a-select-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :value="dict.value">
                       {{ dict.label }}
                     </a-select-option>
@@ -83,7 +83,6 @@
             <span slot="customRenderDictType" slot-scope="text, record">
               <a @click="handleShowData(record)">{{text}}</a>
             </span>
-            dictNameCustomRender
             <!-- 状态渲染模板 -->
             <template slot="customRenderStatus" slot-scope="status">
               <dict-tag :options="dict.type.sys_normal_disable" :value="status"/>
@@ -124,7 +123,7 @@
         queryParam: {
           dictName: '',
           dictType: '',
-          status: undefined,
+          status: undefined
         },
         columns: [
           {

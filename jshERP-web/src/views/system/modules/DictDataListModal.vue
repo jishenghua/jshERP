@@ -77,9 +77,14 @@
             <a>删除</a>
           </a-popconfirm>
         </span>
-        <span slot="numberCustomRender" slot-scope="text, record">
-          <a @click="myHandleDetail(record)">{{record.number}}</a>
-        </span>
+        <template slot="customRenderDictLabel" slot-scope="text, record">
+          <span v-if="record.listClass == '' || record.listClass == 'default'">{{record.dictLabel}}</span>
+          <a-tag v-else :color="record.listClass == 'grey' ? '' : record.listClass">{{record.dictLabel}}</a-tag>
+        </template>
+        <!-- 状态渲染模板 -->
+        <template slot="customRenderStatus" slot-scope="status">
+          <dict-tag :options="dict.type.sys_normal_disable" :value="status"/>
+        </template>
       </a-table>
       <!-- table区域-end -->
       <!-- 表单区域 -->
@@ -126,11 +131,15 @@
             align: "center",
             width: 80
           },
-          { title: '字典编码', dataIndex: 'dictCode',width:100},
-          { title: '字典标签', dataIndex: 'dictLabel',width:100},
-          { title: '字典键值', dataIndex: 'dictValue',width:100},
-          { title: '字典排序', dataIndex: 'dictSort',width:100},
-          { title: '状态', dataIndex: 'status',width:100},
+          { title: '字典编码', dataIndex: 'dictCode',width:100, align:"center"},
+          { title: '字典标签',dataIndex: 'dictLabel',width: 100,align:"center",
+            scopedSlots: { customRender: 'customRenderDictLabel' }
+          },
+          { title: '字典键值', dataIndex: 'dictValue',width:100, align:"center"},
+          { title: '字典排序', dataIndex: 'dictSort',width:100, align:"center"},
+          { title: '状态', dataIndex: 'status',width:100, align:"center",
+            scopedSlots: { customRender: 'customRenderStatus' }
+          },
           { title: '备注', dataIndex: 'remark',width:100},
           { title: '创建时间', dataIndex: 'createTime',width:100}
         ],
@@ -178,11 +187,8 @@
         console.log(value);
       },
       searchReset() {
-        this.queryParam = {
-          type: this.queryParam.type,
-          subType: this.queryParam.subType,
-          status: ""
-        }
+        this.queryParam.dictLabel = ""
+        this.queryParam.status = undefined
         this.loadData(1);
       }
     }
