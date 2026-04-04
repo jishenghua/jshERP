@@ -220,16 +220,16 @@ public class SysDictTypeService {
     public int batchDeleteDictTypeByIds(String ids)throws Exception {
         int result=0;
         String [] idArray=ids.split(",");
-        try {
-            List<String> dictTypeList = new ArrayList<>();
-            for (String dictId : idArray) {
-                SysDictType dictType = selectDictTypeById(Long.valueOf(dictId));
-                dictTypeList.add(dictType.getDictType());
-                if (dictDataMapper.countDictDataByType(dictType.getDictType()) > 0) {
-                    throw new BusinessRunTimeException(ExceptionConstants.DICT_TYPE_ALREADY_USED_CODE,
-                            String.format(ExceptionConstants.DICT_TYPE_ALREADY_USED_MSG, dictType.getDictName()));
-                }
+        List<String> dictTypeList = new ArrayList<>();
+        for (String dictId : idArray) {
+            SysDictType dictType = selectDictTypeById(Long.valueOf(dictId));
+            dictTypeList.add(dictType.getDictType());
+            if (dictDataMapper.countDictDataByType(dictType.getDictType()) > 0) {
+                throw new BusinessRunTimeException(ExceptionConstants.DICT_TYPE_ALREADY_USED_CODE,
+                        String.format(ExceptionConstants.DICT_TYPE_ALREADY_USED_MSG, dictType.getDictName()));
             }
+        }
+        try {
             //记录日志
             StringBuffer sb = new StringBuffer();
             sb.append(BusinessConstants.LOG_OPERATION_TYPE_DELETE);

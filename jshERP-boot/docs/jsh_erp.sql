@@ -1026,6 +1026,10 @@ CREATE TABLE `jsh_sys_dict_data`  (
 -- ----------------------------
 -- Records of jsh_sys_dict_data
 -- ----------------------------
+INSERT INTO `jsh_sys_dict_data`(`dict_code`, `dict_sort`, `dict_label`, `dict_value`, `dict_type`, `css_class`, `list_class`, `is_default`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `delete_flag`) VALUES (1, 1, '男', '0', 'sys_user_sex', '', 'default', 'Y', '0', 'admin', '2021-12-15 21:36:18', 'admin', '2026-04-04 22:38:19', '性别男', '0');
+INSERT INTO `jsh_sys_dict_data`(`dict_code`, `dict_sort`, `dict_label`, `dict_value`, `dict_type`, `css_class`, `list_class`, `is_default`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `delete_flag`) VALUES (2, 2, '女', '1', 'sys_user_sex', '', 'default', 'N', '0', 'admin', '2021-12-15 21:36:18', 'admin', '2026-04-04 22:38:27', '性别女', '0');
+INSERT INTO `jsh_sys_dict_data`(`dict_code`, `dict_sort`, `dict_label`, `dict_value`, `dict_type`, `css_class`, `list_class`, `is_default`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `delete_flag`) VALUES (11, 1, '正常', '0', 'sys_normal_disable', NULL, 'green', 'N', '0', 'admin', '2026-04-03 22:31:34', 'admin', '2026-04-04 22:35:39', '正常状态', '0');
+INSERT INTO `jsh_sys_dict_data`(`dict_code`, `dict_sort`, `dict_label`, `dict_value`, `dict_type`, `css_class`, `list_class`, `is_default`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `delete_flag`) VALUES (12, 2, '停用', '1', 'sys_normal_disable', NULL, 'red', 'N', '0', 'admin', '2026-04-03 22:32:03', 'admin', '2026-04-04 21:38:10', '停用状态', '0');
 
 -- ----------------------------
 -- Table structure for jsh_sys_dict_type
@@ -1049,5 +1053,8 @@ CREATE TABLE `jsh_sys_dict_type`  (
 -- ----------------------------
 -- Records of jsh_sys_dict_type
 -- ----------------------------
+INSERT INTO `jsh_sys_dict_type`(`dict_id`, `dict_name`, `dict_type`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `delete_flag`) VALUES (1, '用户性别', 'sys_user_sex', '0', 'admin', '2021-12-15 21:36:18', 'admin', '2026-04-02 16:20:41', '用户性别列表', '0');
+INSERT INTO `jsh_sys_dict_type`(`dict_id`, `dict_name`, `dict_type`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `delete_flag`) VALUES (12, '系统开关', 'sys_normal_disable', '0', 'admin', '2026-04-03 22:30:57', 'admin', '2026-04-04 21:41:09', '系统开关列表', '0');
+
 
 SET FOREIGN_KEY_CHECKS = 1;
