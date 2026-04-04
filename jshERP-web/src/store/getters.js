@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { USER_INFO, ENHANCE_PRE } from "@/store/mutation-types"
 const getters = {
   device: state => state.app.device,
+  dict: state => state.dict.dict,
   theme: state => state.app.theme,
   color: state => state.app.color,
   token: state => state.user.token,

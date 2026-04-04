@@ -19,8 +19,9 @@
               <a-col :md="6" :sm="24">
                 <a-form-item label="状态" :labelCol="labelCol" :wrapperCol="wrapperCol">
                   <a-select v-model="queryParam.status" placeholder="请选择状态">
-                    <a-select-option value="0">正常</a-select-option>
-                    <a-select-option value="1">停用</a-select-option>
+                    <a-select-option v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :value="dict.value">
+                      {{ dict.label }}
+                    </a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -85,8 +86,7 @@
             dictNameCustomRender
             <!-- 状态渲染模板 -->
             <template slot="customRenderStatus" slot-scope="status">
-              <a-tag v-if="status==='0'" color="green">正常</a-tag>
-              <a-tag v-if="status==='1'" color="orange">停用</a-tag>
+              <dict-tag :options="dict.type.sys_normal_disable" :value="status"/>
             </template>
           </a-table>
         </div>
@@ -106,6 +106,7 @@
   import moment from 'moment/moment'
   export default {
     name: "DictList",
+    dicts: ['sys_normal_disable'],
     mixins: [JeecgListMixin],
     components: {
       DictTypeModal,

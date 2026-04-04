@@ -38,8 +38,11 @@ import vueBus from '@/utils/vueBus';
 import JeecgComponents from '@/components/jeecg/index'
 import '@/assets/less/JAreaLinkage.less'
 import VueAreaLinkage from 'vue-area-linkage'
+import DictData from '@/components/DictData'
+import DictTag from '@/components/DictTag'
 
 Vue.config.productionTip = false
+Vue.component('DictTag', DictTag)
 Vue.use(Storage, config.storageOptions)
 Vue.use(Antd)
 Vue.use(VueAxios, router)
@@ -50,6 +53,7 @@ Vue.use(preview)
 Vue.use(vueBus);
 Vue.use(JeecgComponents)
 Vue.use(VueAreaLinkage)
+DictData.install()
 
 new Vue({
   router,

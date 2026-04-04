@@ -90,6 +90,7 @@ const editDictType = (params)=>putAction("/dict/type/update",params);
 const addDictData = (params)=>postAction("/dict/data/add",params);
 const editDictData= (params)=>putAction("/dict/data/update",params);
 const getDictOptionselect = (params)=>getAction("/dict/type/optionselect",params);
+const getDicts = (dictType)=>getAction("/dict/data/type/"+ dictType);
 //平台参数
 const addPlatformConfig = (params)=>postAction("/platformConfig/add",params);
 const editPlatformConfig = (params)=>putAction("/platformConfig/update",params);
@@ -195,6 +196,7 @@ export {
   addDictData,
   editDictData,
   getDictOptionselect,
+  getDicts,
   addPlatformConfig,
   editPlatformConfig,
   getPlatformConfigByKey,

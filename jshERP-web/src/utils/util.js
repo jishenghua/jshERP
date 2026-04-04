@@ -649,6 +649,22 @@ export function changeListFmtMinus(str) {
   return newArr;
 }
 
+// 数据合并
+export function mergeRecursive(source, target) {
+  for (var p in target) {
+    try {
+      if (target[p].constructor == Object) {
+        source[p] = mergeRecursive(source[p], target[p]);
+      } else {
+        source[p] = target[p];
+      }
+    } catch (e) {
+      source[p] = target[p];
+    }
+  }
+  return source;
+}
+
 //通过post方式导出Excel
 export function exportXlsPost(fileName, title, head, tip, list) {
   if(!fileName || typeof fileName != "string"){
