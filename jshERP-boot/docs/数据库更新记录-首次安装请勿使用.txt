@@ -1820,4 +1820,6 @@ INSERT INTO `jsh_sys_dict_data`(`dict_code`, `dict_sort`, `dict_label`, `dict_va
 -- by jishenghua
 -- 增加字典管理的菜单
 -- --------------------------------------------------------
-INSERT INTO `jsh_function` VALUES (260, '000113', '字典管理', '0001', '/system/dict', '/system/DictList', b'0', '0172', b'1', '电脑版', '', 'profile', '0');
+INSERT INTO jsh_function
+(`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`)
+VALUES ('000113', '字典管理', '0001', '/system/dict', '/system/DictList', b'0', '0172', b'1', '电脑版', '', 'profile', '0');
