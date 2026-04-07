@@ -534,6 +534,8 @@ public class UserService {
             logService.insertLog("用户",
                     BusinessConstants.LOG_OPERATION_TYPE_ADD,
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            //校验角色和机构的选择逻辑
+            checkRoleAndOrg(ue);
             //检查用户名和登录名
             checkLoginName(ue);
             //新增用户信息
@@ -678,6 +680,8 @@ public class UserService {
             logService.insertLog("用户",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
+            //校验角色和机构的选择逻辑
+            checkRoleAndOrg(ue);
             //检查用户名和登录名
             checkLoginName(ue);
             //更新用户信息
@@ -746,6 +750,19 @@ public class UserService {
             return ue;
         }
         return null;
+    }
+
+    /**
+     * 校验角色和机构的选择逻辑：如果角色的数据类型是本机构数据，此时如果未选择机构，则异常
+     * @param ue
+     */
+    private void checkRoleAndOrg(UserEx ue) throws Exception {
+        Long orgaId = ue.getOrgaId();
+        String type = roleService.getRole(ue.getRoleId()).getType();
+        if("本机构数据".equals(type) && orgaId==null) {
+            throw new BusinessRunTimeException(ExceptionConstants.USER_ROLE_ORGA_EMPTY_CODE,
+                    ExceptionConstants.USER_ROLE_ORGA_EMPTY_MSG);
+        }
     }
     /**
      *  检查登录名不能重复

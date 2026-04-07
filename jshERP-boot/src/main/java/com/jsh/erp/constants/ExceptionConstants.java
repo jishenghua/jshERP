@@ -86,6 +86,9 @@ public class ExceptionConstants {
     //验证码不能为空
     public static final int USER_JCAPTCHA_EMPTY_CODE = 500012;
     public static final String USER_JCAPTCHA_EMPTY_MSG = "验证码不能为空";
+    //当前角色的数据类型是本机构数据，所以必须选择机构
+    public static final int USER_ROLE_ORGA_EMPTY_CODE = 500013;
+    public static final String USER_ROLE_ORGA_EMPTY_MSG = "当前角色的数据类型是本机构数据，所以必须选择机构";
 
     /**
      * 角色信息
