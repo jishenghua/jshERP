@@ -57,7 +57,7 @@
               <a-popconfirm v-if="btnEnableList.indexOf(1)>-1" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                 <a>删除</a>
               </a-popconfirm>
-              <a-modal v-model="roleModalVisible" title="操作提示" @ok="handleRoleTip(record)">
+              <a-modal v-model="roleModalVisible" title="操作提示" @ok="handleRoleTip">
                 <p>保存角色已经操作成功！现在继续<b>分配功能</b>吗？</p>
               </a-modal>
             </span>
@@ -201,10 +201,24 @@
         this.roleFunctionModalVisible = true
         this.currentRoleId = id
       },
-      handleRoleTip(record) {
-        if(record) {
+      handleRoleTip() {
+        let roleInfo
+        if(this.currentRoleId) {
+          //编辑的情况下
+          for (let i = 0; i < this.dataSource.length; i++) {
+            if(this.currentRoleId === this.dataSource[i].id) {
+              roleInfo = this.dataSource[i]
+            }
+          }
+        } else {
+          //在新增的情况下
+          if(this.dataSource.length) {
+            roleInfo = this.dataSource[0]
+          }
+        }
+        if(roleInfo) {
           this.roleModalVisible = false
-          this.handleSetFunction(record)
+          this.handleSetFunction(roleInfo)
         }
       },
       handleRoleFunctionTip() {
@@ -212,7 +226,7 @@
           this.roleFunctionModalVisible = false
           let roleName = ''
           for (let i = 0; i < this.dataSource.length; i++) {
-            if(this.dataSource[i].id == this.currentRoleId) {
+            if(this.currentRoleId === this.dataSource[i].id) {
               roleName = this.dataSource[i].name
             }
           }
@@ -220,11 +234,13 @@
         }
       },
       handleAdd: function () {
+        this.currentRoleId = ''
         this.$refs.modalForm.add();
         this.$refs.modalForm.title = "新增【保存之后请继续分配功能】";
         this.$refs.modalForm.disableSubmit = false;
       },
       handleEdit: function (record) {
+        this.currentRoleId = record.id
         this.$refs.modalForm.edit(record);
         this.$refs.modalForm.title = "编辑【保存之后请继续分配功能】";
         this.$refs.modalForm.disableSubmit = false;
