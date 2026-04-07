@@ -804,7 +804,7 @@ export const BillListMixin = {
                 list: res.data.rows,
                 number: info.number,
                 organId: info.organId,
-                discountMoney: info.discountMoney,
+                discount: info.discount,
                 deposit: deposit,
                 remark: info.remark,
                 accountId: info.accountId,

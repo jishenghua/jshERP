@@ -383,7 +383,7 @@
             handleIntroJs(this.prefixNo, 1)
             if(this.transferParam && this.transferParam.number) {
               let tp = this.transferParam
-              this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discountMoney, tp.deposit, tp.remark, this.defaultDepotId, tp.accountId, tp.salesMan)
+              this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discount, tp.deposit, tp.remark, this.defaultDepotId, tp.accountId, tp.salesMan)
             }
           })
         } else {
@@ -477,7 +477,7 @@
         this.$refs.linkBillList.show('其它', '销售订单', '客户', "1,3")
         this.$refs.linkBillList.title = "请选择销售订单"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark, depotId, accountId, salesMan) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, deposit, remark, depotId, accountId, salesMan) {
         let that = this
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
@@ -511,9 +511,9 @@
           this.materialTable.dataSource = listEx
           ///给优惠后金额重新赋值
           allTaxLastMoney = allTaxLastMoney?allTaxLastMoney:0
-          let discount = 0
+          let discountMoney = 0
           if(allTaxLastMoney!==0) {
-            discount = (discountMoney/allTaxLastMoney*100).toFixed(2)-0
+            discountMoney = (discount/100*allTaxLastMoney).toFixed(2)-0
           }
           let discountLastMoney = (allTaxLastMoney - discountMoney).toFixed(2)-0
           let changeAmount = discountLastMoney

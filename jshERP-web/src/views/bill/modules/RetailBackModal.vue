@@ -311,7 +311,7 @@
             this.form.setFieldsValue({'getAmount':0, 'backAmount':0})
             if(this.transferParam && this.transferParam.number) {
               let tp = this.transferParam
-              this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discountMoney, tp.deposit, tp.remark)
+              this.linkBillListOk(tp.list, tp.number, tp.organId, tp.discount, tp.deposit, tp.remark)
             }
           })
         } else {
@@ -409,7 +409,7 @@
         this.$refs.linkBillList.show('出库', '零售', '会员', "1")
         this.$refs.linkBillList.title = "请选择零售出库"
       },
-      linkBillListOk(selectBillDetailRows, linkNumber, organId, discountMoney, deposit, remark) {
+      linkBillListOk(selectBillDetailRows, linkNumber, organId, discount, deposit, remark) {
         this.rowCanEdit = false
         this.materialTable.columns[1].type = FormTypes.normal
         this.changeFormTypes(this.materialTable.columns, 'preNumber', 1)

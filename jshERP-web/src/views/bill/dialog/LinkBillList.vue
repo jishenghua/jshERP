@@ -141,7 +141,7 @@
         organId: '',
         accountId: '',
         salesMan: '',
-        discountMoney: '',
+        discount: '',
         deposit: '',
         remark: '',
         defaultDepotId: '',
@@ -305,7 +305,7 @@
             this.organId = record.organId
             this.accountId = record.accountId
             this.salesMan = record.salesMan
-            this.discountMoney = record.discountMoney
+            this.discount = record.discount
             this.deposit = record.changeAmount - record.finishDeposit
             this.remark = record.remark
             this.initListColumns()
@@ -316,7 +316,7 @@
         } else {
           if(this.selectedDetailRowKeys.length) {
             this.getSelectBillDetailRows()
-            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discountMoney, this.deposit, this.remark, this.defaultDepotId, this.accountId, this.salesMan)
+            this.$emit('ok', this.selectBillDetailRows, this.linkNumber, this.organId, this.discount, this.deposit, this.remark, this.defaultDepotId, this.accountId, this.salesMan)
             this.close()
           } else {
             this.$message.warning('抱歉，请选择单据明细！')
