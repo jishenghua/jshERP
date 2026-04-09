@@ -654,7 +654,7 @@ CREATE TABLE `jsh_person`  (
 -- Records of jsh_person
 -- ----------------------------
 INSERT INTO `jsh_person` VALUES (14, '销售员', '小李', b'1', NULL, 63, '0');
-INSERT INTO `jsh_person` VALUES (15, '仓管员', '小军', b'1', NULL, 63, '0');
+INSERT INTO `jsh_person` VALUES (15, '销售员', '小军', b'1', NULL, 63, '0');
 INSERT INTO `jsh_person` VALUES (16, '财务员', '小夏', b'1', NULL, 63, '0');
 INSERT INTO `jsh_person` VALUES (17, '财务员', '小曹', b'1', NULL, 63, '0');
 
