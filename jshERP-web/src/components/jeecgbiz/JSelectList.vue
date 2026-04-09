@@ -68,6 +68,7 @@
       return {
         ids: "",
         names: "",
+        preNames: "",
         materialData: [],
         setTimeFlag: null
       }
@@ -91,7 +92,7 @@
         this.names = name ? name : undefined
       },
       onSearch() {
-        let barCode = this.materialData.length?this.names:''
+        let barCode = this.materialData.length?this.preNames:''
         //点放大镜，把关键词一起带过去，前提是有搜索结果
         this.$refs.selectModal.showModal(barCode)
       },
@@ -101,7 +102,7 @@
           clearTimeout(this.setTimeFlag);
         }
         this.setTimeFlag = setTimeout(()=>{
-          that.names = value
+          that.preNames = value
           getMaterialByParam({q: value}).then((res) => {
             if (res && res.code === 200) {
               that.materialData = res.data
