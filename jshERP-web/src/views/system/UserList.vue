@@ -130,7 +130,7 @@
           { title: '用户姓名', dataIndex: 'username', width: 100, align: "left"},
           { title: '用户类型', dataIndex: 'userType', width: 80, align: "left" },
           { title: '角色', dataIndex: 'roleName', width: 100, align: "left"},
-          { title: '机构', dataIndex: 'orgAbr', width: 100, align: "left"},
+          { title: '部门', dataIndex: 'orgAbr', width: 100, align: "left"},
           { title: '是否经理', dataIndex: 'leaderFlagStr', width: 60, align: "left"},
           { title: '电话号码', dataIndex: 'phonenum', width: 80, align: "left"},
           { title: '排序', dataIndex: 'userBlngOrgaDsplSeq', width: 40, align: "left"},

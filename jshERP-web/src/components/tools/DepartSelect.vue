@@ -36,7 +36,7 @@
 
 
   </a-modal>
-    
+
 </template>
 
 <script>
@@ -129,7 +129,7 @@
             const userInfo = res.result.userInfo;
             Vue.ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);
             store.commit('SET_INFO', userInfo);
-            //console.log("---切换组织机构---userInfo-------",store.getters.userInfo.orgCode);
+            //console.log("---切换组织部门---userInfo-------",store.getters.userInfo.orgCode);
             this.departClear()
           }
         })

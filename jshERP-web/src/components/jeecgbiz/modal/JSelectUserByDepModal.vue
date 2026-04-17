@@ -12,7 +12,7 @@
     <a-row :gutter="10" style="background-color: #ececec; padding: 10px; margin: -10px">
       <a-col :md="6" :sm="24">
         <a-card :bordered="false">
-          <!--组织机构-->
+          <!--组织部门-->
           <a-directory-tree
             selectable
             :selectedKeys="selectedDepIds"

@@ -39,9 +39,9 @@
             </a-select>
             <a-col v-if="model.id===model.tenantId"><a-row>{{ tenantRoleName }}</a-row></a-col>
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="机构">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="部门">
             <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}" allow-clear
-               :treeData="orgaTree" v-decorator="[ 'orgaId' ]" placeholder="请选择机构">
+               :treeData="orgaTree" v-decorator="[ 'orgaId' ]" placeholder="请选择部门">
             </a-tree-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="职位">

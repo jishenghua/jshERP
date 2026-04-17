@@ -1823,3 +1823,11 @@ INSERT INTO `jsh_sys_dict_data`(`dict_code`, `dict_sort`, `dict_label`, `dict_va
 INSERT INTO jsh_function
 (`number`, `name`, `parent_number`, `url`, `component`, `state`, `sort`, `enabled`, `type`, `push_btn`, `icon`, `delete_flag`)
 VALUES ('000113', '字典管理', '0001', '/system/dict', '/system/DictList', b'0', '0172', b'1', '电脑版', '', 'profile', '0');
+
+-- --------------------------------------------------------
+-- 时间 2026年4月17日
+-- by jishenghua
+-- 更新两个菜单的名字
+-- --------------------------------------------------------
+update jsh_function set name='菜单管理' where number='000105';
+update jsh_function set name='部门管理' where number='000108';

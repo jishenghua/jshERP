@@ -86,9 +86,9 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24" v-if="orgaTree.length">
-                  <a-form-item label="机构" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                  <a-form-item label="部门" :labelCol="labelCol" :wrapperCol="wrapperCol">
                     <a-tree-select style="width:100%" allow-clear :treeData="orgaTree"
-                                   v-model="queryParam.organizationId" placeholder="请选择机构">
+                                   v-model="queryParam.organizationId" placeholder="请选择部门">
                     </a-tree-select>
                   </a-form-item>
                 </a-col>

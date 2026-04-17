@@ -25,10 +25,10 @@
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="编号">
             <a-input placeholder="请输入编号" v-decorator="['orgNo', validatorRules.orgNo ]"/>
           </a-form-item>
-          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级机构">
+          <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上级部门">
             <a-tree-select style="width:100%" :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
                            allow-clear :treeDefaultExpandAll="true"
-                 :treeData="departTree" v-decorator="[ 'parentId' ]" placeholder="请选择上级机构">
+                 :treeData="departTree" v-decorator="[ 'parentId' ]" placeholder="请选择上级部门">
             </a-tree-select>
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序">

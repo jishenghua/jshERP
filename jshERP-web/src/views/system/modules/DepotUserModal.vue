@@ -117,7 +117,7 @@
         params.id='';
         getAction('/user/getUserWithChecked?UBType=UserDepot&UBValue='+id).then((res) => {
           if (res) {
-            //机构全选后，再添加机构，选中数量增多
+            //部门全选后，再添加部门，选中数量增多
             this.allTreeKeys = [];
             for (let i = 0; i < res.length; i++) {
               let temp = res[i]

@@ -21,7 +21,7 @@ const getUserList = (params)=>getAction("/user/getUserList",params);
 const getUserBtnByCurrentUser = (params)=>getAction("/user/getUserBtnByCurrentUser",params);
 const queryPermissionsByUser = (params)=>postAction("/function/findMenuByPNumber",params);
 const resetPwd = (params)=>postAction("/user/resetPwd",params);
-//机构管理
+//部门管理
 const queryOrganizationTreeList = (params)=>getAction("/organization/getOrganizationTree",params);
 const getAllOrganizationTreeByUser = (params)=>getAction("/organization/getAllOrganizationTreeByUser",params);
 const queryOrganizationById = (params)=>getAction("/organization/findById",params);
