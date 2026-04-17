@@ -762,6 +762,20 @@ export const BillListMixin = {
         })
       },500)
     },
+    handleQuickEdit() {
+      if (this.selectedRowKeys.length === 0) {
+        this.$message.warning('请选择一条数据')
+        return
+      }
+      if (this.selectedRowKeys.length > 1) {
+        this.$message.warning('只能选择一条数据进行快捷编辑')
+        return
+      }
+      const record = this.dataSource.find(item => item.id === this.selectedRowKeys[0])
+      if (record) {
+        this.$refs.quickEditModal.show(record)
+      }
+    },
     getDepotByCurrentUser() {
       getAction('/depot/findDepotByCurrentUser').then((res) => {
         if (res.code === 200) {

@@ -108,6 +108,7 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
+          <a-button v-if="btnEnableList.indexOf(1)>-1" icon="edit" @click="handleQuickEdit">备注</a-button>
           <a-button v-if="quickBtn.purchaseIn.indexOf(1)>-1 && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转采购入库', quickBtn.purchaseIn)">转采购入库</a-button>
           <a-tooltip title="可将状态是部分采购的单据强制完成">
             <a-button v-if="btnEnableList.indexOf(1)>-1" icon="issues-close" @click="batchForceClose">强制结单</a-button>
@@ -202,6 +203,7 @@
         <purchase-in-modal ref="transferModalForm" @ok="modalFormOk" @close="modalFormClose"></purchase-in-modal>
         <bill-detail ref="modalDetail" @ok="modalFormOk" @close="modalFormClose"></bill-detail>
         <bill-excel-iframe ref="billExcelIframe" @ok="modalFormOk" @close="modalFormClose"></bill-excel-iframe>
+        <quick-edit-modal ref="quickEditModal" @ok="modalFormOk" @close="modalFormClose"></quick-edit-modal>
       </a-card>
     </a-col>
   </a-row>
@@ -212,11 +214,11 @@
   import PurchaseInModal from './modules/PurchaseInModal'
   import BillDetail from './dialog/BillDetail'
   import BillExcelIframe from '@/components/tools/BillExcelIframe'
+  import QuickEditModal from './dialog/QuickEditModal'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { BillListMixin } from './mixins/BillListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import JDate from '@/components/jeecg/JDate'
-  import Vue from 'vue'
   export default {
     name: "PurchaseOrderList",
     mixins:[JeecgListMixin,BillListMixin],
@@ -225,6 +227,7 @@
       PurchaseInModal,
       BillDetail,
       BillExcelIframe,
+      QuickEditModal,
       JEllipsis,
       JDate,
       VNodes: {

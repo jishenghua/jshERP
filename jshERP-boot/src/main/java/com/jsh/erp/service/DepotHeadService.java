@@ -1874,4 +1874,34 @@ public class DepotHeadService {
                 new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_BATCH_ADD).append(sb).toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
     }
+
+    /**
+     * 快捷编辑单据
+     * @param id 单据id
+     * @param remark 备注内容
+     * @param request 请求对象
+     */
+    @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+    public void quickEditDepotHead(Long id, String remark, HttpServletRequest request) throws Exception {
+        try {
+            // 查询单据获取编号
+            DepotHead oldDepotHead = depotHeadMapper.selectByPrimaryKey(id);
+            if (oldDepotHead == null) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_EDIT_FAILED_CODE,
+                        ExceptionConstants.DEPOT_HEAD_EDIT_FAILED_MSG);
+            }
+            DepotHead depotHead = new DepotHead();
+            depotHead.setId(id);
+            depotHead.setRemark(remark);
+            depotHeadMapper.updateByPrimaryKeySelective(depotHead);
+            // 记录日志，使用单据编号
+            String oldRemark = StringUtil.isNotEmpty(oldDepotHead.getRemark())? "，原备注为:"+oldDepotHead.getRemark():"";
+            logService.insertLog("单据",
+                    new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append("备注，单据编号:")
+                            .append(oldDepotHead.getNumber()).append(oldRemark).toString(),
+                    request);
+        } catch (Exception e) {
+            JshException.writeFail(logger, e);
+        }
+    }
 }

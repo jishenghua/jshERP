@@ -808,4 +808,21 @@ public class DepotHeadController extends BaseController {
         depotHeadService.batchAddDepotHeadAndDetail(ids, request);
         return result;
     }
+
+    /**
+     * 快捷编辑单据
+     * @param jsonObject
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PutMapping(value = "/quickEdit")
+    @ApiOperation(value = "快捷编辑单据")
+    public Object quickEdit(@RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception{
+        JSONObject result = ExceptionConstants.standardSuccess();
+        Long id = jsonObject.getLong("id");
+        String remark = jsonObject.getString("remark");
+        depotHeadService.quickEditDepotHead(id, remark, request);
+        return result;
+    }
 }
