@@ -449,6 +449,11 @@
             }
           }
           this.materialTable.dataSource = listEx
+          if(listEx.length === 0) {
+            this.$nextTick(() => {
+              this.$message.warning('原单据的明细已经全部关联完成');
+            })
+          }
           ///给优惠后金额重新赋值
           allTaxLastMoney = allTaxLastMoney?allTaxLastMoney:0
           let discountMoney = 0
