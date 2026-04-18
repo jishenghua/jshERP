@@ -95,16 +95,10 @@ public class TenantService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int insertTenant(JSONObject obj, HttpServletRequest request)throws Exception {
         UserEx ue = JSONObject.parseObject(obj.toJSONString(), UserEx.class);
-        int result = 0;
-        try{
-            ue.setUsername(ue.getLoginName());
-            userService.checkLoginName(ue); //检查登录名
-            userService.registerUser(ue,manageRoleId,request);
-            result = 1;
-        } catch(Exception e){
-            JshException.writeFail(logger, e);
-        }
-        return result;
+        ue.setUsername(ue.getLoginName());
+        userService.checkLoginName(ue); //检查登录名
+        userService.registerUser(ue,manageRoleId,request);
+        return 1;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
