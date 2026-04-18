@@ -1828,6 +1828,8 @@ VALUES ('000113', '字典管理', '0001', '/system/dict', '/system/DictList', b'
 -- 时间 2026年4月17日
 -- by jishenghua
 -- 更新两个菜单的名字
+-- 更新角色表里面的历史数据
 -- --------------------------------------------------------
 update jsh_function set name='菜单管理' where number='000105';
 update jsh_function set name='部门管理' where number='000108';
+update jsh_role set type='本部门数据' where type='本机构数据';
