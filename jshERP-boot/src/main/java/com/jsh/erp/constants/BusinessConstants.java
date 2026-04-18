@@ -141,7 +141,7 @@ public class BusinessConstants {
     public static final String MATERIAL_CATEGORY_STATUS_ENABLE = "1";
     public static final String MATERIAL_CATEGORY_STATUS_DELETE = "2";
     /**
-     * 机构状态
+     * 部门状态
      *  1未营业、2正常营业、3暂停营业、4终止营业,5已除名
      * */
     public static final String ORGANIZATION_STCD_NOT_OPEN = "1";
@@ -150,7 +150,7 @@ public class BusinessConstants {
     public static final String ORGANIZATION_STCD_BUSINESS_TERMINATED = "4";
     public static final String ORGANIZATION_STCD_REMOVED = "5";
     /**
-     * 根机构父级编号
+     * 根部门父级编号
      * 根机父级构编号默认为-1
      * */
     public static final String ORGANIZATION_ROOT_PARENT_NO = "-1";
@@ -209,7 +209,7 @@ public class BusinessConstants {
 
     public static final String ROLE_TYPE_PRIVATE = "个人数据";
 
-    public static final String ROLE_TYPE_THIS_ORG = "本机构数据";
+    public static final String ROLE_TYPE_THIS_ORG = "本部门数据";
 
     public static final String ROLE_TYPE_PUBLIC = "全部数据";
 

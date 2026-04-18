@@ -305,7 +305,7 @@ public class UserController extends BaseController {
     /**
      * create by: cjl
      * description:
-     *  新增用户及机构和用户关系
+     *  新增用户及部门和用户关系
      * create time: 2019/3/8 16:06
      * @Param: beanJson
      * @return java.lang.Object
@@ -333,7 +333,7 @@ public class UserController extends BaseController {
     /**
      * create by: cjl
      * description:
-     *  修改用户及机构和用户关系
+     *  修改用户及部门和用户关系
      * create time: 2019/3/8 16:06
      * @Param: beanJson
      * @return java.lang.Object
@@ -367,12 +367,12 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 获取机构用户树
+     * 获取部门用户树
      * @return
      * @throws Exception
      */
     @RequestMapping("/getOrganizationUserTree")
-    @ApiOperation(value = "获取机构用户树")
+    @ApiOperation(value = "获取部门用户树")
     public JSONArray getOrganizationUserTree()throws Exception{
         JSONArray arr=new JSONArray();
         List<TreeNodeEx> organizationUserTree= userService.getOrganizationUserTree();

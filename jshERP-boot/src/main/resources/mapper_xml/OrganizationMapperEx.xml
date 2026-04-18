@@ -94,7 +94,7 @@
         1=1
         and ifnull(delete_flag,'0') !='1'
         and parent_id is null
-        and org_abr='根机构'
+        and org_abr='根部门'
         and id in (
         <foreach collection="ids" item="id" separator=",">
             #{id}

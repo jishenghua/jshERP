@@ -534,7 +534,7 @@ public class UserService {
             logService.insertLog("用户",
                     BusinessConstants.LOG_OPERATION_TYPE_ADD,
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            //校验角色和机构的选择逻辑
+            //校验角色和部门的选择逻辑
             checkRoleAndOrg(ue);
             //检查用户名和登录名
             checkLoginName(ue);
@@ -556,19 +556,19 @@ public class UserService {
                 userBusinessService.insertUserBusiness(ubObj, request);
             }
             if(ue.getOrgaId()!=null && "1".equals(ue.getLeaderFlag())){
-                //检查当前机构是否存在经理
+                //检查当前部门是否存在经理
                 List<User> checkList = userMapperEx.getListByOrgaId(ue.getId(), ue.getOrgaId());
                 if(checkList.size()>0) {
                     throw new BusinessRunTimeException(ExceptionConstants.USER_LEADER_IS_EXIST_CODE,
                             ExceptionConstants.USER_LEADER_IS_EXIST_MSG);
                 }
             }
-            //新增用户和机构关联关系
+            //新增用户和部门关联关系
             OrgaUserRel oul=new OrgaUserRel();
-            //机构id
+            //部门id
             oul.setOrgaId(ue.getOrgaId());
             oul.setUserId(userId);
-            //用户在机构中的排序
+            //用户在部门中的排序
             oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
             oul=orgaUserRelService.addOrgaUserRel(oul);
             if(oul==null){
@@ -680,7 +680,7 @@ public class UserService {
             logService.insertLog("用户",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(ue.getId()).toString(),
                     ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
-            //校验角色和机构的选择逻辑
+            //校验角色和部门的选择逻辑
             checkRoleAndOrg(ue);
             //检查用户名和登录名
             checkLoginName(ue);
@@ -706,28 +706,28 @@ public class UserService {
                 }
             }
             if(ue.getOrgaId()!=null && "1".equals(ue.getLeaderFlag())){
-                //检查当前机构是否存在经理
+                //检查当前部门是否存在经理
                 List<User> checkList = userMapperEx.getListByOrgaId(ue.getId(), ue.getOrgaId());
                 if(checkList.size()>0) {
                     throw new BusinessRunTimeException(ExceptionConstants.USER_LEADER_IS_EXIST_CODE,
                             ExceptionConstants.USER_LEADER_IS_EXIST_MSG);
                 }
             }
-            //更新用户和机构关联关系
+            //更新用户和部门关联关系
             OrgaUserRel oul = new OrgaUserRel();
-            //机构和用户关联关系id
+            //部门和用户关联关系id
             oul.setId(ue.getOrgaUserRelId());
-            //机构id
+            //部门id
             oul.setOrgaId(ue.getOrgaId());
             //用户id
             oul.setUserId(ue.getId());
-            //用户在机构中的排序
+            //用户在部门中的排序
             oul.setUserBlngOrgaDsplSeq(ue.getUserBlngOrgaDsplSeq());
             if (oul.getId() != null) {
-                //已存在机构和用户的关联关系，更新
+                //已存在部门和用户的关联关系，更新
                 oul = orgaUserRelService.updateOrgaUserRel(oul);
             } else {
-                //不存在机构和用户的关联关系，新建
+                //不存在部门和用户的关联关系，新建
                 oul = orgaUserRelService.addOrgaUserRel(oul);
             }
             if (oul == null) {
@@ -753,13 +753,13 @@ public class UserService {
     }
 
     /**
-     * 校验角色和机构的选择逻辑：如果角色的数据类型是本机构数据，此时如果未选择机构，则异常
+     * 校验角色和部门的选择逻辑：如果角色的数据类型是本部门数据，此时如果未选择部门，则异常
      * @param ue
      */
     private void checkRoleAndOrg(UserEx ue) throws Exception {
         Long orgaId = ue.getOrgaId();
         String type = roleService.getRole(ue.getRoleId()).getType();
-        if("本机构数据".equals(type) && orgaId==null) {
+        if("本部门数据".equals(type) && orgaId==null) {
             throw new BusinessRunTimeException(ExceptionConstants.USER_ROLE_ORGA_EMPTY_CODE,
                     ExceptionConstants.USER_ROLE_ORGA_EMPTY_MSG);
         }

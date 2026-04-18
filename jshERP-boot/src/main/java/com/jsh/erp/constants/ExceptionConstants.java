@@ -74,9 +74,9 @@ public class ExceptionConstants {
     //租户不能被删除
     public static final int USER_LIMIT_TENANT_DELETE_CODE = 500008;
     public static final String USER_LIMIT_TENANT_DELETE_MSG = "抱歉，租户不能被删除";
-    //当前机构已经存在经理
+    //当前部门已经存在经理
     public static final int USER_LEADER_IS_EXIST_CODE = 500009;
-    public static final String USER_LEADER_IS_EXIST_MSG = "抱歉，当前机构已经存在经理";
+    public static final String USER_LEADER_IS_EXIST_MSG = "抱歉，当前部门已经存在经理";
     //验证码错误
     public static final int USER_JCAPTCHA_ERROR_CODE = 500010;
     public static final String USER_JCAPTCHA_ERROR_MSG = "验证码错误";
@@ -86,9 +86,9 @@ public class ExceptionConstants {
     //验证码不能为空
     public static final int USER_JCAPTCHA_EMPTY_CODE = 500012;
     public static final String USER_JCAPTCHA_EMPTY_MSG = "验证码不能为空";
-    //当前角色的数据类型是本机构数据，所以必须选择机构
+    //当前角色的数据类型是本部门数据，所以必须选择部门
     public static final int USER_ROLE_ORGA_EMPTY_CODE = 500013;
-    public static final String USER_ROLE_ORGA_EMPTY_MSG = "当前角色的数据类型是本机构数据，所以必须选择机构";
+    public static final String USER_ROLE_ORGA_EMPTY_MSG = "当前角色的数据类型是本部门数据，所以必须选择部门";
 
     /**
      * 角色信息
@@ -553,43 +553,43 @@ public class ExceptionConstants {
     public static final int SERIAL_NUMBERE_NOT_EXISTS_CODE = 10500001;
     public static final String SERIAL_NUMBERE_NOT_EXISTS_MSG = "序列号:%s不存在或者已经出库";
     /**
-     * 机构信息
+     * 部门信息
      * type = 110
      * */
-    //添加机构信息失败
+    //添加部门信息失败
     public static final int ORGANIZATION_ADD_FAILED_CODE = 11000000;
-    public static final String ORGANIZATION_ADD_FAILED_MSG = "添加机构信息失败";
-    //删除机构信息失败
+    public static final String ORGANIZATION_ADD_FAILED_MSG = "添加部门信息失败";
+    //删除部门信息失败
     public static final int ORGANIZATION_DELETE_FAILED_CODE = 11000001;
-    public static final String ORGANIZATION_DELETE_FAILED_MSG = "删除机构信息失败";
-    //修改机构信息失败
+    public static final String ORGANIZATION_DELETE_FAILED_MSG = "删除部门信息失败";
+    //修改部门信息失败
     public static final int ORGANIZATION_EDIT_FAILED_CODE = 11000002;
-    public static final String ORGANIZATION_EDIT_FAILED_MSG = "修改机构信息失败";
-    //机构编号已存在
+    public static final String ORGANIZATION_EDIT_FAILED_MSG = "修改部门信息失败";
+    //部门编号已存在
     public static final int ORGANIZATION_NO_ALREADY_EXISTS_CODE = 11000003;
-    public static final String ORGANIZATION_NO_ALREADY_EXISTS_MSG = "机构编号已存在";
-    //根机构不允许删除
+    public static final String ORGANIZATION_NO_ALREADY_EXISTS_MSG = "部门编号已存在";
+    //根部门不允许删除
     public static final int ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_CODE = 11000004;
-    public static final String ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_MSG = "根机构不允许删除";
-    //根机构不允许修改
+    public static final String ORGANIZATION_ROOT_NOT_ALLOWED_DELETE_MSG = "根部门不允许删除";
+    //根部门不允许修改
     public static final int ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_CODE = 11000005;
-    public static final String ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_MSG = "根机构不允许修改";
-    //该机构存在下级不允许删除
+    public static final String ORGANIZATION_ROOT_NOT_ALLOWED_EDIT_MSG = "根部门不允许修改";
+    //该部门存在下级不允许删除
     public static final int ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_CODE = 11000006;
-    public static final String ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_MSG = "该机构存在下级不允许删除";
+    public static final String ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_MSG = "该部门存在下级不允许删除";
     /**
-     * 机构用户关联关系
+     * 部门用户关联关系
      * type = 115
      * */
-    //添加机构用户关联关系失败
+    //添加部门用户关联关系失败
     public static final int ORGA_USER_REL_ADD_FAILED_CODE = 11500000;
-    public static final String ORGA_USER_REL_ADD_FAILED_MSG = "添加机构用户关联关系失败";
-    //删除机构用户关联关系失败
+    public static final String ORGA_USER_REL_ADD_FAILED_MSG = "添加部门用户关联关系失败";
+    //删除部门用户关联关系失败
     public static final int ORGA_USER_REL_DELETE_FAILED_CODE = 11500001;
-    public static final String ORGA_USER_REL_DELETE_FAILED_MSG = "删除机构用户关联关系失败";
-    //修改机构用户关联关系失败
+    public static final String ORGA_USER_REL_DELETE_FAILED_MSG = "删除部门用户关联关系失败";
+    //修改部门用户关联关系失败
     public static final int ORGA_USER_REL_EDIT_FAILED_CODE = 11500002;
-    public static final String ORGA_USER_REL_EDIT_FAILED_MSG = "修改机构用户关联关系失败";
+    public static final String ORGA_USER_REL_EDIT_FAILED_MSG = "修改部门用户关联关系失败";
 
     //进销存统计，如果有权限的仓库数量太多则提示要选择仓库
     public static final int REPORT_TWO_MANY_DEPOT_FAILED_CODE = 510;

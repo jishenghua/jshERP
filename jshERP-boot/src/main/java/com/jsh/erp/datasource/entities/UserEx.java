@@ -9,13 +9,13 @@ import java.util.Date;
  * @Date: 2019/3/8 15:12
  */
 public class UserEx extends User{
-    //机构简称
+    //部门简称
     private String orgAbr;
-    //机构id
+    //部门id
     private Long orgaId;
     //用户在部门中排序
     private String userBlngOrgaDsplSeq;
-    //机构用户关联关系id
+    //部门用户关联关系id
     private Long orgaUserRelId;
 
     private Long roleId;

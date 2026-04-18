@@ -51,7 +51,7 @@ public class OrgaUserRelService {
         int result=0;
         try{
             result=orgaUserRelMapper.insertSelective(orgaUserRel);
-            logService.insertLog("用户与机构关系", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
+            logService.insertLog("用户与部门关系", BusinessConstants.LOG_OPERATION_TYPE_ADD, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -63,7 +63,7 @@ public class OrgaUserRelService {
         int result=0;
         try{
             result=orgaUserRelMapper.updateByPrimaryKeySelective(orgaUserRel);
-            logService.insertLog("用户与机构关系",
+            logService.insertLog("用户与部门关系",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(orgaUserRel.getId()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -75,7 +75,7 @@ public class OrgaUserRelService {
         int result=0;
         try{
             result=orgaUserRelMapper.deleteByPrimaryKey(id);
-            logService.insertLog("用户与机构关系",
+            logService.insertLog("用户与部门关系",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -90,7 +90,7 @@ public class OrgaUserRelService {
         int result=0;
         try{
             result=orgaUserRelMapper.deleteByExample(example);
-            logService.insertLog("用户与机构关系", "批量删除,id集:" + ids, request);
+            logService.insertLog("用户与部门关系", "批量删除,id集:" + ids, request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
         }
@@ -99,7 +99,7 @@ public class OrgaUserRelService {
     /**
      * create by: cjl
      * description:
-     *  新增机构用户关联关系,反显id
+     *  新增部门用户关联关系,反显id
      * create time: 2019/3/12 9:40
      * @Param: orgaUserRel
      * @return void
@@ -139,7 +139,7 @@ public class OrgaUserRelService {
     /**
      * create by: cjl
      * description:
-     *  更新机构用户关联关系
+     *  更新部门用户关联关系
      * create time: 2019/3/12 9:40
      * @Param: orgaUserRel
      * @return void

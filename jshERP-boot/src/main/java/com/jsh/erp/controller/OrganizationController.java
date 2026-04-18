@@ -31,7 +31,7 @@ import static com.jsh.erp.utils.ResponseJsonUtil.returnStr;
  */
 @RestController
 @RequestMapping(value = "/organization")
-@Api(tags = {"机构管理"})
+@Api(tags = {"部门管理"})
 public class OrganizationController {
     private Logger logger = LoggerFactory.getLogger(OrganizationController.class);
 
@@ -102,13 +102,13 @@ public class OrganizationController {
     }
 
     /**
-     * 根据id来查询机构信息
+     * 根据id来查询部门信息
      * @param id
      * @param request
      * @return
      */
     @GetMapping(value = "/findById")
-    @ApiOperation(value = "根据id来查询机构信息")
+    @ApiOperation(value = "根据id来查询部门信息")
     public BaseResponseInfo findById(@RequestParam("id") Long id, HttpServletRequest request) throws Exception {
         BaseResponseInfo res = new BaseResponseInfo();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -122,7 +122,7 @@ public class OrganizationController {
                     outer.put("parentId", org.getParentId());
                     List<Organization> dataParentList = organizationService.findByParentId(org.getParentId());
                     if(dataParentList!=null&&dataParentList.size()>0){
-                        //父级机构名称显示简称
+                        //父级部门名称显示简称
                         outer.put("orgParentName", dataParentList.get(0).getOrgAbr());
                     }
                     outer.put("orgNo", org.getOrgNo());
@@ -141,12 +141,12 @@ public class OrganizationController {
     }
 
     /**
-     * 获取机构树数据
+     * 获取部门树数据
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/getOrganizationTree")
-    @ApiOperation(value = "获取机构树数据")
+    @ApiOperation(value = "获取部门树数据")
     public JSONArray getOrganizationTree(@RequestParam("id") Long id) throws Exception{
        JSONArray arr=new JSONArray();
        List<TreeNode> organizationTree= organizationService.getOrganizationTree(id);
@@ -161,13 +161,13 @@ public class OrganizationController {
     }
 
     /**
-     * 根据用户获取全部机构树
+     * 根据用户获取全部部门树
      * @param request
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/getAllOrganizationTreeByUser")
-    @ApiOperation(value = "根据用户获取全部机构树")
+    @ApiOperation(value = "根据用户获取全部部门树")
     public JSONArray getAllOrganizationTreeByUser(HttpServletRequest request) throws Exception{
         JSONArray arr = new JSONArray();
         Long userId = userService.getUserId(request);

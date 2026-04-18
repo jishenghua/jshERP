@@ -271,7 +271,7 @@ public class DepotHeadService {
     }
 
     /**
-     * 获取机构数组
+     * 获取部门数组
      * @return
      */
     public String[] getOrganArray(String subType, String purchaseStatus) throws Exception {

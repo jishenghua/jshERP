@@ -66,7 +66,7 @@ public class OrganizationService {
         int result=0;
         try{
             result=organizationMapper.insertSelective(organization);
-            logService.insertLog("机构",
+            logService.insertLog("部门",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_ADD).append(organization.getOrgAbr()).toString(),request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -80,7 +80,7 @@ public class OrganizationService {
         int result=0;
         try{
             result=organizationMapperEx.editOrganization(organization);
-            logService.insertLog("机构",
+            logService.insertLog("部门",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(organization.getOrgAbr()).toString(), request);
         }catch(Exception e){
             JshException.writeFail(logger, e);
@@ -106,14 +106,14 @@ public class OrganizationService {
         for(Organization organization: list){
             sb.append("[").append(organization.getOrgAbr()).append("]");
         }
-        logService.insertLog("机构", sb.toString(),
+        logService.insertLog("部门", sb.toString(),
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest());
         User userInfo=userService.getCurrentUser();
         String [] idArray=ids.split(",");
         int result=0;
         List <Organization> organList = organizationMapperEx.getOrganizationByParentIds(idArray);
         if(organList!=null && organList.size()>0) {
-            //如果存在子机构则不能删除
+            //如果存在子部门则不能删除
             logger.error("异常码[{}],异常提示[{}]",
                     ExceptionConstants.ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_CODE,ExceptionConstants.ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_MSG);
             throw new BusinessRunTimeException(ExceptionConstants.ORGANIZATION_CHILD_NOT_ALLOWED_DELETE_CODE,
@@ -187,7 +187,7 @@ public class OrganizationService {
     /**
      * create by: cjl
      * description:
-     *  检查机构编号是否已经存在
+     *  检查部门编号是否已经存在
      * create time: 2019/3/7 10:01
      * @Param: orgNo
      * @return void
@@ -198,7 +198,7 @@ public class OrganizationService {
             if(orgList.size()>1){
                 logger.error("异常码[{}],异常提示[{}],参数,orgNo[{}]",
                         ExceptionConstants.ORGANIZATION_NO_ALREADY_EXISTS_CODE,ExceptionConstants.ORGANIZATION_NO_ALREADY_EXISTS_MSG,orgNo);
-                //获取的数据条数大于1，机构编号已存在
+                //获取的数据条数大于1，部门编号已存在
                 throw new BusinessRunTimeException(ExceptionConstants.ORGANIZATION_NO_ALREADY_EXISTS_CODE,
                         ExceptionConstants.ORGANIZATION_NO_ALREADY_EXISTS_MSG);
             }
