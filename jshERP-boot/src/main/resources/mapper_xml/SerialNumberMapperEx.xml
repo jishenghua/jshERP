@@ -66,6 +66,23 @@
         and ifnull(ser.delete_flag,'0') !='1'
         and ser.is_sell !='1'
     </select>
+
+    <select id="getMinSerialNumberByMaterialIdAndSn" resultType="com.jsh.erp.datasource.entities.SerialNumber">
+        select MIN(id) as id, material_id, serial_number from jsh_serial_number
+        where material_id = #{materialId}
+        <if test="snArray != null">
+            and serial_number
+            in (
+            <foreach collection="snArray" item="sn" separator=",">
+                #{sn}
+            </foreach>
+            )
+        </if>
+        and is_sell != '1'
+        and ifnull(delete_flag,'0') != '1'
+        group by material_id, serial_number
+    </select>
+
     <update id="sellSerialNumber">
         update jsh_serial_number
         <set>
@@ -80,21 +97,13 @@
                 updater = #{updater},
             </if>
         </set>
-        where 1=1
-        <if test="materialId != null">
-            and material_id = #{materialId}
-        </if>
-            and is_sell != '1'
-            and ifnull(delete_flag,'0') !='1'
-        <if test="snArray != null">
-            and serial_number
-            in (
-            <foreach collection="snArray" item="sn" separator=",">
-                #{sn}
+        where is_sell != '1'
+        <if test="idList.size()>0">
+            and id in
+            <foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+                #{item}
             </foreach>
-            )
         </if>
-
     </update>
 
     <update id="cancelSerialNumber">

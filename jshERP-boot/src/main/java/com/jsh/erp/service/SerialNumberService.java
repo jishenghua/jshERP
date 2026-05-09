@@ -150,7 +150,12 @@ public class SerialNumberService {
                         String.format(ExceptionConstants.SERIAL_NUMBERE_NOT_EXISTS_MSG, sn));
             }
         }
-        serialNumberMapperEx.sellSerialNumber(materialId, outBillNo, snArray, new Date(), user == null ? null : user.getId());
+        List<SerialNumber> minList = serialNumberMapperEx.getMinSerialNumberByMaterialIdAndSn(materialId, snArray);
+        List<Long> idList = new ArrayList<>();
+        for (SerialNumber serialNumber : minList) {
+            idList.add(serialNumber.getId());
+        }
+        serialNumberMapperEx.sellSerialNumber(idList, outBillNo, new Date(), user == null ? null : user.getId());
     }
 
     /**
