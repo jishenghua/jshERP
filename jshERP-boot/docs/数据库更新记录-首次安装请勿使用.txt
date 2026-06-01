@@ -1833,3 +1833,10 @@ VALUES ('000113', '字典管理', '0001', '/system/dict', '/system/DictList', b'
 update jsh_function set name='菜单管理' where number='000105';
 update jsh_function set name='部门管理' where number='000108';
 update jsh_role set type='本部门数据' where type='本机构数据';
+
+-- --------------------------------------------------------
+-- 时间 2026年6月1日
+-- by jishenghua
+-- 给单据主表里面增加最终欠款字段
+-- --------------------------------------------------------
+alter table jsh_depot_head add last_debt decimal(24,6) DEFAULT NULL COMMENT '最终欠款' after deposit;

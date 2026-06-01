@@ -156,6 +156,7 @@ CREATE TABLE `jsh_depot_head`  (
   `discount_last_money` decimal(24, 6) NULL DEFAULT NULL COMMENT '优惠后金额',
   `other_money` decimal(24, 6) NULL DEFAULT NULL COMMENT '销售或采购费用合计',
   `deposit` decimal(24, 6) NULL DEFAULT NULL COMMENT '订金',
+  `last_debt` decimal(24, 6) NULL DEFAULT NULL COMMENT '最终欠款',
   `status` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态，0未审核、1已审核、2完成采购|销售、3部分采购|销售、9审核中',
   `purchase_status` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '采购状态，0未采购、2完成采购、3部分采购',
   `source` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0' COMMENT '单据来源，0-pc，1-手机',
