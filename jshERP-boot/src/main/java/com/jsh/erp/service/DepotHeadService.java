@@ -185,8 +185,12 @@ public class DepotHeadService {
                     BigDecimal debt = discountLastMoney.add(otherMoney).subtract((deposit.add(changeAmount)));
                     dh.setDebt(roleService.parseBillPriceByLimit(debt, billCategory, priceLimit, request));
                     //最终欠款的金额
-                    BigDecimal lastDebt = dh.getLastDebt()!=null?dh.getLastDebt():BigDecimal.ZERO;
-                    dh.setLastDebt(roleService.parseBillPriceByLimit(lastDebt, billCategory, priceLimit, request));
+                    //TODO 暂时还是先通过计算获取，半年后改成从数据库直接去读last_dept time:20260601
+                    if(financialBillPriceMap!=null) {
+                        BigDecimal financialBillPrice = financialBillPriceMap.get(dh.getId())!=null?financialBillPriceMap.get(dh.getId()):BigDecimal.ZERO;
+                        BigDecimal lastDebt = debt.subtract(financialBillPrice);
+                        dh.setLastDebt(roleService.parseBillPriceByLimit(lastDebt, billCategory, priceLimit, request));
+                    }
                     //是否有退款单
                     if(billSizeMap!=null) {
                         Integer billListSize = billSizeMap.get(dh.getNumber());
