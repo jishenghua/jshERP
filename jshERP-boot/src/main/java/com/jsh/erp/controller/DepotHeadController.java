@@ -81,6 +81,7 @@ public class DepotHeadController extends BaseController {
         String type = StringUtil.getInfo(search, "type");
         String subType = StringUtil.getInfo(search, "subType");
         String hasDebt = StringUtil.getInfo(search, "hasDebt");
+        String hasLastDebt = StringUtil.getInfo(search, "hasLastDebt");
         String status = StringUtil.getInfo(search, "status");
         String purchaseStatus = StringUtil.getInfo(search, "purchaseStatus");
         String number = StringUtil.getInfo(search, "number");
@@ -95,7 +96,7 @@ public class DepotHeadController extends BaseController {
         Long accountId = StringUtil.parseStrLong(StringUtil.getInfo(search, "accountId"));
         String salesMan = StringUtil.getInfo(search, "salesMan");
         String remark = StringUtil.getInfo(search, "remark");
-        List<DepotHeadVo4List> list = depotHeadService.select(type, subType, hasDebt, status, purchaseStatus, number, linkApply, linkNumber,
+        List<DepotHeadVo4List> list = depotHeadService.select(type, subType, hasDebt, hasLastDebt, status, purchaseStatus, number, linkApply, linkNumber,
                 beginTime, endTime, materialParam, organId, creator, depotId, accountId, salesMan, remark);
         return getDataTable(list);
     }
@@ -135,6 +136,19 @@ public class DepotHeadController extends BaseController {
         Map<String, Object> objectMap = new HashMap<>();
         String ids = jsonObject.getString("ids");
         int res = depotHeadService.batchForceClosePurchase(ids, request);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
+    @PostMapping(value = "/batchSetLastDebt")
+    @ApiOperation(value = "修正最终欠款")
+    public String batchSetLastDebt(@RequestBody JSONObject jsonObject, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String ids = jsonObject.getString("ids");
+        int res = depotHeadService.batchSetLastDebt(ids, request);
         if(res > 0) {
             return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
         } else {

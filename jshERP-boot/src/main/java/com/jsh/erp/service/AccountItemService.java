@@ -6,6 +6,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.AccountItem;
 import com.jsh.erp.datasource.entities.AccountItemExample;
+import com.jsh.erp.datasource.entities.DepotHead;
 import com.jsh.erp.datasource.entities.User;
 import com.jsh.erp.datasource.mappers.AccountItemMapper;
 import com.jsh.erp.datasource.mappers.AccountItemMapperEx;
@@ -22,6 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -112,6 +114,7 @@ public class AccountItemService {
         deleteAccountItemHeadId(headerId);
         JSONArray rowArr = JSONArray.parseArray(rows);
         if (null != rowArr && rowArr.size()>0) {
+            List<AccountItem> accountItemList = new ArrayList<>();
             for (int i = 0; i < rowArr.size(); i++) {
                 AccountItem accountItem = new AccountItem();
                 JSONObject tempInsertedJson = JSONObject.parseObject(rowArr.getString(i));
@@ -142,7 +145,22 @@ public class AccountItemService {
                     accountItem.setEachAmount(BigDecimal.ZERO);
                 }
                 accountItem.setRemark(tempInsertedJson.getString("remark"));
+                accountItemList.add(accountItem);
+            }
+            for (AccountItem accountItem : accountItemList) {
                 this.insertAccountItemWithObj(accountItem);
+            }
+            //更新业务单据的最终欠款
+            for (AccountItem accountItem : accountItemList) {
+                if(accountItem.getBillId()!=null) {
+                    DepotHead dh = depotHeadService.getDepotHead(accountItem.getBillId());
+                    if(dh!=null) {
+                        BigDecimal debt = depotHeadService.getDebtByBill(dh);
+                        if(debt.compareTo(BigDecimal.ZERO)!=0) {
+                            depotHeadService.updateLastDebtByBillId(debt, accountItem.getBillId());
+                        }
+                    }
+                }
             }
         } else {
             throw new BusinessRunTimeException(ExceptionConstants.ACCOUNT_HEAD_ROW_FAILED_CODE,

@@ -27,6 +27,7 @@
     <result column="discount_last_money" jdbcType="DECIMAL" property="discountLastMoney" />
     <result column="other_money" jdbcType="DECIMAL" property="otherMoney" />
     <result column="deposit" jdbcType="DECIMAL" property="deposit" />
+    <result column="debt" jdbcType="DECIMAL" property="debt" />
     <result column="last_debt" jdbcType="DECIMAL" property="lastDebt" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="purchase_status" jdbcType="VARCHAR" property="purchaseStatus" />
@@ -98,8 +99,8 @@
     id, type, sub_type, default_number, number, create_time, oper_time, organ_id, creator, 
     account_id, change_amount, back_amount, total_price, pay_type, bill_type, remark, 
     file_name, sales_man, account_id_list, account_money_list, discount, discount_money, 
-    discount_last_money, other_money, deposit, last_debt, status, purchase_status, source, 
-    link_number, link_apply, tenant_id, delete_flag
+    discount_last_money, other_money, deposit, debt, last_debt, status, purchase_status, 
+    source, link_number, link_apply, tenant_id, delete_flag
   </sql>
   <select id="selectByExample" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="BaseResultMap">
     select
@@ -140,10 +141,10 @@
       remark, file_name, sales_man, 
       account_id_list, account_money_list, discount, 
       discount_money, discount_last_money, other_money, 
-      deposit, last_debt, status, 
-      purchase_status, source, link_number, 
-      link_apply, tenant_id, delete_flag
-      )
+      deposit, debt, last_debt, 
+      status, purchase_status, source, 
+      link_number, link_apply, tenant_id, 
+      delete_flag)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, 
       #{defaultNumber,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{operTime,jdbcType=TIMESTAMP}, #{organId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT}, 
@@ -152,10 +153,10 @@
       #{remark,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{salesMan,jdbcType=VARCHAR}, 
       #{accountIdList,jdbcType=VARCHAR}, #{accountMoneyList,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, 
       #{discountMoney,jdbcType=DECIMAL}, #{discountLastMoney,jdbcType=DECIMAL}, #{otherMoney,jdbcType=DECIMAL}, 
-      #{deposit,jdbcType=DECIMAL}, #{lastDebt,jdbcType=DECIMAL}, #{status,jdbcType=VARCHAR}, 
-      #{purchaseStatus,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{linkNumber,jdbcType=VARCHAR}, 
-      #{linkApply,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=VARCHAR}
-      )
+      #{deposit,jdbcType=DECIMAL}, #{debt,jdbcType=DECIMAL}, #{lastDebt,jdbcType=DECIMAL}, 
+      #{status,jdbcType=VARCHAR}, #{purchaseStatus,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{linkNumber,jdbcType=VARCHAR}, #{linkApply,jdbcType=VARCHAR}, #{tenantId,jdbcType=BIGINT}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jsh.erp.datasource.entities.DepotHead">
     insert into jsh_depot_head
@@ -234,6 +235,9 @@
       </if>
       <if test="deposit != null">
         deposit,
+      </if>
+      <if test="debt != null">
+        debt,
       </if>
       <if test="lastDebt != null">
         last_debt,
@@ -335,6 +339,9 @@
       </if>
       <if test="deposit != null">
         #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="debt != null">
+        #{debt,jdbcType=DECIMAL},
       </if>
       <if test="lastDebt != null">
         #{lastDebt,jdbcType=DECIMAL},
@@ -446,6 +453,9 @@
       <if test="record.deposit != null">
         deposit = #{record.deposit,jdbcType=DECIMAL},
       </if>
+      <if test="record.debt != null">
+        debt = #{record.debt,jdbcType=DECIMAL},
+      </if>
       <if test="record.lastDebt != null">
         last_debt = #{record.lastDebt,jdbcType=DECIMAL},
       </if>
@@ -502,6 +512,7 @@
       discount_last_money = #{record.discountLastMoney,jdbcType=DECIMAL},
       other_money = #{record.otherMoney,jdbcType=DECIMAL},
       deposit = #{record.deposit,jdbcType=DECIMAL},
+      debt = #{record.debt,jdbcType=DECIMAL},
       last_debt = #{record.lastDebt,jdbcType=DECIMAL},
       status = #{record.status,jdbcType=VARCHAR},
       purchase_status = #{record.purchaseStatus,jdbcType=VARCHAR},
@@ -589,6 +600,9 @@
       <if test="deposit != null">
         deposit = #{deposit,jdbcType=DECIMAL},
       </if>
+      <if test="debt != null">
+        debt = #{debt,jdbcType=DECIMAL},
+      </if>
       <if test="lastDebt != null">
         last_debt = #{lastDebt,jdbcType=DECIMAL},
       </if>
@@ -642,6 +656,7 @@
       discount_last_money = #{discountLastMoney,jdbcType=DECIMAL},
       other_money = #{otherMoney,jdbcType=DECIMAL},
       deposit = #{deposit,jdbcType=DECIMAL},
+      debt = #{debt,jdbcType=DECIMAL},
       last_debt = #{lastDebt,jdbcType=DECIMAL},
       status = #{status,jdbcType=VARCHAR},
       purchase_status = #{purchaseStatus,jdbcType=VARCHAR},

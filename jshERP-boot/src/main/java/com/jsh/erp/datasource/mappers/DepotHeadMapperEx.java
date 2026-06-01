@@ -20,6 +20,7 @@ public interface DepotHeadMapperEx {
             @Param("subType") String subType,
             @Param("creatorArray") String[] creatorArray,
             @Param("hasDebt") String hasDebt,
+            @Param("hasLastDebt") String hasLastDebt,
             @Param("statusArray") String[] statusArray,
             @Param("purchaseStatusArray") String[] purchaseStatusArray,
             @Param("number") String number,

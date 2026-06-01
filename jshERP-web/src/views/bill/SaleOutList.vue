@@ -90,8 +90,16 @@
                   </a-form-item>
                 </a-col>
                 <a-col :md="6" :sm="24">
-                  <a-form-item label="有无欠款" :labelCol="labelCol" :wrapperCol="wrapperCol">
-                    <a-select placeholder="请选择有无欠款" allow-clear v-model="queryParam.hasDebt">
+                  <a-form-item label="本次欠款" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择有无本次欠款" allow-clear v-model="queryParam.hasDebt">
+                      <a-select-option value="1">有欠款</a-select-option>
+                      <a-select-option value="0">无欠款</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+                <a-col :md="6" :sm="24">
+                  <a-form-item label="最终欠款" :labelCol="labelCol" :wrapperCol="wrapperCol">
+                    <a-select placeholder="请选择有无最终欠款" allow-clear v-model="queryParam.hasLastDebt">
                       <a-select-option value="1">有欠款</a-select-option>
                       <a-select-option value="0">无欠款</a-select-option>
                     </a-select>
@@ -136,6 +144,9 @@
           </a-tooltip>
           <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
+          <a-tooltip title="可对最终欠款的值进行修正">
+            <a-button v-if="btnEnableList.indexOf(1)>-1" icon="fund" @click="batchSetLastDebt">修正欠款</a-button>
+          </a-tooltip>
           <a-button v-if="isShowExcel && btnEnableList.indexOf(3)>-1" icon="download" @click="handleExport">导出</a-button>
           <a-popover trigger="click" placement="right">
             <template slot="content">
@@ -272,6 +283,7 @@
           linkNumber: "",
           accountId: undefined,
           hasDebt: undefined,
+          hasLastDebt: undefined,
           status: undefined,
           salesMan: undefined,
           remark: ""
@@ -348,6 +360,7 @@
           delete: "/depotHead/delete",
           deleteBatch: "/depotHead/deleteBatch",
           forceCloseBatch: "/depotHead/forceCloseBatch",
+          batchSetLastDebtUrl: "/depotHead/batchSetLastDebt",
           batchSetStatusUrl: "/depotHead/batchSetStatus"
         }
       }

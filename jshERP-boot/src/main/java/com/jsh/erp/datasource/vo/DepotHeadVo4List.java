@@ -39,19 +39,12 @@ public class DepotHeadVo4List extends DepotHead{
 
     private BigDecimal needDebt;
 
-    private BigDecimal debt;
-
     private BigDecimal materialCount;
 
     /**
      * 是否有付款单或收款单
      */
     private Boolean hasFinancialFlag;
-
-    /**
-     * 最终欠款
-     */
-    private BigDecimal lastDebt;
 
     /**
      * 是否有退款单
@@ -211,14 +204,6 @@ public class DepotHeadVo4List extends DepotHead{
         this.needDebt = needDebt;
     }
 
-    public BigDecimal getDebt() {
-        return debt;
-    }
-
-    public void setDebt(BigDecimal debt) {
-        this.debt = debt;
-    }
-
     public BigDecimal getMaterialCount() {
         return materialCount;
     }
@@ -233,14 +218,6 @@ public class DepotHeadVo4List extends DepotHead{
 
     public void setHasFinancialFlag(Boolean hasFinancialFlag) {
         this.hasFinancialFlag = hasFinancialFlag;
-    }
-
-    public BigDecimal getLastDebt() {
-        return lastDebt;
-    }
-
-    public void setLastDebt(BigDecimal lastDebt) {
-        this.lastDebt = lastDebt;
     }
 
     public Boolean getHasBackFlag() {

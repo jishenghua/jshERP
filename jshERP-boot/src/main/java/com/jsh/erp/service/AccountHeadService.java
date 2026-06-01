@@ -410,6 +410,31 @@ public class AccountHeadService {
         return resList;
     }
 
+
+    /**
+     * 根据单据id获取对应的收付款金额
+     * @param billId
+     * @return
+     */
+    public BigDecimal getFinancialBillPriceByBillId(Long billId) {
+        BigDecimal eachAmount = BigDecimal.ZERO;
+        if(billId!=null) {
+            List<Long> idList = new ArrayList<>();
+            idList.add(billId);
+            List<AccountItem> list = getFinancialBillPriceByBillIdList(idList);
+            if(list!=null && !list.isEmpty()) {
+                for (AccountItem accountItem : list) {
+                    if(accountItem!=null && accountItem.getBillId()!=null) {
+                        if(accountItem.getBillId().equals(billId)) {
+                            eachAmount = accountItem.getEachAmount().abs();
+                        }
+                    }
+                }
+            }
+        }
+        return eachAmount;
+    }
+
     public List<AccountItem> getFinancialBillPriceByBillIdList(List<Long> idList) {
         return accountHeadMapperEx.getFinancialBillPriceByBillIdList(idList);
     }
