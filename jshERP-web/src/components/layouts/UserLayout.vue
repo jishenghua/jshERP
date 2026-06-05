@@ -1,7 +1,6 @@
 <template>
   <div class="back-layout">
     <div class="lang-setting">
-      <a-icon type="global" class="select-title" />
       <a-select placeholder="请选择语言" showSearch optionFilterProp="children" :value="currentLang" @change="handleChangeLang" class="select-list">
         <a-select-option class="ignore" value="chinese_simplified">简体中文</a-select-option>
         <a-select-option class="ignore" value="chinese_traditional">繁體中文</a-select-option>
@@ -219,11 +218,6 @@
   .back-layout .lang-setting {
     float: right;
     padding-top: 10px;
-  }
-  .back-layout .lang-setting .select-title {
-    padding-right: 5px;
-    font-size: 18px;
-    color: #acacac;
   }
   .back-layout .lang-setting .select-list {
     width:100px;
