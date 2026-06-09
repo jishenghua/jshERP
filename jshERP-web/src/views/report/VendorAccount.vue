@@ -209,7 +209,7 @@
           {title: '本期欠款', dataIndex: 'debtMoney', sorter: (a, b) => a.debtMoney - b.debtMoney, width: 80},
           {title: '本期付款', dataIndex: 'backMoney', sorter: (a, b) => a.backMoney - b.backMoney, width: 80},
           {dataIndex: 'allNeed', sorter: (a, b) => a.allNeed - b.allNeed, width: 80,
-            slots: { title: 'allNeedTitle' }
+            scopedSlots: { title: 'allNeedTitle' }
           }
         ],
         url: {
