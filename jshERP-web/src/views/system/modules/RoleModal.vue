@@ -38,7 +38,7 @@
           </a-form-item>
           <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="价格屏蔽">
             <j-select-multiple style="width:94%" placeholder="请选择价格屏蔽" v-model="priceLimitList.value" :options="priceLimitList.options"/>
-            <a-tooltip title="价格屏蔽支持多选，主要用于控制首页界面和物料的价格屏蔽">
+            <a-tooltip title="价格屏蔽支持多选，可以对首页和单据进行价格屏蔽，还可以对商品库存和进销存统计报表进行成本价屏蔽">
               <a-icon type="question-circle" style="width:6%; padding-left: 5px; font-size: 18px;" />
             </a-tooltip>
           </a-form-item>
@@ -86,7 +86,8 @@
             { 'value': '3', 'text': '屏蔽首页销售价'},
             { 'value': '4', 'text': '屏蔽单据采购价'},
             { 'value': '5', 'text': '屏蔽单据零售价'},
-            { 'value': '6', 'text': '屏蔽单据销售价'}
+            { 'value': '6', 'text': '屏蔽单据销售价'},
+            { 'value': '7', 'text': '屏蔽库存成本价'}
           ],
           value: ''
         },

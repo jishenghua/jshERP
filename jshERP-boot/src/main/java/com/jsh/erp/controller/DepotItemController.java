@@ -347,6 +347,8 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
             Boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
             List<Long> categoryIdList = new ArrayList<>();
             if(categoryId != null){
@@ -391,14 +393,14 @@ public class DepotItemController {
                     //将小单位的库存换算为大单位的库存
                     item.put("bigUnitStock", materialService.getBigUnitStock(thisSum, diEx.getUnitId()));
                     if(moveAvgPriceFlag) {
-                        item.put("unitPrice", diEx.getCurrentUnitPrice());
+                        item.put("unitPrice", roleService.parseStockPriceByLimit(diEx.getCurrentUnitPrice(), priceLimit, request));
                     } else {
-                        item.put("unitPrice", diEx.getPurchaseDecimal());
+                        item.put("unitPrice", roleService.parseStockPriceByLimit(diEx.getPurchaseDecimal(), priceLimit, request));
                     }
                     if(moveAvgPriceFlag) {
-                        item.put("thisAllPrice", thisSum.multiply(diEx.getCurrentUnitPrice()));
+                        item.put("thisAllPrice", roleService.parseStockPriceByLimit(thisSum.multiply(diEx.getCurrentUnitPrice()), priceLimit, request));
                     } else {
-                        item.put("thisAllPrice", thisSum.multiply(diEx.getPurchaseDecimal()));
+                        item.put("thisAllPrice", roleService.parseStockPriceByLimit(thisSum.multiply(diEx.getPurchaseDecimal()), priceLimit, request));
                     }
                     item.put("imgName", diEx.getImgName());
                     if(fileUploadType == 2) {
@@ -440,6 +442,8 @@ public class DepotItemController {
         BaseResponseInfo res = new BaseResponseInfo();
         Map<String, Object> map = new HashMap<>();
         try {
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
             Boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
             List<Long> categoryIdList = new ArrayList<>();
             if(categoryId != null){
@@ -469,7 +473,14 @@ public class DepotItemController {
                 }
             }
             map.put("totalStock", thisAllStock);
-            map.put("totalCount", thisAllPrice);
+            map.put("totalCount", roleService.parseStockPriceByLimit(thisAllPrice, priceLimit, request));
+            boolean showStockPrice = true;
+            if(StringUtil.isNotEmpty(priceLimit)) {
+                if(priceLimit.contains("7")) {
+                    showStockPrice = false;
+                }
+            }
+            map.put("showStockPrice", showStockPrice);
             res.code = 200;
             res.data = map;
         } catch (BusinessRunTimeException e) {

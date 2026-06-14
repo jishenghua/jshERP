@@ -39,7 +39,8 @@
               </a-col>
               <a-col :md="7" :sm="24">
                 <a-form-item>
-                  <span>总库存：{{currentStock}}，总库存金额：{{currentStockPrice}}，总重量：{{currentWeight}}</span>
+                  <span v-if="showStockPrice">总库存：{{currentStock}}，总库存金额：{{currentStockPrice}}，总重量：{{currentWeight}}</span>
+                  <span v-if="!showStockPrice">总库存：{{currentStock}}，总重量：{{currentWeight}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -110,8 +111,8 @@
               </a-popover>
             </span>
             <span slot="action" slot-scope="text, record">
-              <a @click="showMaterialInOutList(record)">{{record.id?'流水':''}}</a>
-              <a-divider type="vertical" />
+              <a @click="showMaterialInOutList(record)" v-if="showStockPrice">{{record.id?'流水':''}}</a>
+              <a-divider type="vertical" v-if="showStockPrice" />
               <a @click="showMaterialDepotStockList(record)">{{record.id?'分布':''}}</a>
             </span>
             <template slot="customPic" slot-scope="text, record">
@@ -200,6 +201,7 @@
         currentStock: '',
         currentStockPrice: '',
         currentWeight: '',
+        showStockPrice: false,
         pageName: 'materialStock',
         // 默认索引
         defDataIndex:['rowIndex','action','mBarCode','name','standard','model','color','categoryName', 'position','unitName',
@@ -305,6 +307,7 @@
             this.currentStock = res.data.currentStock.toFixed(2)
             this.currentStockPrice = res.data.currentStockPrice.toFixed(2)
             this.currentWeight = res.data.currentWeight.toFixed(2)
+            this.showStockPrice = res.data.showStockPrice
           } else if(res.code===510){
             this.$message.warning(res.data)
           } else {

@@ -107,7 +107,8 @@ public class RoleService {
                         .replace("3", "屏蔽首页销售价")
                         .replace("4", "屏蔽单据采购价")
                         .replace("5", "屏蔽单据零售价")
-                        .replace("6", "屏蔽单据销售价");
+                        .replace("6", "屏蔽单据销售价")
+                        .replace("7", "屏蔽库存成本价");
                     roleEx.setPriceLimitStr(priceLimitStr);
                 }
             }
@@ -271,6 +272,23 @@ public class RoleService {
             }
             if("sale".equals(billCategory) && priceLimit.contains("6")) {
                 return BigDecimal.ZERO;
+            }
+        }
+        return price;
+    }
+
+    /**
+     * 根据权限进行屏蔽成本价-库存报表
+     * @param price
+     * @param priceLimit
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public BigDecimal parseStockPriceByLimit(BigDecimal price, String priceLimit, HttpServletRequest request) throws Exception {
+        if(StringUtil.isNotEmpty(priceLimit)) {
+            if(priceLimit.contains("7")) {
+                return null;
             }
         }
         return price;

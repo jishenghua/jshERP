@@ -766,11 +766,13 @@ public class MaterialController extends BaseController {
                     depotList.add(object.getLong("id"));
                 }
             }
+            Long userId = userService.getUserId(request);
+            String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
             Boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
-            List<MaterialVo4Unit> dataList = materialService.getListWithStock(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam),
-                    moveAvgPriceFlag, zeroStock, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize);
-            int total = materialService.getListWithStockCount(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam), zeroStock);
-            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam));
+            List<MaterialVo4Unit> dataList = materialService.getListWithStock(priceLimit, depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam),
+                    moveAvgPriceFlag, zeroStock, StringUtil.safeSqlParse(column), StringUtil.safeSqlParse(order), (currentPage-1)*pageSize, pageSize, request);
+            int total = materialService.getListWithStockCount(priceLimit, depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam), zeroStock);
+            MaterialVo4Unit materialVo4Unit= materialService.getTotalStockAndPrice(priceLimit, depotList, idList, StringUtil.toNull(position), StringUtil.toNull(materialParam), request);
             map.put("total", total);
             map.put("currentStock", materialVo4Unit.getCurrentStock()!=null?materialVo4Unit.getCurrentStock():BigDecimal.ZERO);
             if(moveAvgPriceFlag) {
@@ -779,6 +781,13 @@ public class MaterialController extends BaseController {
                 map.put("currentStockPrice", materialVo4Unit.getCurrentStockPrice()!=null?materialVo4Unit.getCurrentStockPrice():BigDecimal.ZERO);
             }
             map.put("currentWeight", materialVo4Unit.getCurrentWeight()!=null?materialVo4Unit.getCurrentWeight():BigDecimal.ZERO);
+            boolean showStockPrice = true;
+            if(StringUtil.isNotEmpty(priceLimit)) {
+                if(priceLimit.contains("7")) {
+                    showStockPrice = false;
+                }
+            }
+            map.put("showStockPrice", showStockPrice);
             map.put("rows", dataList);
             res.code = 200;
             res.data = map;
@@ -888,7 +897,7 @@ public class MaterialController extends BaseController {
             @RequestParam(value = "depotIds",required = false) String depotIds,
             @RequestParam("materialId") Long mId,
             HttpServletRequest request)throws Exception {
-        List<MaterialDepotStock> list = materialService.getMaterialDepotStock(depotIds, mId);
+        List<MaterialDepotStock> list = materialService.getMaterialDepotStock(depotIds, mId, request);
         return getDataTable(list);
     }
 }

@@ -70,7 +70,7 @@
             </span>
             <span slot="priceLimitTitle">
               价格屏蔽
-              <a-tooltip title="价格屏蔽支持多选，主要用于控制首页和单据的价格屏蔽">
+              <a-tooltip title="价格屏蔽支持多选，可以对首页和单据进行价格屏蔽，还可以对商品库存和进销存统计报表进行成本价屏蔽">
                 <a-icon type="question-circle" />
               </a-tooltip>
             </span>

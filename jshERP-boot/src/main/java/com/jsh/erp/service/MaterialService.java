@@ -71,6 +71,8 @@ public class MaterialService {
     private MaterialExtendService materialExtendService;
     @Resource
     private SystemConfigService systemConfigService;
+    @Resource
+    private RoleService roleService;
 
     @Value(value="${file.uploadType}")
     private Long fileUploadType;
@@ -1361,9 +1363,9 @@ public class MaterialService {
         return materialMapperEx.getInitialStockWithMaterial(depotList);
     }
 
-    public List<MaterialVo4Unit> getListWithStock(List<Long> depotList, List<Long> idList, String position, String materialParam,
+    public List<MaterialVo4Unit> getListWithStock(String priceLimit, List<Long> depotList, List<Long> idList, String position, String materialParam,
                                                   Boolean moveAvgPriceFlag, Integer zeroStock, String column, String order,
-                                                  Integer offset, Integer rows) throws Exception {
+                                                  Integer offset, Integer rows, HttpServletRequest request) throws Exception {
         Map<Long, BigDecimal> initialStockMap = new HashMap<>();
         List<MaterialInitialStockWithMaterial> initialStockList = getInitialStockWithMaterial(depotList);
         for (MaterialInitialStockWithMaterial mism: initialStockList) {
@@ -1375,6 +1377,8 @@ public class MaterialService {
                 item.setPurchaseDecimal(item.getCurrentUnitPrice());
                 item.setCurrentStockPrice(item.getCurrentStockMovePrice());
             }
+            item.setPurchaseDecimal(roleService.parseStockPriceByLimit(item.getPurchaseDecimal(), priceLimit, request));
+            item.setCurrentStockPrice(roleService.parseStockPriceByLimit(item.getCurrentStockPrice(), priceLimit, request));
             item.setUnitName(null!=item.getUnitId()?item.getUnitName() + "[多单位]":item.getUnitName());
             item.setInitialStock(null!=initialStockMap.get(item.getId())?initialStockMap.get(item.getId()):BigDecimal.ZERO);
             item.setBigUnitStock(getBigUnitStock(item.getCurrentStock(), item.getUnitId()));
@@ -1386,12 +1390,15 @@ public class MaterialService {
         return dataList;
     }
 
-    public int getListWithStockCount(List<Long> depotList, List<Long> idList, String position, String materialParam, Integer zeroStock) {
+    public int getListWithStockCount(String priceLimit, List<Long> depotList, List<Long> idList, String position, String materialParam, Integer zeroStock) {
         return materialMapperEx.getListWithStockCount(depotList, idList, position, materialParam, zeroStock);
     }
 
-    public MaterialVo4Unit getTotalStockAndPrice(List<Long> depotList, List<Long> idList, String position, String materialParam) {
-        return materialMapperEx.getTotalStockAndPrice(depotList, idList, position, materialParam);
+    public MaterialVo4Unit getTotalStockAndPrice(String priceLimit, List<Long> depotList, List<Long> idList, String position, String materialParam, HttpServletRequest request) throws Exception {
+        MaterialVo4Unit res = materialMapperEx.getTotalStockAndPrice(depotList, idList, position, materialParam);
+        res.setCurrentStockMovePrice(roleService.parseStockPriceByLimit(res.getCurrentStockMovePrice(), priceLimit, request));
+        res.setCurrentStockPrice(roleService.parseStockPriceByLimit(res.getCurrentStockPrice(), priceLimit, request));
+        return res;
     }
 
     /**
@@ -1501,7 +1508,7 @@ public class MaterialService {
         }
     }
 
-    public List<MaterialDepotStock> getMaterialDepotStock(String depotIds, Long mId) throws Exception {
+    public List<MaterialDepotStock> getMaterialDepotStock(String depotIds, Long mId, HttpServletRequest request) throws Exception {
         String[] depotIdArr = null;
         if(StringUtil.isNotEmpty(depotIds)) {
             depotIdArr = depotIds.split(",");
@@ -1509,6 +1516,8 @@ public class MaterialService {
         boolean moveAvgPriceFlag = systemConfigService.getMoveAvgPriceFlag();
         List<Long> depotList = depotService.parseDepotListByArr(depotIdArr);
         Long[] depotIdArray = StringUtil.listToLongArray(depotList);
+        Long userId = userService.getUserId(request);
+        String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
         PageUtils.startPage();
         List<MaterialDepotStock> list = materialMapperEx.getMaterialDepotStock(depotIdArray, mId);
         for (MaterialDepotStock item: list) {
@@ -1517,6 +1526,7 @@ public class MaterialService {
             } else {
                 item.setUnitPrice(item.getPurchaseDecimal());
             }
+            item.setUnitPrice(roleService.parseStockPriceByLimit(item.getUnitPrice(), priceLimit, request));
             if(item.getCurrentNumber()!=null && item.getUnitPrice()!=null ) {
                 item.setAllPrice(item.getCurrentNumber().multiply(item.getUnitPrice()));
             }

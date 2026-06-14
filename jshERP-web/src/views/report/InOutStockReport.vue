@@ -36,7 +36,8 @@
               </a-col>
               <a-col :md="6" :sm="24">
                 <a-form-item>
-                  <span>本期总结存：{{totalStockStr}}，总结存金额：{{totalCountMoneyStr}}</span>
+                  <span v-if="showStockPrice">本期总结存：{{totalStockStr}}，总结存金额：{{totalCountMoneyStr}}</span>
+                  <span v-if="!showStockPrice">本期总结存：{{totalStockStr}}</span>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -196,6 +197,7 @@
         categoryTree:[],
         totalStockStr: '0',
         totalCountMoneyStr: '0',
+        showStockPrice: false,
         pageName: 'inOutStockReport',
         // 默认索引
         defDataIndex:['rowIndex','action','barCode','materialName','materialStandard','materialModel','unitName','unitPrice',
@@ -284,6 +286,7 @@
           if(res && res.code === 200) {
             this.totalStockStr = res.data.totalStock.toFixed(2)
             this.totalCountMoneyStr = res.data.totalCount.toFixed(2)
+            this.showStockPrice = res.data.showStockPrice
           }
         })
       },
