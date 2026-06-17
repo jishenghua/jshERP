@@ -757,11 +757,14 @@ public class UserService {
      * @param ue
      */
     private void checkRoleAndOrg(UserEx ue) throws Exception {
-        Long orgaId = ue.getOrgaId();
-        String type = roleService.getRole(ue.getRoleId()).getType();
-        if("本部门数据".equals(type) && orgaId==null) {
-            throw new BusinessRunTimeException(ExceptionConstants.USER_ROLE_ORGA_EMPTY_CODE,
-                    ExceptionConstants.USER_ROLE_ORGA_EMPTY_MSG);
+        if(!Objects.equals(ue.getId(), ue.getTenantId())) {
+            //只对非租户的用户进行校验
+            Long orgaId = ue.getOrgaId();
+            String type = roleService.getRole(ue.getRoleId()).getType();
+            if("本部门数据".equals(type) && orgaId==null) {
+                throw new BusinessRunTimeException(ExceptionConstants.USER_ROLE_ORGA_EMPTY_CODE,
+                        ExceptionConstants.USER_ROLE_ORGA_EMPTY_MSG);
+            }
         }
     }
     /**
