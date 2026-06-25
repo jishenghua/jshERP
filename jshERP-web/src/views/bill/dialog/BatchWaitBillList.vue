@@ -52,7 +52,7 @@
       </div>
       <!-- 操作按钮区域 -->
       <div class="table-operator"  style="margin-top: 5px">
-        <a-button @click="handleBatchInOut" type="primary" icon="plus">批量{{queryParam.type}}</a-button>
+        <a-button @click="handleBatchInOut" :loading="confirmLoading" type="primary" icon="plus">批量{{queryParam.type}}</a-button>
         <span style="padding-left:10px">注意：含有序列号、批号商品或部分入库状态不能批量{{queryParam.type}}，需要到新增界面关联单据</span>
       </div>
       <!-- table区域-begin -->
@@ -102,6 +102,7 @@
       return {
         title: "操作",
         visible: false,
+        confirmLoading: false,
         disableMixinCreated: true,
         selectedRowKeys: [],
         linkNumber: '',
