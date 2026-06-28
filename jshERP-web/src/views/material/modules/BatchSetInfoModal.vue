@@ -24,6 +24,11 @@
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="品牌">
+                <a-input placeholder="请输入品牌" v-decorator.trim="[ 'brand' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="基础重量">
                 <a-input-number style="width: 100%" placeholder="请输入基础重量(kg)" v-decorator.trim="[ 'weight' ]" />
               </a-form-item>
@@ -40,6 +45,17 @@
                 </a-tree-select>
               </a-form-item>
             </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="仓位货架">
+                <a-input placeholder="请输入仓位货架" v-decorator.trim="[ 'position' ]" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="制造商">
+                <a-input placeholder="请输入制造商" v-decorator.trim="[ 'mfrs' ]" />
+              </a-form-item>
+            </a-col>
+
             <a-col :md="8" :sm="24">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="序列号">
                 <a-select placeholder="有无序列号" v-decorator="[ 'enableSerialNumber' ]">
