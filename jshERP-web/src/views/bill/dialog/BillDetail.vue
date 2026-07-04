@@ -624,7 +624,7 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="付款优惠">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="收款优惠">
                 {{model.discountMoney}}
               </a-form-item>
             </a-col>
