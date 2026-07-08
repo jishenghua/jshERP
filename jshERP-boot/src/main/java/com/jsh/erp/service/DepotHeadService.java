@@ -1272,7 +1272,7 @@ public class DepotHeadService {
         if(list!=null) {
             Long headId = list.get(0).getId();
             /**入库和出库处理单据子表信息*/
-            depotItemService.saveDetials(rows,headId, "add",request);
+            depotItemService.saveDetials(rows,headId, "add", null, request);
             /**更新最终欠款*/
             updateLastDebtByBillId(depotHead.getDebt(), headId);
         }
@@ -1312,6 +1312,8 @@ public class DepotHeadService {
             throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_BILL_CANNOT_EDIT_CODE,
                     String.format(ExceptionConstants.DEPOT_HEAD_BILL_CANNOT_EDIT_MSG));
         }
+        //获取之前的关联单据信息
+        DepotHead preDepotHead = getDepotHead(depotHead.getId());
         //获取之前的会员id
         Long preOrganId = getDepotHead(depotHead.getId()).getOrganId();
         String subType = depotHead.getSubType();
@@ -1380,7 +1382,7 @@ public class DepotHeadService {
             }
         }
         /**入库和出库处理单据子表信息*/
-        depotItemService.saveDetials(rows,depotHead.getId(), "update",request);
+        depotItemService.saveDetials(rows,depotHead.getId(), "update", preDepotHead, request);
         /**更新最终欠款*/
         updateLastDebtByBillId(depotHead.getDebt(), depotHead.getId());
         String statusStr = depotHead.getStatus().equals("1")?"[审核]":"";
@@ -1926,7 +1928,7 @@ public class DepotHeadService {
             if(list!=null) {
                 Long headId = list.get(0).getId();
                 /**入库和出库处理单据子表信息*/
-                depotItemService.saveDetials(rows, headId, "add", request);
+                depotItemService.saveDetials(rows, headId, "add", null, request);
             }
         }
         logService.insertLog("单据",

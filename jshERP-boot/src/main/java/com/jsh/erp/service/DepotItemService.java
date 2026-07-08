@@ -381,7 +381,7 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public void saveDetials(String rows, Long headerId, String actionType, HttpServletRequest request) throws Exception{
+    public void saveDetials(String rows, Long headerId, String actionType, DepotHead preDepotHead, HttpServletRequest request) throws Exception{
         //查询单据主表信息
         DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
         //删除序列号和回收序列号
@@ -703,6 +703,10 @@ public class DepotItemService {
                     //单据状态:是否全部完成 2-全部完成 3-部分完成（针对订单的分批出入库）
                     String billStatus = getBillStatusByParam(depotHead, depotHead.getLinkNumber(), "normal");
                     changeBillStatus(depotHead.getLinkNumber(), billStatus);
+                    if(preDepotHead!=null && StringUtil.isNotEmpty(preDepotHead.getLinkNumber()) && !preDepotHead.getLinkNumber().equals(depotHead.getLinkNumber())) {
+                        String preBillStatus = getBillStatusByParam(preDepotHead, preDepotHead.getLinkNumber(), "normal");
+                        changeBillStatus(preDepotHead.getLinkNumber(), preBillStatus);
+                    }
                 }
             }
             //当前单据类型为采购订单的逻辑
@@ -711,11 +715,23 @@ public class DepotItemService {
                 if(StringUtil.isNotEmpty(depotHead.getLinkNumber())) {
                     String billStatus = getBillStatusByParam(depotHead, depotHead.getLinkNumber(), "normal");
                     changeBillPurchaseStatus(depotHead.getLinkNumber(), billStatus);
+                    if(preDepotHead!=null && StringUtil.isNotEmpty(preDepotHead.getLinkNumber()) && !preDepotHead.getLinkNumber().equals(depotHead.getLinkNumber())) {
+                        String preBillStatus = getBillStatusByParam(preDepotHead, preDepotHead.getLinkNumber(), "normal");
+                        if(preBillStatus.equals(BusinessConstants.BILLS_STATUS_AUDIT)) {
+                            //采购进度不存在已审核状态，需要转为未采购-0
+                            preBillStatus = BusinessConstants.BILLS_STATUS_UN_AUDIT;
+                        }
+                        changeBillPurchaseStatus(preDepotHead.getLinkNumber(), preBillStatus);
+                    }
                 }
                 //如果关联单据号非空则更新订单的状态,此处针对请购单转采购订单的场景
                 if(StringUtil.isNotEmpty(depotHead.getLinkApply())) {
                     String billStatus = getBillStatusByParam(depotHead, depotHead.getLinkApply(), "apply");
                     changeBillStatus(depotHead.getLinkApply(), billStatus);
+                    if(preDepotHead!=null && StringUtil.isNotEmpty(preDepotHead.getLinkApply()) && !preDepotHead.getLinkApply().equals(depotHead.getLinkApply())) {
+                        String preBillStatus = getBillStatusByParam(preDepotHead, preDepotHead.getLinkApply(), "apply");
+                        changeBillStatus(preDepotHead.getLinkApply(), preBillStatus);
+                    }
                 }
             }
         } else {
@@ -737,21 +753,26 @@ public class DepotItemService {
         List<DepotItemVo4MaterialAndSum> linkList = depotItemMapperEx.getLinkBillDetailMaterialSum(linkStr);
         //获取分批操作后单据的商品和商品数量（汇总）
         List<DepotItemVo4MaterialAndSum> batchList = depotItemMapperEx.getBatchBillDetailMaterialSum(linkStr, linkType, depotHead.getType());
-        //将分批操作后的单据的商品和商品数据构造成Map
-        Map<Long, BigDecimal> materialSumMap = new HashMap<>();
-        for(DepotItemVo4MaterialAndSum materialAndSum : batchList) {
-            materialSumMap.put(materialAndSum.getMaterialExtendId(), materialAndSum.getOperNumber());
-        }
-        for(DepotItemVo4MaterialAndSum materialAndSum : linkList) {
-            //过滤掉原单里面有数量为0的商品
-            if(materialAndSum.getOperNumber().compareTo(BigDecimal.ZERO) != 0) {
-                BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
-                if (materialSum != null) {
-                    if (materialSum.compareTo(materialAndSum.getOperNumber()) < 0) {
+        if(batchList.isEmpty()) {
+            //从未进行过分批操作
+            res = BusinessConstants.BILLS_STATUS_AUDIT;
+        } else {
+            //将分批操作后的单据的商品和商品数据构造成Map
+            Map<Long, BigDecimal> materialSumMap = new HashMap<>();
+            for(DepotItemVo4MaterialAndSum materialAndSum : batchList) {
+                materialSumMap.put(materialAndSum.getMaterialExtendId(), materialAndSum.getOperNumber());
+            }
+            for(DepotItemVo4MaterialAndSum materialAndSum : linkList) {
+                //过滤掉原单里面有数量为0的商品
+                if(materialAndSum.getOperNumber().compareTo(BigDecimal.ZERO) != 0) {
+                    BigDecimal materialSum = materialSumMap.get(materialAndSum.getMaterialExtendId());
+                    if (materialSum != null) {
+                        if (materialSum.compareTo(materialAndSum.getOperNumber()) < 0) {
+                            res = BusinessConstants.BILLS_STATUS_SKIPING;
+                        }
+                    } else {
                         res = BusinessConstants.BILLS_STATUS_SKIPING;
                     }
-                } else {
-                    res = BusinessConstants.BILLS_STATUS_SKIPING;
                 }
             }
         }
