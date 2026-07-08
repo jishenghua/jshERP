@@ -751,7 +751,7 @@ public class DepotHeadService {
             }
             // 开启强审核，并且没有开启负库存：
             // 1、开启出入库管理，销售出库和采购退货单据审核的时候不做校验，其它出库做校验；
-            // 2、未开启出入库管理，销售出库和采购退货单据审核的时候做校验，其它出库不做校验。
+            // 2、未开启出入库管理，销售出库、采购退货和其它出库单据审核的时候都做校验。
             if("1".equals(status)) {
                 if(forceApprovalFlag && !minusStockFlag) {
                     if(inOutManageFlag) {
@@ -761,7 +761,8 @@ public class DepotHeadService {
                         }
                     } else {
                         if(("出库".equals(depotHead.getType()) && "销售".equals(depotHead.getSubType()))
-                                || ("出库".equals(depotHead.getType()) && "采购退货".equals(depotHead.getSubType()))) {
+                            || ("出库".equals(depotHead.getType()) && "采购退货".equals(depotHead.getSubType()))
+                            || "出库".equals(depotHead.getType()) && "其它".equals(depotHead.getSubType())) {
                             //校验单据中的商品库存是否不足
                             depotItemService.checkMaterialStock(depotHead.getNumber(), depotHead.getId());
                         }
