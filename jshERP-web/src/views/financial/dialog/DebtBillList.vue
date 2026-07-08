@@ -198,6 +198,7 @@
       },
       searchReset() {
         this.queryParam = {
+          organId: this.queryParam.organId,
           type: this.queryParam.type,
           subType: this.queryParam.subType
         }

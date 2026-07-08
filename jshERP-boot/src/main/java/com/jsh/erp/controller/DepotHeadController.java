@@ -691,8 +691,7 @@ public class DepotHeadController extends BaseController {
                            @RequestParam("pageSize") Integer pageSize,
                            HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
-        String organIdStr = StringUtil.getInfo(search, "organId");
-        Long organId = Long.parseLong(organIdStr);
+        Long organId = StringUtil.parseStrLong(StringUtil.getInfo(search, "organId"));
         String materialParam = StringUtil.getInfo(search, "materialParam");
         String number = StringUtil.getInfo(search, "number");
         String beginTime = StringUtil.getInfo(search, "beginTime");
