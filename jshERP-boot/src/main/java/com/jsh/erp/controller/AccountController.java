@@ -4,15 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.base.BaseController;
 import com.jsh.erp.base.TableDataInfo;
+import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.datasource.entities.Account;
 import com.jsh.erp.datasource.vo.AccountVo4InOutList;
 import com.jsh.erp.datasource.vo.AccountVo4List;
 import com.jsh.erp.service.AccountService;
 import com.jsh.erp.service.SystemConfigService;
-import com.jsh.erp.utils.BaseResponseInfo;
-import com.jsh.erp.utils.Constants;
-import com.jsh.erp.utils.ErpInfo;
-import com.jsh.erp.utils.StringUtil;
+import com.jsh.erp.utils.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -191,6 +189,8 @@ public class AccountController extends BaseController {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+            beginTime = Tools.parseDayToTime(beginTime, BusinessConstants.DAY_FIRST_TIME);
+            endTime = Tools.parseDayToTime(endTime,BusinessConstants.DAY_LAST_TIME);
             List<AccountVo4InOutList> dataList = accountService.findAccountInOutList(accountId, StringUtil.toNull(number),
                     beginTime, endTime, forceFlag, (currentPage-1)*pageSize, pageSize);
             int total = accountService.findAccountInOutListCount(accountId, StringUtil.toNull(number),
