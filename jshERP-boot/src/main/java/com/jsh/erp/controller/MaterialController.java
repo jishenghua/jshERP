@@ -608,11 +608,11 @@ public class MaterialController extends BaseController {
                     } else if ("CGDD".equals(prefixNo) || "CGRK".equals(prefixNo) || "CGTH".equals(prefixNo)) {
                         //采购价
                         mvo.setBillPrice(mvo.getPurchaseDecimal());
-                    } else if("QTRK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo)
+                    } else if("QTRK".equals(prefixNo) || "QTCK".equals(prefixNo) || "DBCK".equals(prefixNo) || "ZZD".equals(prefixNo) || "CXD".equals(prefixNo)
                             || "PDLR".equals(prefixNo) || "PDFP".equals(prefixNo)) {
                         //采购价-给录入界面按权限屏蔽
                         mvo.setBillPrice(roleService.parseBillPriceByLimit(mvo.getPurchaseDecimal(), "buy", priceLimit, request));
-                    } else if ("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo) || "QTCK".equals(prefixNo)) {
+                    } else if ("XSDD".equals(prefixNo) || "XSCK".equals(prefixNo) || "XSTH".equals(prefixNo)) {
                         //销售价
                         if(organId == null) {
                             mvo.setBillPrice(mvo.getWholesaleDecimal());
