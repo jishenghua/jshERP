@@ -26,7 +26,7 @@ router.beforeEach((to, from, next) => {
           }
           // 缓存用户的按钮权限
           store.dispatch('GetUserBtnList').then(res => {
-            Vue.ls.set('winBtnStrList', res.data.userBtn, 7 * 24 * 60 * 60 * 1000)
+            Vue.ls.set('winBtnStrList', res.data.userBtn, 100 * 24 * 60 * 60 * 1000)
           })
           let constRoutes = [];
           constRoutes = generateIndexRouter(menuData);
