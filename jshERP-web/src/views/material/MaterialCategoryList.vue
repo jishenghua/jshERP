@@ -8,6 +8,19 @@
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="handleAdd()" type="primary">添加类别</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" title="删除多条数据" @click="batchDel" type="default">批量删除</a-button>
           <a-button @click="refresh" type="default" icon="reload">刷新</a-button>
+          <a-dropdown :trigger="['click']" placement="topCenter">
+            <a-menu slot="overlay">
+              <a-menu-item key="1" @click="switchCheckStrictly(1)">父子关联</a-menu-item>
+              <a-menu-item key="2" @click="switchCheckStrictly(2)">取消关联</a-menu-item>
+              <a-menu-item key="3" @click="checkALL">全部勾选</a-menu-item>
+              <a-menu-item key="4" @click="cancelCheckALL">取消全选</a-menu-item>
+              <a-menu-item key="5" @click="expandAll">展开所有</a-menu-item>
+              <a-menu-item key="6" @click="closeAll">合并所有</a-menu-item>
+            </a-menu>
+            <a-button>
+              树操作 <a-icon type="down" />
+            </a-button>
+          </a-dropdown>
         </a-row>
         <div style="background: #fff;padding-left:16px;height: 100%; margin-top: 5px">
           <a-alert type="info" :showIcon="true">
@@ -32,7 +45,6 @@
                   :treeData="categoryTree"
                   :checkStrictly="checkStrictly"
                   :expandedKeys="iExpandedKeys"
-                  :autoExpandParent="true"
                   @expand="onExpand"/>
                 </span>
               </a-dropdown>
@@ -40,23 +52,6 @@
           </a-col>
         </div>
       </a-card>
-      <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
-      <div class="drawer-bootom-button">
-        <a-dropdown :trigger="['click']" placement="topCenter">
-          <a-menu slot="overlay">
-            <a-menu-item key="1" @click="switchCheckStrictly(1)">父子关联</a-menu-item>
-            <a-menu-item key="2" @click="switchCheckStrictly(2)">取消关联</a-menu-item>
-            <a-menu-item key="3" @click="checkALL">全部勾选</a-menu-item>
-            <a-menu-item key="4" @click="cancelCheckALL">取消全选</a-menu-item>
-            <a-menu-item key="5" @click="expandAll">展开所有</a-menu-item>
-            <a-menu-item key="6" @click="closeAll">合并所有</a-menu-item>
-          </a-menu>
-          <a-button>
-            树操作 <a-icon type="up" />
-          </a-button>
-        </a-dropdown>
-      </div>
-      <!---- author:os_chengtgen -- date:20190827 --  for:切换父子勾选模式 =======------>
     </a-col>
     <a-col :md="12" :sm="24">
       <a-card :bordered="false" v-if="selectedKeys.length>0">
@@ -173,12 +168,12 @@ export default {
       let that = this
       that.treeData = []
       that.categoryTree = []
+      that.iExpandedKeys = []
+      that.allTreeKeys = []
       let params = {};
       params.id='';
       queryMaterialCategoryTreeList(params).then((res) => {
         if (res) {
-          //类别全选后，再添加类别，选中数量增多
-          this.allTreeKeys = [];
           for (let i = 0; i < res.length; i++) {
             let temp = res[i]
             that.categoryTree.push(temp)
