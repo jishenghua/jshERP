@@ -178,8 +178,8 @@
 
 <style lang="less">
   body {
-    // 打开滚动条固定显示
-    overflow-y: scroll;
+    // 使用 auto 而不是 scroll，只在需要时显示滚动条
+    overflow-y: auto;
 
     &.colorWeak {
       filter: invert(80%);
