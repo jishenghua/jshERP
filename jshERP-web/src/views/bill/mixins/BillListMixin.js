@@ -605,7 +605,32 @@ export const BillListMixin = {
     },
     //批量修正剩余订金
     batchSetLastDeposit() {
-
+      if (this.selectedRowKeys.length <= 0) {
+        this.$message.warning('请选择一条记录！')
+      } else {
+        let ids = "";
+        for (let a = 0; a < this.selectedRowKeys.length; a++) {
+          ids += this.selectedRowKeys[a] + ","
+        }
+        let that = this
+        this.$confirm({
+          title: "确认修正剩余订金",
+          content: "是否对选的数据修正剩余订金?",
+          onOk: function () {
+            that.loading = true
+            postAction(that.url.batchSetLastDepositUrl, {ids: ids}).then((res) => {
+              if(res.code === 200){
+                that.loadData()
+                that.$message.success('修正剩余订金完成')
+              } else {
+                that.$message.warning(res.data.message)
+              }
+            }).finally(() => {
+              that.loading = false
+            });
+          }
+        });
+      }
     },
     handleApprove(record) {
       this.$refs.modalForm.action = "approve";

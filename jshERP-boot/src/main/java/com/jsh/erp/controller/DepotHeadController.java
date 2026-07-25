@@ -156,6 +156,19 @@ public class DepotHeadController extends BaseController {
         }
     }
 
+    @PostMapping(value = "/batchSetLastDeposit")
+    @ApiOperation(value = "修正剩余订金")
+    public String batchSetLastDeposit(@RequestBody JSONObject jsonObject, HttpServletRequest request)throws Exception {
+        Map<String, Object> objectMap = new HashMap<>();
+        String ids = jsonObject.getString("ids");
+        int res = depotHeadService.batchSetLastDeposit(ids, request);
+        if(res > 0) {
+            return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+        } else {
+            return returnJson(objectMap, ErpInfo.ERROR.name, ErpInfo.ERROR.code);
+        }
+    }
+
     /**
      * 批量设置状态-审核或者反审核
      * @param jsonObject

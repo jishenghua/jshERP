@@ -133,7 +133,7 @@
               </a-menu-item>
               <a-divider v-if="btnEnableList.indexOf(1)>-1" style="margin: 4px 0;" />
               <a-menu-item v-if="btnEnableList.indexOf(1)>-1" @click="handleQuickEdit">
-                <a-icon type="edit" /><span>备注</span>
+                <a-icon type="edit" /><span>修改备注</span>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -339,6 +339,7 @@
           deleteBatch: "/depotHead/deleteBatch",
           forceCloseBatch: "/depotHead/forceCloseBatch",
           forceClosePurchaseBatch: "/depotHead/forceClosePurchaseBatch",
+          batchSetLastDepositUrl: "/depotHead/batchSetLastDeposit",
           batchSetStatusUrl: "/depotHead/batchSetStatus"
         }
       }

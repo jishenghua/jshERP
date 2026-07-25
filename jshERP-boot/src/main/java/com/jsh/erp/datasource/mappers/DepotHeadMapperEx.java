@@ -301,4 +301,7 @@ public interface DepotHeadMapperEx {
 
     BigDecimal getBillAllPriceByOrganId(
             @Param("organId") Long organId);
+
+    BigDecimal getAllDepositByLinkNumber(
+            @Param("linkNumber") String linkNumber);
 }

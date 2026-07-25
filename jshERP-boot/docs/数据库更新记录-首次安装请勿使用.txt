@@ -1848,3 +1848,4 @@ alter table jsh_depot_head add last_debt decimal(24,6) DEFAULT NULL COMMENT '最
 -- 给单据主表里面增加剩余订金字段
 -- --------------------------------------------------------
 alter table jsh_depot_head add last_deposit decimal(24,6) DEFAULT NULL COMMENT '剩余订金' after deposit;
+update jsh_depot_head set last_deposit=0 where last_deposit is null;
