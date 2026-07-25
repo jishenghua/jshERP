@@ -603,6 +603,10 @@ export const BillListMixin = {
         });
       }
     },
+    //批量修正剩余订金
+    batchSetLastDeposit() {
+
+    },
     handleApprove(record) {
       this.$refs.modalForm.action = "approve";
       this.$refs.modalForm.edit(record);

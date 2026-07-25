@@ -110,15 +110,33 @@
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
           <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
-          <a-button v-if="btnEnableList.indexOf(1)>-1" icon="edit" @click="handleQuickEdit">备注</a-button>
           <a-button v-if="quickBtn.saleOut.indexOf(1)>-1 && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转销售出库', quickBtn.saleOut)">转销售出库</a-button>
           <a-button v-if="quickBtn.purchaseOrder.indexOf(1)>-1 && purchaseBySaleFlag && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转采购订单-以销定购', quickBtn.purchaseOrder)">转采购订单-以销定购</a-button>
-          <a-tooltip title="可将状态是部分销售的单据强制完成">
-            <a-button v-if="btnEnableList.indexOf(1)>-1" icon="issues-close" @click="batchForceClose">强制结单</a-button>
-          </a-tooltip>
-          <a-tooltip title="可将状态是部分采购的单据强制完成">
-            <a-button v-if="purchaseBySaleFlag && btnEnableList.indexOf(1)>-1" icon="issues-close" @click="batchForceClosePurchase">强制结单-以销定购</a-button>
-          </a-tooltip>
+          <a-dropdown>
+            <a-button>
+              更多操作 <a-icon type="down" />
+            </a-button>
+            <a-menu slot="overlay">
+              <a-menu-item v-if="btnEnableList.indexOf(1)>-1" @click="batchForceClose">
+                <a-tooltip title="可将状态是部分销售的单据强制完成">
+                  <a-icon type="issues-close" /><span>强制结单</span>
+                </a-tooltip>
+              </a-menu-item>
+              <a-menu-item v-if="purchaseBySaleFlag && btnEnableList.indexOf(1)>-1" @click="batchForceClosePurchase">
+                <a-tooltip title="可将状态是部分采购的单据强制完成">
+                  <a-icon type="issues-close" /><span>强制结单-以销定购</span>
+                </a-tooltip>
+              </a-menu-item>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" style="margin: 4px 0;" />
+              <a-menu-item v-if="btnEnableList.indexOf(1)>-1" @click="batchSetLastDeposit">
+                <a-icon type="fund" /><span>修正剩余订金</span>
+              </a-menu-item>
+              <a-divider v-if="btnEnableList.indexOf(1)>-1" style="margin: 4px 0;" />
+              <a-menu-item v-if="btnEnableList.indexOf(1)>-1" @click="handleQuickEdit">
+                <a-icon type="edit" /><span>备注</span>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
           <a-button v-if="isShowExcel && btnEnableList.indexOf(3)>-1" icon="download" @click="handleExport">导出</a-button>
           <a-popover trigger="click" placement="right">
             <template slot="content">
@@ -270,8 +288,8 @@
           offset: 1
         },
         // 默认索引
-        defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalPrice','totalTaxLastMoney',
-          'changeAmount','status','purchaseStatus'],
+        defDataIndex:['action','organName','number','materialsList','operTimeStr','userName','materialCount','totalPrice',
+          'totalTaxLastMoney','changeAmount','lastDeposit','status','purchaseStatus'],
         // 默认列
         defColumns: [
           {
@@ -306,6 +324,7 @@
           { title: '优惠后金额', dataIndex: 'discountLastMoney',width:100},
           { title: '结算账户', dataIndex: 'accountName',width:80},
           { title: '收取订金', dataIndex: 'changeAmount',width:80},
+          { title: '剩余订金', dataIndex: 'lastDeposit',width:80},
           { title: '备注', dataIndex: 'remark',width:200},
           { title: '采购进度', dataIndex: 'purchaseStatus', width: 80, align: "center",
             scopedSlots: { customRender: 'customRenderPurchaseStatus' }

@@ -1841,3 +1841,10 @@ update jsh_role set type='本部门数据' where type='本机构数据';
 -- --------------------------------------------------------
 alter table jsh_depot_head add debt decimal(24,6) DEFAULT NULL COMMENT '本次欠款' after deposit;
 alter table jsh_depot_head add last_debt decimal(24,6) DEFAULT NULL COMMENT '最终欠款' after debt;
+
+-- --------------------------------------------------------
+-- 时间 2026年7月25日
+-- by jishenghua
+-- 给单据主表里面增加剩余订金字段
+-- --------------------------------------------------------
+alter table jsh_depot_head add last_deposit decimal(24,6) DEFAULT NULL COMMENT '剩余订金' after deposit;
