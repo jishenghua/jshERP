@@ -75,13 +75,13 @@
         <div class="table-operator"  style="margin-top: 5px">
           <a-button v-if="btnEnableList.indexOf(1)>-1" @click="myHandleAdd" type="primary" icon="plus">新增</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="delete" @click="batchDel">删除</a-button>
+          <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
+          <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
           <a-button v-if="btnEnableList.indexOf(1)>-1" icon="edit" @click="handleQuickEdit">备注</a-button>
           <a-button v-if="quickBtn.purchaseOrder.indexOf(1)>-1 && btnEnableList.indexOf(1)>-1" icon="share-alt" @click="transferBill('转采购订单', quickBtn.purchaseOrder)">转采购订单</a-button>
           <a-tooltip title="可将状态是部分采购的单据强制完成">
             <a-button v-if="btnEnableList.indexOf(1)>-1" icon="issues-close" @click="batchForceClose">强制结单</a-button>
           </a-tooltip>
-          <a-button v-if="checkFlag && btnEnableList.indexOf(2)>-1" icon="check" @click="batchSetStatus(1)">审核</a-button>
-          <a-button v-if="checkFlag && btnEnableList.indexOf(7)>-1" icon="stop" @click="batchSetStatus(0)">反审核</a-button>
           <a-button v-if="isShowExcel && btnEnableList.indexOf(3)>-1" icon="download" @click="handleExport">导出</a-button>
           <a-popover trigger="click" placement="right">
             <template slot="content">
