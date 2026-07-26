@@ -115,6 +115,9 @@
               <a-divider type="vertical" v-if="showStockPrice" />
               <a @click="showMaterialDepotStockList(record)">{{record.id?'分布':''}}</a>
             </span>
+            <span slot="customRenderPurchaseDecimal" slot-scope="text, record">
+              <a @click="showStockPriceInOutList(record)">{{record.purchaseDecimal}}</a>
+            </span>
             <template slot="customPic" slot-scope="text, record">
               <a-popover placement="right" trigger="click">
                 <template slot="content">
@@ -152,12 +155,14 @@
         <!-- table区域-end -->
         <material-in-out-list ref="materialInOutList" @ok="modalFormOk"></material-in-out-list>
         <material-depot-stock-list ref="materialDepotStockList" @ok="modalFormOk"></material-depot-stock-list>
+        <stock-price-in-out-list ref="stockPriceInOutList"></stock-price-in-out-list>
       </a-card>
     </a-col>
   </a-row>
 </template>
 <script>
   import MaterialInOutList from './modules/MaterialInOutList'
+  import StockPriceInOutList from './modules/StockPriceInOutList'
   import MaterialDepotStockList from './modules/MaterialDepotStockList'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import { getAction, getFileAccessHttpUrl } from '@/api/manage'
@@ -171,6 +176,7 @@
     mixins:[JeecgListMixin],
     components: {
       MaterialInOutList,
+      StockPriceInOutList,
       MaterialDepotStockList,
       JEllipsis
     },
@@ -228,7 +234,9 @@
           {title: '类别', dataIndex: 'categoryName', width: 60, ellipsis:true},
           {title: '仓位货架', dataIndex: 'position', width: 60, ellipsis:true},
           {title: '单位', dataIndex: 'unitName', width: 60, ellipsis:true},
-          {title: '成本价', dataIndex: 'purchaseDecimal', sorter: (a, b) => a.purchaseDecimal - b.purchaseDecimal, width: 60},
+          {title: '成本价', dataIndex: 'purchaseDecimal', sorter: (a, b) => a.purchaseDecimal - b.purchaseDecimal, width: 60,
+            scopedSlots: { customRender: 'customRenderPurchaseDecimal' }
+          },
           {title: '初始库存', dataIndex: 'initialStock', width: 60},
           {title: '库存', dataIndex: 'currentStock', sorter: (a, b) => a.currentStock - b.currentStock, width: 60,
             scopedSlots: { customRender: 'customRenderStock' }
@@ -333,6 +341,15 @@
         this.$refs.materialDepotStockList.show(record, depotIds);
         this.$refs.materialDepotStockList.title = "查看商品库存分布（条码：" + record.mBarCode + "，名称：" + record.name + "）";
         this.$refs.materialDepotStockList.disableSubmit = false;
+      },
+      showStockPriceInOutList(record) {
+        let depotIds = ''
+        if(this.depotSelected && this.depotSelected.length>0) {
+          depotIds = this.depotSelected.join()
+        }
+        this.$refs.stockPriceInOutList.show(record, depotIds);
+        this.$refs.stockPriceInOutList.title = "查看成本价的单据流水";
+        this.$refs.stockPriceInOutList.disableSubmit = false;
       },
       exportExcel() {
         let list = []
