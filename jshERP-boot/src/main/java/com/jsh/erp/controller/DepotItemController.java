@@ -93,6 +93,7 @@ public class DepotItemController {
             @RequestParam(value = "number",required = false) String number,
             @RequestParam(value = "beginTime",required = false) String beginTime,
             @RequestParam(value = "endTime",required = false) String endTime,
+            @RequestParam(value = "stockPriceFlag",required = false, defaultValue = "false") Boolean stockPriceFlag,
             @RequestParam("materialId") Long mId,
             HttpServletRequest request)throws Exception {
         Map<String, Object> objectMap = new HashMap<>();
@@ -104,70 +105,10 @@ public class DepotItemController {
         }
         Boolean forceFlag = systemConfigService.getForceApprovalFlag();
         Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
-        List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, forceFlag, inOutManageFlag, sku,
-                batchNumber, StringUtil.toNull(number), beginTime, endTime, mId, (currentPage-1)*pageSize, pageSize);
-        JSONArray dataArray = new JSONArray();
-        if (list != null) {
-            for (DepotItemVo4DetailByTypeAndMId d: list) {
-                JSONObject item = new JSONObject();
-                item.put("number", d.getNumber()); //编号
-                item.put("barCode", d.getBarCode()); //条码
-                item.put("materialName", d.getMaterialName()); //名称
-                String type = d.getType();
-                String subType = d.getSubType();
-                if(("其它").equals(type)) {
-                    item.put("type", subType); //进出类型
-                } else {
-                    item.put("type", subType + type); //进出类型
-                }
-                item.put("depotName", d.getDepotName()); //仓库名称
-                item.put("basicNumber", d.getBnum()); //数量
-                item.put("unitPrice", d.getUnitPrice()); //单价
-                item.put("allPrice", d.getAllPrice()); //金额
-                item.put("operTime", Tools.getCenternTime(d.getOtime())); //时间
-                dataArray.add(item);
-            }
+        if(stockPriceFlag!=null && stockPriceFlag) {
+            //此处针对开启了出入库管理开关，用于查询成本价的明细，不然会导致查询不到销售相关的单据
+            inOutManageFlag = false;
         }
-        if (list == null) {
-            objectMap.put("rows", new ArrayList<Object>());
-            objectMap.put("total", BusinessConstants.DEFAULT_LIST_NULL_NUMBER);
-            return returnJson(objectMap, "查找不到数据", ErpInfo.OK.code);
-        }
-        objectMap.put("rows", dataArray);
-        objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, forceFlag, inOutManageFlag, sku,
-                batchNumber, StringUtil.toNull(number), beginTime, endTime, mId));
-        return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
-    }
-
-    /**
-     * 根据仓库和商品查询成本价流水列表
-     * @param mId
-     * @param request
-     * @return
-     */
-    @GetMapping(value = "/findStockPriceDetailByDepotIdsAndMaterialId")
-    @ApiOperation(value = "根据仓库和商品查询成本价流水列表")
-    public String findStockPriceDetailByDepotIdsAndMaterialId(
-            @RequestParam(value = Constants.PAGE_SIZE, required = false) Integer pageSize,
-            @RequestParam(value = Constants.CURRENT_PAGE, required = false) Integer currentPage,
-            @RequestParam(value = "depotIds",required = false) String depotIds,
-            @RequestParam(value = "sku",required = false) String sku,
-            @RequestParam(value = "batchNumber",required = false) String batchNumber,
-            @RequestParam(value = "number",required = false) String number,
-            @RequestParam(value = "beginTime",required = false) String beginTime,
-            @RequestParam(value = "endTime",required = false) String endTime,
-            @RequestParam("materialId") Long mId,
-            HttpServletRequest request)throws Exception {
-        Map<String, Object> objectMap = new HashMap<>();
-        if(StringUtil.isNotEmpty(beginTime)) {
-            beginTime = beginTime + BusinessConstants.DAY_FIRST_TIME;
-        }
-        if(StringUtil.isNotEmpty(endTime)) {
-            endTime = endTime + BusinessConstants.DAY_LAST_TIME;
-        }
-        Boolean forceFlag = systemConfigService.getForceApprovalFlag();
-        //此处给出入库管理的传值默认为false，不然会导致查询不到销售相关的单据
-        Boolean inOutManageFlag = false;
         List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, forceFlag, inOutManageFlag, sku,
                 batchNumber, StringUtil.toNull(number), beginTime, endTime, mId, (currentPage-1)*pageSize, pageSize);
         JSONArray dataArray = new JSONArray();

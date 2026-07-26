@@ -95,6 +95,7 @@
           number: '',
           beginTime: '',
           endTime: '',
+          stockPriceFlag: false
         },
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']
@@ -181,6 +182,17 @@
             that.$refs.billDetail.title="详情";
           }
         })
+      },
+      searchReset() {
+        this.queryParam = {
+          depotIds: '',
+          materialId:'',
+          number: '',
+          beginTime: '',
+          endTime: '',
+          stockPriceFlag: false
+        }
+        this.loadData(1);
       },
       exportExcel() {
         let list = []

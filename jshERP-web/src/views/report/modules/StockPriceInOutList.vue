@@ -95,6 +95,7 @@
           number: '',
           beginTime: '',
           endTime: '',
+          stockPriceFlag: true
         },
         ipagination:{
           pageSizeOptions: ['10', '20', '30', '100', '200']
@@ -134,7 +135,7 @@
           sm: { span: 16 },
         },
         url: {
-          list: "/depotItem/findStockPriceDetailByDepotIdsAndMaterialId"
+          list: "/depotItem/findDetailByDepotIdsAndMaterialId"
         }
       }
     },
@@ -181,6 +182,17 @@
             that.$refs.billDetail.title="详情";
           }
         })
+      },
+      searchReset() {
+        this.queryParam = {
+          depotIds: '',
+          materialId:'',
+          number: '',
+          beginTime: '',
+          endTime: '',
+          stockPriceFlag: true
+        }
+        this.loadData(1);
       },
       exportExcel() {
         let list = []
