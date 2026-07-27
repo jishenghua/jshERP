@@ -1,20 +1,48 @@
 <template>
   <global-layout @dynamicRouterShow="dynamicRouterShow">
     <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" style="z-index: 9999;" @select="onMenuSelect"/>
-    <a-tabs
-      @contextmenu.native="e => onContextmenu(e)"
-      v-if="multipage"
-      :active-key="activePage"
-      class="tab-layout-tabs"
-      :hide-add="true"
-      type="editable-card"
-      @change="changePage"
-      @tabClick="tabCallBack"
-      @edit="editPage">
-      <a-tab-pane :id="page.fullPath" :key="page.fullPath" v-for="page in pageList">
-        <span slot="tab" :pagekey="page.fullPath">{{ page.meta.title }}</span>
-      </a-tab-pane>
-    </a-tabs>
+    <div class="tabs-wrapper">
+      <a-tabs
+        @contextmenu.native="e => onContextmenu(e)"
+        v-if="multipage"
+        :active-key="activePage"
+        class="tab-layout-tabs"
+        :hide-add="true"
+        type="editable-card"
+        @change="changePage"
+        @tabClick="tabCallBack"
+        @edit="editPage">
+        <a-tab-pane :id="page.fullPath" :key="page.fullPath" v-for="page in pageList">
+          <span slot="tab" :pagekey="page.fullPath">{{ page.meta.title }}</span>
+        </a-tab-pane>
+      </a-tabs>
+      <div class="close-dropdown-wrapper">
+        <a-dropdown :trigger="['click']" placement="bottomRight">
+          <a-button size="small" class="close-all-btn">
+            <a-icon type="close" />
+            <a-icon type="down" />
+          </a-button>
+          <a-menu slot="overlay" @click="onCloseAllMenuClick">
+            <a-menu-item key="closeLeft">
+              <a-icon type="arrow-left" />
+              关闭左侧
+            </a-menu-item>
+            <a-menu-item key="closeRight">
+              <a-icon type="arrow-right" />
+              关闭右侧
+            </a-menu-item>
+            <a-menu-item key="closeOthers">
+              <a-icon type="close-circle" />
+              关闭其它
+            </a-menu-item>
+            <a-menu-item key="closeAll">
+              <a-icon type="close" />
+              关闭全部
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
+      </div>
+    </div>
     <div style="margin: 4px 4px 0;">
       <transition name="page-toggle">
         <keep-alive v-if="multipage" :include="includedComponents">
@@ -377,6 +405,40 @@
           this.activePage = key
         }
       },
+      onCloseAllMenuClick({ key }) {
+        switch (key) {
+          case 'closeLeft':
+            this.closeLeft(this.activePage)
+            break
+          case 'closeRight':
+            this.closeRight(this.activePage)
+            break
+          case 'closeOthers':
+            this.closeOthers(this.activePage)
+            break
+          case 'closeAll':
+            this.closeAll()
+            break
+          default:
+            break
+        }
+      },
+      closeAll() {
+        if (this.pageList.length === 1) {
+          this.$message.warning('这是最后一页，不能再关闭了啦')
+          return
+        }
+        const indexContent = this.pageList.find(item => item.fullPath === indexKey)
+        if (indexContent) {
+          this.linkList = [indexKey]
+          this.pageList = [indexContent]
+          this.activePage = indexKey
+        } else {
+          this.linkList = [this.linkList[0]]
+          this.pageList = [this.pageList[0]]
+          this.activePage = this.linkList[0]
+        }
+      }
     }
   }
 </script>
@@ -418,6 +480,42 @@
       border: none;
     }
 
+  }
+
+  .tabs-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    background-color: #fff;
+
+    .close-dropdown-wrapper {
+      flex-shrink: 0;
+      margin-left: 8px;
+
+      .close-all-btn {
+        padding: 0 6px;
+        height: 24px;
+        border-radius: 4px;
+        border: 1px solid #d9d9d9;
+        background-color: #fff;
+        transition: all 0.3s;
+
+        &:hover {
+          border-color: @primary-color;
+          color: @primary-color;
+        }
+
+        .anticon-close {
+          font-size: 12px;
+          margin-right: 2px;
+        }
+
+        .anticon-down {
+          font-size: 10px;
+        }
+      }
+    }
   }
 
   .ant-tabs {
