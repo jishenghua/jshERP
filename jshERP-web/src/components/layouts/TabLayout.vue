@@ -494,6 +494,7 @@
       margin-left: 8px;
 
       .close-all-btn {
+        margin-right: 5px;
         padding: 0 6px;
         height: 24px;
         border-radius: 4px;
@@ -512,7 +513,7 @@
         }
 
         .anticon-down {
-          font-size: 10px;
+          font-size: 14px;
         }
       }
     }
