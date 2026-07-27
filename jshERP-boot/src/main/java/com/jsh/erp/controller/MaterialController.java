@@ -788,6 +788,7 @@ public class MaterialController extends BaseController {
                 }
             }
             map.put("showStockPrice", showStockPrice);
+            map.put("moveAvgPriceFlag", moveAvgPriceFlag);
             map.put("rows", dataList);
             res.code = 200;
             res.data = map;

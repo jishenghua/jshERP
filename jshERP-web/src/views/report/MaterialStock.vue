@@ -116,7 +116,8 @@
               <a @click="showMaterialDepotStockList(record)">{{record.id?'分布':''}}</a>
             </span>
             <span slot="customRenderPurchaseDecimal" slot-scope="text, record">
-              <a @click="showStockPriceInOutList(record)">{{record.purchaseDecimal}}</a>
+              <a v-if="moveAvgPriceFlag" @click="showStockPriceInOutList(record)">{{record.purchaseDecimal}}</a>
+              <template v-else>{{record.purchaseDecimal}}</template>
             </span>
             <template slot="customPic" slot-scope="text, record">
               <a-popover placement="right" trigger="click">
@@ -208,6 +209,7 @@
         currentStockPrice: '',
         currentWeight: '',
         showStockPrice: false,
+        moveAvgPriceFlag: false,
         pageName: 'materialStock',
         // 默认索引
         defDataIndex:['rowIndex','action','mBarCode','name','standard','model','color','categoryName', 'position','unitName',
@@ -316,6 +318,7 @@
             this.currentStockPrice = res.data.currentStockPrice.toFixed(2)
             this.currentWeight = res.data.currentWeight.toFixed(2)
             this.showStockPrice = res.data.showStockPrice
+            this.moveAvgPriceFlag = res.data.moveAvgPriceFlag
           } else if(res.code===510){
             this.$message.warning(res.data)
           } else {
