@@ -1,10 +1,7 @@
 package com.jsh.erp.datasource.mappers;
 
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
-import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
-import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
-import com.jsh.erp.datasource.vo.InOutPriceVo;
+import com.jsh.erp.datasource.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -253,6 +250,8 @@ public interface DepotItemMapperEx {
 
     List<MaterialVo4Unit> getBillItemByParam(
             @Param("barCodeList") List<String> barCodeList);
+
+    List<CurrentStockVo> getCurrentStockList();
 
     BigDecimal getCurrentStockByParam(
             @Param("depotId") Long depotId,

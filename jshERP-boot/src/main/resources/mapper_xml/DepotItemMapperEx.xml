@@ -985,25 +985,19 @@
 
     <select id="getFinishNumber" resultType="java.math.BigDecimal">
         select ifnull(sum(di.basic_number),0) from jsh_depot_item di
+        left join jsh_depot_head dh on di.header_id=dh.id and ifnull(dh.delete_flag,'0') !='1'
         where di.material_extend_id=#{meId}
         and di.link_id=#{linkId}
         and ifnull(di.delete_flag,'0') !='1'
-        and di.header_id
-        in
-        (
-        select dh.id from jsh_depot_head dh
-        where 1=1
         <if test="noType == 'normal'">
             and dh.link_number=#{linkStr}
         </if>
         <if test="noType == 'apply'">
             and dh.link_apply=#{linkStr}
         </if>
-        and ifnull(dh.delete_flag,'0') !='1'
         <if test="goToType != null and goToType !=''">
             and dh.sub_type=#{goToType}
         </if>
-        )
     </select>
 
     <select id="getRealFinishNumber" resultType="java.math.BigDecimal">
@@ -1130,6 +1124,12 @@
         </if>
         and ifnull(m.delete_flag,'0') !='1'
         order by m.id desc
+    </select>
+
+    <select id="getCurrentStockList" resultType="com.jsh.erp.datasource.vo.CurrentStockVo">
+        select depot_id, material_id, ifnull(current_number,0) current_number
+        from jsh_material_current_stock
+        where ifnull(delete_flag,'0') !='1'
     </select>
 
     <select id="getCurrentStockByParam" resultType="java.math.BigDecimal">

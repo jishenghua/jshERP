@@ -207,7 +207,8 @@ public class DepotItemController {
             Long userId = userService.getUserId(request);
             String priceLimit = userService.getRoleTypeByUserId(userId).getPriceLimit();
             List<DepotItemVo4WithInfoEx> dataList = new ArrayList<>();
-            String billCategory = depotHeadService.getBillCategory(depotHeadService.getDepotHead(headerId).getSubType());
+            DepotHead depotHead = depotHeadService.getDepotHead(headerId);
+            String billCategory = depotHeadService.getBillCategory(depotHead.getSubType());
             if(headerId != 0) {
                 dataList = depotItemService.getDetailList(headerId);
             }
@@ -223,7 +224,36 @@ public class DepotItemController {
                 BigDecimal totalFinishPurchaseNumber = BigDecimal.ZERO;
                 BigDecimal totalFinishNumber = BigDecimal.ZERO;
                 BigDecimal totalWeight = BigDecimal.ZERO;
+                Map<Long,Unit> unitMap = unitService.getUnitMap();
+                Map<String, BigDecimal> currentStockMap = depotItemService.getCurrentStockMap();
                 for (DepotItemVo4WithInfoEx diEx : dataList) {
+                    Unit unitInfo = unitMap!=null?unitMap.get(diEx.getUnitId()):new Unit(); //查询多单位信息
+                    String materialUnit = diEx.getMaterialUnit();
+                    BigDecimal stock = currentStockMap.get(diEx.getDepotId() + "_" + diEx.getMaterialId());
+                    stock = stock==null?BigDecimal.ZERO:stock;
+                    if(StringUtil.isNotEmpty(diEx.getSku())){
+                        stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
+                    } else {
+                        if (unitInfo!=null) {
+                            stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
+                        }
+                    }
+                    BigDecimal finishPurchaseNumber = BigDecimal.ZERO;
+                    if(BusinessConstants.PURCHASE_STATUS_SKIPING.equals(depotHead.getPurchaseStatus())) {
+                        //只统计部分完成的场景
+                        finishPurchaseNumber = depotItemService.getFinishPurchaseNumber(diEx.getMaterialExtendId(), diEx.getId(), depotHead.getNumber(), linkType, depotHead.getSubType());
+                        if (unitInfo!=null) {
+                            finishPurchaseNumber = unitService.parseStockByUnit(finishPurchaseNumber, unitInfo, materialUnit);
+                        }
+                    }
+                    BigDecimal finishNumber = BigDecimal.ZERO;
+                    if(BusinessConstants.BILLS_STATUS_SKIPING.equals(depotHead.getStatus())) {
+                        //只统计部分完成的场景
+                        finishNumber = depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), depotHead.getNumber(), linkType, depotHead.getSubType());
+                        if (unitInfo!=null) {
+                            finishNumber = unitService.parseStockByUnit(finishNumber, unitInfo, materialUnit);
+                        }
+                    }
                     JSONObject item = new JSONObject();
                     item.put("id", diEx.getId());
                     item.put("materialExtendId", diEx.getMaterialExtendId() == null ? "" : diEx.getMaterialExtendId());
@@ -237,17 +267,6 @@ public class DepotItemController {
                     item.put("otherField1", diEx.getMOtherField1());
                     item.put("otherField2", diEx.getMOtherField2());
                     item.put("otherField3", diEx.getMOtherField3());
-                    BigDecimal stock;
-                    Unit unitInfo = materialService.findUnit(diEx.getMaterialId()); //查询多单位信息
-                    String materialUnit = diEx.getMaterialUnit();
-                    if(StringUtil.isNotEmpty(diEx.getSku())){
-                        stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
-                    } else {
-                        stock = depotItemService.getCurrentStockByParam(diEx.getDepotId(),diEx.getMaterialId());
-                        if (StringUtil.isNotEmpty(unitInfo.getName())) {
-                            stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
-                        }
-                    }
                     item.put("stock", stock);
                     item.put("unit", diEx.getMaterialUnit());
                     item.put("snList", diEx.getSnList());
@@ -259,9 +278,7 @@ public class DepotItemController {
                     item.put("operNumber", diEx.getOperNumber());
                     item.put("basicNumber", diEx.getBasicNumber());
                     item.put("preNumber", diEx.getOperNumber()); //原数量
-                    BigDecimal finishPurchaseNumber = depotItemService.getFinishPurchaseNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType);
                     item.put("finishPurchaseNumber", finishPurchaseNumber); //已采购（以销定购的情况）
-                    BigDecimal finishNumber = depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), diEx.getHeaderId(), unitInfo, materialUnit, linkType);
                     item.put("finishNumber", finishNumber); //已采购|已销售|已入库|已出库
                     item.put("purchaseDecimal", roleService.parseBillPriceByLimit(diEx.getPurchaseDecimal(), billCategory, priceLimit, request));  //采购价
                     if("basic".equals(linkType) || "1".equals(isReadOnly)) {

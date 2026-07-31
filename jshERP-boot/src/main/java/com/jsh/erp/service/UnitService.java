@@ -24,9 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UnitService {
@@ -302,5 +300,14 @@ public class UnitService {
             JshException.writeFail(logger, e);
         }
         return result;
+    }
+
+    public Map<Long,Unit> getUnitMap() throws Exception {
+        List<Unit> unitList = getUnit();
+        Map<Long,Unit> unitMap = new HashMap<>();
+        for(Unit unit : unitList){
+            unitMap.put(unit.getId(), unit);
+        }
+        return unitMap;
     }
 }

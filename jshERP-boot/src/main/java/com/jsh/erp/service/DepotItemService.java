@@ -6,10 +6,7 @@ import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
 import com.jsh.erp.datasource.mappers.*;
-import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
-import com.jsh.erp.datasource.vo.DepotItemVo4Stock;
-import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
-import com.jsh.erp.datasource.vo.InOutPriceVo;
+import com.jsh.erp.datasource.vo.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.exception.JshException;
 import com.jsh.erp.utils.StringUtil;
@@ -1235,78 +1232,51 @@ public class DepotItemService {
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getFinishPurchaseNumber(Long meId, Long id, Long headerId, Unit unitInfo, String materialUnit, String linkType) {
+    public BigDecimal getFinishPurchaseNumber(Long meId, Long id, String number, String linkType, String subType) {
         BigDecimal count = BigDecimal.ZERO;
-        Long linkId = id;
-        DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
-        String linkStr = depotHead.getNumber(); //订单号
         // 针对以销定购的情况
-        if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
+        if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)) {
             String goToType = BusinessConstants.SUB_TYPE_PURCHASE_ORDER;
             String noType = "normal";
-            count = depotItemMapperEx.getFinishNumber(meId, linkId, linkStr, noType, goToType);
-            //根据多单位情况进行数量的转换
-            if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
-                count = count.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);
-            }
-            if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo()!=null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO)!=0) {
-                count = count.divide(unitInfo.getRatioTwo(),2,BigDecimal.ROUND_HALF_UP);
-            }
-            if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree()!=null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO)!=0) {
-                count = count.divide(unitInfo.getRatioThree(),2,BigDecimal.ROUND_HALF_UP);
-            }
+            count = depotItemMapperEx.getFinishNumber(meId, id, number, noType, goToType);
         }
         return count;
     }
 
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
-    public BigDecimal getFinishNumber(Long meId, Long id, Long headerId, Unit unitInfo, String materialUnit, String linkType) {
-        Long linkId = id;
+    public BigDecimal getFinishNumber(Long meId, Long id, String number, String linkType, String subType) {
         String goToType = "";
-        DepotHead depotHead =depotHeadMapper.selectByPrimaryKey(headerId);
-        String linkStr = depotHead.getNumber(); //订单号
         if("other".equals(linkType)) {
             //采购入库、采购退货、销售出库、销售退货都转其它入库
-            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())
-                    || BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(depotHead.getSubType())
-                    || BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())
-                    || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(depotHead.getSubType())) {
+            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(subType)
+                    || BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(subType)
+                    || BusinessConstants.SUB_TYPE_SALES.equals(subType)
+                    || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(subType)) {
                 goToType = BusinessConstants.SUB_TYPE_OTHER;
             }
         } else if("basic".equals(linkType)||"purchase".equals(linkType)) {
             //采购订单转采购入库
-            if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(depotHead.getSubType())) {
+            if(BusinessConstants.SUB_TYPE_PURCHASE_ORDER.equals(subType)) {
                 goToType = BusinessConstants.SUB_TYPE_PURCHASE;
             }
             //销售订单转销售出库
-            if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(depotHead.getSubType())) {
+            if(BusinessConstants.SUB_TYPE_SALES_ORDER.equals(subType)) {
                 goToType = BusinessConstants.SUB_TYPE_SALES;
             }
             //采购入库转采购退货
-            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(depotHead.getSubType())) {
+            if(BusinessConstants.SUB_TYPE_PURCHASE.equals(subType)) {
                 goToType = BusinessConstants.SUB_TYPE_PURCHASE_RETURN;
             }
             //销售出库转销售退货
-            if(BusinessConstants.SUB_TYPE_SALES.equals(depotHead.getSubType())) {
+            if(BusinessConstants.SUB_TYPE_SALES.equals(subType)) {
                 goToType = BusinessConstants.SUB_TYPE_SALES_RETURN;
             }
         }
         String noType = "normal";
-        if(BusinessConstants.SUB_TYPE_PURCHASE_APPLY.equals(depotHead.getSubType())) {
+        if(BusinessConstants.SUB_TYPE_PURCHASE_APPLY.equals(subType)) {
             noType = "apply";
         }
-        BigDecimal count = depotItemMapperEx.getFinishNumber(meId, linkId, linkStr, noType, goToType);
-        //根据多单位情况进行数量的转换
-        if(materialUnit.equals(unitInfo.getOtherUnit()) && unitInfo.getRatio()!=null && unitInfo.getRatio().compareTo(BigDecimal.ZERO)!=0) {
-            count = count.divide(unitInfo.getRatio(),2,BigDecimal.ROUND_HALF_UP);
-        }
-        if(materialUnit.equals(unitInfo.getOtherUnitTwo()) && unitInfo.getRatioTwo()!=null && unitInfo.getRatioTwo().compareTo(BigDecimal.ZERO)!=0) {
-            count = count.divide(unitInfo.getRatioTwo(),2,BigDecimal.ROUND_HALF_UP);
-        }
-        if(materialUnit.equals(unitInfo.getOtherUnitThree()) && unitInfo.getRatioThree()!=null && unitInfo.getRatioThree().compareTo(BigDecimal.ZERO)!=0) {
-            count = count.divide(unitInfo.getRatioThree(),2,BigDecimal.ROUND_HALF_UP);
-        }
-        return count;
+        return depotItemMapperEx.getFinishNumber(meId, id, number, noType, goToType);
     }
 
     /**
@@ -1521,6 +1491,15 @@ public class DepotItemService {
             subType = "其它";
         }
         return depotItemMapperEx.getLastUnitPriceByParam(organId, meId, type, subType);
+    }
+
+    public Map<String, BigDecimal> getCurrentStockMap() {
+        Map<String, BigDecimal> map = new HashMap<>();
+        List<CurrentStockVo> list = depotItemMapperEx.getCurrentStockList();
+        for (CurrentStockVo cs : list) {
+            map.put(cs.getDepotId() + "_" + cs.getMaterialId(), cs.getCurrentNumber());
+        }
+        return map;
     }
 
     public BigDecimal getCurrentStockByParam(Long depotId, Long mId) {
