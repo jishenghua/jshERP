@@ -1849,3 +1849,10 @@ alter table jsh_depot_head add last_debt decimal(24,6) DEFAULT NULL COMMENT '最
 -- --------------------------------------------------------
 alter table jsh_depot_head add last_deposit decimal(24,6) DEFAULT NULL COMMENT '剩余订金' after deposit;
 update jsh_depot_head set last_deposit=0 where last_deposit is null;
+
+-- --------------------------------------------------------
+-- 时间 2026年8月04日
+-- by jishenghua
+-- 给平台表增加手机端版本
+-- --------------------------------------------------------
+insert into jsh_platform_config(platform_key, platform_key_info, platform_value) values ('app_version', '手机端版本', '');

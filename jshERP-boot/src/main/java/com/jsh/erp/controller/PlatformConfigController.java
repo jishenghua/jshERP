@@ -172,6 +172,26 @@ public class PlatformConfigController extends BaseController {
     }
 
     /**
+     * 获取APP版本
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/getPlatform/appVersion")
+    @ApiOperation(value = "获取APP版本")
+    public String getPlatformAppVersion(HttpServletRequest request)throws Exception {
+        String res;
+        try {
+            String platformKey = "app_version";
+            PlatformConfig platformConfig = platformConfigService.getInfoByKey(platformKey);
+            res = platformConfig.getPlatformValue();
+        } catch(Exception e){
+            logger.error(e.getMessage(), e);
+            res = "#";
+        }
+        return res;
+    }
+
+    /**
      * 根据platformKey更新platformValue
      * @param object
      * @param request
