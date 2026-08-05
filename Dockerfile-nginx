@@ -1,0 +1,26 @@
+# --- 階段一：構建前端 (Build Stage) ---
+FROM node:20-buster AS frontend-build
+
+WORKDIR /app
+
+RUN npm config set registry https://registry.npmmirror.com
+
+
+COPY jshERP-web/package.json ./
+
+RUN yarn install --network-timeout 100000
+
+COPY jshERP-web/ .
+
+ENV NODE_OPTIONS=--max_old_space_size=4096
+
+RUN yarn build
+
+FROM nginx:alpine
+
+COPY --from=frontend-build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+# 啟動 Nginx
+CMD ["nginx", "-g", "daemon off;"]
