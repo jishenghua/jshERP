@@ -216,120 +216,117 @@ public class DepotItemController {
             outer.put("total", dataList.size());
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
-            if (null != dataList) {
-                BigDecimal totalOperNumber = BigDecimal.ZERO;
-                BigDecimal totalAllPrice = BigDecimal.ZERO;
-                BigDecimal totalTaxMoney = BigDecimal.ZERO;
-                BigDecimal totalTaxLastMoney = BigDecimal.ZERO;
-                BigDecimal totalFinishPurchaseNumber = BigDecimal.ZERO;
-                BigDecimal totalFinishNumber = BigDecimal.ZERO;
-                BigDecimal totalWeight = BigDecimal.ZERO;
-                Map<Long,Unit> unitMap = unitService.getUnitMap();
-                Map<String, BigDecimal> currentStockMap = depotItemService.getCurrentStockMap();
-                for (DepotItemVo4WithInfoEx diEx : dataList) {
-                    Unit unitInfo = unitMap!=null?unitMap.get(diEx.getUnitId()):new Unit(); //查询多单位信息
-                    String materialUnit = diEx.getMaterialUnit();
-                    BigDecimal stock = currentStockMap.get(diEx.getDepotId() + "_" + diEx.getMaterialId());
-                    stock = stock==null?BigDecimal.ZERO:stock;
-                    if(StringUtil.isNotEmpty(diEx.getSku())){
-                        stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
-                    } else {
-                        if (unitInfo!=null) {
-                            stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
-                        }
+            BigDecimal totalOperNumber = BigDecimal.ZERO;
+            BigDecimal totalAllPrice = BigDecimal.ZERO;
+            BigDecimal totalTaxMoney = BigDecimal.ZERO;
+            BigDecimal totalTaxLastMoney = BigDecimal.ZERO;
+            BigDecimal totalFinishPurchaseNumber = BigDecimal.ZERO;
+            BigDecimal totalFinishNumber = BigDecimal.ZERO;
+            BigDecimal totalWeight = BigDecimal.ZERO;
+            Map<Long,Unit> unitMap = unitService.getUnitMap();
+            for (DepotItemVo4WithInfoEx diEx : dataList) {
+                Unit unitInfo = unitMap!=null?unitMap.get(diEx.getUnitId()):new Unit(); //查询多单位信息
+                String materialUnit = diEx.getMaterialUnit();
+                BigDecimal stock;
+                if(StringUtil.isNotEmpty(diEx.getSku())){
+                    stock = depotItemService.getSkuStockByParam(diEx.getDepotId(),diEx.getMaterialExtendId(),null,null);
+                } else {
+                    stock = depotItemService.getCurrentStockByParam(diEx.getDepotId(),diEx.getMaterialId());
+                    if (unitInfo!=null) {
+                        stock = unitService.parseStockByUnit(stock, unitInfo, materialUnit);
                     }
-                    BigDecimal finishPurchaseNumber = BigDecimal.ZERO;
-                    if(BusinessConstants.PURCHASE_STATUS_SKIPING.equals(depotHead.getPurchaseStatus())) {
-                        //只统计部分完成的场景
-                        finishPurchaseNumber = depotItemService.getFinishPurchaseNumber(diEx.getMaterialExtendId(), diEx.getId(), depotHead.getNumber(), linkType, depotHead.getSubType());
-                        if (unitInfo!=null) {
-                            finishPurchaseNumber = unitService.parseStockByUnit(finishPurchaseNumber, unitInfo, materialUnit);
-                        }
-                    }
-                    BigDecimal finishNumber = BigDecimal.ZERO;
-                    if(BusinessConstants.BILLS_STATUS_SKIPING.equals(depotHead.getStatus())) {
-                        //只统计部分完成的场景
-                        finishNumber = depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), depotHead.getNumber(), linkType, depotHead.getSubType());
-                        if (unitInfo!=null) {
-                            finishNumber = unitService.parseStockByUnit(finishNumber, unitInfo, materialUnit);
-                        }
-                    }
-                    JSONObject item = new JSONObject();
-                    item.put("id", diEx.getId());
-                    item.put("materialExtendId", diEx.getMaterialExtendId() == null ? "" : diEx.getMaterialExtendId());
-                    item.put("barCode", diEx.getBarCode());
-                    item.put("name", diEx.getMName());
-                    item.put("standard", diEx.getMStandard());
-                    item.put("model", diEx.getMModel());
-                    item.put("color", diEx.getMColor());
-                    item.put("brand", diEx.getBrand());
-                    item.put("mfrs", diEx.getMMfrs());
-                    item.put("otherField1", diEx.getMOtherField1());
-                    item.put("otherField2", diEx.getMOtherField2());
-                    item.put("otherField3", diEx.getMOtherField3());
-                    item.put("stock", stock);
-                    item.put("unit", diEx.getMaterialUnit());
-                    item.put("snList", diEx.getSnList());
-                    item.put("batchNumber", diEx.getBatchNumber());
-                    item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
-                    item.put("sku", diEx.getSku());
-                    item.put("enableSerialNumber", diEx.getEnableSerialNumber());
-                    item.put("enableBatchNumber", diEx.getEnableBatchNumber());
-                    item.put("operNumber", diEx.getOperNumber());
-                    item.put("basicNumber", diEx.getBasicNumber());
-                    item.put("preNumber", diEx.getOperNumber()); //原数量
-                    item.put("finishPurchaseNumber", finishPurchaseNumber); //已采购（以销定购的情况）
-                    item.put("finishNumber", finishNumber); //已采购|已销售|已入库|已出库
-                    item.put("purchaseDecimal", roleService.parseBillPriceByLimit(diEx.getPurchaseDecimal(), billCategory, priceLimit, request));  //采购价
-                    if("basic".equals(linkType) || "1".equals(isReadOnly)) {
-                        //正常情况显示金额，而以销定购的情况不能显示金额
-                        item.put("unitPrice", roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request));
-                        item.put("taxUnitPrice", roleService.parseBillPriceByLimit(diEx.getTaxUnitPrice(), billCategory, priceLimit, request));
-                        item.put("allPrice", roleService.parseBillPriceByLimit(diEx.getAllPrice(), billCategory, priceLimit, request));
-                        item.put("taxRate", roleService.parseBillPriceByLimit(diEx.getTaxRate(), billCategory, priceLimit, request));
-                        item.put("taxMoney", roleService.parseBillPriceByLimit(diEx.getTaxMoney(), billCategory, priceLimit, request));
-                        item.put("taxLastMoney", roleService.parseBillPriceByLimit(diEx.getTaxLastMoney(), billCategory, priceLimit, request));
-                    }
-                    BigDecimal allWeight = diEx.getBasicNumber()==null||diEx.getWeight()==null?BigDecimal.ZERO:diEx.getBasicNumber().multiply(diEx.getWeight());
-                    item.put("weight", allWeight);
-                    item.put("position", diEx.getPosition());
-                    item.put("remark", diEx.getRemark());
-                    item.put("imgName", diEx.getImgName());
-                    if(fileUploadType == 2) {
-                        item.put("imgSmall", "small");
-                        item.put("imgLarge", "large");
-                    } else {
-                        item.put("imgSmall", "");
-                        item.put("imgLarge", "");
-                    }
-                    item.put("linkId", diEx.getLinkId());
-                    item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
-                    item.put("depotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());
-                    item.put("anotherDepotId", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotId());
-                    item.put("anotherDepotName", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotName());
-                    item.put("mType", diEx.getMaterialType());
-                    item.put("op", 1);
-                    dataArray.add(item);
-                    //合计数据汇总
-                    totalOperNumber = totalOperNumber.add(diEx.getOperNumber()==null?BigDecimal.ZERO:diEx.getOperNumber());
-                    totalAllPrice = totalAllPrice.add(diEx.getAllPrice()==null?BigDecimal.ZERO:diEx.getAllPrice());
-                    totalTaxMoney = totalTaxMoney.add(diEx.getTaxMoney()==null?BigDecimal.ZERO:diEx.getTaxMoney());
-                    totalTaxLastMoney = totalTaxLastMoney.add(diEx.getTaxLastMoney()==null?BigDecimal.ZERO:diEx.getTaxLastMoney());
-                    totalFinishPurchaseNumber = totalFinishPurchaseNumber.add(finishPurchaseNumber);
-                    totalFinishNumber = totalFinishNumber.add(finishNumber);
-                    totalWeight = totalWeight.add(allWeight);
                 }
-                if(StringUtil.isNotEmpty(isReadOnly) && "1".equals(isReadOnly)) {
-                    JSONObject footItem = new JSONObject();
-                    footItem.put("operNumber", totalOperNumber);
-                    footItem.put("allPrice", roleService.parseBillPriceByLimit(totalAllPrice, billCategory, priceLimit, request));
-                    footItem.put("taxMoney", roleService.parseBillPriceByLimit(totalTaxMoney, billCategory, priceLimit, request));
-                    footItem.put("taxLastMoney", roleService.parseBillPriceByLimit(totalTaxLastMoney, billCategory, priceLimit, request));
-                    footItem.put("finishPurchaseNumber", totalFinishPurchaseNumber);
-                    footItem.put("finishNumber", totalFinishNumber);
-                    footItem.put("weight", totalWeight);
-                    dataArray.add(footItem);
+                BigDecimal finishPurchaseNumber = BigDecimal.ZERO;
+                if(BusinessConstants.PURCHASE_STATUS_SKIPING.equals(depotHead.getPurchaseStatus())) {
+                    //只统计部分完成的场景
+                    finishPurchaseNumber = depotItemService.getFinishPurchaseNumber(diEx.getMaterialExtendId(), diEx.getId(), depotHead.getNumber(), linkType, depotHead.getSubType());
+                    if (unitInfo!=null) {
+                        finishPurchaseNumber = unitService.parseStockByUnit(finishPurchaseNumber, unitInfo, materialUnit);
+                    }
                 }
+                BigDecimal finishNumber = BigDecimal.ZERO;
+                if(BusinessConstants.BILLS_STATUS_SKIPING.equals(depotHead.getStatus())) {
+                    //只统计部分完成的场景
+                    finishNumber = depotItemService.getFinishNumber(diEx.getMaterialExtendId(), diEx.getId(), depotHead.getNumber(), linkType, depotHead.getSubType());
+                    if (unitInfo!=null) {
+                        finishNumber = unitService.parseStockByUnit(finishNumber, unitInfo, materialUnit);
+                    }
+                }
+                JSONObject item = new JSONObject();
+                item.put("id", diEx.getId());
+                item.put("materialExtendId", diEx.getMaterialExtendId() == null ? "" : diEx.getMaterialExtendId());
+                item.put("barCode", diEx.getBarCode());
+                item.put("name", diEx.getMName());
+                item.put("standard", diEx.getMStandard());
+                item.put("model", diEx.getMModel());
+                item.put("color", diEx.getMColor());
+                item.put("brand", diEx.getBrand());
+                item.put("mfrs", diEx.getMMfrs());
+                item.put("otherField1", diEx.getMOtherField1());
+                item.put("otherField2", diEx.getMOtherField2());
+                item.put("otherField3", diEx.getMOtherField3());
+                item.put("stock", stock);
+                item.put("unit", diEx.getMaterialUnit());
+                item.put("snList", diEx.getSnList());
+                item.put("batchNumber", diEx.getBatchNumber());
+                item.put("expirationDate", Tools.parseDateToStr(diEx.getExpirationDate()));
+                item.put("sku", diEx.getSku());
+                item.put("enableSerialNumber", diEx.getEnableSerialNumber());
+                item.put("enableBatchNumber", diEx.getEnableBatchNumber());
+                item.put("operNumber", diEx.getOperNumber());
+                item.put("basicNumber", diEx.getBasicNumber());
+                item.put("preNumber", diEx.getOperNumber()); //原数量
+                item.put("finishPurchaseNumber", finishPurchaseNumber); //已采购（以销定购的情况）
+                item.put("finishNumber", finishNumber); //已采购|已销售|已入库|已出库
+                item.put("purchaseDecimal", roleService.parseBillPriceByLimit(diEx.getPurchaseDecimal(), billCategory, priceLimit, request));  //采购价
+                if("basic".equals(linkType) || "1".equals(isReadOnly)) {
+                    //正常情况显示金额，而以销定购的情况不能显示金额
+                    item.put("unitPrice", roleService.parseBillPriceByLimit(diEx.getUnitPrice(), billCategory, priceLimit, request));
+                    item.put("taxUnitPrice", roleService.parseBillPriceByLimit(diEx.getTaxUnitPrice(), billCategory, priceLimit, request));
+                    item.put("allPrice", roleService.parseBillPriceByLimit(diEx.getAllPrice(), billCategory, priceLimit, request));
+                    item.put("taxRate", roleService.parseBillPriceByLimit(diEx.getTaxRate(), billCategory, priceLimit, request));
+                    item.put("taxMoney", roleService.parseBillPriceByLimit(diEx.getTaxMoney(), billCategory, priceLimit, request));
+                    item.put("taxLastMoney", roleService.parseBillPriceByLimit(diEx.getTaxLastMoney(), billCategory, priceLimit, request));
+                }
+                BigDecimal allWeight = diEx.getBasicNumber()==null||diEx.getWeight()==null?BigDecimal.ZERO:diEx.getBasicNumber().multiply(diEx.getWeight());
+                item.put("weight", allWeight);
+                item.put("position", diEx.getPosition());
+                item.put("remark", diEx.getRemark());
+                item.put("imgName", diEx.getImgName());
+                if(fileUploadType == 2) {
+                    item.put("imgSmall", "small");
+                    item.put("imgLarge", "large");
+                } else {
+                    item.put("imgSmall", "");
+                    item.put("imgLarge", "");
+                }
+                item.put("linkId", diEx.getLinkId());
+                item.put("depotId", diEx.getDepotId() == null ? "" : diEx.getDepotId());
+                item.put("depotName", diEx.getDepotId() == null ? "" : diEx.getDepotName());
+                item.put("anotherDepotId", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotId());
+                item.put("anotherDepotName", diEx.getAnotherDepotId() == null ? "" : diEx.getAnotherDepotName());
+                item.put("mType", diEx.getMaterialType());
+                item.put("op", 1);
+                dataArray.add(item);
+                //合计数据汇总
+                totalOperNumber = totalOperNumber.add(diEx.getOperNumber()==null?BigDecimal.ZERO:diEx.getOperNumber());
+                totalAllPrice = totalAllPrice.add(diEx.getAllPrice()==null?BigDecimal.ZERO:diEx.getAllPrice());
+                totalTaxMoney = totalTaxMoney.add(diEx.getTaxMoney()==null?BigDecimal.ZERO:diEx.getTaxMoney());
+                totalTaxLastMoney = totalTaxLastMoney.add(diEx.getTaxLastMoney()==null?BigDecimal.ZERO:diEx.getTaxLastMoney());
+                totalFinishPurchaseNumber = totalFinishPurchaseNumber.add(finishPurchaseNumber);
+                totalFinishNumber = totalFinishNumber.add(finishNumber);
+                totalWeight = totalWeight.add(allWeight);
+            }
+            if(StringUtil.isNotEmpty(isReadOnly) && "1".equals(isReadOnly)) {
+                JSONObject footItem = new JSONObject();
+                footItem.put("operNumber", totalOperNumber);
+                footItem.put("allPrice", roleService.parseBillPriceByLimit(totalAllPrice, billCategory, priceLimit, request));
+                footItem.put("taxMoney", roleService.parseBillPriceByLimit(totalTaxMoney, billCategory, priceLimit, request));
+                footItem.put("taxLastMoney", roleService.parseBillPriceByLimit(totalTaxLastMoney, billCategory, priceLimit, request));
+                footItem.put("finishPurchaseNumber", totalFinishPurchaseNumber);
+                footItem.put("finishNumber", totalFinishNumber);
+                footItem.put("weight", totalWeight);
+                dataArray.add(footItem);
             }
             outer.put("rows", dataArray);
             res.code = 200;

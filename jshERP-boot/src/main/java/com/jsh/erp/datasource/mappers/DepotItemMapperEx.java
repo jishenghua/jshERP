@@ -251,8 +251,6 @@ public interface DepotItemMapperEx {
     List<MaterialVo4Unit> getBillItemByParam(
             @Param("barCodeList") List<String> barCodeList);
 
-    List<CurrentStockVo> getCurrentStockList();
-
     BigDecimal getCurrentStockByParam(
             @Param("depotId") Long depotId,
             @Param("mId") Long mId);

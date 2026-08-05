@@ -1493,15 +1493,6 @@ public class DepotItemService {
         return depotItemMapperEx.getLastUnitPriceByParam(organId, meId, type, subType);
     }
 
-    public Map<String, BigDecimal> getCurrentStockMap() {
-        Map<String, BigDecimal> map = new HashMap<>();
-        List<CurrentStockVo> list = depotItemMapperEx.getCurrentStockList();
-        for (CurrentStockVo cs : list) {
-            map.put(cs.getDepotId() + "_" + cs.getMaterialId(), cs.getCurrentNumber());
-        }
-        return map;
-    }
-
     public BigDecimal getCurrentStockByParam(Long depotId, Long mId) {
         BigDecimal stock = depotItemMapperEx.getCurrentStockByParam(depotId, mId);
         return stock!=null? stock: BigDecimal.ZERO;
