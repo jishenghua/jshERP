@@ -31,6 +31,7 @@
 #   NPM_REGISTRY     npm 镜像源            默认 https://registry.npmmirror.com
 #   MAVEN_MIRROR     Maven 镜像源(留空禁用) 默认 https://maven.aliyun.com/repository/public
 #   AUTO_START       是否写开机自启(rc.local) 默认 1
+#   JDK8_URL         JDK8(tar.gz)直链(留空则官方源, 失败自动转清华 TUNA 镜像) 默认空
 #   JSH_SWAP_TARGET_MB  构建期目标内存(内存+swap, MB; 不足自动补建 swap) 默认 4096
 #
 # 部署完成后默认登录: 租户 jsh / 超管 admin，密码均为 123456
@@ -64,6 +65,7 @@ REDIS_PASSWORD="${REDIS_PASSWORD:-1234abcd}"
 NPM_REGISTRY="${NPM_REGISTRY:-https://registry.npmmirror.com}"
 MAVEN_MIRROR="${MAVEN_MIRROR:-https://maven.aliyun.com/repository/public}"
 AUTO_START="${AUTO_START:-1}"
+JDK8_URL="${JDK8_URL:-}"
 
 DO_DEPS=1
 DO_BUILD=1
@@ -333,9 +335,40 @@ ensure_java8() {
         local arch
         case "$(uname -m)" in x86_64) arch=x64;; aarch64) arch=aarch64;; *) die "不支持的 CPU 架构: $(uname -m)";; esac
         mkdir -p "$jdk_dir"
-        curl -fL --connect-timeout 20 -o /tmp/temurin8.tar.gz \
-            "https://api.adoptium.net/v3/binary/latest/8/ga/linux/${arch}/jdk/hotspot/normal/eclipse" \
-            || die "下载 Temurin8 失败，请手动安装 JDK8 后重试(--skip-deps 可跳过)"
+
+        # 官方下载接口(api.adoptium.net)会把请求 302 重定向到 github.com 的 release 附件,
+        # 国内云主机访问 github.com:443 常超时(curl error 28), 官方源失败后自动改用清华 TUNA
+        # 也可用环境变量 JDK8_URL 直接指定任一 tar.gz 直链, 完全跳过自动选源。
+        local dl_ok=0 fname
+        if [[ -n "$JDK8_URL" ]]; then
+            log "按 JDK8_URL 下载: $JDK8_URL"
+            curl -fL --connect-timeout 20 --retry 1 -o /tmp/temurin8.tar.gz "$JDK8_URL" \
+                || die "下载 Temurin8 失败(JDK8_URL=${JDK8_URL})，请确认直链可用后重试"
+            dl_ok=1
+        elif curl -fL --connect-timeout 20 --retry 1 -o /tmp/temurin8.tar.gz \
+                "https://api.adoptium.net/v3/binary/latest/8/ga/linux/${arch}/jdk/hotspot/normal/eclipse" 2>/dev/null; then
+            dl_ok=1
+        else
+            warn "官方源(经 github.com 分发)不可达, 改用清华 TUNA 国内镜像 ..."
+            fname="$(curl -fsSL --connect-timeout 15 --max-time 30 \
+                        "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jdk/${arch}/linux/" 2>/dev/null \
+                     | grep -oE "OpenJDK8U-jdk_${arch}_linux_hotspot_[0-9]+u[0-9]+b[0-9]+\.tar\.gz" | head -n 1)"
+            if [[ -z "$fname" ]]; then
+                warn "TUNA 镜像目录解析失败(网络受限或镜像未同步), 请先手动确认可达:"
+                warn "  curl -I https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jdk/${arch}/linux/"
+            else
+                log "镜像源命中: ${fname}"
+                curl -fL --connect-timeout 20 --retry 1 -o /tmp/temurin8.tar.gz \
+                    "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jdk/${arch}/linux/${fname}" 2>/dev/null \
+                    && dl_ok=1
+            fi
+        fi
+        if [[ "$dl_ok" != "1" ]]; then
+            die "下载 Temurin8 失败。若服务器无法访问 github.com(官方源经其分发, 国内云主机常见), 可:\n" \
+                "  1) 指定国内直链重试:  JDK8_URL=<tar.gz 下载地址> bash $0\n" \
+                "     从清华镜像获取最新直链:  curl -s https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jdk/${arch}/linux/ | grep -oE 'OpenJDK8U-jdk_${arch}_linux_hotspot_[0-9]+u[0-9]+b[0-9]+\\.tar\\.gz' | head -1\n" \
+                "  2) 手动安装 JDK8 后重试:  bash $0 --skip-deps"
+        fi
         tar -xzf /tmp/temurin8.tar.gz -C "$jdk_dir" --strip-components=1 || die "解压 Temurin8 失败"
         java_bin="$jdk_dir/bin/java"
     fi
