@@ -75,7 +75,127 @@ warn() { echo -e "${C_YEL}[WARN]${C_END} $*"; }
 die()  { echo -e "${C_RED}[FAIL]${C_END} $*" >&2; exit 1; }
 hr()   { echo -e "${C_BLU}-------------------------------------------------------------------------${C_END}"; }
 
+# 兼容精简 PATH 环境(非登录 shell / su 切换 / 部分 sudo 配置): 
+# CentOS/RHEL 系的 mysqld、mariadbd、nginx 等位于 /usr/sbin, 缺目录会导致"明明已安装却被判定缺失"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin${PATH:+:$PATH}"
+
 cmd_exists() { command -v "$1" >/dev/null 2>&1; }
+
+# apt 系: 判断软件源中某包是否存在可安装候选。
+# 用 LC_ALL=C 规避中英文 locale 差异; 虚拟包/缺失包均无候选(如 Debian 的 mysql-server 为虚拟包)
+apt_has_candidate() {
+    local c
+    c="$(LC_ALL=C apt-cache policy "$1" 2>/dev/null | awk '/^[[:space:]]*Candidate:/{print $2; exit}')"
+    [[ -n "$c" && "$c" != "(none)" ]]
+}
+
+# apt 系: 从给定包名列表中返回第一个存在候选的包名(均无候选则输出为空)
+apt_first_candidate() {
+    local p
+    for p in "$@"; do
+        apt_has_candidate "$p" && { echo "$p"; return 0; }
+    done
+    return 1
+}
+
+# Ubuntu 精简容器/部分镜像常只启用 main 组件, 而 mysql-server/mariadb-server/maven 等位于 universe;
+# 探测到候选缺失时, 尝试在指向 Ubuntu 仓库的源上补开 universe 并刷新索引(幂等, 失败容错)。
+# 仅在 ID=ubuntu 时生效; Debian 的 mariadb-server/maven 均在 main, 无需处理
+apt_enable_universe() {
+    [[ "$ID" == "ubuntu" ]] || return 1
+    local f tmp modified=0
+    # 判断某源文件是否指向 Ubuntu 仓库(文件名含 ubuntu, 或 URIs 指向官方源/镜像站)
+    src_is_ubuntu() {
+        case "$1" in
+            *ubuntu*) grep -Eq '^(URIs:|deb )' "$1" ;;
+            *)        grep -Eq '^(URIs:|deb ).*(archive\.ubuntu\.com|ports\.ubuntu\.com|security\.ubuntu\.com|mirrors\.)' "$1" ;;
+        esac
+    }
+    # 1) deb822 格式: /etc/apt/sources.list.d/*.sources (Ubuntu 22.04+ 默认)
+    for f in /etc/apt/sources.list.d/*.sources; do
+        [[ -f "$f" ]] || continue
+        src_is_ubuntu "$f" || continue
+        tmp="${f}.jshERP.tmp"
+        awk '/^[[:space:]]*Components:/ {
+                 if ($0 !~ /(^|[[:space:]])universe([[:space:]]|$)/) { sub(/[[:space:]]+$/, ""); print $0 " universe"; next }
+             }
+             { print }' "$f" > "$tmp" && mv "$tmp" "$f" && modified=1
+    done
+    # 2) 传统单行格式: /etc/apt/sources.list 与 sources.list.d/*.list (官方源/常见镜像站/云厂商内网源)
+    for f in /etc/apt/sources.list /etc/apt/sources.list.d/*.list; do
+        [[ -f "$f" ]] || continue
+        src_is_ubuntu "$f" || continue
+        tmp="${f}.jshERP.tmp"
+        awk '/^[[:space:]]*deb([[:space:]]|$)/ {
+                 if ($0 !~ /(^|[[:space:]])universe([[:space:]]|$)/) { sub(/[[:space:]]+$/, ""); print $0 " universe"; next }
+             }
+             { print }' "$f" > "$tmp" && mv "$tmp" "$f" && modified=1
+    done
+    [[ "$modified" == "1" ]] || return 1
+    apt_refresh || true
+    ok "已尝试启用 universe 组件并刷新软件源"
+    return 0
+}
+
+# Ubuntu 已 EOL(非 LTS / 超出维护期)的版本, archive/security.ubuntu.com 已停止提供,
+# apt-get update 会对仓库报 404 / "does not have a Release file"(如 oracular=24.10, 2025-07 起下线)。
+# 将官方源重定向到 old-releases.ubuntu.com(长期保留全部 EOL 版本, 含 universe, 亦含 -updates/-security)。
+# 仅处理指向官方源的条目(不影响自建镜像/第三方源); 无改动时返回 1。
+apt_fix_eol_ubuntu() {
+    [[ "$ID" == "ubuntu" ]] || return 1
+    local f tmp modified=0
+    for f in /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+        [[ -f "$f" ]] || continue
+        grep -Eq 'archive\.ubuntu\.com|security\.ubuntu\.com|ports\.ubuntu\.com' "$f" || continue
+        tmp="${f}.jshERP-eol.tmp"
+        sed -E 's@(https?://)(archive|security|ports)\.ubuntu\.com@\1old-releases.ubuntu.com@g' "$f" > "$tmp"
+        if cmp -s "$f" "$tmp"; then rm -f "$tmp"; continue; fi
+        mv "$tmp" "$f"; modified=1
+        warn "检测到 Ubuntu 已 EOL(官方源 404), 已切换软件源: $f -> old-releases.ubuntu.com"
+    done
+    [[ "$modified" == "1" ]]
+}
+
+# 统一的 apt 索引刷新入口:
+#   - 成功静默返回 0;
+#   - 失败且判定为 Ubuntu EOL(官方源 404)时, 自动切换 old-releases 源并重试一次;
+#   - 仍失败则打印错误摘要并返回非 0, 由调用方决定告警/容错
+apt_refresh() {
+    local out rc
+    out="$(apt-get update 2>&1)"
+    rc=$?
+    [[ "$rc" == "0" ]] && return 0
+    if [[ "$ID" == "ubuntu" ]] && grep -Eq '404|does not have a Release file' <<<"$out"; then
+        if apt_fix_eol_ubuntu; then
+            if apt-get update >/dev/null 2>&1; then return 0; fi
+            warn "切换 old-releases.ubuntu.com 后 apt-get update 仍失败, 完整输出:"
+            apt-get update 2>&1 | tail -n 12 || true
+            return 1
+        fi
+    fi
+    warn "apt-get update 未成功(网络/软件源异常?), 错误摘要:"
+    grep -E '^(Err|E):' <<<"$out" | head -n 8 | sed 's/^/  /'
+    return 1
+}
+
+# apt 系: 给定包列表存在无候选的情况时(索引过期 / Ubuntu 仅启用 main / 发行版 EOL 等),
+# 经 apt_refresh(含 EOL 自动切换)恢复; 仍缺再尝试补开 universe(Ubuntu 专属)。
+# 完成后由调用方重新探测候选。
+apt_ensure_candidates() {
+    local p any_missing=0
+    for p in "$@"; do
+        apt_has_candidate "$p" || any_missing=1
+    done
+    [[ "$any_missing" == "0" ]] && return 0
+    apt_refresh || true
+    local still=0
+    for p in "$@"; do
+        apt_has_candidate "$p" || still=1
+    done
+    [[ "$still" == "0" ]] && return 0
+    apt_enable_universe || return 1
+    return 0
+}
 
 usage() {
     sed -n '2,40p' "$0" | sed 's/^# \{0,1\}//'
@@ -100,16 +220,37 @@ elif cmd_exists apt-get; then PM=apt-get
 else die "仅支持 Debian/Ubuntu(CentOS/Rocky/Alma) 系 Linux"; fi
 if [[ "$PM" == "apt-get" ]]; then PM_INSTALL=(apt-get install -y)
 else PM_INSTALL=("$PM" install -y); fi
+# 供报错/排障提示使用, 避免在 Debian/Ubuntu 上给出 yum 这类错误命令
+case "$PM" in
+    apt-get) PM_HINT="apt-get install -y" ;;
+    dnf)     PM_HINT="dnf install -y" ;;
+    *)       PM_HINT="yum install -y" ;;
+esac
 
 pkg_install() {
-    local missing=() p
+    local missing=() p out rc
     for p in "$@"; do
         cmd_exists "$p" || missing+=("$p")
     done
     [[ ${#missing[@]} -eq 0 ]] && return 0
     log "安装缺失依赖: ${missing[*]}"
-    if [[ "$PM" == "apt-get" ]]; then apt-get update >/dev/null 2>&1 || true; fi
-    if ! "${PM_INSTALL[@]}" "${missing[@]}"; then
+    if [[ "$PM" == "apt-get" ]]; then
+        # 避免 debconf 交互提问挂起(如 tzdata/locales)
+        export DEBIAN_FRONTEND=noninteractive
+        apt_refresh || true
+    fi
+    # LC_ALL=C: 中文 locale 下 apt 报错(如"无法定位软件包")不利于脚本判断, 统一为英文后便于识别
+    out="$(LC_ALL=C "${PM_INSTALL[@]}" "${missing[@]}" 2>&1)"
+    rc=$?
+    if [[ "$rc" != "0" ]]; then
+        # apt 的 "Unable to locate package" 多为源索引过期或组件不全(如 Ubuntu 只开 main):
+        # 刷新索引后重试一次, 仍失败时按 PKG_ALLOW_FAIL 决定容错或报错
+        if [[ "$PM" == "apt-get" ]] && grep -q 'Unable to locate package' <<<"$out"; then
+            warn "软件源未找到部分软件包(索引过期/源组件不全/发行版 EOL?), 刷新索引后重试一次 ..."
+            apt_refresh || true
+            if LC_ALL=C "${PM_INSTALL[@]}" "${missing[@]}"; then return 0; fi
+        fi
+        printf '%s\n' "$out" >&2   # 展示原始报错, 便于定位是网络/源/依赖问题
         if [[ "${PKG_ALLOW_FAIL:-0}" == "1" ]]; then
             warn "安装 ${missing[*]} 失败(已容错, 由调用方决定回退)"
             return 1
@@ -118,21 +259,31 @@ pkg_install() {
     fi
 }
 
-ensure_epel() { [[ "$PM" == "apt-get" ]] && return 0; $PM install -y epel-release >/dev/null 2>&1 || true; }
+ensure_epel() {
+    [[ "$PM" == "apt-get" ]] && return 0
+    # 已启用则跳过; 失败容错(部分发行版 AppStream 已含所需包, 无需 EPEL)
+    rpm -q epel-release >/dev/null 2>&1 && return 0
+    "$PM" install -y epel-release >/dev/null 2>&1 || true
+}
 
 svc_restart() {
     local s
     for s in "$@"; do
         if systemctl >/dev/null 2>&1; then
+            # 刚通过包管理器安装的单元可能尚未被 systemd 加载, 先刷新缓存
+            systemctl daemon-reload >/dev/null 2>&1 || true
             if systemctl list-unit-files 2>/dev/null | grep "^${s}\.service" >/dev/null; then
                 systemctl enable "${s}" >/dev/null 2>&1 || true
-                systemctl restart "${s}" && { ok "服务 ${s} 已重启"; return 0; }
+                # 单元处于 failed 状态会拦截 start/restart, 清态后再启
+                systemctl reset-failed "${s}" >/dev/null 2>&1 || true
+                if systemctl restart "${s}"; then ok "服务 ${s} 已重启"; return 0; fi
+                [[ "${JSH_SILENT:-0}" == "1" ]] || warn "服务 ${s} 重启失败, 可执行 systemctl status ${s} 查看原因"
             fi
         else
-            service "${s}" restart 2>/dev/null && { ok "服务 ${s} 已重启"; return 0; }
+            service "${s}" restart >/dev/null 2>&1 && { ok "服务 ${s} 已重启"; return 0; }
         fi
     done
-    warn "无法自动管理服务($*) , 请手动启动"
+    [[ "${JSH_SILENT:-0}" == "1" ]] || warn "无法自动管理服务($*) , 请手动启动"
     return 1
 }
 
@@ -163,10 +314,11 @@ ensure_java8() {
         warn "未找到 JDK8，尝试安装 ..."
         if [[ "$PM" == "apt-get" ]]; then
             if apt-cache show openjdk-8-jdk >/dev/null 2>&1; then
-                pkg_install openjdk-8-jdk || true
+                PKG_ALLOW_FAIL=1 pkg_install openjdk-8-jdk || true
             fi
         else
-            pkg_install java-1.8.0-openjdk-devel || true
+            # CentOS/Rocky/Alma 若无 openjdk8 包则容错, 由下方 Temurin 下载兜底
+            PKG_ALLOW_FAIL=1 pkg_install java-1.8.0-openjdk-devel || true
         fi
         if java -version 2>&1 | grep '"1\.8' >/dev/null; then
             java_bin="$(command -v java)"
@@ -199,13 +351,27 @@ ensure_java8() {
 ensure_maven() {
     log "[环境] 检测 Maven ..."
     if ! cmd_exists mvn; then
-        pkg_install maven || true
+        # apt 源无 maven 候选(索引过期 / Ubuntu 仅 main)时先尝试恢复, 仍无候选再走二进制兜底
+        if [[ "$PM" == "apt-get" ]]; then
+            apt_ensure_candidates maven
+            apt_has_candidate maven && PKG_ALLOW_FAIL=1 pkg_install maven || true
+        else
+            ensure_epel
+            PKG_ALLOW_FAIL=1 pkg_install maven || true
+        fi
         if ! cmd_exists mvn; then
-            log "下载 Maven 3.9.x 到 /opt/maven ..."
+            log "下载 Maven 3.9.9 到 /opt/maven ..."
             mkdir -p /opt/maven
-            curl -fL --connect-timeout 20 -o /tmp/maven.tar.gz \
+            # dlcdn.apache.org 只保留最新版本, 固定版本(3.9.9)归档后返回 404;
+            # archive.apache.org 长期保留全部版本, 作为备用源
+            local mv_url dl_ok=0
+            for mv_url in \
                 "https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz" \
-                || die "下载 Maven 失败，请手动安装后重试(--skip-deps 可跳过)"
+                "https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz"; do
+                if curl -fL --connect-timeout 20 -o /tmp/maven.tar.gz "$mv_url"; then dl_ok=1; break; fi
+                warn "下载失败: $mv_url(该源可能已归档/网络异常), 尝试下一个备用源 ..."
+            done
+            [[ "$dl_ok" == "1" ]] || die "下载 Maven 失败，请手动安装后重试(--skip-deps 可跳过)"
             tar -xzf /tmp/maven.tar.gz -C /opt/maven --strip-components=1 || die "解压 Maven 失败"
             echo "export PATH=/opt/maven/bin:\$PATH" >> /etc/profile.d/jshERP-env.sh
             export PATH="/opt/maven/bin:$PATH"
@@ -219,7 +385,17 @@ ensure_node() {
     local major=""
     if cmd_exists node; then major="$(node -v | sed 's/^v//; s/\..*//')"; fi
     if [[ -z "$major" || "$major" -lt 16 ]]; then
-        pkg_install nodejs npm || true
+        if [[ "$PM" == "apt-get" ]]; then
+            # 精简源(Ubuntu 仅 main)可能缺 nodejs/npm 候选, 先恢复源, 分开安装并容错;
+            # 失败或仍无候选时由下方 Node 二进制包下载兜底
+            apt_ensure_candidates nodejs npm
+            apt_has_candidate nodejs && PKG_ALLOW_FAIL=1 pkg_install nodejs >/dev/null 2>&1 || true
+            apt_has_candidate npm && PKG_ALLOW_FAIL=1 pkg_install npm >/dev/null 2>&1 || true
+        else
+            # CentOS/RHEL 默认仓库无 nodejs/npm(需 EPEL); 安装失败时由下方源码包下载兜底
+            ensure_epel
+            PKG_ALLOW_FAIL=1 pkg_install nodejs npm || true
+        fi
         if cmd_exists node; then major="$(node -v | sed 's/^v//; s/\..*//')"; fi
     fi
     if [[ -z "$major" || "$major" -lt 16 ]]; then
@@ -244,66 +420,282 @@ ensure_node() {
     ok "Node 就绪: $(node -v) / npm $(npm -v 2>/dev/null)"
 }
 
-ensure_db() {
-    log "[环境] 检测 MySQL/MariaDB ..."
-    if cmd_exists mysql; then
-        ok "检测到 MySQL 客户端: $(mysql --version)"
-    else
-        if [[ "$PM" == "apt-get" ]]; then
-            # Ubuntu 的 mysql-server 为真实 MySQL8;
-            # Debian 中 mysql-server 是虚拟包(实际由 mariadb-server 提供, 无安装候选),
-            # 故用 apt-cache policy 判断是否存在真实候选, 失败时自动回退 MariaDB
-            if apt-cache policy mysql-server 2>/dev/null | grep -E '^[[:space:]]*Candidate: [0-9]' >/dev/null; then
-                PKG_ALLOW_FAIL=1 pkg_install mysql-server || pkg_install mariadb-server
-            else
-                log "发行版无 mysql-server 候选, 安装 mariadb-server(兼容本系统 SQL)"
-                pkg_install mariadb-server
-            fi
-        else
-            PKG_ALLOW_FAIL=1 pkg_install mysql-server || { ensure_epel; pkg_install mariadb-server; }
+# 在 PATH 与常见安装目录中定位可执行文件(避免因 PATH 不含 /usr/sbin 等目录而误判未安装)
+find_bin_path() {
+    local c d p
+    for c in "$@"; do
+        p="$(command -v "$c" 2>/dev/null)" && { echo "$p"; return 0; }
+    done
+    for c in "$@"; do
+        for d in /usr/local/sbin /usr/sbin /usr/libexec /usr/local/bin /usr/bin; do
+            [[ -x "$d/$c" ]] && { echo "$d/$c"; return 0; }
+        done
+    done
+    return 1
+}
+
+# 读取数据库数据目录(解析 my.cnf, 缺省 /var/lib/mysql)
+db_datadir() {
+    local cnf d
+    for cnf in /etc/my.cnf /etc/mysql/my.cnf /etc/mysql/mariadb.conf.d/*.cnf \
+                /etc/my.cnf.d/*.cnf /etc/mariadb/my.cnf; do
+        [[ -f "$cnf" ]] || continue
+        d="$(awk '/^[[:space:]]*datadir[[:space:]]*=/ {
+                line=$0; sub(/^[^=]*=[[:space:]]*/, "", line)
+                sub(/[[:space:]]*[#;].*$/, "", line); gsub(/[[:space:]]+$/, "", line)
+                print line; exit }' "$cnf" 2>/dev/null)"
+        [[ -n "$d" ]] && { echo "$d"; return 0; }
+    done
+    echo /var/lib/mysql
+}
+
+# 数据目录初始化修复: 解决 CentOS7/RHEL7(MariaDB 5.5) 装包后常见的数据目录半初始化问题。
+# 症状: mysqld 启动报 "Table 'mysql.host' doesn't exist" / "Can't open the mysql.plugin table";
+# 原因: 装包时 mysql_install_db 未执行成功, 或 /var/lib/mysql 残留残缺文件(InnoDB 已建、系统表未建)。
+# 仅当数据目录缺少系统库关键表时才触发; 已初始化的正常库直接跳过, 不会误删用户数据(残缺目录先备份)。
+repair_db_datadir() {
+    local ddir tool back sys_ok=0
+    ddir="$(db_datadir)"
+    # 系统库关键表存在即视为已初始化: MariaDB<=10.3/MySQL<=5.6 为 MyISAM(user.frm),
+    # MySQL 5.7+/MariaDB 10.4+ 为 InnoDB(user.ibd)
+    if [[ -d "$ddir/mysql" ]]; then
+        if ls "$ddir"/mysql/user.frm "$ddir"/mysql/host.frm >/dev/null 2>&1 \
+           || ls "$ddir"/mysql/user.ibd "$ddir"/mysql/host.ibd >/dev/null 2>&1; then
+            sys_ok=1
         fi
     fi
-    # 启动(新装系统上 mysql/mariadb 服务名不同)
-    svc_restart mysql mariadb || svc_restart mysqld mariadbd
-    local i
+    [[ "$sys_ok" == "1" ]] && return 0
+    warn "数据目录 $ddir 缺少系统表, 疑似未初始化/初始化中断, 尝试自动修复 ..."
+    tool="$(find_bin_path mariadb-install-db mysql_install_db)"
+    if [[ -z "$tool" ]]; then
+        warn "未找到初始化工具(mysql_install_db/mariadb-install-db), 可手动执行: ${PM_HINT} mariadb-server(或 mysql-server)"
+        return 1
+    fi
+    # 停止可能占用数据目录的进程
+    pkill -9 mysqld >/dev/null 2>&1 || true
+    pkill -9 mariadbd >/dev/null 2>&1 || true
+    sleep 1
+    # 目录非空(残缺/旧数据)先整体备份, 避免误删
+    if [[ -d "$ddir" ]] && [[ -n "$(ls -A "$ddir" 2>/dev/null)" ]]; then
+        back="${ddir}.backup.$(date '+%Y%m%d%H%M%S')"
+        mv "$ddir" "$back" 2>/dev/null && warn "原数据目录(未完整初始化)已备份为: $back"
+    fi
+    mkdir -p "$ddir"
+    chown mysql:mysql "$ddir" 2>/dev/null || true
+    if ! "$tool" --user=mysql --datadir="$ddir" >/dev/null 2>&1; then
+        # 个别版本不支持 --datadir 参数时回退到默认目录(与 my.cnf 一致)
+        if ! "$tool" --user=mysql >/dev/null 2>&1; then
+            warn "系统表初始化失败, 可手动执行: ${tool} --user=mysql --datadir=${ddir}"
+            return 1
+        fi
+    fi
+    chown -R mysql:mysql "$ddir" 2>/dev/null || true
+    # SELinux Enforcing 时恢复数据目录上下文, 否则 mysqld 无法读写
+    if cmd_exists restorecon; then restorecon -Rv "$ddir" >/dev/null 2>&1 || true; fi
+    ok "数据目录已重新初始化: $ddir"
+    return 0
+}
+
+ensure_db() {
+    log "[环境] 检测 MySQL/MariaDB ..."
+    # 注意: mysql 客户端与服务端在多数发行版是相互独立的包;
+    # 且 mysqld/mariadbd 通常装在 /usr/sbin 等目录(非登录 shell/su 切换的 root 其 PATH 可能不含该目录),
+    # 故统一用 find_bin_path 做 PATH + 常见目录双重定位, 避免误判"未安装"
+    local DBD_BIN="" have_srv=0
+    DBD_BIN="$(find_bin_path mysqld mariadbd)"
+    [[ -n "$DBD_BIN" ]] && have_srv=1
+
+    if [[ "$have_srv" == "1" ]]; then
+        ok "检测到数据库服务端: $DBD_BIN"
+    else
+        log "未检测到数据库服务端, 开始安装 ..."
+        local dbpkg=""
+        if [[ "$PM" == "apt-get" ]]; then
+            # 不按发行版写死, 而按"软件源实际提供的候选"择优安装:
+            #   Debian 中 mysql-server 是虚拟包(实际由 mariadb-server 提供);
+            #   Ubuntu 中 mysql-server/mariadb-server 均可为真实包;
+            # 候选缺失(索引过期 / Ubuntu 仅 main)时先尝试恢复源(刷新索引 + universe)
+            apt_ensure_candidates mysql-server mariadb-server
+            dbpkg="$(apt_first_candidate mysql-server mariadb-server)"
+            if [[ -n "$dbpkg" ]]; then
+                log "通过系统包安装数据库服务端: ${dbpkg}"
+                PKG_ALLOW_FAIL=1 pkg_install "$dbpkg" || true
+            else
+                warn "软件源中仍无数据库服务端候选(内网/精简源常见), 将给出排障提示"
+            fi
+        else
+            # CentOS 7: 无 mysql-server 候选(自动回退 base 源 mariadb-server);
+            # CentOS 8+/Rocky/Alma: AppStream 提供 MySQL 8 或 MariaDB
+            PKG_ALLOW_FAIL=1 pkg_install mysql-server \
+                || PKG_ALLOW_FAIL=1 pkg_install mariadb-server || true
+        fi
+        DBD_BIN="$(find_bin_path mysqld mariadbd)"
+        [[ -n "$DBD_BIN" ]] && have_srv=1
+        if [[ "$have_srv" != "1" ]]; then
+            # 输出实际安装情况, 便于定位(而非只抛一句失败)
+            warn "当前已安装的数据库相关软件包:"
+            if cmd_exists rpm; then rpm -qa 2>/dev/null | grep -iE 'mysql|maria' | sed 's/^/    /'
+            elif cmd_exists dpkg; then dpkg -l 2>/dev/null | grep -iE 'mysql|maria' | awk '{print "    " $2}'; fi
+            warn "守护进程文件(mysqld/mariadbd)实际所在位置:"
+            if cmd_exists rpm; then rpm -ql mysql-server mariadb-server 2>/dev/null | grep -E '/(mysqld|mariadbd)$' | sed 's/^/    /'; fi
+            warn "若软件源受限(如 Ubuntu 仅启用 main / 内网镜像未同步 universe / 索引过期), 请先:"
+            warn "  1) 检查软件源配置并执行: apt-get update(或 yum makecache)"
+            warn "  2) 安装数据库: ${PM_HINT} mariadb-server(或 mysql-server)"
+            warn "  修复后使用 --skip-deps 重新执行本脚本"
+            die "安装后仍未定位到 mysqld/mariadbd, 请按上方信息检查软件源与网络"
+        fi
+        ok "数据库服务端已安装: $DBD_BIN"
+    fi
+    # 服务端二进制存在不代表系统表已初始化: 缺失时先重建数据目录,
+    # 避免出现 "Table 'mysql.host' doesn't exist" 这类启动失败(见 repair_db_datadir 注释)
+    repair_db_datadir || warn "数据目录系统表异常, 将尝试直接启动(若仍失败, 请按下方排障提示手动执行 mysql_install_db)"
+    # 客户端: 后续建库/导 SQL 均依赖 mysql 命令(部分发行版服务端包不随带客户端)
+    if [[ -z "$(find_bin_path mysql)" ]]; then
+        if [[ "$PM" == "apt-get" ]]; then
+            PKG_ALLOW_FAIL=1 pkg_install mariadb-client mysql-client >/dev/null 2>&1 || true
+        else
+            PKG_ALLOW_FAIL=1 pkg_install mariadb mysql >/dev/null 2>&1 || true
+        fi
+    fi
+    if [[ -z "$(find_bin_path mysql)" ]]; then
+        die "缺少 mysql 客户端命令, 请先安装客户端(mariadb/mysql / mariadb-client/mysql-client)后重试"
+    fi
+
+    # ---- 启动数据库服务(新装系统服务名各不相同, 分组尝试) ----
+    local srv_ok=0
+    if systemctl >/dev/null 2>&1; then
+        JSH_SILENT=1 svc_restart mysql mariadb && srv_ok=1
+        [[ "$srv_ok" == "1" ]] || { JSH_SILENT=1 svc_restart mysqld mariadbd && srv_ok=1; }
+        # 单元处于 failed 状态会拦截再次启动(systemd 保留上次失败记录), 清态后重试一轮
+        if [[ "$srv_ok" != "1" ]]; then
+            systemctl reset-failed mysql mariadb mysqld mariadbd >/dev/null 2>&1 || true
+            JSH_SILENT=1 svc_restart mysql mariadb && srv_ok=1
+            [[ "$srv_ok" == "1" ]] || { JSH_SILENT=1 svc_restart mysqld mariadbd && srv_ok=1; }
+        fi
+    else
+        # 无 systemd 环境(部分容器/老系统): 直接走 service 脚本
+        service mariadb start >/dev/null 2>&1 && srv_ok=1
+        [[ "$srv_ok" == "1" ]] || { service mysql start  >/dev/null 2>&1 && srv_ok=1; }
+        [[ "$srv_ok" == "1" ]] || { service mysqld start >/dev/null 2>&1 && srv_ok=1; }
+    fi
+    if [[ "$srv_ok" != "1" ]]; then
+        # 兜底: 直接拉起守护进程(等价于手动启动); 若仍失败, 下方日志/状态会给出原因
+        warn "systemctl/service 启动失败, 尝试直接启动数据库守护进程 ..."
+        mkdir -p /var/run/mysqld /var/run/mariadb 2>/dev/null || true
+        chown mysql:mysql /var/run/mysqld /var/run/mariadb 2>/dev/null || true
+        local safe_bin
+        safe_bin="$(find_bin_path mysqld_safe mysqld mariadbd)"
+        if [[ -n "$safe_bin" ]]; then
+            nohup "$safe_bin" --user=mysql >/dev/null 2>&1 &
+        fi
+    fi
+
+    # ---- 就绪自检(最长约 60 秒) ----
+    local i up=0 sock
     for i in $(seq 1 30); do
-        if mysql -uroot -e "SELECT 1" >/dev/null 2>&1; then break; fi
+        if mysql -uroot -e "SELECT 1" >/dev/null 2>&1; then up=1; break; fi
+        # root 采用密码/socket 认证时上述登录失败不代表服务未起, 以进程+套接字兜底判断
+        if pgrep -x mysqld >/dev/null 2>&1 || pgrep -x mariadbd >/dev/null 2>&1; then
+            for sock in /var/lib/mysql/mysql.sock /var/run/mysqld/mysqld.sock \
+                        /var/run/mariadb/mariadb.sock /tmp/mysql.sock; do
+                [[ -S "$sock" ]] && { up=1; break; }
+            done
+            [[ "$up" == "1" ]] && break
+        fi
         sleep 2
-        [[ "$i" -eq 30 ]] && warn "数据库服务等待超时, 请手动检查(mysql -uroot 是否可登录)"
     done
-    ok "MySQL/MariaDB 服务可用"
+    if [[ "$up" != "1" ]]; then
+        warn "数据库服务 60 秒内未就绪, 以下是排障信息:"
+        warn "  查看状态: systemctl status mariadb mysql mysqld --no-pager -l"
+        warn "  查看日志: tail -n 50 /var/log/mariadb/mariadb.log /var/log/mysql/error.log"
+        warn "  手动启动: systemctl start mariadb; 无 systemd 时执行: mysqld_safe --user=mysql &"
+        echo
+        # 识别"系统表缺失"类报错(数据目录未完整初始化), 给出针对性修复命令
+        local ddir dberr
+        ddir="$(db_datadir)"
+        dberr="$( { tail -n 60 /var/log/mariadb/mariadb.log 2>/dev/null
+                    tail -n 60 /var/log/mysql/error.log 2>/dev/null
+                    tail -n 60 /var/log/mysqld.log 2>/dev/null; } 2>/dev/null )"
+        if grep -qE "mysql\.host doesn't exist|Can't open and lock privilege tables|mysql\.plugin table" <<<"$dberr"; then
+            warn "日志显示数据库系统表缺失(数据目录未完整初始化), 请执行:"
+            warn "  mv ${ddir} ${ddir}.broken && mkdir -p ${ddir} && chown mysql:mysql ${ddir}"
+            warn "  mysql_install_db --user=mysql && chown -R mysql:mysql ${ddir} && systemctl start mariadb"
+            warn "修复后重新执行: bash $0 --skip-deps"
+        fi
+        echo
+        systemctl --no-pager status mariadb mysql mysqld 2>/dev/null | head -30 || true
+        echo
+        tail -n 30 /var/log/mariadb/mariadb.log 2>/dev/null || true
+        tail -n 30 /var/log/mysql/error.log 2>/dev/null || true
+        die "数据库未能启动, 请按上方信息修复后, 使用 --skip-deps 重新执行本脚本"
+    fi
+    ok "MySQL/MariaDB 服务可用: $(mysql --version 2>/dev/null | sed 's/, for .*//')"
 }
 
 ensure_redis() {
     log "[环境] 检测 Redis ..."
     if ! cmd_exists redis-server && ! cmd_exists redis-cli; then
         if [[ "$PM" == "apt-get" ]]; then
-            if apt-cache show redis-server >/dev/null 2>&1; then pkg_install redis-server
-            else pkg_install redis; fi
+            # apt-cache show 对虚拟包/缺失包均返回 0, 须按候选判断实际可用包名;
+            # redis-server/redis 在 Ubuntu 中位于 universe, 先做候选恢复
+            apt_ensure_candidates redis-server redis
+            if apt_has_candidate redis-server; then pkg_install redis-server
+            elif apt_has_candidate redis; then pkg_install redis
+            else die "软件源中无 redis-server/redis 候选(索引过期或未启用 universe?), 请检查软件源后重试"; fi
         else
             ensure_epel
             pkg_install redis
         fi
     fi
-    svc_restart redis-server redis
+
+    # 服务管理重启; 失败时(容器内无 systemd/service)直接拉起守护进程
     local rc=""
     for f in /etc/redis/redis.conf /etc/redis.conf; do [[ -f "$f" ]] && rc="$f" && break; done
     if [[ -n "$rc" ]]; then
+        # 先写密码, 再启动, 避免服务在旧配置(无密码)下运行
         sed -i "s/^#\? *requirepass .*/requirepass ${REDIS_PASSWORD}/" "$rc"
         grep -q "^requirepass " "$rc" || echo "requirepass ${REDIS_PASSWORD}" >> "$rc"
         ok "Redis 密码已写入 $rc"
-        svc_restart redis-server redis
     else
         warn "未找到 Redis 配置文件, 请手动设置 requirepass ${REDIS_PASSWORD}"
+    fi
+
+    if svc_restart redis-server redis; then
+        :
+    else
+        # 容器/无 systemd 环境兜底: 直接拉起 redis-server
+        warn "无法通过 systemctl/service 管理 Redis, 尝试直接启动 redis-server ..."
+        pkill -9 redis-server >/dev/null 2>&1 || true
+        sleep 1
+        if [[ -n "$rc" ]]; then
+            nohup redis-server "$rc" >/dev/null 2>&1 &
+        else
+            nohup redis-server --requirepass "$REDIS_PASSWORD" >/dev/null 2>&1 &
+        fi
+    fi
+
+    # 就绪自检(带密码认证)
+    local i rdy=0
+    for i in $(seq 1 15); do
+        if redis-cli -a "$REDIS_PASSWORD" ping 2>/dev/null | grep -q PONG; then rdy=1; break; fi
+        sleep 1
+    done
+    if [[ "$rdy" == "1" ]]; then
+        ok "Redis 服务可用(密码认证)"
+    else
+        warn "Redis 未能就绪, 请手动启动: redis-server $rc"
     fi
 }
 
 ensure_nginx() {
     log "[环境] 检测 Nginx ..."
     if ! cmd_exists nginx; then
-        ensure_epel
+        if [[ "$PM" == "apt-get" ]]; then apt_ensure_candidates nginx
+        else ensure_epel; fi
         pkg_install nginx
     fi
+    # 部分发行版(Debian)默认不预建 conf.d, 站点配置写入前先确保目录存在
+    mkdir -p /etc/nginx/conf.d /etc/nginx/sites-available /etc/nginx/sites-enabled 2>/dev/null || true
     svc_restart nginx
     ok "Nginx 可用: $(nginx -v 2>&1)"
 }
@@ -323,7 +715,15 @@ init_database() {
         die "MySQL root 登录失败, 请检查 MYSQL_ROOT_PASSWORD"
     fi
 
-    "${MYSQL_ADMIN[@]}" <<SQL
+    # MySQL 8.0 移除了 GRANT...IDENTIFIED BY 老语法;
+    # 而 MariaDB 5.5(CentOS 7 默认)/旧版不支持 CREATE USER IF NOT EXISTS / ALTER USER,
+    # 故按服务器版本分支处理建库建号
+    local dbver is_mysql8
+    dbver="$("${MYSQL_ADMIN[@]}" -N -e "SELECT VERSION()" 2>/dev/null | head -1)"
+    is_mysql8=0
+    case "$dbver" in 8.*|9.*) is_mysql8=1 ;; esac
+    if [[ "$is_mysql8" == "1" ]]; then
+        "${MYSQL_ADMIN[@]}" <<SQL
 CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost'  IDENTIFIED BY '${DB_PASSWORD}';
 CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';
@@ -333,7 +733,17 @@ GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'localhost';
 GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'127.0.0.1';
 FLUSH PRIVILEGES;
 SQL
-    ok "数据库 ${DB_NAME} 与账号 ${DB_USER} 已就绪"
+    else
+        # MariaDB / MySQL 5.x: GRANT ... IDENTIFIED BY 兼容语法
+        # (用户不存在则自动创建, 已存在则同步密码并授权)
+        "${MYSQL_ADMIN[@]}" <<SQL
+CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';
+FLUSH PRIVILEGES;
+SQL
+    fi
+    ok "数据库 ${DB_NAME} 与账号 ${DB_USER} 已就绪 (${dbver})"
 
     local tables
     tables="$("${MYSQL_ADMIN[@]}" -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${DB_NAME}'")"
@@ -496,7 +906,11 @@ config_backend() {
 
 config_nginx() {
     log "[配置] 生成 Nginx 站点 (端口 ${HTTP_PORT}) ..."
-    cat > /etc/nginx/conf.d/jshERP.conf <<EOF
+    # 站点内容先写入临时文件, 再按发行版 include 布局放置:
+    #   conf.d        —— CentOS/RHEL/Rocky/Alma 及多数发行版默认 include
+    #   sites-enabled —— Debian 系默认布局(主配置未 include conf.d 时回退)
+    local tmp_conf=/etc/nginx/jshERP.conf.tmp
+    cat > "$tmp_conf" <<EOF
 server {
     listen       ${HTTP_PORT};
     server_name  ${SERVER_NAME};
@@ -523,9 +937,70 @@ server {
     }
 }
 EOF
-    nginx -t || die "Nginx 配置校验失败, 请检查 /etc/nginx/conf.d/jshERP.conf"
-    svc_restart nginx || nginx -s reload
-    ok "Nginx 配置完成"
+
+    local conf_dest=/etc/nginx/conf.d/jshERP.conf
+    if [[ "$(nginx -T 2>&1)" != *"/etc/nginx/conf.d/"* ]]; then
+        warn "主配置未 include /etc/nginx/conf.d, 改用 sites-enabled 布局"
+        conf_dest=/etc/nginx/sites-available/jshERP.conf
+    fi
+    mkdir -p "$(dirname "$conf_dest")" /etc/nginx/sites-enabled /etc/nginx/conf.d
+    cp -f "$tmp_conf" "$conf_dest"
+    rm -f "$tmp_conf"
+    if [[ "$conf_dest" == /etc/nginx/sites-available/* ]]; then
+        ln -sf "$conf_dest" /etc/nginx/sites-enabled/jshERP.conf
+    else
+        rm -f /etc/nginx/sites-enabled/jshERP.conf 2>/dev/null || true
+    fi
+
+    local err
+    err="$(nginx -t 2>&1)" || die "Nginx 配置校验失败, 请检查 ${conf_dest}:\n${err}"
+    # 使新站点生效: 运行中则 reload, 未运行则通过服务管理/直接拉起
+    if pgrep -x nginx >/dev/null 2>&1; then
+        nginx -s reload >/dev/null 2>&1 && ok "Nginx 已重载配置" || warn "nginx reload 失败, 请手动执行 nginx -s reload"
+    else
+        svc_restart nginx || nginx >/dev/null 2>&1 || warn "nginx 启动失败, 请手动启动"
+    fi
+    ok "Nginx 站点配置完成: ${conf_dest}"
+}
+
+# ---------------------------- SELinux 适配(CentOS/RHEL 系) ----------------------------
+# 未处理 SELinux 时, CentOS/RHEL 上典型症状: 前端 403、反代 502、nginx 无法监听自定义端口
+fix_selinux() {
+    cmd_exists getenforce || return 0
+    if [[ "$(getenforce 2>/dev/null)" != "Enforcing" ]]; then
+        log "[SELinux] 非 Enforcing 模式, 无需调整"
+        return 0
+    fi
+    log "[SELinux] Enforcing 模式, 自动放行 Nginx 部署所需权限 ..."
+    # 1) 允许 Nginx 反向代理访问本机后端端口(否则 502)
+    if cmd_exists setsebool; then
+        setsebool -P httpd_can_network_connect 1 >/dev/null 2>&1 \
+            && ok "httpd_can_network_connect=1 (nginx 反代放行)" \
+            || warn "setsebool 失败, 可手动执行: setsebool -P httpd_can_network_connect 1"
+    fi
+    # 2) 允许 Nginx 监听自定义端口(${HTTP_PORT} 默认不在 http_port_t 内, 否则 bind 失败)
+    if ! cmd_exists semanage && [[ "$PM" != "apt-get" ]]; then
+        # CentOS 7: policycoreutils-python; CentOS 8+/Rocky/Alma: policycoreutils-python-utils
+        PKG_ALLOW_FAIL=1 pkg_install policycoreutils-python-utils >/dev/null 2>&1 \
+            || PKG_ALLOW_FAIL=1 pkg_install policycoreutils-python >/dev/null 2>&1 || true
+    fi
+    if cmd_exists semanage; then
+        if ! semanage port -l 2>/dev/null | grep -Eq "^http_port_t[[:space:]]+tcp[[:space:]]+.*\b${HTTP_PORT}\b"; then
+            semanage port -a -t http_port_t -p tcp "$HTTP_PORT" >/dev/null 2>&1 \
+                && ok "端口 ${HTTP_PORT} 已加入 http_port_t" \
+                || warn "semanage port 添加失败, 可手动执行: semanage port -a -t http_port_t -p tcp ${HTTP_PORT}"
+        fi
+    fi
+    # 3) 前端静态目录打上 httpd 可读标签(否则访问 403)
+    if [[ -d "$WEB_HOME" ]]; then
+        if cmd_exists semanage; then
+            semanage fcontext -a -t httpd_sys_content_t "${WEB_HOME}(/.*)?" >/dev/null 2>&1 || true
+            restorecon -Rv "$WEB_HOME" >/dev/null 2>&1 || true
+        fi
+        chcon -Rt httpd_sys_content_t "$WEB_HOME" >/dev/null 2>&1 \
+            && ok "WEB 目录已标记 httpd_sys_content_t (nginx 可读)" \
+            || warn "chcon 设置 WEB 目录标签失败"
+    fi
 }
 
 # ---------------------------- 5. 启动与自检 ----------------------------
@@ -543,6 +1018,18 @@ start_backend() {
     done
     warn "后端启动自检超时, 最近日志如下:"
     tail -n 30 "$BACKEND_HOME"/logs/*.log 2>/dev/null || true
+    # 常见诱因诊断: 后端 @PostConstruct 会写 Redis 缓存, Redis 未就绪会直接启动失败
+    if ! ss -ltn 2>/dev/null | grep -q ':6379' \
+       && ! netstat -ltn 2>/dev/null | grep -q ':6379'; then
+        warn "检测到 Redis(6379) 未监听, 请先启动 Redis 再重启后端:"
+        warn "  nohup redis-server /etc/redis.conf >/dev/null 2>&1 &"
+        warn "  redis-cli -a '${REDIS_PASSWORD}' ping   # 期望 PONG"
+        warn "  cd ${BACKEND_HOME} && ./restart.sh"
+    fi
+    if ! ss -ltn 2>/dev/null | grep -q ':3306' \
+       && ! netstat -ltn 2>/dev/null | grep -q ':3306'; then
+        warn "检测到 MySQL/MariaDB(3306) 未监听, 请先启动数据库再重启后端"
+    fi
     return 1
 }
 
@@ -573,12 +1060,13 @@ EOF
             return 0
         fi
     fi
-    # 回退方案: rc.local
+    # 回退方案: rc.local (systemd 发行版需启用 rc-local.service 开机才会执行)
     [[ -f /etc/rc.local ]] || echo -e '#!/bin/bash\nexit 0' > /etc/rc.local
     if ! grep -q "$BACKEND_HOME" /etc/rc.local; then
         sed -i '/^exit 0/i export JAVA_HOME='"$JAVA_HOME"'\ncd '"$BACKEND_HOME"' && ./restart.sh' /etc/rc.local
     fi
     chmod +x /etc/rc.local
+    if systemctl >/dev/null 2>&1; then systemctl enable rc-local >/dev/null 2>&1 || true; fi
     ok "已写入 /etc/rc.local 开机自启"
 }
 
@@ -617,7 +1105,7 @@ hr
 
 [[ "$(id -u)" -eq 0 ]] || die "请使用 root 运行: sudo bash $0"
 [[ -d "$BACKEND_SRC" && -d "$WEB_SRC" ]] || die "请在 jshERP 源码根目录运行本脚本(需包含 jshERP-boot 与 jshERP-web)"
-pkg_install curl unzip tar wget git >/dev/null 2>&1 || true
+PKG_ALLOW_FAIL=1 pkg_install curl unzip tar wget git ca-certificates >/dev/null 2>&1 || true
 
 if [[ "$DO_DEPS" == "1" ]]; then
     ensure_java8
@@ -642,6 +1130,7 @@ else
 fi
 
 assemble
+fix_selinux
 config_backend
 config_nginx
 start_backend || die "后端启动失败, 请根据上方日志排查"
