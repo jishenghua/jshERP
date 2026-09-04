@@ -1309,7 +1309,7 @@
         select count(s.id) from jsh_depot_head dh
         left join jsh_serial_number s on dh.number=s.in_bill_no
         where dh.number = #{number}
-        and (s.out_bill_no is not null or s.out_bill_no!='')
+        and (s.out_bill_no is not null and s.out_bill_no!='')
     </select>
 
     <select id="waitBillList" parameterType="com.jsh.erp.datasource.entities.DepotHeadExample" resultMap="ResultMapEx">

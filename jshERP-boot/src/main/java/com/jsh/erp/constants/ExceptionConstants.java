@@ -467,7 +467,9 @@ public class ExceptionConstants {
     //单据录入-序列号已被出库，不允许修改该单据
     public static final int DEPOT_HEAD_SN_NOT_ALLOW_UPDATE_CODE = 8500035;
     public static final String DEPOT_HEAD_SN_NOT_ALLOW_UPDATE_MSG = "抱歉，序列号:%s已被出库，不允许修改该单据";
-
+    //单据录入-单据被财务单据关联，不允许单独删除
+    public static final int DEPOT_HEAD_FINANCIAL_ASSOCIATED_CODE = 8500036;
+    public static final String DEPOT_HEAD_FINANCIAL_ASSOCIATED_MSG = "单据:%s被财务单据:%s关联，不允许单独删除";
 
     /**
      *  单据明细信息

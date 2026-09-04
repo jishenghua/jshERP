@@ -424,6 +424,12 @@ public class DepotHeadService {
                 throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_CODE,
                         String.format(ExceptionConstants.DEPOT_HEAD_UN_AUDIT_DELETE_FAILED_MSG));
             }
+            //检查有没有被财务单据关联
+            List<AccountHead> ahList = accountHeadService.getFinancialBillNoByBillId(depotHead.getId());
+            if (!ahList.isEmpty()) {
+                throw new BusinessRunTimeException(ExceptionConstants.DEPOT_HEAD_FINANCIAL_ASSOCIATED_CODE,
+                        String.format(ExceptionConstants.DEPOT_HEAD_FINANCIAL_ASSOCIATED_MSG, depotHead.getNumber(), ahList.get(0).getBillNo()));
+            }
         }
         for(DepotHead depotHead: dhList){
             sb.append("[").append(depotHead.getNumber()).append("]");
