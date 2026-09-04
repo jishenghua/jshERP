@@ -8,6 +8,7 @@
 #   1. 检测并安装基础环境(JDK8、Maven、Node、MySQL/MariaDB、Redis、Nginx)
 #   2. 初始化数据库 jsh_erp 并导入后端 docs/jsh_erp.sql
 #   3. 编译后端 jshERP-boot -> jshERP.jar，编译前端 jshERP-web -> dist
+#      (低内存服务器会自动补建 swapfile, 防止前端构建被系统 OOM 杀死)
 #   4. 组装运行目录(默认 /opt/jshERP)，生成并覆盖后端 application.yml 配置
 #   5. 生成 Nginx 站点配置(默认监听 3000，反代 /jshERP-boot -> 127.0.0.1:9999)
 #   6. 启动后端与 Nginx，自检后输出访问地址和默认账号
@@ -30,6 +31,7 @@
 #   NPM_REGISTRY     npm 镜像源            默认 https://registry.npmmirror.com
 #   MAVEN_MIRROR     Maven 镜像源(留空禁用) 默认 https://maven.aliyun.com/repository/public
 #   AUTO_START       是否写开机自启(rc.local) 默认 1
+#   JSH_SWAP_TARGET_MB  构建期目标内存(内存+swap, MB; 不足自动补建 swap) 默认 4096
 #
 # 部署完成后默认登录: 租户 jsh / 超管 admin，密码均为 123456
 ###############################################################################
@@ -416,8 +418,69 @@ ensure_node() {
         export NODE_OPTIONS="--openssl-legacy-provider ${NODE_OPTIONS:-}"
         log "Node 主版本 ${major}，已追加 NODE_OPTIONS=--openssl-legacy-provider"
     fi
-    export NODE_OPTIONS="${NODE_OPTIONS:-} --max_old_space_size=4096"
-    ok "Node 就绪: $(node -v) / npm $(npm -v 2>/dev/null)"
+    # 按本机物理内存动态设置 Node 堆上限(上限取 min(4096, RAM*3/4), 保底 1024MB):
+    # 小内存机若仍按 4096 封顶, V8 堆会尽量增长直至内存耗尽, 构建中途易被内核 OOM
+    # killer 杀死, 日志无报错只见 "Killed"; 封顶略低于可用内存可显著缓解。
+    local mem_mb heap_mb
+    mem_mb="$(awk '/^MemTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
+    [[ "$mem_mb" =~ ^[0-9]+$ ]] || mem_mb=2048
+    heap_mb=$(( mem_mb * 3 / 4 ))
+    (( heap_mb > 4096 )) && heap_mb=4096
+    (( heap_mb < 1024 )) && heap_mb=1024
+    export NODE_OPTIONS="${NODE_OPTIONS:-} --max-old-space-size=${heap_mb}"
+    ok "Node 就绪: $(node -v) / npm $(npm -v 2>/dev/null) (堆上限 ${heap_mb}MB)"
+}
+
+# 低内存机器(常见 1-2G VPS)上, 前端 vue-cli/webpack 生产构建实际占用常超 2GB。
+# 若无 swap, node 进程会因内存耗尽被内核 OOM killer 杀死(日志无报错, 仅 "Killed")。
+# 这里检测 内存+Swap 总量, 不足 JSH_SWAP_TARGET_MB(默认 4096)时自动补建 swapfile 并写入 fstab。
+ensure_swap() {
+    local mem_mb=0 swap_mb=0 total_mb=0 need_mb=0 avail_kb=0
+    local sw_file=/swapfile_jshERP
+    if [[ -f /proc/meminfo ]]; then
+        mem_mb="$(awk '/^MemTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
+        swap_mb="$(awk '/^SwapTotal:/{print int($2/1024)}' /proc/meminfo 2>/dev/null)"
+    fi
+    [[ "$mem_mb" =~ ^[0-9]+$ ]] || mem_mb=0
+    [[ "$swap_mb" =~ ^[0-9]+$ ]] || swap_mb=0
+    local target_mb="${JSH_SWAP_TARGET_MB:-4096}"
+    total_mb=$(( mem_mb + swap_mb ))
+    if (( total_mb >= target_mb )); then
+        log "[内存] 内存+Swap 充足 (RAM ${mem_mb}MB + Swap ${swap_mb}MB), 可正常构建"
+        return 0
+    fi
+    # 已启用同名 swapfile 则无需重复创建
+    if swapon -s 2>/dev/null | grep -q "${sw_file}$"; then
+        ok "[内存] 已启用 ${sw_file}, 构建内存可用"
+        return 0
+    fi
+    need_mb=$(( target_mb - total_mb ))
+    avail_kb="$(df -Pk / 2>/dev/null | awk 'NR==2{print $4}')"
+    [[ "$avail_kb" =~ ^[0-9]+$ ]] || avail_kb=0
+    if (( avail_kb < need_mb * 1100 )); then
+        warn "[内存] RAM+Swap 仅 ${total_mb}MB 且根分区磁盘空间不足($((avail_kb/1024))MB), 无法自动补建 swap, 构建可能失败"
+        warn "[内存] 请手动执行: dd if=/dev/zero of=${sw_file} bs=1M count=${need_mb} && chmod 600 ${sw_file} && mkswap ${sw_file} && swapon ${sw_file}"
+        return 1
+    fi
+    log "[内存] RAM+Swap 共 ${total_mb}MB 偏低, 自动补建 ${need_mb}MB swapfile: ${sw_file} ..."
+    if ! fallocate -l "${need_mb}M" "$sw_file" 2>/dev/null; then
+        dd if=/dev/zero of="$sw_file" bs=1M count="$need_mb" 2>/dev/null || { warn "[内存] 创建 swapfile 失败"; return 1; }
+    fi
+    chmod 600 "$sw_file"
+    if ! mkswap "$sw_file" >/dev/null 2>&1; then
+        warn "[内存] mkswap ${sw_file} 失败"; rm -f "$sw_file"; return 1
+    fi
+    if ! swapon "$sw_file" >/dev/null 2>&1; then
+        # 部分文件系统上 fallocate 预分配的文件无法直接 swapon, 用 dd 真实写入兜底重试
+        warn "[内存] swapon 失败, 改用 dd 重建 swapfile 重试 ..."
+        rm -f "$sw_file"
+        dd if=/dev/zero of="$sw_file" bs=1M count="$need_mb" 2>/dev/null || { warn "[内存] 重建 swapfile 失败"; return 1; }
+        chmod 600 "$sw_file"
+        mkswap "$sw_file" >/dev/null 2>&1 || { warn "[内存] mkswap 失败"; rm -f "$sw_file"; return 1; }
+        swapon "$sw_file" >/dev/null 2>&1 || { warn "[内存] swapon 失败(容器内无 CAP_SYS_ADMIN?), 请手动添加 swap 或改用内存更大的机器构建"; rm -f "$sw_file"; return 1; }
+    fi
+    grep -q "^${sw_file}" /etc/fstab 2>/dev/null || echo "${sw_file} none swap sw 0 0" >> /etc/fstab
+    ok "已补建并启用 ${need_mb}MB swap (${sw_file}), 构建可用内存约 $(( total_mb + need_mb ))MB"
 }
 
 # 在 PATH 与常见安装目录中定位可执行文件(避免因 PATH 不含 /usr/sbin 等目录而误判未安装)
@@ -1122,6 +1185,7 @@ else
 fi
 
 if [[ "$DO_BUILD" == "1" ]]; then
+    ensure_swap   # 低内存机器先补足 swap, 防止构建被内核 OOM killer 杀死
     init_database
     build_backend
     build_web
