@@ -176,6 +176,14 @@ public class UserService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateUser(JSONObject obj, HttpServletRequest request) throws Exception{
         User user = JSONObject.parseObject(obj.toJSONString(), User.class);
+        // tenantId must never be settable through this endpoint: updateByPrimaryKeySelective
+        // writes every non-null field from the client-supplied JSON, and the tenant SQL
+        // parser only scopes which row the UPDATE's WHERE clause can reach (by the caller's
+        // own tenant), not what the SET clause is allowed to write. Without this, a caller
+        // could set their own (or any row within their tenant's) tenantId to 0, which the
+        // tenant filter treats as unrestricted super-admin access on every later request
+        // made with that user's token.
+        user.setTenantId(null);
         int result=0;
         try{
             //判断是否登录过
