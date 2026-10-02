@@ -1,10 +1,7 @@
 package com.jsh.erp.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
-import com.jsh.erp.datasource.entities.Depot;
-import com.jsh.erp.datasource.entities.DepotExample;
 import com.jsh.erp.datasource.entities.SysDictData;
 import com.jsh.erp.datasource.entities.SysDictType;
 import com.jsh.erp.datasource.mappers.SysDictDataMapper;
@@ -24,7 +21,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
