@@ -34,11 +34,6 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
                 {{model.billTimeStr}}
               </a-form-item>
@@ -46,6 +41,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
                 {{model.billNo}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+                {{model.handsPersonName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -88,19 +88,19 @@
         <section ref="print" id="giroPrint">
           <a-row class="form-row" :gutter="24">
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                <a-input v-decorator="['id']" hidden/>
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
+                <a-input v-decorator="['id']" hidden/>
                 {{model.billTimeStr}}
               </a-form-item>
             </a-col>
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
                 {{model.billNo}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+                {{model.handsPersonName}}
               </a-form-item>
             </a-col>
             <a-col :span="6"></a-col>
@@ -149,11 +149,6 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
                 {{model.billTimeStr}}
               </a-form-item>
@@ -161,6 +156,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
                 {{model.billNo}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+                {{model.handsPersonName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -208,11 +208,6 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
                 {{model.billTimeStr}}
               </a-form-item>
@@ -220,6 +215,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
                 {{model.billNo}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+                {{model.handsPersonName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -267,11 +267,6 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
                 {{model.billTimeStr}}
               </a-form-item>
@@ -279,6 +274,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
                 {{model.billNo}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+                {{model.handsPersonName}}
               </a-form-item>
             </a-col>
           </a-row>
@@ -337,11 +337,6 @@
               </a-form-item>
             </a-col>
             <a-col :span="6">
-              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
-                {{model.handsPersonName}}
-              </a-form-item>
-            </a-col>
-            <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据日期">
                 {{model.billTimeStr}}
               </a-form-item>
@@ -349,6 +344,11 @@
             <a-col :span="6">
               <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="单据编号">
                 {{model.billNo}}
+              </a-form-item>
+            </a-col>
+            <a-col :span="6">
+              <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="财务人员">
+                {{model.handsPersonName}}
               </a-form-item>
             </a-col>
           </a-row>
