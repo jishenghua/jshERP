@@ -781,7 +781,7 @@
         and di.material_extend_id=#{meId}
         and ifnull(di.sku,'') !=''
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="beginTime != null">
             and dh.oper_time &gt;= #{beginTime}
@@ -808,7 +808,7 @@
         and ifnull(dh.delete_flag,'0') !='1'
         and di.material_id=#{mId}
         <if test="forceFlag">
-            and dh.status = '1'
+            and (dh.status = '1' or dh.status = '2' or dh.status = '3')
         </if>
         <if test="beginTime != null">
             and dh.oper_time &gt;= #{beginTime}
