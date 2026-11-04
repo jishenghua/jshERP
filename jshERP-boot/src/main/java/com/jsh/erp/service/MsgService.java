@@ -49,7 +49,13 @@ public class MsgService {
     public Msg getMsg(long id)throws Exception {
         Msg result=null;
         try{
-            result=msgMapper.selectByPrimaryKey(id);
+            User userInfo = userService.getCurrentUser();
+            MsgExample example = new MsgExample();
+            example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userInfo.getId());
+            List<Msg> list = msgMapper.selectByExample(example);
+            if (list != null && !list.isEmpty()) {
+                result = list.get(0);
+            }
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
                     ExceptionConstants.DATA_READ_FAIL_CODE, ExceptionConstants.DATA_READ_FAIL_MSG,e);
@@ -107,6 +113,8 @@ public class MsgService {
         try{
             User userInfo = userService.getCurrentUser();
             if(!BusinessConstants.DEFAULT_MANAGER.equals(userInfo.getLoginName())) {
+                msg.setUserId(userInfo.getId());
+                msg.setTenantId(userInfo.getTenantId());
                 msg.setCreateTime(new Date());
                 msg.setStatus("1");
                 result=msgMapper.insertSelective(msg);
@@ -125,9 +133,16 @@ public class MsgService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int updateMsg(JSONObject obj, HttpServletRequest request) throws Exception{
         Msg msg = JSONObject.parseObject(obj.toJSONString(), Msg.class);
+        Long id = msg.getId();
+        msg.setId(null);
+        msg.setUserId(null);
+        msg.setTenantId(null);
         int result=0;
         try{
-            result=msgMapper.updateByPrimaryKeySelective(msg);
+            User userInfo = userService.getCurrentUser();
+            MsgExample example = new MsgExample();
+            example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userInfo.getId());
+            result=msgMapper.updateByExampleSelective(msg, example);
             logService.insertLog("消息",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_EDIT).append(msg.getMsgTitle()).toString(), request);
         }catch(Exception e){
@@ -143,7 +158,10 @@ public class MsgService {
     public int deleteMsg(Long id, HttpServletRequest request)throws Exception {
         int result=0;
         try{
-            result=msgMapper.deleteByPrimaryKey(id);
+            User userInfo = userService.getCurrentUser();
+            MsgExample example = new MsgExample();
+            example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userInfo.getId());
+            result=msgMapper.deleteByExample(example);
             logService.insertLog("消息",
                     new StringBuffer(BusinessConstants.LOG_OPERATION_TYPE_DELETE).append(id).toString(), request);
         }catch(Exception e){
@@ -158,10 +176,11 @@ public class MsgService {
     @Transactional(value = "transactionManager", rollbackFor = Exception.class)
     public int batchDeleteMsg(String ids, HttpServletRequest request) throws Exception{
         List<Long> idList = StringUtil.strToLongList(ids);
-        MsgExample example = new MsgExample();
-        example.createCriteria().andIdIn(idList);
         int result=0;
         try{
+            User userInfo = userService.getCurrentUser();
+            MsgExample example = new MsgExample();
+            example.createCriteria().andIdIn(idList).andUserIdEqualTo(userInfo.getId());
             result=msgMapper.deleteByExample(example);
             logService.insertLog("消息", "批量删除,id集:" + ids, request);
         }catch(Exception e){
@@ -252,9 +271,10 @@ public class MsgService {
         List<Long> idList = StringUtil.strToLongList(ids);
         Msg msg = new Msg();
         msg.setStatus(status);
-        MsgExample example = new MsgExample();
-        example.createCriteria().andIdIn(idList);
         try{
+            User userInfo = userService.getCurrentUser();
+            MsgExample example = new MsgExample();
+            example.createCriteria().andIdIn(idList).andUserIdEqualTo(userInfo.getId());
             msgMapper.updateByExampleSelective(msg, example);
         }catch(Exception e){
             logger.error("异常码[{}],异常提示[{}],异常[{}]",
@@ -307,7 +327,7 @@ public class MsgService {
                 Msg msg = new Msg();
                 msg.setStatus("2");
                 MsgExample example = new MsgExample();
-                example.createCriteria();
+                example.createCriteria().andUserIdEqualTo(userInfo.getId());
                 msgMapper.updateByExampleSelective(msg, example);
             }
         }catch(Exception e){
