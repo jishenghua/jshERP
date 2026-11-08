@@ -220,7 +220,6 @@
   import { BillListMixin } from './mixins/BillListMixin'
   import JEllipsis from '@/components/jeecg/JEllipsis'
   import JDate from '@/components/jeecg/JDate'
-  import Vue from 'vue'
   export default {
     name: "SaleBackList",
     mixins:[JeecgListMixin,BillListMixin],
