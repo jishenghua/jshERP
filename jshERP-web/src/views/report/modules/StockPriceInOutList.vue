@@ -40,7 +40,7 @@
             <a-col :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery">查询</a-button>
               <a-button style="margin-left: 8px" @click="searchReset">重置</a-button>
-              <a-button style="margin-left: 8px" @click="exportExcel" icon="download">导出</a-button>
+              <a-button style="margin-left: 8px" @click="handleExportXls('商品成本价流水')" icon="download">导出</a-button>
             </a-col>
           </a-row>
         </a-form>
@@ -135,7 +135,8 @@
           sm: { span: 16 },
         },
         url: {
-          list: "/depotItem/findDetailByDepotIdsAndMaterialId"
+          list: "/depotItem/findDetailByDepotIdsAndMaterialId",
+          exportXlsUrl: "/depotItem/exportDetailByDepotIdsAndMaterialId",
         }
       }
     },
@@ -193,18 +194,6 @@
           stockPriceFlag: true
         }
         this.loadData(1);
-      },
-      exportExcel() {
-        let list = []
-        let head = '单据编号,类型,条码,名称,仓库名称,数量,单价,金额,日期'
-        for (let i = 0; i < this.dataSource.length; i++) {
-          let item = []
-          let ds = this.dataSource[i]
-          item.push(ds.number, ds.type, ds.barCode, ds.materialName, ds.depotName, ds.basicNumber, ds.unitPrice, ds.allPrice, ds.operTime)
-          list.push(item)
-        }
-        let tip = '商品库存流水查询'
-        this.handleExportXlsPost('商品库存流水', '商品库存流水', head, tip, list)
       }
     }
   }

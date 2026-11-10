@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jsh.erp.constants.BusinessConstants;
 import com.jsh.erp.constants.ExceptionConstants;
 import com.jsh.erp.datasource.entities.*;
-import com.jsh.erp.datasource.vo.DepotItemStockWarningCount;
-import com.jsh.erp.datasource.vo.DepotItemVoBatchNumberList;
-import com.jsh.erp.datasource.vo.InOutPriceVo;
-import com.jsh.erp.datasource.vo.MaterialDepotStock;
+import com.jsh.erp.datasource.vo.*;
 import com.jsh.erp.exception.BusinessRunTimeException;
 import com.jsh.erp.service.DepotService;
 import com.jsh.erp.service.DepotHeadService;
@@ -32,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,6 +140,48 @@ public class DepotItemController {
         objectMap.put("total", depotItemService.findDetailByDepotIdsAndMaterialIdCount(depotIds, forceFlag, inOutManageFlag, sku,
                 batchNumber, StringUtil.toNull(number), beginTime, endTime, mId));
         return returnJson(objectMap, ErpInfo.OK.name, ErpInfo.OK.code);
+    }
+
+    /**
+     * 根据仓库和商品查询单据列表-导出含成本价的列表
+     * @param mId
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "/exportDetailByDepotIdsAndMaterialId")
+    @ApiOperation(value = "根据仓库和商品查询单据列表-导出含成本价的列表")
+    public void exportDetailByDepotIdsAndMaterialId(
+            @RequestParam(value = "depotIds",required = false) String depotIds,
+            @RequestParam(value = "sku",required = false) String sku,
+            @RequestParam(value = "batchNumber",required = false) String batchNumber,
+            @RequestParam(value = "number",required = false) String number,
+            @RequestParam(value = "beginTime",required = false) String beginTime,
+            @RequestParam(value = "endTime",required = false) String endTime,
+            @RequestParam(value = "stockPriceFlag",required = false, defaultValue = "false") Boolean stockPriceFlag,
+            @RequestParam("materialId") Long mId,
+            HttpServletRequest request, HttpServletResponse response)throws Exception {
+        try {
+            if(StringUtil.isNotEmpty(beginTime)) {
+                beginTime = beginTime + BusinessConstants.DAY_FIRST_TIME;
+            }
+            if(StringUtil.isNotEmpty(endTime)) {
+                endTime = endTime + BusinessConstants.DAY_LAST_TIME;
+            }
+            Boolean forceFlag = systemConfigService.getForceApprovalFlag();
+            Boolean inOutManageFlag = systemConfigService.getInOutManageFlag();
+            if(stockPriceFlag!=null && stockPriceFlag) {
+                //此处针对开启了出入库管理开关，用于查询成本价的明细，不然会导致查询不到销售相关的单据
+                inOutManageFlag = false;
+            }
+            List<DepotItemVo4DetailByTypeAndMId> list = depotItemService.findDetailByDepotIdsAndMaterialIdList(depotIds, forceFlag, inOutManageFlag, sku,
+                    batchNumber, StringUtil.toNull(number), beginTime, endTime, mId, null, null);
+            //给列表里面加上成本价
+            List<DepotItemVo4DetailWithCurrentUnitPrice> currentUnitPriceList = depotItemService.findDetailWithCurrentUnitPrice(list, mId);
+            File file = depotItemService.exportDetailByDepotIdsAndMaterialId(currentUnitPriceList);
+            ExcelUtils.downloadExcel(file, file.getName(), response);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     /**
