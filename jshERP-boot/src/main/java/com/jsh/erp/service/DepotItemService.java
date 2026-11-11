@@ -172,6 +172,25 @@ public class DepotItemService {
         return list==null?0:list.size();
     }
 
+    /**
+     * 用于更新移动平均价
+     */
+    public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdListForUpdate(String depotIds, Boolean forceFlag, Boolean inOutManageFlag, String sku, String batchNumber,
+                                                                                      String number, String beginTime, String endTime, Long mId, Integer offset, Integer rows)throws Exception {
+        List<Long> depotList = new ArrayList<>();
+        if(StringUtil.isNotEmpty(depotIds)) {
+            depotList = StringUtil.strToLongList(depotIds);
+        }
+        Long[] depotIdArray = StringUtil.listToLongArray(depotList);
+        List<DepotItemVo4DetailByTypeAndMId> list =null;
+        try{
+            list = depotItemMapperEx.findDetailByDepotIdsAndMaterialIdList(depotIdArray, forceFlag, inOutManageFlag, sku, batchNumber, number, beginTime, endTime, mId, offset, rows);
+        }catch(Exception e){
+            JshException.readFail(logger, e);
+        }
+        return list;
+    }
+
     public List<DepotItemVo4DetailByTypeAndMId> findDetailByDepotIdsAndMaterialIdList(String depotIds, Boolean forceFlag, Boolean inOutManageFlag, String sku, String batchNumber,
                                                                                       String number, String beginTime, String endTime, Long mId, Integer offset, Integer rows)throws Exception {
         String[] depotIdArrOld = null;
@@ -1148,7 +1167,7 @@ public class DepotItemService {
         Boolean inOutManageFlag = false;
         //查询多单位信息
         Unit unitInfo = materialService.findUnit(depotItem.getMaterialId());
-        List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdList(null, forceFlag, inOutManageFlag, null,
+        List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdListForUpdate(null, forceFlag, inOutManageFlag, null,
                 null, null, null, null, depotItem.getMaterialId(), null, null);
         Collections.reverse(itemList); //倒序之后变成按时间从前往后排序
         // 只关心最终成本价，回调传 null
