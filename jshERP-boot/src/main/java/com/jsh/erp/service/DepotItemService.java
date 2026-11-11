@@ -1151,139 +1151,118 @@ public class DepotItemService {
         List<DepotItemVo4DetailByTypeAndMId> itemList = findDetailByDepotIdsAndMaterialIdList(null, forceFlag, inOutManageFlag, null,
                 null, null, null, null, depotItem.getMaterialId(), null, null);
         Collections.reverse(itemList); //倒序之后变成按时间从前往后排序
-        BigDecimal currentNumber = BigDecimal.ZERO;
-        BigDecimal currentUnitPrice = BigDecimal.ZERO;
-        BigDecimal currentAllPrice = BigDecimal.ZERO;
-        for(DepotItemVo4DetailByTypeAndMId item: itemList) {
-            BigDecimal basicNumber = item.getBnum()!=null?item.getBnum():BigDecimal.ZERO;
-            //数量*单价  另外计算新的成本价
-            BigDecimal allPrice = unitService.parseAllPriceByUnit(item.getAllPrice()!=null?item.getAllPrice():BigDecimal.ZERO, unitInfo, item.getMaterialUnit());
-            if(basicNumber.compareTo(BigDecimal.ZERO)!=0 && allPrice.compareTo(BigDecimal.ZERO)!=0) {
-                //入库
-                if (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(item.getType())) {
-                    //零售退货、销售退货
-                    if (BusinessConstants.SUB_TYPE_RETAIL_RETURN.equals(item.getSubType()) || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(item.getSubType())) {
-                        //数量*当前的成本单价
-                        currentNumber = currentNumber.add(basicNumber);
-                        currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
-                    } else {
-                        currentAllPrice = currentAllPrice.add(allPrice);
-                        currentNumber = currentNumber.add(basicNumber);
-                        //只有当前库存总金额和当前库存数量都大于0才计算移动平均价
-                        if (currentAllPrice.compareTo(BigDecimal.ZERO) > 0 && currentNumber.compareTo(BigDecimal.ZERO) > 0) {
-                            currentUnitPrice = currentAllPrice.divide(currentNumber, 4, BigDecimal.ROUND_HALF_UP);
-                        } else {
-                            currentUnitPrice = item.getUnitPrice();
-                        }
-                    }
-                }
-                //出库
-                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(item.getType())) {
-                    //采购退货
-                    if (BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(item.getSubType())) {
-                        currentAllPrice = currentAllPrice.add(allPrice);
-                        currentNumber = currentNumber.add(basicNumber);
-                        //只有当前库存总金额和当前库存数量都大于0才计算移动平均价
-                        if (currentAllPrice.compareTo(BigDecimal.ZERO) > 0 && currentNumber.compareTo(BigDecimal.ZERO) > 0) {
-                            currentUnitPrice = currentAllPrice.divide(currentNumber, 4, BigDecimal.ROUND_HALF_UP);
-                        } else {
-                            currentUnitPrice = item.getUnitPrice();
-                        }
-                    } else {
-                        //数量*当前的成本单价
-                        currentNumber = currentNumber.add(basicNumber);
-                        currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
-                    }
-                }
-                //特殊情况：1-组装单 2-拆卸单 3-盘点复盘
-                if(BusinessConstants.SUB_TYPE_ASSEMBLE.equals(item.getSubType())||
-                        BusinessConstants.SUB_TYPE_DISASSEMBLE.equals(item.getSubType())||
-                        BusinessConstants.SUB_TYPE_REPLAY.equals(item.getSubType())) {
-                    //数量*当前的成本单价
-                    currentNumber = currentNumber.add(basicNumber);
-                    currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
-                }
-                //防止单价金额溢出
-                if(currentUnitPrice.compareTo(BigDecimal.valueOf(100000000))>0 || currentUnitPrice.compareTo(BigDecimal.valueOf(-100000000))<0) {
-                    currentUnitPrice = BigDecimal.ZERO;
-                }
-            }
-        }
+        // 只关心最终成本价，回调传 null
+        BigDecimal currentUnitPrice = calculateCurrentUnitPrice(itemList, unitInfo, null);
         //更新实时库存中的当前单价
         materialCurrentStockMapperEx.updateUnitPriceByMId(currentUnitPrice, depotItem.getMaterialId());
     }
 
+    /**
+     * 给列表里面加上成本价
+     * @param itemList
+     * @param mId
+     * @return
+     * @throws Exception
+     */
     public List<DepotItemVo4DetailWithCurrentUnitPrice> findDetailWithCurrentUnitPrice(List<DepotItemVo4DetailByTypeAndMId> itemList, Long mId) throws Exception {
         List<DepotItemVo4DetailWithCurrentUnitPrice> result = new ArrayList<>();
         //查询多单位信息
         Unit unitInfo = materialService.findUnit(mId);
         Collections.reverse(itemList); //倒序之后变成按时间从前往后排序
-        BigDecimal currentNumber = BigDecimal.ZERO;
-        BigDecimal currentUnitPrice = BigDecimal.ZERO;
-        BigDecimal currentAllPrice = BigDecimal.ZERO;
-        for(DepotItemVo4DetailByTypeAndMId item: itemList) {
-            BigDecimal basicNumber = item.getBnum()!=null?item.getBnum():BigDecimal.ZERO;
-            //数量*单价  另外计算新的成本价
-            BigDecimal allPrice = unitService.parseAllPriceByUnit(item.getAllPrice()!=null?item.getAllPrice():BigDecimal.ZERO, unitInfo, item.getMaterialUnit());
-            if(basicNumber.compareTo(BigDecimal.ZERO)!=0 && allPrice.compareTo(BigDecimal.ZERO)!=0) {
-                //入库
-                if (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(item.getType())) {
-                    //零售退货、销售退货
-                    if (BusinessConstants.SUB_TYPE_RETAIL_RETURN.equals(item.getSubType()) || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(item.getSubType())) {
-                        //数量*当前的成本单价
-                        currentNumber = currentNumber.add(basicNumber);
-                        currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
-                    } else {
-                        currentAllPrice = currentAllPrice.add(allPrice);
-                        currentNumber = currentNumber.add(basicNumber);
-                        //只有当前库存总金额和当前库存数量都大于0才计算移动平均价
-                        if (currentAllPrice.compareTo(BigDecimal.ZERO) > 0 && currentNumber.compareTo(BigDecimal.ZERO) > 0) {
-                            currentUnitPrice = currentAllPrice.divide(currentNumber, 4, BigDecimal.ROUND_HALF_UP);
-                        } else {
-                            currentUnitPrice = item.getUnitPrice();
-                        }
-                    }
-                }
-                //出库
-                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(item.getType())) {
-                    //采购退货
-                    if (BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(item.getSubType())) {
-                        currentAllPrice = currentAllPrice.add(allPrice);
-                        currentNumber = currentNumber.add(basicNumber);
-                        //只有当前库存总金额和当前库存数量都大于0才计算移动平均价
-                        if (currentAllPrice.compareTo(BigDecimal.ZERO) > 0 && currentNumber.compareTo(BigDecimal.ZERO) > 0) {
-                            currentUnitPrice = currentAllPrice.divide(currentNumber, 4, BigDecimal.ROUND_HALF_UP);
-                        } else {
-                            currentUnitPrice = item.getUnitPrice();
-                        }
-                    } else {
-                        //数量*当前的成本单价
-                        currentNumber = currentNumber.add(basicNumber);
-                        currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
-                    }
-                }
-                //特殊情况：1-组装单 2-拆卸单 3-盘点复盘
-                if(BusinessConstants.SUB_TYPE_ASSEMBLE.equals(item.getSubType())||
-                        BusinessConstants.SUB_TYPE_DISASSEMBLE.equals(item.getSubType())||
-                        BusinessConstants.SUB_TYPE_REPLAY.equals(item.getSubType())) {
-                    //数量*当前的成本单价
-                    currentNumber = currentNumber.add(basicNumber);
-                    currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
-                }
-                //防止单价金额溢出
-                if(currentUnitPrice.compareTo(BigDecimal.valueOf(100000000))>0 || currentUnitPrice.compareTo(BigDecimal.valueOf(-100000000))<0) {
-                    currentUnitPrice = BigDecimal.ZERO;
-                }
-            }
+        // 每处理一条明细，就把当前成本价回调出去，由调用方决定怎么用
+        BigDecimal finalUnitPrice = calculateCurrentUnitPrice(itemList, unitInfo, (item, currentUnitPrice) -> {
             DepotItemVo4DetailWithCurrentUnitPrice currentUnitPirceItem = new DepotItemVo4DetailWithCurrentUnitPrice();
             // 将原 item 的其它字段拷贝到新对象
             BeanUtils.copyProperties(item, currentUnitPirceItem);
             //加上成本价
             currentUnitPirceItem.setCurrentUnitPrice(currentUnitPrice);
             result.add(currentUnitPirceItem);
-        }
+        });
         Collections.reverse(result); //再次倒序
         return result;
+    }
+
+    /**
+     * 公共方法：按明细列表计算移动加权平均成本价
+     *
+     * @param itemList  已按时间从前往后排序的明细列表
+     * @param unitInfo  多单位信息
+     * @param consumer  每条明细处理后的回调，参数为(当前明细, 当前成本价)；
+     *                  不需要逐条处理时传 null
+     * @return 最终的成本单价
+     */
+    private BigDecimal calculateCurrentUnitPrice(List<DepotItemVo4DetailByTypeAndMId> itemList,
+                                                 Unit unitInfo, BiConsumer<DepotItemVo4DetailByTypeAndMId, BigDecimal> consumer) {
+        BigDecimal currentNumber = BigDecimal.ZERO;
+        BigDecimal currentUnitPrice = BigDecimal.ZERO;
+        BigDecimal currentAllPrice = BigDecimal.ZERO;
+
+        for (DepotItemVo4DetailByTypeAndMId item : itemList) {
+            BigDecimal basicNumber = item.getBnum() != null ? item.getBnum() : BigDecimal.ZERO;
+            //数量*单价  另外计算新的成本价
+            BigDecimal allPrice = unitService.parseAllPriceByUnit(
+                    item.getAllPrice() != null ? item.getAllPrice() : BigDecimal.ZERO,
+                    unitInfo, item.getMaterialUnit());
+
+            if (basicNumber.compareTo(BigDecimal.ZERO) != 0 && allPrice.compareTo(BigDecimal.ZERO) != 0) {
+                //入库
+                if (BusinessConstants.DEPOTHEAD_TYPE_IN.equals(item.getType())) {
+                    //零售退货、销售退货
+                    if (BusinessConstants.SUB_TYPE_RETAIL_RETURN.equals(item.getSubType())
+                            || BusinessConstants.SUB_TYPE_SALES_RETURN.equals(item.getSubType())) {
+                        //数量*当前的成本单价
+                        currentNumber = currentNumber.add(basicNumber);
+                        currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
+                    } else {
+                        currentAllPrice = currentAllPrice.add(allPrice);
+                        currentNumber = currentNumber.add(basicNumber);
+                        //只有当前库存总金额和当前库存数量都大于0才计算移动平均价
+                        if (currentAllPrice.compareTo(BigDecimal.ZERO) > 0 && currentNumber.compareTo(BigDecimal.ZERO) > 0) {
+                            currentUnitPrice = currentAllPrice.divide(currentNumber, 4, BigDecimal.ROUND_HALF_UP);
+                        } else {
+                            currentUnitPrice = item.getUnitPrice();
+                        }
+                    }
+                }
+                //出库
+                if (BusinessConstants.DEPOTHEAD_TYPE_OUT.equals(item.getType())) {
+                    //采购退货
+                    if (BusinessConstants.SUB_TYPE_PURCHASE_RETURN.equals(item.getSubType())) {
+                        currentAllPrice = currentAllPrice.add(allPrice);
+                        currentNumber = currentNumber.add(basicNumber);
+                        //只有当前库存总金额和当前库存数量都大于0才计算移动平均价
+                        if (currentAllPrice.compareTo(BigDecimal.ZERO) > 0 && currentNumber.compareTo(BigDecimal.ZERO) > 0) {
+                            currentUnitPrice = currentAllPrice.divide(currentNumber, 4, BigDecimal.ROUND_HALF_UP);
+                        } else {
+                            currentUnitPrice = item.getUnitPrice();
+                        }
+                    } else {
+                        //数量*当前的成本单价
+                        currentNumber = currentNumber.add(basicNumber);
+                        currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
+                    }
+                }
+                //特殊情况：1-组装单 2-拆卸单 3-盘点复盘
+                if (BusinessConstants.SUB_TYPE_ASSEMBLE.equals(item.getSubType())
+                        || BusinessConstants.SUB_TYPE_DISASSEMBLE.equals(item.getSubType())
+                        || BusinessConstants.SUB_TYPE_REPLAY.equals(item.getSubType())) {
+                    //数量*当前的成本单价
+                    currentNumber = currentNumber.add(basicNumber);
+                    currentAllPrice = currentAllPrice.add(basicNumber.multiply(currentUnitPrice));
+                }
+                //防止单价金额溢出
+                if (currentUnitPrice.compareTo(BigDecimal.valueOf(100000000)) > 0
+                        || currentUnitPrice.compareTo(BigDecimal.valueOf(-100000000)) < 0) {
+                    currentUnitPrice = BigDecimal.ZERO;
+                }
+            }
+
+            // 逐条回调（如果需要）
+            if (consumer != null) {
+                consumer.accept(item, currentUnitPrice);
+            }
+        }
+        return currentUnitPrice;
     }
 
     /**
