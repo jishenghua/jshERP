@@ -217,6 +217,15 @@ public class UserService {
         if("admin".equals(loginName)){
             logger.info("禁止重置超管密码");
         } else {
+            //仅允许租户管理员(id等于tenantId)、超管(tenantId为空)或用户本人重置密码，防止越权重置他人密码
+            User currentUser = getCurrentUser();
+            boolean hasPermission = currentUser.getTenantId() == null
+                    || currentUser.getId().equals(currentUser.getTenantId())
+                    || currentUser.getId().equals(id);
+            if (!hasPermission) {
+                logger.info("当前用户无权限重置其他用户的密码, userId={}", currentUser.getId());
+                return result;
+            }
             User user = new User();
             user.setId(id);
             user.setPassword(md5Pwd);
