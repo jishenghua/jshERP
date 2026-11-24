@@ -1856,3 +1856,11 @@ update jsh_depot_head set last_deposit=0 where last_deposit is null;
 -- 给平台表增加手机端版本
 -- --------------------------------------------------------
 insert into jsh_platform_config(platform_key, platform_key_info, platform_value) values ('app_version', '手机端版本', '');
+
+-- --------------------------------------------------------
+-- 时间 2026年11月24日
+-- by jishenghua
+-- 给序列号相关字段扩展字段长度
+-- --------------------------------------------------------
+alter table jsh_depot_item change sn_list sn_list varchar(12500) DEFAULT NULL COMMENT '序列号列表';
+alter table jsh_serial_number change serial_number serial_number varchar(600) DEFAULT NULL COMMENT '序列号';
